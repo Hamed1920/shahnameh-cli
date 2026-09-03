@@ -1,4 +1,37 @@
-import { spawn } from 'node:child_process'
+import { spawn, execFileSync } from 'node:child_process'
+import fs from 'node:fs'
+import path from 'node:path'
+
+/**
+ * Resolve the CLI's JavaScript entrypoint so we can spawn it with `shell: false`.
+ *
+ * SECURITY: `higgsfield` on Windows is a .cmd/.ps1 shim, which Node can only launch
+ * with `shell: true` — and that concatenates arguments into a command line instead of
+ * escaping them. Our arguments include prompts authored in Claude Chat/Cowork, so a
+ * prompt containing `&`, `|` or a quote would be a command injection. Running the
+ * .js entrypoint under the current Node binary avoids the shell entirely.
+ */
+let ENTRY = null
+function resolveEntry() {
+  if (ENTRY !== null) return ENTRY
+  const candidates = []
+  if (process.env.SHM_HIGGSFIELD_JS) candidates.push(process.env.SHM_HIGGSFIELD_JS)
+  try {
+    const root = execFileSync(process.execPath, [
+      path.join(path.dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js'),
+      'root', '-g',
+    ], { encoding: 'utf8' }).trim()
+    candidates.push(path.join(root, '@higgsfield', 'cli', 'bin', 'higgsfield.js'))
+  } catch { /* fall through */ }
+  if (process.platform === 'win32' && process.env.APPDATA) {
+    candidates.push(path.join(process.env.APPDATA, 'npm', 'node_modules', '@higgsfield', 'cli', 'bin', 'higgsfield.js'))
+  }
+  for (const c of candidates) {
+    try { if (c && fs.existsSync(c)) { ENTRY = c; return ENTRY } } catch { /* next */ }
+  }
+  ENTRY = false
+  return ENTRY
+}
 
 /**
  * Thin wrapper over the Higgsfield CLI.
@@ -10,8 +43,18 @@ import { spawn } from 'node:child_process'
 
 export function hf(args, { timeoutMs = 20 * 60_000 } = {}) {
   return new Promise((resolve) => {
-    const child = spawn('higgsfield', args, {
-      shell: process.platform === 'win32',
+    const entry = resolveEntry()
+    if (!entry) {
+      resolve({
+        code: -1, stdout: '',
+        stderr: 'Could not locate the Higgsfield CLI entrypoint. Install it with '
+              + '`npm i -g @higgsfield/cli`, or set SHM_HIGGSFIELD_JS to bin/higgsfield.js.',
+      })
+      return
+    }
+    // shell:false — arguments are passed as an argv array and never parsed by a shell.
+    const child = spawn(process.execPath, [entry, ...args], {
+      shell: false,
       windowsHide: true,
     })
     let stdout = ''
