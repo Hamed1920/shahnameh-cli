@@ -22,7 +22,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { P, appendJsonl, findEntity, loadEntities, readCsv, resolveRef } from './lib/project.mjs'
+import { P, appendJsonl, findEntity, isShotId, loadEntities, readCsv, resolveRef } from './lib/project.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const cfg = JSON.parse(await fs.readFile(path.join(HERE, 'config.json'), 'utf8'))
@@ -63,13 +63,17 @@ for (const [i, raw] of batch.entries()) {
   if (!raw.target) { bad.push([at, 'missing target']); continue }
   if (!raw.prompt || !String(raw.prompt).trim()) { bad.push([at, 'missing prompt']); continue }
 
-  const entity = findEntity(entities, raw.target)
-  if (!entity) {
+  // A shot id is a valid target even though it is not an entity - it renders
+  // into the episode folder rather than an entity folder (INDEXING.md s7).
+  const shot = isShotId(raw.target) ? String(raw.target).trim() : null
+  const entity = shot ? null : findEntity(entities, raw.target)
+  if (!shot && !entity) {
     bad.push([at, `unknown target '${raw.target}' - register it first, never auto-created`])
     continue
   }
+  const targetId = shot ?? entity.id
 
-  const variant = raw.variant || entity.canonical_variant || 'V01'
+  const variant = raw.variant || entity?.canonical_variant || 'V01'
 
   // Resolve refs now so a broken reference is caught before any credits are spent.
   let refErr = null
@@ -81,20 +85,29 @@ for (const [i, raw] of batch.entries()) {
 
   // Deduplicate within the batch: the same entity+variant+prompt twice is
   // almost always a copy-paste artefact in a long PDF, not an intentional pair.
-  const key = `${entity.id}|${variant}|${String(raw.prompt).trim()}`
+  const key = `${targetId}|${variant}|${String(raw.prompt).trim()}`
   if (seen.has(key)) { bad.push([at, 'duplicate of an earlier row in this batch']); continue }
   seen.add(key)
+
+  // Video defaults to a cheap draft; approving it in the panel buys the final.
+  const model = raw.model || cfg.defaultImageModel
+  const isVideo = /^(seedance|kling|veo)/.test(model)
+  const stage = raw.stage ?? (isVideo ? 'draft' : null)
+  const params = { ...(raw.params ?? {}) }
+  if (stage === 'draft' && !params.resolution) params.resolution = cfg.videoDraftResolution
+  if (isVideo && !params.duration) params.duration = cfg.videoDuration
 
   ok.push({
     jobId: `J-${stamp}-${Math.random().toString(36).slice(2, 5).toUpperCase()}`,
     parentJobId: null,
     attempt: 1,
-    target: entity.id,
+    stage,
+    target: targetId,
     variant,
-    model: raw.model || cfg.defaultImageModel,
+    model,
     prompt: String(raw.prompt).trim(),
     basePrompt: String(raw.prompt).trim(),
-    params: raw.params ?? {},
+    params,
     refs: raw.refs ?? [],
     revisionNotes: [],
     label: raw.label ?? null,

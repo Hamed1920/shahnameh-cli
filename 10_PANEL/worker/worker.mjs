@@ -17,8 +17,8 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
-  P, ROOT, appendJsonl, findEntity, loadEntities, log, readCsv, readJsonl,
-  readState, resolveRef, writeCsv, writeState,
+  P, ROOT, appendJsonl, findEntity, isShotId, loadEntities, log, readCsv, readJsonl,
+  readState, resolveRef, shotFolder, writeCsv, writeState,
 } from './lib/project.mjs'
 import { estimateCost, extractJobId, extractResultUrls, hfJson, isAuthenticated, paramsToArgs } from './lib/hf.mjs'
 import { promote, reject } from './lib/promote.mjs'
@@ -37,17 +37,33 @@ const LEDGER_HEADER = [
 
 // ---------------------------------------------------------------- helpers
 
+function pidAlive(pid) {
+  if (!Number.isFinite(pid) || pid <= 0) return false
+  try { process.kill(pid, 0); return true } catch (e) { return e.code === 'EPERM' }
+}
+
+/**
+ * Lock, with stale reclaim. A killed worker leaves its lock behind; without the
+ * liveness check that permanently blocks every future run and the only fix is
+ * deleting a file by hand.
+ */
 async function acquireLock() {
-  try {
-    await fs.mkdir(path.dirname(P.lock), { recursive: true })
-    const fh = await fs.open(P.lock, 'wx')
-    await fh.write(String(process.pid))
-    await fh.close()
-    return true
-  } catch (e) {
-    if (e.code === 'EEXIST') return false
-    throw e
+  await fs.mkdir(path.dirname(P.lock), { recursive: true })
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const fh = await fs.open(P.lock, 'wx')
+      await fh.write(String(process.pid))
+      await fh.close()
+      return true
+    } catch (e) {
+      if (e.code !== 'EEXIST') throw e
+      const held = parseInt((await fs.readFile(P.lock, 'utf8').catch(() => '')).trim(), 10)
+      if (pidAlive(held)) return false
+      await log(`reclaiming stale lock from pid ${held || 'unknown'}`)
+      await fs.rm(P.lock, { force: true })
+    }
   }
+  return false
 }
 async function releaseLock() { await fs.rm(P.lock, { force: true }) }
 
@@ -67,6 +83,7 @@ async function applicableLearnings(entity) {
     .filter((l) => l.status === 'approved')
     .filter((l) => {
       const s = l.scope ?? {}
+      if (!entity) return !s.entity && !s.family && !s.kind
       if (s.entity) return entity && s.entity === entity.id
       if (s.family) return entity && entity.family === s.family
       if (s.kind) return entity && entity.kind === s.kind
@@ -121,12 +138,15 @@ async function runQueue(state) {
   let count = 0
 
   for (const job of pending) {
-    const entity = findEntity(entities, job.target)
-    if (!entity) {
+    // A shot target is valid but is not an entity; it renders into the episode.
+    const shot = isShotId(job.target) ? job.target : null
+    const entity = shot ? null : findEntity(entities, job.target)
+    if (!shot && !entity) {
       await log(`SKIP ${job.jobId}: unknown target ${job.target}`)
       state.processedJobs.push(job.jobId)
       continue
     }
+    const targetId = shot ?? entity.id
 
     // Resolve reference tokens to real paths before spending anything.
     const refPaths = []
@@ -146,7 +166,15 @@ async function runQueue(state) {
     const prompt = buildPrompt(job.prompt, learnings, job.revisionNotes)
     const model = job.model || cfg.defaultImageModel
     const params = { prompt, ...(job.params ?? {}) }
-    if (refPaths.length) params['image-references'] = refPaths.join(',')
+
+    // Array -> repeated --image-references flags (see paramsToArgs).
+    if (refPaths.length) params.image_references = refPaths
+
+    // Seedance rejects reference media in the default t2v mode; supplying
+    // references without switching mode fails the job after it is priced.
+    if (refPaths.length && /^seedance/.test(model) && !params.mode) {
+      params.mode = 'omni_reference'
+    }
 
     const { credits } = await estimateCost(model, params)
     await log(`COST ${job.jobId} ${model} = ${credits ?? 'unknown'} credits`)
@@ -164,7 +192,7 @@ async function runQueue(state) {
       dryTotal.jobs++
       if (credits != null) dryTotal.credits += credits
       else dryTotal.unpriced++
-      await log(`DRY-RUN would generate ${job.jobId} -> ${entity.id} ${job.variant} (${model})`)
+      await log(`DRY-RUN would generate ${job.jobId} -> ${targetId} ${job.variant} (${model}) refs=${refPaths.length}`)
       continue
     }
 
@@ -173,14 +201,14 @@ async function runQueue(state) {
       ...paramsToArgs(params),
       '--wait', '--wait-timeout', cfg.waitTimeout, '--wait-interval', cfg.waitInterval,
     ]
-    await log(`GENERATE ${job.jobId} ${entity.id} ${job.variant} model=${model}`)
+    await log(`GENERATE ${job.jobId} ${targetId} ${job.variant} model=${model}`)
     const res = await hfJson(args, { timeoutMs: 25 * 60_000 })
 
     if (res.code !== 0) {
       await log(`FAIL ${job.jobId}: exit ${res.code} ${res.stderr.trim().slice(0, 400)}`)
       await ledgerAppend({
         job_id: job.jobId, content_hash: '', author: job.enqueuedBy, type: 'generate.image',
-        target: job.target, resolved_target: entity.id, variant: job.variant, engine: 'higgsfield',
+        target: job.target, resolved_target: targetId, variant: job.variant, engine: 'higgsfield',
         state: 'FAILED', ingested: new Date().toISOString(), source_file: 'queue',
         parent_job_id: job.parentJobId ?? '', hf_job_id: '', attempt: String(job.attempt ?? 1),
         cost: String(credits ?? ''),
@@ -222,7 +250,11 @@ async function runQueue(state) {
       parentJobId: job.parentJobId ?? null,
       hfJobId,
       attempt: job.attempt ?? 1,
-      target: entity.id,
+      stage: job.stage ?? null,
+      label: job.label ?? null,
+      target: targetId,
+      isShot: Boolean(shot),
+      outputFolder: shot ? await shotFolder(shot) : entity.folder,
       variant: job.variant || entity.canonical_variant || 'V01',
       model,
       prompt,
@@ -236,7 +268,7 @@ async function runQueue(state) {
 
     await ledgerAppend({
       job_id: job.jobId, content_hash: '', author: job.enqueuedBy, type: 'generate.image',
-      target: job.target, resolved_target: entity.id, variant: job.variant, engine: 'higgsfield',
+      target: job.target, resolved_target: targetId, variant: job.variant, engine: 'higgsfield',
       state: 'GENERATED', ingested: new Date().toISOString(), source_file: 'queue',
       parent_job_id: job.parentJobId ?? '', hf_job_id: hfJobId,
       attempt: String(job.attempt ?? 1), cost: String(credits ?? ''),
@@ -244,6 +276,9 @@ async function runQueue(state) {
 
     if (credits != null) state.spentCredits += credits
     state.processedJobs.push(job.jobId)
+    // Persist after EVERY job. A kill between jobs would otherwise lose the
+    // record of work already paid for, and the next run would buy it again.
+    await writeState(state)
     count++
   }
   return count
@@ -273,7 +308,14 @@ async function runDecisions(state) {
         continue
       }
       if (d.verdict === 'accepted') {
-        await promote(d, sidecar)
+        // Approving a cheap draft does not promote it — it buys the expensive
+        // final. Only a final render becomes the entity's asset.
+        if (sidecar?.stage === 'draft') {
+          await archiveDraft(d)
+          await enqueueFinal(d, sidecar)
+        } else {
+          await promote(d, sidecar)
+        }
       } else {
         await reject(d)
         if (d.requeue) await enqueueRevision(d, sidecar, entities)
@@ -286,6 +328,49 @@ async function runDecisions(state) {
     }
   }
   return count
+}
+
+/** Keep the approved draft as a record; it is not the deliverable. */
+async function archiveDraft(decision) {
+  const src = path.join(ROOT, decision.candidate)
+  const dir = path.join(P.drafts, decision.hfJobId)
+  await fs.mkdir(dir, { recursive: true })
+  const dest = path.join(dir, path.basename(src))
+  try {
+    await fs.copyFile(src, dest)
+    await fs.rm(src, { force: true })
+  } catch (e) { if (e.code !== 'ENOENT') throw e }
+  await log(`DRAFT APPROVED ${decision.candidate} -> ${rel(dest)}`)
+}
+
+/**
+ * Re-run an approved draft at final resolution. Same prompt, same references,
+ * same variant — the only thing that changes is quality, so the shot Hamed
+ * approved is the shot he gets.
+ */
+async function enqueueFinal(decision, sidecar) {
+  const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, '')
+  const jobId = `J-${stamp}-${Math.random().toString(36).slice(2, 5).toUpperCase()}`
+  const params = { ...(sidecar.params ?? {}), resolution: cfg.videoFinalResolution }
+
+  await appendJsonl(P.queue, {
+    jobId,
+    parentJobId: sidecar.jobId,
+    attempt: sidecar.attempt ?? 1,
+    stage: 'final',
+    target: sidecar.target,
+    variant: sidecar.variant,
+    model: sidecar.model,
+    prompt: sidecar.basePrompt ?? sidecar.prompt,
+    basePrompt: sidecar.basePrompt ?? sidecar.prompt,
+    params,
+    refs: sidecar.refs ?? [],
+    revisionNotes: sidecar.revisionNotes ?? [],
+    label: sidecar.label ?? null,
+    enqueuedAt: new Date().toISOString(),
+    enqueuedBy: 'worker:final',
+  })
+  await log(`FINAL QUEUED ${sidecar.jobId} -> ${jobId} at ${cfg.videoFinalResolution}`)
 }
 
 async function enqueueRevision(decision, sidecar, entities) {
@@ -309,6 +394,8 @@ async function enqueueRevision(decision, sidecar, entities) {
     jobId,
     parentJobId: sidecar.jobId,
     attempt,
+    // A rejected draft re-rolls as a draft. Never escalate cost on a failure.
+    stage: sidecar.stage ?? null,
     target: sidecar.target,
     variant: sidecar.variant,
     model: sidecar.model,

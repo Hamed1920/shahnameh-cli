@@ -105,18 +105,51 @@ export async function getPending(): Promise<Candidate[]> {
   return (await getCandidates()).filter((c) => !c.decided)
 }
 
-/** Resolve the reference image the reviewer should compare against. */
+/**
+ * Resolve an @-token to a project-relative path. Mirrors resolveRef in the
+ * worker and Resolve-ShmRef in PowerShell.
+ */
+export async function resolveRefToken(token: string): Promise<string | null> {
+  const t = String(token ?? '').trim().replace(/^@/, '')
+  if (!t) return null
+  const [ref, variantIn, takeIn] = t.split('/')
+  const [entities, assets] = await Promise.all([getEntities(), getAssets()])
+  const ent = entities.find((e) => e.id === ref || e.short_id === ref)
+  if (!ent) return null
+  const variant = (variantIn || ent.canonical_variant || '').toUpperCase()
+  if (!variant) return null
+  let rows = assets.filter((a) => a.entity_id === ent.id && a.variant === variant)
+  if (takeIn) rows = rows.filter((a) => a.take === takeIn.toUpperCase())
+  if (rows.length === 0) return null
+  const row = [...rows].sort((a, b) => b.take.localeCompare(a.take))[0]
+  return `${row.folder}/${row.filename}`
+}
+
+/**
+ * The image the reviewer should compare against.
+ *
+ * For an entity target that is its canonical plate. For a SHOT target there is
+ * no entity, so fall back to the first reference the shot was generated from —
+ * which is what the reviewer actually needs to check continuity against.
+ */
 export async function getReferenceFor(
   entityId: string,
   variant?: string,
+  fallbackRefs?: string[],
 ): Promise<string | null> {
   const [entities, assets] = await Promise.all([getEntities(), getAssets()])
   const ent = entities.find((e) => e.id === entityId || e.short_id === entityId)
-  if (!ent) return null
-  const want = variant || ent.canonical_variant
-  const rows = assets.filter((a) => a.entity_id === ent.id)
-  const hit = rows.find((a) => a.variant === want) ?? rows[0]
-  return hit ? `${hit.folder}/${hit.filename}` : null
+  if (ent) {
+    const want = variant || ent.canonical_variant
+    const rows = assets.filter((a) => a.entity_id === ent.id)
+    const hit = rows.find((a) => a.variant === want) ?? rows[0]
+    if (hit) return `${hit.folder}/${hit.filename}`
+  }
+  for (const token of fallbackRefs ?? []) {
+    const p = await resolveRefToken(token)
+    if (p) return p
+  }
+  return null
 }
 
 export async function getWorkerState(): Promise<Record<string, unknown> | null> {

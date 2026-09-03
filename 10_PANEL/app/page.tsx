@@ -9,7 +9,7 @@ export default async function ReviewQueue() {
   const withRefs = await Promise.all(
     pending.map(async (c) => ({
       candidate: c,
-      referencePath: await getReferenceFor(c.sidecar.target, c.sidecar.variant),
+      referencePath: await getReferenceFor(c.sidecar.target, c.sidecar.variant, c.sidecar.refs),
     })),
   )
 

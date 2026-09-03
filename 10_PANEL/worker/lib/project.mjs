@@ -21,6 +21,7 @@ export const P = {
   lock: path.join(ROOT, '00_PROJECT', 'queue', 'worker.lock'),
   staging: path.join(ROOT, '09_OUTPUT', '_staging'),
   rejected: path.join(ROOT, '09_OUTPUT', '_rejected'),
+  drafts: path.join(ROOT, '09_OUTPUT', '_drafts'),
 }
 
 export const rel = (abs) => path.relative(ROOT, abs).split(path.sep).join('/')
@@ -60,6 +61,32 @@ export async function writeCsv(file, rows, header) {
 export async function loadEntities() {
   const { rows } = await readCsv(P.entities)
   return rows
+}
+
+/**
+ * SHM-EP001-SC010-SH0010 and friends. A shot is a valid generation target but is
+ * not an entity - it belongs to an episode, so its output lands in the episode
+ * folder rather than an entity folder. See INDEXING.md section 7.
+ */
+export const SHOT_RX = /^SHM-EP\d{3}(-SQ\d{2})?(-SC\d{3})?(-SH\d{4})?$/
+export const isShotId = (ref) => SHOT_RX.test(String(ref).trim())
+
+/**
+ * Project-relative output folder for a shot: 07_EPISODES/<episode dir>/shots.
+ * The episode directory is matched by its SHM-EPnnn prefix, so the readable
+ * suffix (...-ZAHHAK-ENTRY) can change without breaking anything.
+ */
+export async function shotFolder(ref) {
+  const ep = String(ref).match(/^SHM-EP\d{3}/)[0]
+  const root = path.join(ROOT, '07_EPISODES')
+  let dirName = ep
+  try {
+    const found = (await fs.readdir(root, { withFileTypes: true }))
+      .filter((e) => e.isDirectory() && e.name.startsWith(ep))
+      .map((e) => e.name)[0]
+    if (found) dirName = found
+  } catch { /* episode folder not created yet */ }
+  return `07_EPISODES/${dirName}/shots`
 }
 
 export function findEntity(entities, ref) {

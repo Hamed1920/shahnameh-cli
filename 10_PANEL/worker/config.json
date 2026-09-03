@@ -1,13 +1,17 @@
 {
-  "defaultImageModel": "nano_banana_2",
-  "defaultVideoModel": "seedance_2_0",
+  "_comment": "Ceilings are sized against the account balance seen 2026-09-03: 5346.5 credits, ultra plan. costCeilingCredits is per worker run, not lifetime - it pauses the queue rather than failing, and resets when queue/state.json spentCredits is cleared. Models verified against `model list` 2026-09-03: nano_banana_2 does NOT exist as a job type; the Nano Banana 2 family is nano_banana_flash / _2_lite / _pro. Video is seedance_2_5, matching the source document. Video is generated as a 480p DRAFT first (37.5 credits vs 135 at 1080p); approving a draft in the panel queues the identical job at 1080p rather than promoting the draft.",
+  "defaultImageModel": "nano_banana_pro",
+  "defaultVideoModel": "seedance_2_5",
   "concurrency": 1,
-  "maxJobsPerRun": 4,
-  "costCeilingCredits": 200,
-  "perJobCostCeilingCredits": 60,
-  "waitTimeout": "20m",
+  "maxJobsPerRun": 12,
+  "perJobCostCeilingCredits": 250,
+  "costCeilingCredits": 1500,
+  "waitTimeout": "25m",
   "waitInterval": "5s",
   "maxAttempts": 4,
   "pollSeconds": 5,
-  "reviewer": "hamed"
+  "reviewer": "hamed",
+  "videoDraftResolution": "480p",
+  "videoFinalResolution": "1080p",
+  "videoDuration": 15
 }

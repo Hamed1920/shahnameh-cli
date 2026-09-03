@@ -9,6 +9,28 @@ function assetUrl(rel: string) {
   return `/api/asset?path=${encodeURIComponent(rel)}`
 }
 
+const isVideo = (p: string) => /\.(mp4|mov|webm)$/i.test(p)
+
+/** Renders a candidate or reference, picking the right element for its type. */
+function Media({ path, alt, dim }: { path: string; alt: string; dim?: boolean }) {
+  const cls = `checker w-full rounded border border-[var(--color-edge)] object-contain${dim ? ' opacity-90' : ''}`
+  if (isVideo(path)) {
+    return (
+      <video
+        src={assetUrl(path)}
+        className={cls}
+        controls
+        loop
+        muted
+        playsInline
+        preload="metadata"
+      />
+    )
+  }
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={assetUrl(path)} alt={alt} className={cls} />
+}
+
 function Submit({ label, tone }: { label: string; tone: 'good' | 'bad' }) {
   const { pending } = useFormStatus()
   const bg = tone === 'good' ? 'var(--color-good)' : 'var(--color-bad)'
@@ -42,11 +64,9 @@ export function ReviewCard({
           <p className="mb-2 text-xs uppercase tracking-wide text-[var(--color-muted)]">
             Candidate · {candidate.take}
           </p>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={assetUrl(candidate.path)}
+          <Media
+            path={candidate.path}
             alt={`${s.target} ${s.variant} ${candidate.take}`}
-            className="checker w-full rounded border border-[var(--color-edge)] object-contain"
           />
         </div>
         <div>
@@ -54,24 +74,32 @@ export function ReviewCard({
             Reference {referencePath ? '' : '— none on file'}
           </p>
           {referencePath ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={assetUrl(referencePath)}
-              alt="reference"
-              className="checker w-full rounded border border-[var(--color-edge)] object-contain opacity-90"
-            />
+            <Media path={referencePath} alt="reference" dim />
           ) : (
-            <div className="flex h-48 items-center justify-center rounded border border-dashed border-[var(--color-edge)] text-sm text-[var(--color-muted)]">
-              First asset for this entity
+            <div className="flex h-48 items-center justify-center rounded border border-dashed border-[var(--color-edge)] p-4 text-center text-sm text-[var(--color-muted)]">
+              {s.refs?.length
+                ? `Generated from ${s.refs.length} reference${s.refs.length > 1 ? 's' : ''}: ${s.refs.join(', ')}`
+                : 'No reference on file'}
             </div>
           )}
         </div>
       </div>
 
       <div className="border-t border-[var(--color-edge)] px-4 py-3 text-sm">
-        <div className="mb-2 flex flex-wrap gap-x-4 gap-y-1 text-[var(--color-muted)]">
+        <div className="mb-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[var(--color-muted)]">
           <span className="font-mono text-white">{s.target}</span>
           <span>{s.variant}</span>
+          {s.stage && (
+            <span
+              className={
+                s.stage === 'draft'
+                  ? 'rounded bg-[var(--color-accent)]/20 px-2 py-0.5 text-xs font-medium text-[var(--color-accent)]'
+                  : 'rounded bg-[var(--color-good)]/20 px-2 py-0.5 text-xs font-medium text-[var(--color-good)]'
+              }
+            >
+              {s.stage === 'draft' ? 'DRAFT — approving buys the 1080p final' : 'FINAL'}
+            </span>
+          )}
           <span>model {s.model}</span>
           <span>job {s.jobId}</span>
           {s.attempt > 1 && (

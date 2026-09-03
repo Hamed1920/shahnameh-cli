@@ -1,0 +1,124 @@
+[
+  {
+    "label": "GRP-006 Iranian nobles",
+    "target": "SHM-GRP-006-NOBLES-IRANIAN",
+    "variant": "V01",
+    "refs": ["@REF-001/V02"],
+    "params": { "aspect_ratio": "16:9", "resolution": "2k" },
+    "prompt": "Group reference sheet. Six Iranian nobles and commanders standing in a loose irregular line against a plain cold stone wall, overcast daylight. Each figure is visibly different in height, build, age and bearing. Masks are smooth continuous pale human-like surfaces with small narrow eye openings and no mouth - never skull, skeletal or Day-of-the-Dead. Heavy travel-worn layered robes in muted ochre, oxblood, dust grey and deep indigo, with restrained metal clasps at the shoulder. They read as tired petitioners who have travelled a long way, not as an army: no armour, no raised weapons, no formation. Physically real and tactile, natural light, muted desaturated palette, fine fabric and dust detail. No magic, no glow, no floating particles, no heroic posing."
+  },
+  {
+    "label": "GRP-007 Iranian riders",
+    "target": "SHM-GRP-007-RIDERS-IRANIAN",
+    "variant": "V01",
+    "refs": ["@REF-001/V02"],
+    "params": { "aspect_ratio": "16:9", "resolution": "2k" },
+    "prompt": "Group reference sheet. Five Iranian riders standing dismounted beside their tack on a cold rocky plain, overcast daylight. Masks are smooth continuous pale human-like surfaces with small narrow eye openings, matching the established Iranian mask language. Practical riding dress: short travel coats over layered wool, leather belts, wrapped legs, dust and sweat marks. They carry harness, water skins and rolled cloth, not weapons. A political escort, deliberately not a war party: no armour plates, no shields, no drawn blades, no formation. Physically real and tactile, muted desaturated palette, natural overcast light, visible wear and travel dust. No magic, no glow, no heroic posing."
+  },
+  {
+    "label": "GRP-008 Jamshid attendants",
+    "target": "SHM-GRP-008-ATTENDANTS-JAMSHID",
+    "variant": "V01",
+    "refs": ["@GRP-005"],
+    "params": { "aspect_ratio": "16:9", "resolution": "2k" },
+    "prompt": "Group reference sheet. Five attendants of Jamshid's household standing in a shallow line inside a pale columned interior, low warm lamplight. Masks are smooth continuous pale human-like surfaces with small narrow eye openings. Fine pale court dress, cleaner and lighter than travel clothing: soft belted tunics in bone, pale rose and muted gold, with narrow woven trim. They carry vessels, folded cloth and a lamp - serving objects, not weapons, and they stand at ease rather than at post. Physically real and tactile, muted palette, soft directional light. No magic, no glow, no floating particles."
+  },
+
+  {
+    "label": "LOC-012 approach to Zahhak domain",
+    "target": "SHM-LOC-012-APPROACH-ZAHHAK-DOMAIN",
+    "variant": "V01",
+    "params": { "aspect_ratio": "16:9", "resolution": "2k" },
+    "prompt": "Extreme wide establishing plate, 24mm, static. A cold rocky plain under flat overcast light, empty and windswept, with a pale stone road running from the foreground toward a severe dark stone complex on the far horizon. The land between is bare and open, scattered with low grey rock and dry scrub. Weak crosswind. The architecture in the distance is heavy, blunt and unwelcoming, built of dark stone with no ornament. Horizontal cinematic frame with deep negative space. Physically real and tactile, muted desaturated palette of grey, rust and cold blue. No people, no banners, no magic, no glow, no drone spectacle."
+  },
+  {
+    "label": "LOC-013 Zahhak outer court",
+    "target": "SHM-LOC-013-COURT-ZAHHAK-OUTER",
+    "variant": "V01",
+    "params": { "aspect_ratio": "16:9", "resolution": "2k" },
+    "prompt": "Wide architectural plate, 24mm, frontal. The outer courtyard of a severe dark stone complex: a broad empty flagstone yard enclosed by heavy blunt walls, a deep shadowed gateway on the far side, iron tethering rings and a low stone water trough along one wall. Flat overcast light, no sun. The space is built for waiting, not for ceremony - no decoration, no banners, no statuary. Horizontal cinematic frame using the full width. Physically real and tactile, muted grey and cold brown palette, worn stone and standing water. No people, no animals, no magic, no glow."
+  },
+  {
+    "label": "LOC-014 Iran outskirts",
+    "target": "SHM-LOC-014-OUTSKIRTS-IRAN",
+    "variant": "V01",
+    "params": { "aspect_ratio": "16:9", "resolution": "2k" },
+    "prompt": "Wide establishing plate, 24mm. The healthy liveable edge of an ancient Iranian city in late afternoon: low mudbrick and pale stone buildings, irrigation channels running with water, cultivated plots, rows of cypress and fruit trees, dust roads. The settlement is intact, tended and partly green - deliberately NOT a ruin, not post-apocalyptic, not abandoned. Warm low sun raking across the walls. Horizontal cinematic frame with a wide open sky. Physically real and tactile, muted natural palette of ochre, sage and pale stone. No people, no smoke, no magic, no glow."
+  },
+  {
+    "label": "LOC-015 royal causeway",
+    "target": "SHM-LOC-015-CAUSEWAY-ROYAL",
+    "variant": "V01",
+    "params": { "aspect_ratio": "16:9", "resolution": "2k" },
+    "prompt": "Wide architectural plate, 24mm, frontal and slightly low. A monumental ascending stone causeway: a broad ramp rising into a long shallow staircase, flanked by heavy carved retaining walls, leading up toward a dark colonnaded threshold at the top. Built entirely for the rising line - the eye is carried upward. Pale weathered ashlar stone, worn treads, flat overcast light with a cold sky. Horizontal cinematic frame using the full width, deep perspective. Physically real and tactile, muted palette. No people, no banners, no magic, no glow, no floating particles."
+  },
+  {
+    "label": "LOC-016 lower gate",
+    "target": "SHM-LOC-016-GATE-LOWER-MOUNT",
+    "variant": "V01",
+    "params": { "aspect_ratio": "16:9", "resolution": "2k" },
+    "prompt": "Wide architectural plate, 24mm. A small plain secondary gate at the lower rear of a great stone complex: a single narrow timber-and-iron door set in a heavy unadorned wall, a short flight of worn steps, a dirt yard below with tethering posts and scattered straw. Utilitarian and unceremonial, clearly the servants' and animals' way out - no carving, no relief, no banners. Cold pre-dawn light, long shadows. Horizontal cinematic frame. Physically real and tactile, muted grey and brown palette. No people, no animals, no magic, no glow."
+  },
+  {
+    "label": "LOC-017 final desert",
+    "target": "SHM-LOC-017-DESERT-FINAL",
+    "variant": "V01",
+    "params": { "aspect_ratio": "16:9", "resolution": "2k" },
+    "prompt": "Extreme wide establishing plate, 24mm, static, horizon centred low. An open desert running completely flat to a clean unbroken horizon - no ridge, no mountain, no structure anywhere in frame. Cracked pale earth and thin drifting sand, a few dry stems. Enormous empty sky in high haze, light failing toward dusk. The frame must feel like an ending: vast, quiet and without destination. Horizontal cinematic composition with extreme negative space. Physically real and tactile, muted palette of bone, ash and faded blue. No people, no animals, no magic, no glow, no lens flare."
+  },
+
+  {
+    "label": "PRP-011 Iranian royal banner",
+    "target": "SHM-PRP-011-BANNER-IRANIAN-ROYAL",
+    "variant": "V01",
+    "params": { "aspect_ratio": "16:9", "resolution": "2k" },
+    "prompt": "Prop turnaround sheet on neutral grey seamless, soft even museum light. The official royal banner of ancient Iran: a heavy woven rectangular cloth in deep oxblood and faded gold, mounted on a dark timber staff with a plain metal ferrule. The weave is coarse and visibly hand-made, edges frayed from travel, one corner stained. A single restrained abstract emblem is worked into the cloth - geometric, not figurative, no readable text or lettering. Four views: full upright, full reverse, cloth detail, staff head detail. Physically real and tactile. No jewels, no glow, no magic, no decorative shine."
+  },
+  {
+    "label": "PRP-012 ritual vessel",
+    "target": "SHM-PRP-012-VESSEL-RITUAL",
+    "variant": "V01",
+    "params": { "aspect_ratio": "16:9", "resolution": "2k" },
+    "prompt": "Prop turnaround sheet on neutral grey seamless, soft even museum light. A ritual vessel of plain dark stone and dull metal: a heavy wide-bellied lidded jar roughly two hands across, with a low foot and simple incised banding around the shoulder. Visibly weighty, made to be carried with two hands. Surfaces are worn, matte and unpolished. Four views: front, reverse, lid detail, base detail. Physically real and tactile - an object of office, not treasure. No jewels, no coins, no gilding, no glow, no decorative sheen."
+  },
+  {
+    "label": "PRP-013 power insignia",
+    "target": "SHM-PRP-013-INSIGNIA-POWER",
+    "variant": "V01",
+    "params": { "aspect_ratio": "16:9", "resolution": "2k" },
+    "prompt": "Prop turnaround sheet on neutral grey seamless, soft even museum light. A restrained metal insignia of political authority: a flat hand-sized plaque of dark bronze on a short heavy chain, its face bearing one austere abstract geometric device. Edges worn smooth from handling, metal dull and slightly pitted. Four views: face, reverse, edge profile, chain detail. Physically real and tactile - the object stands for an office being transferred. No jewels, no enamel, no gilding, no glow, no magic."
+  },
+  {
+    "label": "PRP-014 Jamshid regalia",
+    "target": "SHM-PRP-014-REGALIA-JAMSHID",
+    "variant": "V01",
+    "refs": ["@CHR-002/V01"],
+    "params": { "aspect_ratio": "16:9", "resolution": "2k" },
+    "prompt": "Prop layout sheet on neutral grey seamless, soft even museum light. The droppable royal elements of Jamshid, laid out separately and unworn: a gold five-point crown, a heavy shoulder mantle in red and cream block-print cloth, a wide ceremonial belt with a worked gold buckle, and two gold arm rings. Each object is shown clearly apart from the others so it can be tracked as it is shed. The gold is soft, dull and worn rather than bright. Physically real and tactile. No jewels beyond the metal itself, no glow, no magic, no decorative shine."
+  },
+  {
+    "label": "PRP-015 mount harness",
+    "target": "SHM-PRP-015-HARNESS-MOUNT",
+    "variant": "V01",
+    "refs": ["@CRT-001/V01"],
+    "params": { "aspect_ratio": "16:9", "resolution": "2k" },
+    "prompt": "Prop turnaround sheet on neutral grey seamless, soft even museum light. A working saddle and harness sized for a very large terrestrial riding animal: thick oiled leather straps, heavy iron buckles and rings, a broad padded seat pad in coarse dark wool, and a chest strap with a simple restraining rein. Everything is functional, heavily used and repaired in places - stitching visible, leather scuffed and darkened with wear. Four views: assembled from the side, assembled from above, buckle detail, underside padding detail. Physically real and tactile. No ornament, no jewels, no glow, no magic."
+  },
+
+  {
+    "label": "CHR-002 V02 Jamshid in escape",
+    "target": "SHM-CHR-002-JAMSHID",
+    "variant": "V02",
+    "refs": ["@CHR-002/V01"],
+    "params": { "aspect_ratio": "16:9", "resolution": "2k" },
+    "prompt": "Character plate. The SAME figure as the reference - identical white mask carved with gold sunburst rosettes, identical long straight black hair, identical face and proportions - but now stripped of royal signs for flight. The crown is gone. The heavy block-print outer robe is gone, leaving the plain under-layer in bone and faded rose, belted simply and marked with dust. Posture is lower and tighter than the royal plate: weight forward, shoulders drawn in, one hand closed. Front three-quarter and back three-quarter views on neutral grey seamless, plus a detail of the bare head without the crown. The mask itself must not be redesigned. Physically real and tactile, muted palette. No magic, no glow, no heroic posing."
+  },
+  {
+    "label": "CRT-001 V02 standing bipedal mount",
+    "target": "SHM-CRT-001-RIDING-BEAST-PALE-BEAKED",
+    "variant": "V02",
+    "refs": ["@CRT-001/V01"],
+    "params": { "aspect_ratio": "16:9", "resolution": "2k" },
+    "prompt": "Creature plate. The SAME animal as the reference - identical pale bone-coloured beak, identical white and pale blue shaggy coat, identical single short horn and eye - now shown STANDING UPRIGHT ON TWO POWERFUL HIND LEGS, with much smaller forelimbs held close to the body. Heavy digitigrade bird-like legs with broad three-toed feet carry the whole weight. It is entirely terrestrial and flightless: NO WINGS of any kind, no feathered arms, no resemblance to a simurgh or any flying creature. Tall enough for a person to ride, with a crimson embroidered blanket across the back. Shown full body in profile on open ground, and a second view kneeling low on folded hind legs to be mounted. Physically real and tactile, natural overcast light. No magic, no glow, no wings."
+  }
+]

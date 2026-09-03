@@ -37,6 +37,9 @@ export interface StagingSidecar {
   parentJobId: string | null
   hfJobId: string
   attempt: number
+  /** draft = cheap preview; approving it queues the final. null for stills. */
+  stage: 'draft' | 'final' | null
+  label: string | null
   target: string
   variant: string
   model: string

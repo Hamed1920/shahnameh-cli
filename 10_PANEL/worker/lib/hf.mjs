@@ -99,34 +99,44 @@ export async function isAuthenticated() {
 }
 
 /**
- * Pull result URLs out of a response whose exact schema we have not yet seen
- * against a live account.
+ * Pull the deliverable URLs out of a generate response.
  *
- * Deliberately tolerant: it walks the whole tree for likely keys and for any
- * media-looking URL. The raw response is always stored in the sidecar, so when
- * the real shape is known this can be tightened to read the exact field.
+ * Verified schema (2026-09-03, live account). The response is an array of job
+ * objects, each shaped:
+ *   { id, job_type, status, result_url, min_result_url, params: {...} }
+ *
+ * Only `result_url` is the deliverable. Two things must NOT be downloaded:
+ *   - `min_result_url`, a small webp thumbnail of the same image
+ *   - anything under `params` — that echoes back the INPUT reference images we
+ *     supplied, which would land our own reference in the review queue as if it
+ *     were a new candidate
+ *
+ * A broad tree-walk picked up both. This reads the exact field instead.
  */
 export function extractResultUrls(json) {
-  const urls = new Set()
-  const KEYS = /^(result_url|resultUrl|url|output_url|outputUrl|file_url|download_url|src)$/i
-  const MEDIA = /\.(png|jpe?g|webp|gif|mp4|mov|webm)(\?|$)/i
+  const urls = []
+  const push = (u) => { if (typeof u === 'string' && /^https?:\/\//i.test(u) && !urls.includes(u)) urls.push(u) }
 
-  const walk = (node) => {
-    if (node == null) return
-    if (typeof node === 'string') {
-      if (/^https?:\/\//i.test(node) && MEDIA.test(node)) urls.add(node)
-      return
-    }
-    if (Array.isArray(node)) { node.forEach(walk); return }
-    if (typeof node === 'object') {
-      for (const [k, v] of Object.entries(node)) {
-        if (typeof v === 'string' && KEYS.test(k) && /^https?:\/\//i.test(v)) urls.add(v)
-        else walk(v)
+  const fromJob = (job) => {
+    if (!job || typeof job !== 'object') return
+    if (job.status && String(job.status).toLowerCase() !== 'completed') return
+    push(job.result_url ?? job.resultUrl)
+    // Some job types return several outputs in one job.
+    for (const key of ['result_urls', 'resultUrls', 'results', 'outputs']) {
+      const v = job[key]
+      if (Array.isArray(v)) {
+        for (const item of v) {
+          if (typeof item === 'string') push(item)
+          else if (item && typeof item === 'object') push(item.result_url ?? item.url)
+        }
       }
     }
   }
-  walk(json)
-  return [...urls]
+
+  if (Array.isArray(json)) json.forEach(fromJob)
+  else fromJob(json)
+
+  return urls
 }
 
 export function extractJobId(json) {
@@ -168,11 +178,26 @@ export async function estimateCost(model, params) {
   return { credits: find(r.json), raw: r.json ?? r.stdout }
 }
 
+/**
+ * Build argv from a params object.
+ *
+ * Array-valued params become REPEATED flags, which is what the CLI expects for
+ * image_references / video_references / audio_references. Comma-joining them
+ * into a single flag silently produces one bogus reference instead of several.
+ */
 export function paramsToArgs(params) {
   const args = []
   for (const [k, v] of Object.entries(params ?? {})) {
     if (v === undefined || v === null || v === '') continue
-    args.push(k.startsWith('--') ? k : `--${k}`, String(v))
+    const flag = k.startsWith('--') ? k : `--${String(k).replace(/_/g, '-')}`
+    if (Array.isArray(v)) {
+      for (const item of v) {
+        if (item === undefined || item === null || item === '') continue
+        args.push(flag, String(item))
+      }
+    } else {
+      args.push(flag, String(v))
+    }
   }
   return args
 }
