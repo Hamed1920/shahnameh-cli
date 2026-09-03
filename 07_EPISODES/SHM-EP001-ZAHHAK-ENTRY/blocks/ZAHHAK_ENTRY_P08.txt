@@ -1,0 +1,32 @@
+PROMPT 08  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_IRANIAN_NOBLES: [MENTION IRANIAN NOBLES GROUP REFERENCE]
+— CHAR_IRANIAN_RIDERS: [MENTION IRANIAN RIDERS REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_MOUNTAIN_ROUTE: [MENTION MOUNTAIN ROUTE]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_ROYAL_SERPENT_STAFF: [MENTION ROYAL SERPENT STAFF]
+— PROP_IRANIAN_BANNER: [MENTION IRANIAN ROYAL BANNER]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+Preserve the same travel dust, weak crosswind, group order and Zahhak’s reliance on the new staff.
+
+SHOT 1 — GAIT AGAINST TERRAIN — 0:00–0:05:
+65mm close lateral view of staff, legs and steep gravel. Zahhak completes two slow physical phases of one gait cycle. The staff bites stone; the stronger foot advances; the lame side follows with visible weight transfer. Clothing grazes dust.
+
+SHOT 2 — PROCESSION IN WIDTH — 0:05–0:10:
+24mm very wide rear three-quarter shot across a broad ascending pass. Zahhak leads on foot near the lower left; the path bends through the full horizontal frame and rises toward the upper right. Nobles walk behind; riders trail at irregular distances. The weak banner creates a single restrained color or tonal break.
+
+SHOT 3 — RIDERS WAIT FOR HIM — 0:10–0:15:
+85mm compressed view across the slope. Several horses have already reached a higher turn and stand waiting while Zahhak slowly closes the distance below. One rider looks back, then lowers the gaze. This delay makes Zahhak’s physical limitation real without reducing his authority. End as the city’s distant outer wall first appears beyond the ridge.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Dry wind, staff striking gravel, uneven footsteps, sparse hoof movement, harness strain, horse breathing and no military rhythm.

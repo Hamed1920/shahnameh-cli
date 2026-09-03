@@ -1,0 +1,34 @@
+PROMPT 09  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_IRANIAN_RIDERS: [MENTION IRANIAN RIDERS REFERENCE]
+— CHAR_JAMSHID_ROYAL: [MENTION JAMSHID ROYAL REFERENCE]
+— CHAR_JAMSHID_ATTENDANTS: [MENTION JAMSHID ATTENDANTS REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_IRAN_OUTSKIRTS: [MENTION IRAN OUTSKIRTS]
+— LOC_HALL_OF_COLUMNS: [MENTION EXISTING HALL OF COLUMNS]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_ROYAL_SERPENT_STAFF: [MENTION ROYAL SERPENT STAFF]
+— PROP_JAMSHID_REGALIA: [MENTION JAMSHID REGALIA]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+Zahhak’s group has just revealed the distant Iranian wall. Preserve their direction of travel and the same weather.
+
+SHOT 1 — DUST APPROACHES — 0:00–0:05:
+85mm telephoto landscape. Zahhak’s delegation crosses laterally below the distant Iranian wall, compressed by heatless haze and dust. The riders remain behind the walking figure. No charge. The staff flashes only as dark material, never magical.
+
+SHOT 2 — JAMSHID SEES — 0:05–0:10:
+Match the horizontal dust line to the edge of a high opening inside the unchanged Hall of Columns. 85mm view from behind a foreground column. Jamshid stands in royal dress and sees the distant moving line. His head snaps toward it; one hand clamps the stone edge; breath stops for one beat. The mask never changes.
+
+SHOT 3 — POSTS EMPTY — 0:10–0:15:
+40mm slightly high wide view across the hall. Exactly two attendants quietly abandon separate posts and disappear through opposite side passages. Jamshid turns his torso before his feet catch up, noticing the new empty width around him. The camera drifts backward and a column cuts him toward the edge of frame. End as he steps away from the central axis.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Distant hooves and wind, then interior air, fingers gripping stone, attendants’ receding cloth and footsteps, Jamshid’s shortened breath.

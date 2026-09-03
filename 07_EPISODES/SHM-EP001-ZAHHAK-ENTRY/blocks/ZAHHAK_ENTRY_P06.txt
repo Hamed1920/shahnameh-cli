@@ -1,0 +1,31 @@
+PROMPT 06  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_IRANIAN_NOBLES: [MENTION IRANIAN NOBLES GROUP REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_ZAHHAK_AUDIENCE_HALL: [MENTION ZAHHAK AUDIENCE HALL]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_ZAHHAK_OLD_STAFF: [MENTION ZAHHAK OLD STAFF]
+— PROP_ROYAL_SERPENT_STAFF: [MENTION ROYAL SERPENT STAFF]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+Direct continuation: Zahhak has just begun lifting the old staff; the new staff remains held horizontally by the principal noble.
+
+SHOT 1 — OLD AUTHORITY SET DOWN — 0:00–0:05:
+85mm detail at seat height. Zahhak transfers weight onto the throne arm, lifts the old staff and lays it horizontally on bare stone beside the seat. The movement is slow because he physically depends on it. No attendant helps. The old staff makes one dry impact.
+
+SHOT 2 — THE HANDOVER — 0:05–0:10:
+50mm low three-quarter view close to the principal noble’s hands. Zahhak leans forward, grips the Royal Serpent Staff near its balance point and tests its weight. The noble releases only after Zahhak has control. One natural serpent crosses Zahhak’s forearm but does not touch the staff symbolically.
+
+SHOT 3 — ACCEPTANCE — 0:10–0:15:
+35mm wide horizontal frame. Zahhak plants the new staff vertically and transfers visible body weight onto it, then rises only partway from the seat. His lame side lags. The principal noble bows until his torso is almost parallel to the floor; the others follow unevenly. Zahhak’s chin lifts only a few centimeters. End on the new staff dividing ruler and petitioners.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Old wood or metal scraping stone, one dry impact, glove tightening on the new staff, fabric strain as Zahhak shifts, a firm new staff strike and silence after its decay.

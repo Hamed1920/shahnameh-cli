@@ -1,0 +1,31 @@
+PROMPT 03  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_IRANIAN_NOBLES: [MENTION IRANIAN NOBLES GROUP REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_ZAHHAK_AUDIENCE_HALL: [MENTION ZAHHAK AUDIENCE HALL]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_ZAHHAK_OLD_STAFF: [MENTION ZAHHAK OLD STAFF]
+— PROP_GIFT_BUNDLE: [MENTION LIMITED CEREMONIAL GIFTS]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+Preserve the exact shallow arc, Zahhak’s seated position, old staff placement, gift bearers and light direction from Block 02.
+
+SHOT 1 — FIRST KNEE — 0:00–0:05:
+50mm eye-level lateral composition. The principal noble lowers to one knee first, with visible strain and a small balance correction. Two others follow at different speeds; the remaining nobles bow their torsos and place one hand on the chest. No perfectly synchronized movement.
+
+SHOT 2 — THE COLLECTIVE DECISION — 0:05–0:10:
+35mm wide three-quarter view from near Zahhak’s platform. The kneeling group fills the lower left and center of the horizontal frame while Zahhak’s old staff and one inactive hand occupy the right foreground. One noble raises both empty palms briefly toward him, then lowers them. The gesture communicates request and surrender of authority without dialogue.
+
+SHOT 3 — ZAHHAK DOES NOT ANSWER — 0:10–0:15:
+85mm close view of Zahhak’s masked head, shoulder and serpents. His body remains still. First a serpent slowly turns toward the nobles; only afterward Zahhak’s head rotates a few degrees in the same direction. His breathing remains calm. End on the silence before acceptance.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Fabric tightening, knees contacting stone at different moments, one restrained breath from the petitioners, low hall air and a soft scale crossing heavy clothing.

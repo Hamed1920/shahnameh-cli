@@ -1,0 +1,35 @@
+PROMPT 10  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_IRANIAN_NOBLES: [MENTION IRANIAN NOBLES GROUP REFERENCE]
+— CHAR_JAMSHID_ROYAL: [MENTION JAMSHID ROYAL REFERENCE]
+— CHAR_JAMSHID_ESCAPE: [MENTION JAMSHID ESCAPE REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_HALL_OF_COLUMNS: [MENTION EXISTING HALL OF COLUMNS]
+— LOC_ESCAPE_ROUTE: [MENTION DESCENDING ESCAPE ROUTE]
+— LOC_IRAN_MAIN_GATE: [MENTION IRAN MAIN GATE]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_JAMSHID_REGALIA: [MENTION JAMSHID REGALIA]
+— PROP_ROYAL_SERPENT_STAFF: [MENTION ROYAL SERPENT STAFF]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+Jamshid has moved off the hall’s central axis. Zahhak waits outside the main gate with the accepted delegation.
+
+SHOT 1 — DISCARDING THE SIGN — 0:00–0:05:
+65mm close view beside a narrow side entrance. Jamshid pulls one removable royal element from shoulder or neck and lets it fall rather than placing it. It strikes stone without grandeur. He gathers the remaining costume tight and enters the descending passage. His base identity and mask remain unchanged as the visual state transitions from royal to escape version.
+
+SHOT 2 — OPENED FROM WITHIN — 0:05–0:10:
+Match the fallen object’s horizontal edge to the locking beam of the main Iranian gate lifting from inside. 32mm interior wide shot. Mechanisms and restrained gate workers pull the monumental doors inward. Cold exterior light and dust enter first, revealing Zahhak waiting on foot beyond them. Nothing breaks.
+
+SHOT 3 — FIRST CROSSING — 0:10–0:15:
+50mm low side composition across the threshold. Zahhak waits until the opening is complete, then begins one asymmetrical step into Iran: staff first, strong foot, lame side. Nobles follow several paces back. He never poses or looks upward. End with the new staff planted just inside the gate.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Regalia hitting stone, quick fabric and breath, wooden or metal locking beam, heavy doors opening inward, wind entering, one staff impact inside Iran.

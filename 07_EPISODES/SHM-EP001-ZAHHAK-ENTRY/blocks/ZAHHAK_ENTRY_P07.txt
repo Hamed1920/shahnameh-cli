@@ -1,0 +1,33 @@
+PROMPT 07  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_IRANIAN_NOBLES: [MENTION IRANIAN NOBLES GROUP REFERENCE]
+— CHAR_IRANIAN_RIDERS: [MENTION IRANIAN RIDERS REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_ZAHHAK_AUDIENCE_HALL: [MENTION ZAHHAK AUDIENCE HALL]
+— LOC_ZAHHAK_OUTER_COURT: [MENTION ZAHHAK OUTER COURT]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_ROYAL_SERPENT_STAFF: [MENTION ROYAL SERPENT STAFF]
+— PROP_IRANIAN_BANNER: [MENTION IRANIAN ROYAL BANNER]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+The old staff remains abandoned beside the seat and must never appear again. Zahhak now uses only the Royal Serpent Staff.
+
+SHOT 1 — FIRST STEP AS CHOSEN KING — 0:00–0:05:
+50mm lateral tracking view. Zahhak completes one full asymmetrical gait cycle away from the seat: new staff first, stronger foot, lame side dragged forward. He turns by moving the staff before shoulder and head. The nearest nobles remain low and shift backward on their knees to clear his path.
+
+SHOT 2 — THE HUMAN CORRIDOR — 0:05–0:10:
+28mm wide frontal retreat through the audience hall. Zahhak advances slowly down the center while the nobles stand at different moments and separate toward both horizontal edges, forming a corridor. No one cheers or raises arms. Serpents adjust independently with every uneven step.
+
+SHOT 3 — OUTER COURT — 0:10–0:15:
+35mm exterior side view. Zahhak crosses into cold daylight and stops beside waiting riders. The principal noble lifts the Iranian banner, now carrying it behind rather than before him. Horses react to the serpents with one restrained sidestep, controlled by riders. End as Zahhak plants the staff toward the rising road.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Staff-foot gait rhythm, knees and clothing shifting, hall reverb opening into exterior wind, horse leather and one nervous hoof adjustment.

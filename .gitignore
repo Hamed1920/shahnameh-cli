@@ -21,10 +21,19 @@
 !/10_PANEL/
 !/.claude/
 
-# the episode folder template is structure/docs, not assets
+# Episode folders: the TEXT is project metadata (prompts, shotlists, asset maps)
+# and belongs in the repo. The rendered video and the binary source documents do
+# not. The global media rules below still apply on top of this.
 !/07_EPISODES/
-/07_EPISODES/*
-!/07_EPISODES/_TEMPLATE/
+!/07_EPISODES/**/
+!/07_EPISODES/**/*.md
+!/07_EPISODES/**/*.txt
+!/07_EPISODES/**/*.json
+!/07_EPISODES/**/*.csv
+*.docx
+*.doc
+*.pptx
+*.xlsx
 
 # --- asset folders stay ignored, listed here only for readers ---------
 #   01_CHARACTERS  02_GROUPS   03_LOCATIONS  04_PROPS  05_CREATURES

@@ -1,0 +1,33 @@
+PROMPT 11  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_IRANIAN_NOBLES: [MENTION IRANIAN NOBLES GROUP REFERENCE]
+— CHAR_JAMSHID_ESCAPE: [MENTION JAMSHID ESCAPE REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_ROYAL_CAUSEWAY: [MENTION ROYAL CAUSEWAY]
+— LOC_ESCAPE_ROUTE: [MENTION DESCENDING ESCAPE ROUTE]
+— LOC_LOWER_GATE_MOUNT: [MENTION LOWER GATE AND MOUNT AREA]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_ROYAL_SERPENT_STAFF: [MENTION ROYAL SERPENT STAFF]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+Zahhak has just crossed the main threshold. Jamshid is already descending in the escape version of his unchanged identity.
+
+SHOT 1 — ASCENDING CAUSEWAY — 0:00–0:05:
+35mm controlled low three-quarter tracking shot. Zahhak advances two heavy phases up the royal ramp, staff first. Nobles follow lower in frame and spread across the width without crowding him. Serpents move independently with gait and weak wind. The camera retreats upward at his exact pace.
+
+SHOT 2 — DESCENDING STAIR — 0:05–0:10:
+Match Zahhak’s staff landing to Jamshid’s hand striking a rough stone rail. 28mm close handheld camera retreats below him down narrow stairs. Jamshid takes several quick downward steps, one sideways to recover balance. His hand drags along the wall; shoulders pitch forward; the camera briefly loses part of him behind a foreground corner.
+
+SHOT 3 — TWO DIRECTIONS — 0:10–0:15:
+Intercut two short physically matched fragments: 2.5 seconds of Zahhak’s staff and lame gait rising across broad palace steps, then 2.5 seconds of Jamshid’s feet dropping down the last service ramp toward the lower gate. Preserve opposing screen direction and elevation. End on Jamshid seeing the huge kneeling area and flightless mount ahead, but do not mount yet.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Slow staff-foot rhythm and distant followers, hard cut to quick breath and scraping hand, then alternating step impacts with no score or artificial transition sound.

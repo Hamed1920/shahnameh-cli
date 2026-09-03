@@ -1,0 +1,33 @@
+PROMPT 04  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_IRANIAN_NOBLES: [MENTION IRANIAN NOBLES GROUP REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_ZAHHAK_AUDIENCE_HALL: [MENTION ZAHHAK AUDIENCE HALL]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_IRANIAN_BANNER: [MENTION IRANIAN ROYAL BANNER]
+— PROP_RITUAL_VESSEL: [MENTION RITUAL VESSEL]
+— PROP_POWER_INSIGNIA: [MENTION POWER INSIGNIA]
+— PROP_ROYAL_SERPENT_STAFF: [MENTION ROYAL SERPENT STAFF]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+All nobles remain kneeling or bowed. Zahhak stays seated with the old staff. Preserve the same hall, light and group positions.
+
+SHOT 1 — THE CLOTH OPENS — 0:00–0:05:
+65mm low side close-up across the stone floor. Two nobles unfold one dark cloth laterally from center toward both sides, revealing a simple stone-or-metal vessel and one restrained metal insignia. Their hands move carefully because the objects are heavy, not sacred. No jewels, coins or decorative glow.
+
+SHOT 2 — THE BANNER LOWERED — 0:05–0:10:
+50mm diagonal composition using the horizontal frame. Another noble lowers the official Iranian banner from upright to a near-horizontal resting position before Zahhak. The cloth spreads across the middle ground like a surrendered line. Zahhak watches from the far right, still elevated but not heroic.
+
+SHOT 3 — THE IMPORTANT OBJECT — 0:10–0:15:
+85mm close detail as the principal bearer unwraps the Royal Serpent Staff last and raises it horizontally on both open hands. Its design is long, dark and minimal, with one abstract serpent motif; no dragon head, jewels, light or magic. The camera performs a restrained rack focus from tense fingers to the serpent motif. End before Zahhak reaches.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Heavy cloth across stone, vessel and insignia making quiet dry contact, banner fabric unfolding, restrained breathing and the slight creak of the staff’s weight.

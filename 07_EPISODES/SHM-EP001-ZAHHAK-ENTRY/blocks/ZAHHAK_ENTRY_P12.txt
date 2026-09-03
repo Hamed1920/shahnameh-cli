@@ -1,0 +1,63 @@
+PROMPT 12  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_JAMSHID_ESCAPE: [MENTION JAMSHID ESCAPE REFERENCE]
+— CREATURE_JAMSHID_MOUNT: [MENTION TWO-LEGGED FLIGHTLESS MOUNT REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_HALL_OF_COLUMNS: [MENTION EXISTING HALL OF COLUMNS]
+— LOC_JAMSHID_THRONE: [MENTION EXISTING JAMSHID THRONE]
+— LOC_LOWER_GATE_MOUNT: [MENTION LOWER GATE AND MOUNT AREA]
+— LOC_FINAL_DESERT: [MENTION FINAL DESERT LANDSCAPE]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_ROYAL_SERPENT_STAFF: [MENTION ROYAL SERPENT STAFF]
+— PROP_MOUNT_HARNESS: [MENTION MOUNT HARNESS]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+Jamshid has reached the mount area. Zahhak continues upward toward the unchanged Hall of Columns and throne.
+
+SHOT 1 — UNCHANGED HALL — 0:00–0:04:
+24mm restrained frontal wide shot in the exact existing Hall of Columns. Zahhak enters at one horizontal edge and advances toward the unchanged throne on the central axis, completing one heavy gait cycle. No followers enter. Cut on the staff striking the first throne step.
+
+SHOT 2 — MOUNT KNEELS — 0:04–0:08:
+Match the impact to the enormous two-legged flightless mount lowering beside Jamshid. 35mm side view. The 2.5-to-3-meter terrestrial animal is heavy and plausible, with massive legs, weighty beak or muzzle, coarse feathers and areas of skin. It has no usable wings, never flies and never resembles Simurgh, griffin or hippogriff. It bends until the functional saddle reaches Jamshid. He swings on in one practical movement and leans forward; no climb or pose.
+
+SHOT 3 — NEW OCCUPANT — 0:08–0:11:
+50mm centered frontal view of the exact unchanged Jamshid throne. Zahhak lowers himself using the staff to control his lame side, plants it and becomes still. No crown and no victorious head lift. One serpent crosses the throne arm while another turns toward the empty hall.
+
+SHOT 4 — SMALL IN THE LAND — 0:11–0:15:
+Extreme wide static 24mm horizontal desert landscape. Jamshid and the mount run away along descending ground, already small in the lower third. Heavy terrestrial two-legged strides only; no leap, glide or flight. Dry wind softens their track as they become one moving dark point. Cut to black before complete disappearance.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Staff on throne step, heavy animal joints and harness leather, strained breath, cloth and serpent scales as Zahhak sits, then open desert wind and receding two-legged footfalls. Wind is the last sound; cut to silence.
+
+۵. دستور اجرای مستقیم برای Claude / Higgsfield CLI
+EXECUTION INSTRUCTION FOR CLAUDE / HIGGSFIELD CLI
+
+1. Process PROMPT 01 through PROMPT 12 strictly in order.
+2. Every generation must be horizontal 16:9. Reject any vertical 9:16 composition or vertical crop.
+3. Replace every [MENTION ...] placeholder with the exact matching uploaded asset before submission.
+4. Generate each 15-second block separately and name outputs ZAHHAK_ENTRY_P01 through ZAHHAK_ENTRY_P12.
+5. Keep identities, masks, costumes, body proportions, architecture and props locked across all accepted blocks.
+6. From PROMPT 06 onward, Zahhak uses only PROP_ROYAL_SERPENT_STAFF. Never restore the old staff.
+7. Keep Zahhak exactly 178 cm, permanently lame and visibly staff-dependent.
+8. Keep five to ten natural black serpents alive and independently moving; reject statues, dragons or Medusa forms.
+9. Preserve the exact existing Hall of Columns and Jamshid throne; no redesign.
+10. Reject any military conquest, broken gate, cheering crowd, heroic escape, flying mount or ruined Iranian city.
+11. If one block fails continuity, regenerate only that block without silently changing assets or prompt meaning.
+12. After all accepted generations, assemble the full 180-second master; editorial selection to approximately 90 seconds happens afterward.
+۶. معیار رد و قبول خروجی
+قاب دقیقاً افقی 16:9 است و میزانسن برای عرض تصویر طراحی شده.
+هیئت ایرانی محتاج و جدی است؛ نه ارتش، نه جشن و نه صف قهرمانانه.
+لحظه‌ی مرکزی بلاک ۶ با جایگزینی واقعی دو عصا روشن است.
+لنگیدن ضحاک و حرکت مستقل مارها در تمام نماهای مربوط حفظ شده.
+ورود ضحاک پذیرفته‌شدن سیاسی است؛ دروازه شکسته نمی‌شود.
+مسیر ضحاک صعودی و مسیر جمشید نزولی باقی می‌ماند.
+تخت و Hall همان اَسِت‌های قبلی‌اند؛ موجود جمشید کاملاً زمینی است.
+۱۲ بلاک جداگانه، هرکدام حداکثر ۱۵ ثانیه و بدون دیالوگ، نریشن یا موسیقی تحویل شده‌اند.

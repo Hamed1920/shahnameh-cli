@@ -1,0 +1,597 @@
+SHAHNAMEH MODERN
+پرامپت‌های کامل اپیزود ورود ضحاک به ایران
+نسخه‌ی افقی ۱۶:۹ — مستر سه‌دقیقه‌ای برای انتخاب و تدوین نسخه‌ی نهایی
+قاب
+افقی سینمایی — 16:9
+مدت مستر
+۱۲ بلاک × ۱۵ ثانیه = ۱۸۰ ثانیه / ۳ دقیقه
+هدف تدوین
+انتخاب حدود ۹۰ ثانیه از مستر سه‌دقیقه‌ای پس از بررسی خروجی‌ها
+کاربرد
+Claude / Higgsfield CLI — Assign رفرنس و Generation بلاک‌به‌بلاک
+اصل مرکزی: ایران فتح نمی‌شود؛ بزرگان ایران خودشان ضحاک را دعوت و مشروع می‌کنند. ضحاک در قاب‌های عریض آرام، مرکزی و صعودی می‌شود؛ جمشید از مرکز بیرون می‌افتد، سریع‌تر حرکت می‌کند و پیوسته نزول می‌کند.
+
+۱. رجیستری ثابت اَسِت‌ها و جای منشن رفرنس
+Asset IDها باید در Claude و CLI بدون تغییر حفظ شوند. هر عبارت داخل کروشه با منشن واقعی همان تصویر جایگزین شود.
+Asset ID
+تعریف ثابت
+جای رفرنس
+CHAR_ZAHHAK
+ضحاک نهایی؛ ۱۷۸ سانتی‌متر، ماسک و لباس ثابت، ۵ تا ۱۰ مار سیاه طبیعی
+[MENTION ZAHHAK FINAL]
+CHAR_JAMSHID_ROYAL
+جمشید در وضعیت سلطنتی ابتدای اپیزود
+[MENTION JAMSHID ROYAL]
+CHAR_JAMSHID_ESCAPE
+همان جمشید در فرار؛ نشانه‌های سلطنتی کمتر
+[MENTION JAMSHID ESCAPE]
+CHAR_IRANIAN_NOBLES
+۵ تا ۸ بزرگ و سردار ایرانی با Variation
+[MENTION IRANIAN NOBLES]
+CHAR_IRANIAN_RIDERS
+سواران همراه سیاسی؛ نه ارتش مهاجم
+[MENTION IRANIAN RIDERS]
+CHAR_JAMSHID_ATTENDANTS
+خادمان و محافظان جمشید
+[MENTION JAMSHID ATTENDANTS]
+CREATURE_JAMSHID_MOUNT
+موجود دوپای عظیم، زمینی و کاملاً بدون پرواز
+[MENTION FLIGHTLESS MOUNT]
+لوکیشن‌های مرجع
+Asset ID
+تعریف ثابت
+جای رفرنس
+LOC_ZAHHAK_APPROACH
+دشت و مسیر منتهی به قلمرو ضحاک
+[MENTION ZAHHAK APPROACH]
+LOC_ZAHHAK_AUDIENCE_HALL
+تالار سرد و سنگی ملاقات
+[MENTION ZAHHAK HALL]
+LOC_ZAHHAK_OUTER_COURT
+حیاط بیرونی و محل انتظار سواران
+[MENTION OUTER COURT]
+LOC_MOUNTAIN_ROUTE
+گردنه و جاده‌ی صعودی به ایران
+[MENTION MOUNTAIN ROUTE]
+LOC_IRAN_OUTSKIRTS
+حاشیه‌ی سالم و زیست‌پذیر شهر ایران
+[MENTION IRAN OUTSKIRTS]
+LOC_IRAN_MAIN_GATE
+دروازه‌ی اصلی که از داخل باز می‌شود
+[MENTION MAIN GATE]
+LOC_ROYAL_CAUSEWAY
+رمپ و پلکان صعودی مرکز قدرت
+[MENTION ROYAL CAUSEWAY]
+LOC_HALL_OF_COLUMNS
+همان Hero Location جمشید؛ بدون redesign
+[MENTION HALL OF COLUMNS]
+LOC_JAMSHID_THRONE
+همان تخت جمشید؛ بدون redesign
+[MENTION JAMSHID THRONE]
+LOC_ESCAPE_ROUTE
+راهرو و پلکان نزولی فرار
+[MENTION ESCAPE ROUTE]
+LOC_LOWER_GATE_MOUNT
+دروازه فرعی و محل موجود سواری
+[MENTION LOWER GATE]
+LOC_FINAL_DESERT
+بیابان نهایی با افق باز
+[MENTION FINAL DESERT]
+پراپ‌های ثابت
+PROP_ROYAL_SERPENT_STAFF — عصای بلند و تیره با نقش انتزاعی مار؛ بدون اژدها، جادو یا نور.
+PROP_ZAHHAK_OLD_STAFF — عصای قدیمی؛ فقط تا پیش از بلاک ۶ دیده می‌شود.
+PROP_IRANIAN_BANNER / PROP_RITUAL_VESSEL / PROP_POWER_INSIGNIA — سه هدیه‌ی محدود و سیاسی، نه گنج.
+PROP_JAMSHID_REGALIA — عناصر قابل رهاکردن در شروع فرار.
+PROP_MOUNT_HARNESS — زین و مهار کاملاً کاربردی برای موجود زمینی.
+
+۲. قوانین غیرقابل‌مذاکره‌ی قاب و Continuity
+تمام خروجی‌ها افقی و دقیقاً 16:9 هستند؛ هیچ Composition عمودی، Crop عمودی یا زبان بصری Reels وجود ندارد.
+قاب عریض برای معماری، فاصله‌ی سیاسی، حرکت جانبی، خطوط صعود و نزول و فضای منفی استفاده شود.
+از بلاک ۶ به بعد فقط Royal Serpent Staff در دست ضحاک است و عصای قدیمی هرگز برنمی‌گردد.
+دروازه‌ی ایران از داخل باز می‌شود؛ ورود ضحاک فتح نظامی، نبرد یا Victory Montage نیست.
+ایران پیش از ورود ضحاک سالم، زیست‌پذیر و تا حدی سبز است؛ ویرانه‌ی پساآخرالزمانی نساز.
+ترس جمشید فقط از بدن، دست، شانه، تنفس و ریتم قدم منتقل می‌شود؛ ماسک صورت بازی نمی‌کند.
+موجود سواری جمشید زمینی و Flightless است؛ زانو می‌زند و هیچ شباهتی به سیمرغ ندارد.
+۳. نقشه‌ی سه‌دقیقه‌ای اپیزود
+بلاک
+زمان
+کارکرد روایی
+۱
+00:00–00:15
+رسیدن هیئت به قلمرو ضحاک
+۲
+00:15–00:30
+ورود به تالار
+۳
+00:30–00:45
+زانو زدن و خواهش جمعی
+۴
+00:45–01:00
+آشکارشدن هدایا
+۵
+01:00–01:15
+مکث و سنجش ضحاک
+۶
+01:15–01:30
+پذیرش عصای مارنقش
+۷
+01:30–01:45
+خروج ضحاک با هیئت
+۸
+01:45–02:00
+حرکت در گردنه
+۹
+02:00–02:15
+نزدیک‌شدن / هراس جمشید
+۱۰
+02:15–02:30
+رهاکردن شاهی / بازشدن دروازه
+۱۱
+02:30–02:45
+صعود ضحاک / نزول جمشید
+۱۲
+02:45–03:00
+تخت / موجود سواری / بیابان
+
+۴.1  بلاک ۱ — بزرگان ایران به قلمرو ضحاک می‌رسند
+خروجی مورد انتظار
+پیش از دیدار، هیئت ایرانی را در مقیاس سرزمین می‌بینیم: نه ارتش مهاجم و نه کاروان جشن. آن‌ها از چند مسیر به یک مقصد سرد می‌رسند و انتخاب سیاسی‌شان از همان فاصله حس می‌شود.
+PROMPT 01  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_IRANIAN_NOBLES: [MENTION IRANIAN NOBLES GROUP REFERENCE]
+— CHAR_IRANIAN_RIDERS: [MENTION IRANIAN RIDERS REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_ZAHHAK_APPROACH: [MENTION APPROACH TO ZAHHAK TERRITORY]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_IRANIAN_BANNER: [MENTION IRANIAN ROYAL BANNER]
+— PROP_GIFT_BUNDLE: [MENTION LIMITED CEREMONIAL GIFTS]
+
+SHOT 1 — CONVERGENCE — 0:00–0:07:
+24mm extreme wide static view across a cold rocky plain. Two small groups of Iranian riders and nobles enter from opposite horizontal edges and converge on the same distant stone road. The wide frame must show the empty land between them before they meet. Their spacing is irregular and tired; banners hang low in weak crosswind. No military formation and no raised weapons.
+
+SHOT 2 — THE FINAL APPROACH — 0:07–0:15:
+50mm lateral telephoto observation from behind foreground rock. The joined delegation moves left to right toward Zahhak’s severe stone complex in the far background. A principal noble walks beside a pack animal carrying only three to five wrapped ceremonial gifts. Riders slow as the ground rises. The camera pans only enough to keep them in frame, arriving slightly late and allowing bodies to overlap naturally. End as the first riders stop before the outer threshold.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Dry wind, dispersed hooves, harness leather, restrained fabric and distant stone resonance. No chant, horns or drums.
+
+۴.2  بلاک ۲ — عبور هیئت از آستانه و ورود به تالار
+خروجی مورد انتظار
+هیئت از فضای باز وارد معماری ضحاک می‌شود. عرض قاب افقی برای نشان دادن کوچک‌شدن آدم‌ها زیر سنگ و فاصله‌ی زیاد آنان تا سکوی ضحاک استفاده می‌شود.
+PROMPT 02  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_IRANIAN_NOBLES: [MENTION IRANIAN NOBLES GROUP REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_ZAHHAK_AUDIENCE_HALL: [MENTION ZAHHAK AUDIENCE HALL]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_ZAHHAK_OLD_STAFF: [MENTION ZAHHAK OLD STAFF]
+— PROP_GIFT_BUNDLE: [MENTION LIMITED CEREMONIAL GIFTS]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+The delegation has just stopped outside. Keep the same clothing wear, gift count, weak wind and travel dust.
+
+SHOT 1 — THRESHOLD — 0:00–0:05:
+32mm low view from inside the dark entrance looking outward. The first two nobles cross from cold exterior light into shadow, followed by the others. Their eyes need time to adjust; one hand briefly touches the stone wall. The gifts pass close to the lens and partially block the frame.
+
+SHOT 2 — DISTANCE TO POWER — 0:05–0:10:
+24mm symmetrical-but-imperfect horizontal wide shot from the rear of the hall. Zahhak sits far across the width on a low severe platform, almost motionless, old staff planted beside his stronger leg. The nobles enter as a compressed group, then spread laterally into a restrained shallow arc. Empty stone dominates between them and Zahhak.
+
+SHOT 3 — STOPPING LINE — 0:10–0:15:
+65mm side view compressed across the line of nobles. Their feet stop at slightly different moments. One gift bearer takes half a step too far, notices, and returns into line. Zahhak remains soft in the distant background while one living serpent turns toward the new arrivals. End before anyone kneels.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Exterior wind narrows into interior room tone, shoes crossing the threshold, gifts brushing cloth, one uneven last footstep and subtle serpent scales.
+
+۴.3  بلاک ۳ — خواهش جمعی و زانو زدن مقابل ضحاک
+خروجی مورد انتظار
+فروتنی باید انسانی و نامنظم باشد، نه کورئوگرافی درباری. ضحاک با کمترین حرکت بیشترین وزن را دارد؛ بزرگان خودشان فاصله‌ی قدرت را می‌سازند.
+PROMPT 03  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_IRANIAN_NOBLES: [MENTION IRANIAN NOBLES GROUP REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_ZAHHAK_AUDIENCE_HALL: [MENTION ZAHHAK AUDIENCE HALL]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_ZAHHAK_OLD_STAFF: [MENTION ZAHHAK OLD STAFF]
+— PROP_GIFT_BUNDLE: [MENTION LIMITED CEREMONIAL GIFTS]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+Preserve the exact shallow arc, Zahhak’s seated position, old staff placement, gift bearers and light direction from Block 02.
+
+SHOT 1 — FIRST KNEE — 0:00–0:05:
+50mm eye-level lateral composition. The principal noble lowers to one knee first, with visible strain and a small balance correction. Two others follow at different speeds; the remaining nobles bow their torsos and place one hand on the chest. No perfectly synchronized movement.
+
+SHOT 2 — THE COLLECTIVE DECISION — 0:05–0:10:
+35mm wide three-quarter view from near Zahhak’s platform. The kneeling group fills the lower left and center of the horizontal frame while Zahhak’s old staff and one inactive hand occupy the right foreground. One noble raises both empty palms briefly toward him, then lowers them. The gesture communicates request and surrender of authority without dialogue.
+
+SHOT 3 — ZAHHAK DOES NOT ANSWER — 0:10–0:15:
+85mm close view of Zahhak’s masked head, shoulder and serpents. His body remains still. First a serpent slowly turns toward the nobles; only afterward Zahhak’s head rotates a few degrees in the same direction. His breathing remains calm. End on the silence before acceptance.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Fabric tightening, knees contacting stone at different moments, one restrained breath from the petitioners, low hall air and a soft scale crossing heavy clothing.
+
+۴.4  بلاک ۴ — هدایا یکی‌یکی در عرض قاب آشکار می‌شوند
+خروجی مورد انتظار
+هدایا محدود، سنگین و سیاسی‌اند؛ نه گنج فانتزی. معرفی عصای مارنقش در پایان بلاک انجام می‌شود تا اهمیتش از بقیه جدا شود.
+PROMPT 04  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_IRANIAN_NOBLES: [MENTION IRANIAN NOBLES GROUP REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_ZAHHAK_AUDIENCE_HALL: [MENTION ZAHHAK AUDIENCE HALL]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_IRANIAN_BANNER: [MENTION IRANIAN ROYAL BANNER]
+— PROP_RITUAL_VESSEL: [MENTION RITUAL VESSEL]
+— PROP_POWER_INSIGNIA: [MENTION POWER INSIGNIA]
+— PROP_ROYAL_SERPENT_STAFF: [MENTION ROYAL SERPENT STAFF]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+All nobles remain kneeling or bowed. Zahhak stays seated with the old staff. Preserve the same hall, light and group positions.
+
+SHOT 1 — THE CLOTH OPENS — 0:00–0:05:
+65mm low side close-up across the stone floor. Two nobles unfold one dark cloth laterally from center toward both sides, revealing a simple stone-or-metal vessel and one restrained metal insignia. Their hands move carefully because the objects are heavy, not sacred. No jewels, coins or decorative glow.
+
+SHOT 2 — THE BANNER LOWERED — 0:05–0:10:
+50mm diagonal composition using the horizontal frame. Another noble lowers the official Iranian banner from upright to a near-horizontal resting position before Zahhak. The cloth spreads across the middle ground like a surrendered line. Zahhak watches from the far right, still elevated but not heroic.
+
+SHOT 3 — THE IMPORTANT OBJECT — 0:10–0:15:
+85mm close detail as the principal bearer unwraps the Royal Serpent Staff last and raises it horizontally on both open hands. Its design is long, dark and minimal, with one abstract serpent motif; no dragon head, jewels, light or magic. The camera performs a restrained rack focus from tense fingers to the serpent motif. End before Zahhak reaches.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Heavy cloth across stone, vessel and insignia making quiet dry contact, banner fabric unfolding, restrained breathing and the slight creak of the staff’s weight.
+
+۴.5  بلاک ۵ — ضحاک پیشنهاد شاهی را می‌سنجد
+خروجی مورد انتظار
+این بلاک مکث است. ضحاک عجله ندارد؛ نگاه او از هدایا عبور می‌کند و روی عصای مارنقش می‌ماند. بزرگان زیر وزنِ انتظار فرسوده می‌شوند.
+PROMPT 05  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_IRANIAN_NOBLES: [MENTION IRANIAN NOBLES GROUP REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_ZAHHAK_AUDIENCE_HALL: [MENTION ZAHHAK AUDIENCE HALL]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_ZAHHAK_OLD_STAFF: [MENTION ZAHHAK OLD STAFF]
+— PROP_ROYAL_SERPENT_STAFF: [MENTION ROYAL SERPENT STAFF]
+— PROP_IRANIAN_BANNER: [MENTION IRANIAN ROYAL BANNER]
+— PROP_RITUAL_VESSEL: [MENTION RITUAL VESSEL]
+— PROP_POWER_INSIGNIA: [MENTION POWER INSIGNIA]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+The Royal Serpent Staff remains horizontal on the principal noble’s raised hands. Preserve all kneeling positions and exposed gifts.
+
+SHOT 1 — HELD WEIGHT — 0:00–0:05:
+85mm shallow-focus profile. The principal noble’s forearms begin to tremble almost imperceptibly under the horizontal staff. He does not lower it. Behind him, other bowed figures remain soft. The camera stays close enough to feel effort but avoids theatrical suffering.
+
+SHOT 2 — ZAHHAK’S MEASURE — 0:05–0:10:
+65mm frontal medium close-up. Zahhak’s masked head travels slowly from the lowered Iranian banner across the vessel and insignia, finally stopping on the staff. His old staff remains vertical beside him. Two serpents independently follow different objects; another continues breathing against his back.
+
+SHOT 3 — DECISION WITHOUT SPEECH — 0:10–0:15:
+40mm wide side composition spanning Zahhak on the right and the kneeling delegation across the left. Zahhak shifts his seated weight forward and closes one hand around the throne edge. The principal noble recognizes the movement and bows his head deeper, but nobody celebrates. End exactly as Zahhak begins lifting the old staff from the floor.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Nearly silent room tone, subtle arm strain, cloth tension, serpent scales, Zahhak’s glove tightening on stone and the old staff beginning to scrape.
+
+۴.6  بلاک ۶ — جایگزینی عصا و انتقال مشروعیت
+خروجی مورد انتظار
+مرکز معنایی اپیزود: ضحاک عصای شخصی قدیمی را کنار می‌گذارد و عصای سلطنتی ایران را می‌گیرد. نه تاج، نه سوگند و نه تشویق؛ فقط یک جایگزینی فیزیکی که صاحب قدرت را عوض می‌کند.
+PROMPT 06  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_IRANIAN_NOBLES: [MENTION IRANIAN NOBLES GROUP REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_ZAHHAK_AUDIENCE_HALL: [MENTION ZAHHAK AUDIENCE HALL]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_ZAHHAK_OLD_STAFF: [MENTION ZAHHAK OLD STAFF]
+— PROP_ROYAL_SERPENT_STAFF: [MENTION ROYAL SERPENT STAFF]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+Direct continuation: Zahhak has just begun lifting the old staff; the new staff remains held horizontally by the principal noble.
+
+SHOT 1 — OLD AUTHORITY SET DOWN — 0:00–0:05:
+85mm detail at seat height. Zahhak transfers weight onto the throne arm, lifts the old staff and lays it horizontally on bare stone beside the seat. The movement is slow because he physically depends on it. No attendant helps. The old staff makes one dry impact.
+
+SHOT 2 — THE HANDOVER — 0:05–0:10:
+50mm low three-quarter view close to the principal noble’s hands. Zahhak leans forward, grips the Royal Serpent Staff near its balance point and tests its weight. The noble releases only after Zahhak has control. One natural serpent crosses Zahhak’s forearm but does not touch the staff symbolically.
+
+SHOT 3 — ACCEPTANCE — 0:10–0:15:
+35mm wide horizontal frame. Zahhak plants the new staff vertically and transfers visible body weight onto it, then rises only partway from the seat. His lame side lags. The principal noble bows until his torso is almost parallel to the floor; the others follow unevenly. Zahhak’s chin lifts only a few centimeters. End on the new staff dividing ruler and petitioners.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Old wood or metal scraping stone, one dry impact, glove tightening on the new staff, fabric strain as Zahhak shifts, a firm new staff strike and silence after its decay.
+
+۴.7  بلاک ۷ — ضحاک تالار را با عصای ایران ترک می‌کند
+خروجی مورد انتظار
+پذیرش به حرکت تبدیل می‌شود. ضحاک با لنگیدن واقعی از میان بزرگان عبور می‌کند؛ آنان عقب می‌روند و مسیر را برای همان کسی باز می‌کنند که خودشان دعوت کرده‌اند.
+PROMPT 07  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_IRANIAN_NOBLES: [MENTION IRANIAN NOBLES GROUP REFERENCE]
+— CHAR_IRANIAN_RIDERS: [MENTION IRANIAN RIDERS REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_ZAHHAK_AUDIENCE_HALL: [MENTION ZAHHAK AUDIENCE HALL]
+— LOC_ZAHHAK_OUTER_COURT: [MENTION ZAHHAK OUTER COURT]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_ROYAL_SERPENT_STAFF: [MENTION ROYAL SERPENT STAFF]
+— PROP_IRANIAN_BANNER: [MENTION IRANIAN ROYAL BANNER]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+The old staff remains abandoned beside the seat and must never appear again. Zahhak now uses only the Royal Serpent Staff.
+
+SHOT 1 — FIRST STEP AS CHOSEN KING — 0:00–0:05:
+50mm lateral tracking view. Zahhak completes one full asymmetrical gait cycle away from the seat: new staff first, stronger foot, lame side dragged forward. He turns by moving the staff before shoulder and head. The nearest nobles remain low and shift backward on their knees to clear his path.
+
+SHOT 2 — THE HUMAN CORRIDOR — 0:05–0:10:
+28mm wide frontal retreat through the audience hall. Zahhak advances slowly down the center while the nobles stand at different moments and separate toward both horizontal edges, forming a corridor. No one cheers or raises arms. Serpents adjust independently with every uneven step.
+
+SHOT 3 — OUTER COURT — 0:10–0:15:
+35mm exterior side view. Zahhak crosses into cold daylight and stops beside waiting riders. The principal noble lifts the Iranian banner, now carrying it behind rather than before him. Horses react to the serpents with one restrained sidestep, controlled by riders. End as Zahhak plants the staff toward the rising road.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Staff-foot gait rhythm, knees and clothing shifting, hall reverb opening into exterior wind, horse leather and one nervous hoof adjustment.
+
+۴.8  بلاک ۸ — حرکت طولانی در گردنه‌های رو به ایران
+خروجی مورد انتظار
+مقیاس بزرگ از مسیر و عرض سرزمین می‌آید، نه از شات قهرمانانه. ضحاک پیاده و کند است؛ سواران مجبورند سرعت خود را با بدن ناقص او تنظیم کنند.
+PROMPT 08  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_IRANIAN_NOBLES: [MENTION IRANIAN NOBLES GROUP REFERENCE]
+— CHAR_IRANIAN_RIDERS: [MENTION IRANIAN RIDERS REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_MOUNTAIN_ROUTE: [MENTION MOUNTAIN ROUTE]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_ROYAL_SERPENT_STAFF: [MENTION ROYAL SERPENT STAFF]
+— PROP_IRANIAN_BANNER: [MENTION IRANIAN ROYAL BANNER]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+Preserve the same travel dust, weak crosswind, group order and Zahhak’s reliance on the new staff.
+
+SHOT 1 — GAIT AGAINST TERRAIN — 0:00–0:05:
+65mm close lateral view of staff, legs and steep gravel. Zahhak completes two slow physical phases of one gait cycle. The staff bites stone; the stronger foot advances; the lame side follows with visible weight transfer. Clothing grazes dust.
+
+SHOT 2 — PROCESSION IN WIDTH — 0:05–0:10:
+24mm very wide rear three-quarter shot across a broad ascending pass. Zahhak leads on foot near the lower left; the path bends through the full horizontal frame and rises toward the upper right. Nobles walk behind; riders trail at irregular distances. The weak banner creates a single restrained color or tonal break.
+
+SHOT 3 — RIDERS WAIT FOR HIM — 0:10–0:15:
+85mm compressed view across the slope. Several horses have already reached a higher turn and stand waiting while Zahhak slowly closes the distance below. One rider looks back, then lowers the gaze. This delay makes Zahhak’s physical limitation real without reducing his authority. End as the city’s distant outer wall first appears beyond the ridge.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Dry wind, staff striking gravel, uneven footsteps, sparse hoof movement, harness strain, horse breathing and no military rhythm.
+
+۴.9  بلاک ۹ — نزدیک‌شدن ضحاک / نخستین هراس جمشید
+خروجی مورد انتظار
+تدوین موازی از اینجا شروع می‌شود. یک خط گردوغبار در افق به واکنش بدنی جمشید وصل می‌شود؛ او پیام‌رسان ندارد و سقوط را از رفتار جهان اطرافش می‌فهمد.
+PROMPT 09  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_IRANIAN_RIDERS: [MENTION IRANIAN RIDERS REFERENCE]
+— CHAR_JAMSHID_ROYAL: [MENTION JAMSHID ROYAL REFERENCE]
+— CHAR_JAMSHID_ATTENDANTS: [MENTION JAMSHID ATTENDANTS REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_IRAN_OUTSKIRTS: [MENTION IRAN OUTSKIRTS]
+— LOC_HALL_OF_COLUMNS: [MENTION EXISTING HALL OF COLUMNS]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_ROYAL_SERPENT_STAFF: [MENTION ROYAL SERPENT STAFF]
+— PROP_JAMSHID_REGALIA: [MENTION JAMSHID REGALIA]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+Zahhak’s group has just revealed the distant Iranian wall. Preserve their direction of travel and the same weather.
+
+SHOT 1 — DUST APPROACHES — 0:00–0:05:
+85mm telephoto landscape. Zahhak’s delegation crosses laterally below the distant Iranian wall, compressed by heatless haze and dust. The riders remain behind the walking figure. No charge. The staff flashes only as dark material, never magical.
+
+SHOT 2 — JAMSHID SEES — 0:05–0:10:
+Match the horizontal dust line to the edge of a high opening inside the unchanged Hall of Columns. 85mm view from behind a foreground column. Jamshid stands in royal dress and sees the distant moving line. His head snaps toward it; one hand clamps the stone edge; breath stops for one beat. The mask never changes.
+
+SHOT 3 — POSTS EMPTY — 0:10–0:15:
+40mm slightly high wide view across the hall. Exactly two attendants quietly abandon separate posts and disappear through opposite side passages. Jamshid turns his torso before his feet catch up, noticing the new empty width around him. The camera drifts backward and a column cuts him toward the edge of frame. End as he steps away from the central axis.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Distant hooves and wind, then interior air, fingers gripping stone, attendants’ receding cloth and footsteps, Jamshid’s shortened breath.
+
+۴.10  بلاک ۱۰ — جمشید نشانه‌های شاهی را رها می‌کند / دروازه باز می‌شود
+خروجی مورد انتظار
+دو اتفاق هم‌زمان: جمشید از مرکز کنار می‌کشد و یکی از نشانه‌های سلطنتی را می‌اندازد؛ در همان لحظه دروازه‌ی اصلی از داخل برای ضحاک باز می‌شود. مشروعیت بدون نبرد منتقل شده است.
+PROMPT 10  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_IRANIAN_NOBLES: [MENTION IRANIAN NOBLES GROUP REFERENCE]
+— CHAR_JAMSHID_ROYAL: [MENTION JAMSHID ROYAL REFERENCE]
+— CHAR_JAMSHID_ESCAPE: [MENTION JAMSHID ESCAPE REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_HALL_OF_COLUMNS: [MENTION EXISTING HALL OF COLUMNS]
+— LOC_ESCAPE_ROUTE: [MENTION DESCENDING ESCAPE ROUTE]
+— LOC_IRAN_MAIN_GATE: [MENTION IRAN MAIN GATE]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_JAMSHID_REGALIA: [MENTION JAMSHID REGALIA]
+— PROP_ROYAL_SERPENT_STAFF: [MENTION ROYAL SERPENT STAFF]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+Jamshid has moved off the hall’s central axis. Zahhak waits outside the main gate with the accepted delegation.
+
+SHOT 1 — DISCARDING THE SIGN — 0:00–0:05:
+65mm close view beside a narrow side entrance. Jamshid pulls one removable royal element from shoulder or neck and lets it fall rather than placing it. It strikes stone without grandeur. He gathers the remaining costume tight and enters the descending passage. His base identity and mask remain unchanged as the visual state transitions from royal to escape version.
+
+SHOT 2 — OPENED FROM WITHIN — 0:05–0:10:
+Match the fallen object’s horizontal edge to the locking beam of the main Iranian gate lifting from inside. 32mm interior wide shot. Mechanisms and restrained gate workers pull the monumental doors inward. Cold exterior light and dust enter first, revealing Zahhak waiting on foot beyond them. Nothing breaks.
+
+SHOT 3 — FIRST CROSSING — 0:10–0:15:
+50mm low side composition across the threshold. Zahhak waits until the opening is complete, then begins one asymmetrical step into Iran: staff first, strong foot, lame side. Nobles follow several paces back. He never poses or looks upward. End with the new staff planted just inside the gate.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Regalia hitting stone, quick fabric and breath, wooden or metal locking beam, heavy doors opening inward, wind entering, one staff impact inside Iran.
+
+۴.11  بلاک ۱۱ — صعود ضحاک در مسیر شاهی / نزول جمشید به پایین‌شهر
+خروجی مورد انتظار
+تقابل به شکل خالص دیده می‌شود: ضحاک آهسته اما ثابت بالا می‌رود؛ جمشید سریع‌تر و نامتعادل پایین می‌آید. Match Cutها از پله، دست و عصا ساخته می‌شوند.
+PROMPT 11  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_IRANIAN_NOBLES: [MENTION IRANIAN NOBLES GROUP REFERENCE]
+— CHAR_JAMSHID_ESCAPE: [MENTION JAMSHID ESCAPE REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_ROYAL_CAUSEWAY: [MENTION ROYAL CAUSEWAY]
+— LOC_ESCAPE_ROUTE: [MENTION DESCENDING ESCAPE ROUTE]
+— LOC_LOWER_GATE_MOUNT: [MENTION LOWER GATE AND MOUNT AREA]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_ROYAL_SERPENT_STAFF: [MENTION ROYAL SERPENT STAFF]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+Zahhak has just crossed the main threshold. Jamshid is already descending in the escape version of his unchanged identity.
+
+SHOT 1 — ASCENDING CAUSEWAY — 0:00–0:05:
+35mm controlled low three-quarter tracking shot. Zahhak advances two heavy phases up the royal ramp, staff first. Nobles follow lower in frame and spread across the width without crowding him. Serpents move independently with gait and weak wind. The camera retreats upward at his exact pace.
+
+SHOT 2 — DESCENDING STAIR — 0:05–0:10:
+Match Zahhak’s staff landing to Jamshid’s hand striking a rough stone rail. 28mm close handheld camera retreats below him down narrow stairs. Jamshid takes several quick downward steps, one sideways to recover balance. His hand drags along the wall; shoulders pitch forward; the camera briefly loses part of him behind a foreground corner.
+
+SHOT 3 — TWO DIRECTIONS — 0:10–0:15:
+Intercut two short physically matched fragments: 2.5 seconds of Zahhak’s staff and lame gait rising across broad palace steps, then 2.5 seconds of Jamshid’s feet dropping down the last service ramp toward the lower gate. Preserve opposing screen direction and elevation. End on Jamshid seeing the huge kneeling area and flightless mount ahead, but do not mount yet.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Slow staff-foot rhythm and distant followers, hard cut to quick breath and scraping hand, then alternating step impacts with no score or artificial transition sound.
+
+۴.12  بلاک ۱۲ — همان تخت، شاهی دیگر / جمشید نقطه‌ای در بیابان
+خروجی مورد انتظار
+پایان چهار تکه دارد: ضحاک وارد همان تالار می‌شود؛ موجود زمینی برای جمشید زانو می‌زند؛ ضحاک روی همان تخت می‌نشیند؛ جمشید در بیابان کوچک می‌شود. هیچ‌کدام قهرمانانه نیست.
+PROMPT 12  /  15 SECONDS  /  HORIZONTAL 16:9
+Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.
+
+CHARACTERS / REFERENCE ASSIGNMENT:
+— CHAR_ZAHHAK: [MENTION ZAHHAK FINAL REFERENCE]
+— CHAR_JAMSHID_ESCAPE: [MENTION JAMSHID ESCAPE REFERENCE]
+— CREATURE_JAMSHID_MOUNT: [MENTION TWO-LEGGED FLIGHTLESS MOUNT REFERENCE]
+
+LOCATION / REFERENCE ASSIGNMENT:
+— LOC_HALL_OF_COLUMNS: [MENTION EXISTING HALL OF COLUMNS]
+— LOC_JAMSHID_THRONE: [MENTION EXISTING JAMSHID THRONE]
+— LOC_LOWER_GATE_MOUNT: [MENTION LOWER GATE AND MOUNT AREA]
+— LOC_FINAL_DESERT: [MENTION FINAL DESERT LANDSCAPE]
+
+PROPS / REFERENCE ASSIGNMENT:
+— PROP_ROYAL_SERPENT_STAFF: [MENTION ROYAL SERPENT STAFF]
+— PROP_MOUNT_HARNESS: [MENTION MOUNT HARNESS]
+
+CONTINUITY FROM PREVIOUS BLOCK:
+Jamshid has reached the mount area. Zahhak continues upward toward the unchanged Hall of Columns and throne.
+
+SHOT 1 — UNCHANGED HALL — 0:00–0:04:
+24mm restrained frontal wide shot in the exact existing Hall of Columns. Zahhak enters at one horizontal edge and advances toward the unchanged throne on the central axis, completing one heavy gait cycle. No followers enter. Cut on the staff striking the first throne step.
+
+SHOT 2 — MOUNT KNEELS — 0:04–0:08:
+Match the impact to the enormous two-legged flightless mount lowering beside Jamshid. 35mm side view. The 2.5-to-3-meter terrestrial animal is heavy and plausible, with massive legs, weighty beak or muzzle, coarse feathers and areas of skin. It has no usable wings, never flies and never resembles Simurgh, griffin or hippogriff. It bends until the functional saddle reaches Jamshid. He swings on in one practical movement and leans forward; no climb or pose.
+
+SHOT 3 — NEW OCCUPANT — 0:08–0:11:
+50mm centered frontal view of the exact unchanged Jamshid throne. Zahhak lowers himself using the staff to control his lame side, plants it and becomes still. No crown and no victorious head lift. One serpent crosses the throne arm while another turns toward the empty hall.
+
+SHOT 4 — SMALL IN THE LAND — 0:11–0:15:
+Extreme wide static 24mm horizontal desert landscape. Jamshid and the mount run away along descending ground, already small in the lower third. Heavy terrestrial two-legged strides only; no leap, glide or flight. Dry wind softens their track as they become one moving dark point. Cut to black before complete disappearance.
+
+GLOBAL EXECUTION RULES:
+Horizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.
+
+SOUND:
+Staff on throne step, heavy animal joints and harness leather, strained breath, cloth and serpent scales as Zahhak sits, then open desert wind and receding two-legged footfalls. Wind is the last sound; cut to silence.
+
+۵. دستور اجرای مستقیم برای Claude / Higgsfield CLI
+EXECUTION INSTRUCTION FOR CLAUDE / HIGGSFIELD CLI
+
+1. Process PROMPT 01 through PROMPT 12 strictly in order.
+2. Every generation must be horizontal 16:9. Reject any vertical 9:16 composition or vertical crop.
+3. Replace every [MENTION ...] placeholder with the exact matching uploaded asset before submission.
+4. Generate each 15-second block separately and name outputs ZAHHAK_ENTRY_P01 through ZAHHAK_ENTRY_P12.
+5. Keep identities, masks, costumes, body proportions, architecture and props locked across all accepted blocks.
+6. From PROMPT 06 onward, Zahhak uses only PROP_ROYAL_SERPENT_STAFF. Never restore the old staff.
+7. Keep Zahhak exactly 178 cm, permanently lame and visibly staff-dependent.
+8. Keep five to ten natural black serpents alive and independently moving; reject statues, dragons or Medusa forms.
+9. Preserve the exact existing Hall of Columns and Jamshid throne; no redesign.
+10. Reject any military conquest, broken gate, cheering crowd, heroic escape, flying mount or ruined Iranian city.
+11. If one block fails continuity, regenerate only that block without silently changing assets or prompt meaning.
+12. After all accepted generations, assemble the full 180-second master; editorial selection to approximately 90 seconds happens afterward.
+۶. معیار رد و قبول خروجی
+قاب دقیقاً افقی 16:9 است و میزانسن برای عرض تصویر طراحی شده.
+هیئت ایرانی محتاج و جدی است؛ نه ارتش، نه جشن و نه صف قهرمانانه.
+لحظه‌ی مرکزی بلاک ۶ با جایگزینی واقعی دو عصا روشن است.
+لنگیدن ضحاک و حرکت مستقل مارها در تمام نماهای مربوط حفظ شده.
+ورود ضحاک پذیرفته‌شدن سیاسی است؛ دروازه شکسته نمی‌شود.
+مسیر ضحاک صعودی و مسیر جمشید نزولی باقی می‌ماند.
+تخت و Hall همان اَسِت‌های قبلی‌اند؛ موجود جمشید کاملاً زمینی است.
+۱۲ بلاک جداگانه، هرکدام حداکثر ۱۵ ثانیه و بدون دیالوگ، نریشن یا موسیقی تحویل شده‌اند.

@@ -103,6 +103,9 @@ function extFromUrl(url, fallback = '.png') {
 
 // ---------------------------------------------------------------- generate
 
+// Accumulated across a dry run so we can report one total before any spend.
+const dryTotal = { jobs: 0, credits: 0, unpriced: 0 }
+
 async function runQueue(state) {
   const queue = await readJsonl(P.queue)
   const done = new Set(state.processedJobs)
@@ -158,6 +161,9 @@ async function runQueue(state) {
     }
 
     if (DRY) {
+      dryTotal.jobs++
+      if (credits != null) dryTotal.credits += credits
+      else dryTotal.unpriced++
       await log(`DRY-RUN would generate ${job.jobId} -> ${entity.id} ${job.variant} (${model})`)
       continue
     }
@@ -324,6 +330,15 @@ async function pass() {
   const generated = await runQueue(state)
   const decided = await runDecisions(state)
   await writeState(state)
+
+  // One total, so the spend can be reported and approved before anything runs.
+  if (DRY && dryTotal.jobs > 0) {
+    await log(
+      `DRY-RUN TOTAL: ${dryTotal.jobs} job(s), ${dryTotal.credits} credits`
+      + (dryTotal.unpriced ? ` (+${dryTotal.unpriced} could not be priced)` : '')
+      + ` | ceilings: ${cfg.perJobCostCeilingCredits}/job, ${cfg.costCeilingCredits} total`,
+    )
+  }
   return generated + decided
 }
 
