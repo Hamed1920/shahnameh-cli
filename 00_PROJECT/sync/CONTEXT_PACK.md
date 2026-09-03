@@ -1,6 +1,6 @@
 # Shahnameh - Context Pack
 
-Generated 2026-09-03 14:22 - `state_hash: e04f07a2`
+Generated 2026-09-03 15:03 - `state_hash: e04f07a2`
 
 Paste or attach this at the start of a Claude Chat conversation, or add it to the files of a
 Claude Cowork project. It is the complete current state of the Shahnameh asset index.
@@ -201,6 +201,12 @@ Use these only to understand the shape of the space. **Do not allocate from them
 
 ---
 
+## What we've learned
+
+_Nothing approved yet. Rules appear here once Hamed approves them in the review panel._
+
+---
+
 ## Open questions
 
 ### Q1 â€” Is `LOC-011` one location or two?
@@ -246,6 +252,19 @@ Both are flagged `NO-ASSET;NEEDS-HERO-SHEET`. Worth a generation pass?
 ### Q7 â€” Episode structure
 
 How many episodes, and what are they? Nothing can be bound to a shot until `SHM-EP001` exists.
+
+### Q8 â€” Which Higgsfield models should be the defaults?
+
+`10_PANEL/worker/config.json` currently defaults to `nano_banana_2` for images and
+`seedance_2_0` for video, taken from the CLI's own help examples. Once authenticated, run
+`higgsfield model list --json` and pick deliberately â€” the choice affects cost per generation and
+how well reference images are honoured.
+
+### Q9 â€” Spend ceilings
+
+The worker holds any job over **60 credits** and pauses entirely after **200 credits** in a run
+(`perJobCostCeilingCredits` / `costCeilingCredits`). Those are placeholders chosen without
+knowing the plan's credit balance. Set them against the real budget.
 
 ---
 

@@ -29,6 +29,11 @@ Run `/project-log` at the start of a session, or read directly:
 - **Never auto-create a missing target entity** to make a job succeed. Reject and ask.
 - **The validator must pass** before you finish any session that touched files or registries.
 - Anything you can't classify goes in `99_INBOX/`, never the project root.
+- **The worker is the only process that moves asset files or edits the CSV registries.** The
+  panel appends to JSONL and nothing else. Don't add a second writer.
+- **Never mark a learning `approved` yourself** - only Hamed does, in the panel. Only approved
+  rules reach a prompt.
+- **Never spend credits without pricing first.** `generate cost` before `generate create`.
 
 ## Tools
 
@@ -43,7 +48,13 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File "00_PROJECT\tools\Build-
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File "00_PROJECT\tools\Ingest-Jobs.ps1" -WhatIf
 ```
 
-Skills: `/project-log`, `/sync-out`, `/sync-in`, `/sync-check`.
+```powershell
+# review panel + generation worker (separate terminals, from 10_PANEL)
+npm run dev        # http://localhost:3000
+npm run worker     # add --dry-run to price without spending
+```
+
+Skills: `/project-log`, `/sync-out`, `/sync-in`, `/sync-check`, `/learn`.
 
 ## Layout
 
@@ -52,11 +63,30 @@ Skills: `/project-log`, `/sync-out`, `/sync-in`, `/sync-check`.
 01_CHARACTERS/  CHR      02_GROUPS/    GRP      03_LOCATIONS/  LOC
 04_PROPS/       PRP VEH  05_CREATURES/ CRT      06_COSTUMES/   COS
 07_EPISODES/    EP SQ SC SH             08_REFERENCE/ REF FX
-09_OUTPUT/      renders and deliverables
+09_OUTPUT/      renders; _staging and _rejected are working space
+10_PANEL/       Next.js review panel + generation worker
 99_INBOX/       unindexed drop zone
 ```
 
+Any path segment starting with `_` is working space and is ignored by the validator.
+
+## Git
+
+Remote: `https://github.com/Hamed1920/shahnameh-cli.git` — **code and project metadata only.**
+
+- **Never commit assets.** `.gitignore` is an allowlist (`/*` deny, then re-include) precisely so
+  a new asset folder is excluded by default. Do not convert it to a denylist.
+- **Author is Hamed alone.** No `Co-Authored-By` trailers, no "Generated with" lines, no Claude
+  attribution of any kind.
+- Verify before pushing: `git add -A --dry-run` should list no media files.
+
 ## Environment
 
-Windows 11, PowerShell 5.1. Not a git repository. Scripts are ASCII-only on purpose — PS 5.1
-reads BOM-less `.ps1` as ANSI, so non-ASCII characters in them corrupt silently.
+Windows 11, PowerShell 5.1, Node 24 LTS, Git 2.55.
+
+- PowerShell scripts are **ASCII-only on purpose** — PS 5.1 reads BOM-less `.ps1` as ANSI, so
+  non-ASCII characters corrupt silently.
+- **Never write JSON with PowerShell's `Set-Content -Encoding utf8`** — PS 5.1 emits a BOM and
+  Node refuses to parse it. Use `[System.IO.File]::WriteAllText` with `UTF8Encoding($false)`.
+- If `npm` fails with "running scripts is disabled", use `npm.cmd` or
+  `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.

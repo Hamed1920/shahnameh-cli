@@ -115,6 +115,11 @@ slug alone. That is the bar.
 Variants are creative decisions. Takes are attempts. Never use a new variant number to mean
 "I re-rolled it."
 
+**A batch of N candidates from one prompt is N takes of one variant**, not N variants. The
+reviewer promotes the one that works; the rest are kept in `09_OUTPUT/_rejected/` as the
+negative half of the training signal. This follows from the rule above, but it is the thing
+people get wrong most often.
+
 ### Canonical variant
 
 Every entity with more than one variant **must** declare a `canonical_variant` in

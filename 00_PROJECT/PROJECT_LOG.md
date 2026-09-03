@@ -9,8 +9,8 @@ Newest entries at the top of the log. Append with `/project-log`.
 
 ## Current state
 
-**Phase:** Indexing v2.0 and the Chat/Cowork sync protocol are in place and tested.
-Higgsfield engine not yet wired up.
+**Phase:** Review panel and generation worker built and tested. Higgsfield CLI installed but
+**not authenticated** — that is the one blocker before anything can generate.
 **Last updated:** 2026-09-03 · `state_hash: e04f07a2`
 
 | | |
@@ -18,36 +18,97 @@ Higgsfield engine not yet wired up.
 | Assets filed | 28 |
 | Entities registered | 25 |
 | Episodes defined | 0 |
-| Shots defined | 0 |
 | Validator | PASS, 0 warnings |
+| Higgsfield auth | **NOT DONE** — needs Hamed at a browser |
 
 ### What exists
 
 ```
-00_PROJECT/          INDEXING.md v2, SYNC_PROTOCOL.md, OPEN_QUESTIONS.md, registry/, tools/, sync/
-01_CHARACTERS/       4 files  — Zahhak (3 looks), Jamshid
-02_GROUPS/           4 files  — workers, fire priests, royal warriors, palace guards
-03_LOCATIONS/       12 files  — 11 locations (LOC-011 has 2 variants)
-04_PROPS/            3 files  — cobra staff turnaround, diplomatic gift set x2
-05_CREATURES/        3 files  — three riding beasts
-06_COSTUMES/         empty
-07_EPISODES/         _TEMPLATE only
-08_REFERENCE/        2 files  — civilization caste contact boards
-09_OUTPUT/           empty
-99_INBOX/            empty
+00_PROJECT/   INDEXING v2, SYNC_PROTOCOL, OPEN_QUESTIONS, registry/, tools/, sync/,
+              review/, queue/, reference/HIGGSFIELD-CLI.md
+01..08        28 indexed assets across characters, groups, locations, props, creatures, boards
+09_OUTPUT/    _staging and _rejected working folders (ignored by the validator)
+10_PANEL/     Next.js 16.3 review panel + generation worker
 ```
 
 Open decisions live in [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md) — 7 outstanding.
 
 ### Next up
 
-- [ ] Receive the Higgsfield prompt from Hamed and wire the engine into `/sync-in` step 4
+- [ ] **Hamed: `higgsfield auth login`, then `higgsfield workspace set <id>`**
+- [ ] First real generation, then pin down the response schema in `worker/lib/hf.mjs`
 - [ ] Resolve the open questions
 - [ ] Define `SHM-EP001` and its shotlist
 
 ---
 
 ## Log
+
+### 2026-09-03 — Review panel, generation worker, and the learning loop
+
+**Agent:** Claude (Opus 5) · **Chat:** initial setup, third pass
+
+Built the human gate between a generation and the index: a local review panel where every
+Higgsfield output is accepted or denied with notes, denials regenerate with the fix applied, and
+the notes distil into prompt rules that improve every future generation.
+
+Environment, from nothing:
+
+- Node 24.19.0 and Git 2.55 installed (neither was present; `npx skills add` needs git to clone)
+- `@higgsfield/cli` 1.1.24 installed globally. Its npm postinstall script was blocked by npm 11's
+  new default and the CLI works without it, so it was left blocked rather than granted.
+- 8 Higgsfield companion skills installed to `.agents/skills/`, symlinked into `.claude/skills/`
+- Real CLI surface captured to [reference/HIGGSFIELD-CLI.md](reference/HIGGSFIELD-CLI.md)
+
+Two findings that changed the design:
+
+- **The CLI never saves files locally.** It is async and returns a `result_url`; the asset lives
+  in Higgsfield Assets. Downloading into the project is entirely our code.
+- **Media flags auto-upload local paths**, so `Resolve-ShmRef` output can be passed straight to
+  `--image-references`. The separate `upload create` step the plan assumed is unnecessary.
+
+Built:
+
+- `10_PANEL/` — Next.js 16.3.4 / React 19.2 / Tailwind 4. Routes: review queue, index, learnings,
+  queue/worker status, plus an asset-streaming API.
+- `10_PANEL/worker/` — generate, poll, download, promote, reject, requeue. Prices every job with
+  `generate cost` first and holds anything over the ceiling.
+- `/learn` skill — distils review notes into scoped rules. Proposes only; Hamed approves.
+- Approved learnings now ship in `CONTEXT_PACK.md`, so Chat and Cowork improve too.
+- Git: repo initialised against `Hamed1920/shahnameh-cli` with an allowlist `.gitignore`.
+
+Tested end to end without spending anything:
+
+- Seeded two candidates, accepted one and denied the other. Accept promoted the file into
+  `04_PROPS/` with a correct SHM filename, appended the manifest row, and updated the entity's
+  `variant_count`, `canonical_variant` and flags. Deny moved it to `_rejected/` and queued a
+  revision carrying the note forward at attempt 2. Validator PASS at 29 assets throughout.
+- All test artifacts rolled back; state hash returned to `e04f07a2`.
+- Path traversal probes against the asset route (`../`, URL-encoded, absolute, drive-qualified)
+  all rejected 403. A non-media file inside the root is also refused, so both gates work.
+
+Notable judgement calls made (flag if wrong):
+
+- **The worker is the only process that writes asset files and CSVs; the panel appends JSONL
+  only.** A Next.js app and PowerShell tools writing the same CSVs would eventually corrupt one.
+  One writer removes the race rather than mitigating it.
+- **Rejected candidates are kept, not deleted.** They are the negative half of the training
+  signal that `/learn` reads.
+- **A denial cannot be submitted without a note.** The note is what builds the revision prompt;
+  without one the loop has nothing to act on.
+- **Revision notes accumulate across attempts**, so attempt 3 does not reintroduce the fault
+  attempt 2 was told to fix. `maxAttempts` 4, then it stops and asks for a human rethink.
+- **The generate-response parser is deliberately tolerant** and saves `raw-response.json` when it
+  finds no URL, rather than guessing. No live response has been seen yet; tighten it after the
+  first real generation.
+- Filename descriptors come from the prompt, not the review note — notes are sentences and made
+  unreadable 48-character filenames.
+
+Corrections to the previous entry:
+
+- The first version of the worker refused to process review verdicts when unauthenticated.
+  Promotion and rejection are local filesystem work and need no account; only generation does.
+  Fixed so the panel stays fully usable before `auth login` ever happens.
 
 ### 2026-09-03 — Indexing v2.0 and the Chat/Cowork sync protocol
 

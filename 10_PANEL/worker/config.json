@@ -1,0 +1,13 @@
+{
+  "defaultImageModel": "nano_banana_2",
+  "defaultVideoModel": "seedance_2_0",
+  "concurrency": 1,
+  "maxJobsPerRun": 4,
+  "costCeilingCredits": 200,
+  "perJobCostCeilingCredits": 60,
+  "waitTimeout": "20m",
+  "waitInterval": "5s",
+  "maxAttempts": 4,
+  "pollSeconds": 5,
+  "reviewer": "hamed"
+}

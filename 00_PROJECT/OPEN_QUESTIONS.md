@@ -50,3 +50,16 @@ Both are flagged `NO-ASSET;NEEDS-HERO-SHEET`. Worth a generation pass?
 ### Q7 — Episode structure
 
 How many episodes, and what are they? Nothing can be bound to a shot until `SHM-EP001` exists.
+
+### Q8 — Which Higgsfield models should be the defaults?
+
+`10_PANEL/worker/config.json` currently defaults to `nano_banana_2` for images and
+`seedance_2_0` for video, taken from the CLI's own help examples. Once authenticated, run
+`higgsfield model list --json` and pick deliberately — the choice affects cost per generation and
+how well reference images are honoured.
+
+### Q9 — Spend ceilings
+
+The worker holds any job over **60 credits** and pauses entirely after **200 credits** in a run
+(`perJobCostCeilingCredits` / `costCeilingCredits`). Those are placeholders chosen without
+knowing the plan's credit balance. Set them against the real budget.

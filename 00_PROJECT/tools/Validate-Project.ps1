@@ -153,13 +153,24 @@ foreach ($m in $manifest) {
 
 # ---------------------------------------------------------------- 3. disk vs manifest
 
+# Any path segment starting with '_' is working space, not the indexed library:
+# 07_EPISODES/_TEMPLATE, 09_OUTPUT/_staging, 09_OUTPUT/_rejected. Files under
+# those are deliberately unregistered and must not report as orphans.
+function Test-ShmWorkingPath {
+    param([string]$FullPath, [string]$RootPath)
+    $rel = $FullPath.Substring($RootPath.Length).TrimStart('\', '/')
+    foreach ($seg in ($rel -split '[\\/]')) { if ($seg.StartsWith('_')) { return $true } }
+    return $false
+}
+
 $onDisk = @{}
 foreach ($d in $ASSET_DIRS) {
     $p = Join-Path $Root $d
     if (-not (Test-Path -LiteralPath $p)) { continue }
-    Get-ChildItem -LiteralPath $p -Recurse -File | Where-Object { $MEDIA_EXT -contains $_.Extension.ToLower() } | ForEach-Object {
-        $onDisk[$_.Name] = $_
-    }
+    Get-ChildItem -LiteralPath $p -Recurse -File |
+        Where-Object { $MEDIA_EXT -contains $_.Extension.ToLower() } |
+        Where-Object { -not (Test-ShmWorkingPath -FullPath $_.FullName -RootPath $Root) } |
+        ForEach-Object { $onDisk[$_.Name] = $_ }
 }
 
 foreach ($name in $onDisk.Keys) {

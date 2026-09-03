@@ -1,0 +1,122 @@
+import fs from 'node:fs/promises'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { parseCsv, toCsv } from './csv.mjs'
+
+const HERE = path.dirname(fileURLToPath(import.meta.url))
+export const ROOT = process.env.SHM_ROOT
+  ? path.resolve(process.env.SHM_ROOT)
+  : path.resolve(HERE, '..', '..', '..')
+
+export const P = {
+  root: ROOT,
+  entities: path.join(ROOT, '00_PROJECT', 'registry', 'ENTITIES.csv'),
+  manifest: path.join(ROOT, '00_PROJECT', 'registry', 'ASSET_MANIFEST.csv'),
+  ledger: path.join(ROOT, '00_PROJECT', 'sync', 'JOB_LEDGER.csv'),
+  reviewLog: path.join(ROOT, '00_PROJECT', 'review', 'REVIEW_LOG.jsonl'),
+  learnings: path.join(ROOT, '00_PROJECT', 'review', 'LEARNINGS.jsonl'),
+  queue: path.join(ROOT, '00_PROJECT', 'queue', 'QUEUE.jsonl'),
+  state: path.join(ROOT, '00_PROJECT', 'queue', 'state.json'),
+  log: path.join(ROOT, '00_PROJECT', 'queue', 'worker.log'),
+  lock: path.join(ROOT, '00_PROJECT', 'queue', 'worker.lock'),
+  staging: path.join(ROOT, '09_OUTPUT', '_staging'),
+  rejected: path.join(ROOT, '09_OUTPUT', '_rejected'),
+}
+
+export const rel = (abs) => path.relative(ROOT, abs).split(path.sep).join('/')
+
+export async function readText(file) {
+  try { return await fs.readFile(file, 'utf8') } catch (e) {
+    if (e.code === 'ENOENT') return ''
+    throw e
+  }
+}
+
+export async function readJsonl(file) {
+  const out = []
+  for (const line of (await readText(file)).split('\n')) {
+    const t = line.trim()
+    if (t) { try { out.push(JSON.parse(t)) } catch { /* torn line */ } }
+  }
+  return out
+}
+
+export async function appendJsonl(file, record) {
+  await fs.mkdir(path.dirname(file), { recursive: true })
+  await fs.appendFile(file, JSON.stringify(record) + '\n', 'utf8')
+}
+
+export async function readCsv(file) {
+  return parseCsv(await readText(file))
+}
+
+/** Atomic-ish CSV write: temp file then rename, so a crash cannot truncate a registry. */
+export async function writeCsv(file, rows, header) {
+  const tmp = file + '.tmp'
+  await fs.writeFile(tmp, toCsv(rows, header), 'utf8')
+  await fs.rename(tmp, file)
+}
+
+export async function loadEntities() {
+  const { rows } = await readCsv(P.entities)
+  return rows
+}
+
+export function findEntity(entities, ref) {
+  const r = String(ref).trim().replace(/^@/, '')
+  return entities.find((e) => e.id === r) ?? entities.find((e) => e.short_id === r) ?? null
+}
+
+/**
+ * Resolve an @-token to a file path, mirroring Resolve-ShmRef in Shm-Common.ps1.
+ *   @CHR-001  @CHR-001/V02  @CHR-001/V02/T03
+ */
+export async function resolveRef(token, entities, assets) {
+  const t = String(token).trim().replace(/^@/, '')
+  const [ref, variantIn, takeIn] = t.split('/')
+  const ent = findEntity(entities, ref)
+  if (!ent) return { ok: false, reason: `unknown entity '${ref}'` }
+
+  const variant = (variantIn || ent.canonical_variant || '').toUpperCase()
+  if (!variant) return { ok: false, reason: `${ent.id} has no canonical_variant and none was given` }
+
+  let rows = assets.filter((a) => a.entity_id === ent.id && a.variant === variant)
+  if (takeIn) rows = rows.filter((a) => a.take === takeIn.toUpperCase())
+  if (rows.length === 0) return { ok: false, reason: `${ent.id} has no asset for ${variant}` }
+
+  const row = rows.sort((a, b) => b.take.localeCompare(a.take))[0]
+  const abs = path.join(ROOT, row.folder, row.filename)
+  try { await fs.access(abs) } catch { return { ok: false, reason: `file missing: ${row.filename}` } }
+  return { ok: true, path: abs, entity: ent, variant, take: row.take }
+}
+
+export async function log(line) {
+  const stamp = new Date().toISOString()
+  const msg = `${stamp}  ${line}`
+  console.log(msg)
+  await fs.mkdir(path.dirname(P.log), { recursive: true })
+  await fs.appendFile(P.log, msg + '\n', 'utf8')
+}
+
+export async function readState() {
+  const t = await readText(P.state)
+  if (!t.trim()) return { processedJobs: [], processedDecisions: [], spentCredits: 0 }
+  try {
+    const s = JSON.parse(t)
+    return {
+      processedJobs: s.processedJobs ?? [],
+      processedDecisions: s.processedDecisions ?? [],
+      spentCredits: s.spentCredits ?? 0,
+      ...s,
+    }
+  } catch {
+    return { processedJobs: [], processedDecisions: [], spentCredits: 0 }
+  }
+}
+
+export async function writeState(state) {
+  await fs.mkdir(path.dirname(P.state), { recursive: true })
+  const tmp = P.state + '.tmp'
+  await fs.writeFile(tmp, JSON.stringify({ ...state, updatedAt: new Date().toISOString() }, null, 2))
+  await fs.rename(tmp, P.state)
+}

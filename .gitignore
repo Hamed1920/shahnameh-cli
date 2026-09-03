@@ -78,6 +78,11 @@ next-env.d.ts
 00_PROJECT/sync/receipts/*
 !00_PROJECT/sync/receipts/.gitkeep
 00_PROJECT/sync/PLAN-*.json
+# The work queue and worker state are transient. The review log and the learning
+# corpus are NOT - they are the project's accumulated judgement, so they stay versioned.
+00_PROJECT/queue/QUEUE.jsonl
+00_PROJECT/queue/state.json
+00_PROJECT/queue/worker.lock
 00_PROJECT/queue/*.log
 00_PROJECT/registry/*.bak
 

@@ -23,6 +23,13 @@ The fix is a closed loop with exactly one authority for each thing:
 | Number assignment | **CLI**, always, no exceptions |
 | Creative intent, prompt wording | **Chat / Cowork** |
 | Execution and file layout | **CLI** |
+| Whether a generation is good enough | **Hamed**, in the review panel |
+| What we learned from that | **`/learn`** proposes, Hamed approves |
+
+Since the review panel exists there is a fourth leg to the loop: approved learnings are written
+back into the context pack, so Chat and Cowork begin each session already knowing what previous
+generations got wrong. The loop feeds judgement back to the authoring surfaces, not just assets
+forward to disk.
 
 Chat proposes. The CLI disposes. Chat is structurally incapable of causing a collision because
 it never writes a number.

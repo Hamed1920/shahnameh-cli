@@ -161,6 +161,39 @@ foreach ($k in $kindTitles.Keys) {
 
 W "---"
 W ""
+W "## What we've learned"
+W ""
+
+# Approved learnings only. Proposed rules are not shipped anywhere - Hamed
+# approves them in the review panel first. See .claude/skills/learn/SKILL.md.
+$learnPath = Join-Path $Root '00_PROJECT\review\LEARNINGS.jsonl'
+$approved = @()
+if (Test-Path -LiteralPath $learnPath) {
+    $byId = [ordered]@{}
+    foreach ($line in (Get-Content -LiteralPath $learnPath)) {
+        if ([string]::IsNullOrWhiteSpace($line)) { continue }
+        try { $obj = $line | ConvertFrom-Json } catch { continue }
+        $byId[$obj.id] = $obj    # last write wins
+    }
+    $approved = @($byId.Values | Where-Object { $_.status -eq 'approved' })
+}
+
+if ($approved.Count -eq 0) {
+    W "_Nothing approved yet. Rules appear here once Hamed approves them in the review panel._"
+} else {
+    W "Rules earned from reviewed generations. **Apply the ones that match what you are writing.**"
+    W ""
+    foreach ($l in $approved) {
+        $scope = if ($l.scope.entity) { $l.scope.entity }
+                 elseif ($l.scope.family) { "family $($l.scope.family)" }
+                 elseif ($l.scope.kind) { "all $($l.scope.kind)" }
+                 else { 'all prompts' }
+        W ("- **[{0}]** {1}" -f $scope, $l.rule)
+    }
+}
+W ""
+W "---"
+W ""
 W "## Open questions"
 W ""
 if (Test-Path -LiteralPath $P.Questions) {
