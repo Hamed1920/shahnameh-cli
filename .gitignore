@@ -1,0 +1,89 @@
+# =====================================================================
+#  ALLOWLIST. Everything is ignored unless explicitly re-included below.
+#
+#  This repo is CODE AND PROJECT METADATA ONLY. Generated assets - images,
+#  video, Higgsfield outputs, staging and rejected candidates - must NEVER
+#  be committed.
+#
+#  A denylist would mean remembering to exclude every new asset folder.
+#  An allowlist means a new folder is excluded by default and someone has
+#  to deliberately opt it in. That is the safer default for an absolute
+#  rule, so do not convert this back to a denylist.
+# =====================================================================
+
+/*
+
+# --- re-included: code and metadata -----------------------------------
+!/.gitignore
+!/CLAUDE.md
+!/README.md
+!/00_PROJECT/
+!/10_PANEL/
+!/.claude/
+
+# the episode folder template is structure/docs, not assets
+!/07_EPISODES/
+/07_EPISODES/*
+!/07_EPISODES/_TEMPLATE/
+
+# --- asset folders stay ignored, listed here only for readers ---------
+#   01_CHARACTERS  02_GROUPS   03_LOCATIONS  04_PROPS  05_CREATURES
+#   06_COSTUMES    07_EPISODES 08_REFERENCE  09_OUTPUT 99_INBOX
+
+# --- vendored third-party skills: reinstall, do not commit -------------
+#   npx skills add higgsfield-ai/skills
+/.agents/
+/skills-lock.json
+/.claude/skills/higgsfield-*
+
+# --- second layer: never any media, anywhere, whatever the path -------
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+*.bmp
+*.tif
+*.tiff
+*.mp4
+*.mov
+*.webm
+*.avi
+*.mkv
+*.wav
+*.mp3
+*.psd
+*.ai
+
+# --- node / next ------------------------------------------------------
+node_modules/
+.next/
+.turbo/
+out/
+build/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# --- local env and secrets --------------------------------------------
+.env
+.env.*
+!.env.example
+
+# --- runtime state, not source ----------------------------------------
+00_PROJECT/sync/inbox/*
+!00_PROJECT/sync/inbox/.gitkeep
+00_PROJECT/sync/processed/*
+!00_PROJECT/sync/processed/.gitkeep
+00_PROJECT/sync/receipts/*
+!00_PROJECT/sync/receipts/.gitkeep
+00_PROJECT/sync/PLAN-*.json
+00_PROJECT/queue/*.log
+00_PROJECT/registry/*.bak
+
+# --- os / editor ------------------------------------------------------
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
