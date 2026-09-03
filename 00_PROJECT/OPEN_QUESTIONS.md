@@ -7,20 +7,6 @@ Resolve one by deleting it and logging the decision with `/project-log`.
 
 ---
 
-### Q1 — Is `LOC-011` one location or two?
-
-`SHM-LOC-011-PALACE-UNDERLEVELS` holds two variants that look like **different places**:
-V01 a carved-rock corridor with blue-washed niches, V02 a mudbrick multi-level courtyard.
-Split into two `LOC` numbers, or keep as one location seen two ways?
-*Currently:* one entity, canonical `V01` (provisional). Flagged `REVIEW-SPLIT`.
-
-### Q2 — Are the three ceremonial gates three gates, or three takes of one?
-
-`LOC-001` (stone relief), `LOC-002` (cypress court), `LOC-003` (marble screen) are registered as
-three separate locations. If they are actually rejected takes of a single gate, they should
-collapse into one entity with three variants.
-*Currently:* three entities. All flagged `REVIEW-SPLIT`.
-
 ### Q3 — Confirm Zahhak's canonical look
 
 `SHM-CHR-001-ZAHHAK` canonical is provisionally `V03` (dragon-embroidered robe + cobra staff),
@@ -63,3 +49,9 @@ how well reference images are honoured.
 The worker holds any job over **60 credits** and pauses entirely after **200 credits** in a run
 (`perJobCostCeilingCredits` / `costCeilingCredits`). Those are placeholders chosen without
 knowing the plan's credit balance. Set them against the real budget.
+
+---
+
+*Resolved 2026-09-03 by the EP001 script:*
+*Q1 — `LOC-011` V01 is the escape route; kept as one location.*
+*Q2 — `LOC-002` is Iran's main gate. `LOC-001` and `LOC-003` remain separate gates.*

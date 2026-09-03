@@ -1,6 +1,6 @@
 # Shahnameh - Context Pack
 
-Generated 2026-09-03 15:03 - `state_hash: e04f07a2`
+Generated 2026-09-03 15:28 - `state_hash: eee7dcce`
 
 Paste or attach this at the start of a Claude Chat conversation, or add it to the files of a
 Claude Cowork project. It is the complete current state of the Shahnameh asset index.
@@ -41,7 +41,7 @@ use the bare `@CHR-001` form and let the CLI pick the canonical.
 === SHM-JOB ===
 job_id: J-20260903-001
 author: claude-chat
-state_hash: e04f07a2
+state_hash: eee7dcce
 type: generate.image
 target: SHM-PRP-001-STAFF-COBRA-BRONZE
 variant: V02
@@ -62,7 +62,7 @@ Nothing needs escaping.
 `target` is an existing ID (short or full), or `NEW/KIND/SLUG`. `job_id` must be unique;
 re-sending the same one with the same content is a safe no-op.
 
-Always echo `state_hash: e04f07a2` so the CLI can tell you if you were working from a stale
+Always echo `state_hash: eee7dcce` so the CLI can tell you if you were working from a stale
 copy of this pack.
 
 ## Naming rules you need to know
@@ -81,7 +81,7 @@ copy of this pack.
 Use these only to understand the shape of the space. **Do not allocate from them** - propose
 `NEW/KIND/SLUG` instead and let the CLI assign.
 
-`CHR 003   GRP 006   LOC 012   PRP 011   CRT 004   COS 001   VEH 001   FX 001   REF 002`
+`CHR 003   GRP 009   LOC 018   PRP 016   CRT 004   COS 001   VEH 001   FX 001   REF 002`
 
 ---
 
@@ -119,6 +119,18 @@ Use these only to understand the shape of the space. **Do not allocate from them
   - status CONCEPT | variants V01 (canonical)
   - Completely featureless pale stone egg-shaped heads, no eyes or mouth. Dark blue-black quilted coats with small dagger loops. Distinct from GRP-004: no carved features, no shields, no spears.
 
+**GRP-006** `SHM-GRP-006-NOBLES-IRANIAN`
+  - status RESERVED | no assets yet | family NOBLES | FLAGS NO-ASSET
+  - Five to eight Iranian nobles and commanders with visible variation between them. Petitioners, not an army: tired irregular spacing, no raised weapons. Masks are smooth continuous human-like surfaces with small eye openings - never skull or skeletal.
+
+**GRP-007** `SHM-GRP-007-RIDERS-IRANIAN`
+  - status RESERVED | no assets yet | family RIDERS | FLAGS NO-ASSET
+  - Mounted political escort accompanying the delegation. Explicitly not an invading force: no formation, no drawn weapons, harness and travel wear.
+
+**GRP-008** `SHM-GRP-008-ATTENDANTS-JAMSHID`
+  - status RESERVED | no assets yet | family ATTENDANTS | FLAGS NO-ASSET
+  - Jamshid servants and personal guards inside the Hall of Columns. Distinct from GRP-005 palace guards: attendants carry and serve rather than stand post.
+
 ### Locations (LOC)
 
 **LOC-001** `SHM-LOC-001-GATE-CEREMONIAL-STONE-RELIEF`
@@ -141,7 +153,7 @@ Use these only to understand the shape of the space. **Do not allocate from them
   - status CONCEPT | variants V01 (canonical)
   - Late dry season. Grey rocky ridge line across the frame, teal haze sky, rust and sage scrub in the foreground. Establishing wide, no architecture.
 
-**LOC-006** `SHM-LOC-006-MERDAS-PRIVATE-HALL`
+**LOC-006** `SHM-LOC-006-HALL-OF-COLUMNS`
   - status CONCEPT | variants V01 (canonical)
   - Night. Two rows of massive weathered columns, a throne entirely buried under a vast white shroud that pools across the floor, a small gold crown set alone on a plinth beside it, deep blue void beyond the arch.
 
@@ -165,6 +177,30 @@ Use these only to understand the shape of the space. **Do not allocate from them
   - status CONCEPT | variants V01 (canonical), V02 | FLAGS NEEDS-CANONICAL;REVIEW-SPLIT
   - Descending secondary circulation. V01 a carved-rock corridor with blue-washed arched niches and one long central stair. V02 a large mudbrick multi-level courtyard with several stairs and small trees. These may be two different places.
 
+**LOC-012** `SHM-LOC-012-APPROACH-ZAHHAK-DOMAIN`
+  - status RESERVED | no assets yet | family APPROACH | FLAGS NO-ASSET
+  - Cold rocky plain with a distant stone road leading to Zahhak severe stone complex. Wide empty land between converging groups. Overcast, weak crosswind.
+
+**LOC-013** `SHM-LOC-013-COURT-ZAHHAK-OUTER`
+  - status RESERVED | no assets yet | family COURT | FLAGS NO-ASSET
+  - Outer courtyard of Zahhak complex where riders and animals wait outside the audience hall.
+
+**LOC-014** `SHM-LOC-014-OUTSKIRTS-IRAN`
+  - status RESERVED | no assets yet | family OUTSKIRTS | FLAGS NO-ASSET
+  - Healthy liveable edge of the Iranian city before Zahhak arrives. Partly green, cultivated, intact - deliberately not a post-apocalyptic ruin.
+
+**LOC-015** `SHM-LOC-015-CAUSEWAY-ROYAL`
+  - status RESERVED | no assets yet | family CAUSEWAY | FLAGS NO-ASSET
+  - Ascending ramp and stair leading to the seat of power. Built for the rising line of Zahhak entry.
+
+**LOC-016** `SHM-LOC-016-GATE-LOWER-MOUNT`
+  - status RESERVED | no assets yet | family GATE | FLAGS NO-ASSET
+  - Secondary lower gate where Jamshid mount waits during the escape. Smaller and plainer than the main ceremonial gate.
+
+**LOC-017** `SHM-LOC-017-DESERT-FINAL`
+  - status RESERVED | no assets yet | family DESERT | FLAGS NO-ASSET
+  - Final desert with a fully open horizon and no ridge line. Closing image of the episode.
+
 ### Props (PRP)
 
 **PRP-001** `SHM-PRP-001-STAFF-COBRA-BRONZE`
@@ -178,6 +214,26 @@ Use these only to understand the shape of the space. **Do not allocate from them
 **PRP-010** `SHM-PRP-010-GIFT-DIPLOMATIC-SET`
   - status CONCEPT | variants V01 (canonical), V02 | family GIFT | FLAGS NEEDS-CANONICAL;REVIEW-SPLIT
   - V01 flat-lay on a stone slab: sheathed dagger on black velvet, ornate silver mace, folded crimson gold-thread textiles, black lidded jar, raw crystal, silver casket. V02 staged in a niche: carved stone bird vessel, jewelled textile hanging, tooled belt with gold buckle, gold casket, gold chain.
+
+**PRP-011** `SHM-PRP-011-BANNER-IRANIAN-ROYAL`
+  - status RESERVED | no assets yet | family BANNER | FLAGS NO-ASSET
+  - Official Iranian royal banner. Carried upright by the delegation, then lowered to near-horizontal before Zahhak as a surrendered line.
+
+**PRP-012** `SHM-PRP-012-VESSEL-RITUAL`
+  - status RESERVED | no assets yet | family VESSEL | FLAGS NO-ASSET
+  - Simple stone or metal ritual vessel. Heavy and plain, not treasure - no jewels, coins or decorative glow.
+
+**PRP-013** `SHM-PRP-013-INSIGNIA-POWER`
+  - status RESERVED | no assets yet | family INSIGNIA | FLAGS NO-ASSET
+  - Restrained metal insignia of political authority. One of the three limited ceremonial gifts.
+
+**PRP-014** `SHM-PRP-014-REGALIA-JAMSHID`
+  - status RESERVED | no assets yet | family REGALIA | FLAGS NO-ASSET
+  - Royal elements Jamshid can drop during the escape - shed to move faster and to shed the office itself.
+
+**PRP-015** `SHM-PRP-015-HARNESS-MOUNT`
+  - status RESERVED | no assets yet | family HARNESS | FLAGS NO-ASSET
+  - Entirely functional saddle and harness for the terrestrial mount. Working tack, no ornament.
 
 ### Creatures (CRT)
 
@@ -208,20 +264,6 @@ _Nothing approved yet. Rules appear here once Hamed approves them in the review 
 ---
 
 ## Open questions
-
-### Q1 â€” Is `LOC-011` one location or two?
-
-`SHM-LOC-011-PALACE-UNDERLEVELS` holds two variants that look like **different places**:
-V01 a carved-rock corridor with blue-washed niches, V02 a mudbrick multi-level courtyard.
-Split into two `LOC` numbers, or keep as one location seen two ways?
-*Currently:* one entity, canonical `V01` (provisional). Flagged `REVIEW-SPLIT`.
-
-### Q2 â€” Are the three ceremonial gates three gates, or three takes of one?
-
-`LOC-001` (stone relief), `LOC-002` (cypress court), `LOC-003` (marble screen) are registered as
-three separate locations. If they are actually rejected takes of a single gate, they should
-collapse into one entity with three variants.
-*Currently:* three entities. All flagged `REVIEW-SPLIT`.
 
 ### Q3 â€” Confirm Zahhak's canonical look
 
@@ -268,4 +310,10 @@ knowing the plan's credit balance. Set them against the real budget.
 
 ---
 
-_End of context pack. `state_hash: e04f07a2`_
+*Resolved 2026-09-03 by the EP001 script:*
+*Q1 â€” `LOC-011` V01 is the escape route; kept as one location.*
+*Q2 â€” `LOC-002` is Iran's main gate. `LOC-001` and `LOC-003` remain separate gates.*
+
+---
+
+_End of context pack. `state_hash: eee7dcce`_
