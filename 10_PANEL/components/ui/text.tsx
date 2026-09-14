@@ -1,65 +1,84 @@
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 
-/** Page title, optional description, optional right-aligned count. */
+/** Page title in the display serif, an optional mono meta line, and an optional description. */
 export function PageHeader({
   title,
+  eyebrow,
   meta,
   children,
 }: {
   title: ReactNode
+  /** Small mono line above the title. */
+  eyebrow?: ReactNode
   meta?: ReactNode
   children?: ReactNode
 }) {
   return (
-    <header className="space-y-2">
-      <div className="flex items-baseline justify-between gap-4">
-        <h1 className="text-xl font-semibold tracking-tight text-fg">{title}</h1>
-        {meta && <span className="shrink-0 text-sm text-muted">{meta}</span>}
+    <header className="border-b border-edge pb-9">
+      {eyebrow && <div className="eyebrow mb-4 text-faint">{eyebrow}</div>}
+      <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
+        <h1 className="font-display text-[56px] leading-[0.95] tracking-[-0.01em] text-fg">{title}</h1>
+        {meta && <span className="pb-1.5 font-mono text-xs text-muted tabular-nums">{meta}</span>}
       </div>
       {children && (
-        <p className="max-w-3xl text-sm leading-relaxed text-muted">{children}</p>
+        <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-muted">{children}</p>
       )}
-      <hr className="hairline mt-4!" />
     </header>
   )
 }
 
-const HEADING_TONES = {
-  accent: 'text-accent',
-  good: 'text-good',
-  bad: 'text-bad',
-  muted: 'text-muted',
+/**
+ * The bar pinned to the top of a working page (Review, References). Bleeds out
+ * over the content padding set in app/layout.tsx -- keep the two in step.
+ */
+export function StickyHeader({ className, children }: { className?: string; children: ReactNode }) {
+  return (
+    <div
+      className={cn(
+        'sticky top-0 z-30 -mx-6 -mt-10 mb-10 border-b border-edge bg-ink/95 px-6 pt-7 pb-4 lg:-mx-12 lg:px-12',
+        className,
+      )}
+    >
+      {children}
+    </div>
+  )
+}
+
+const DOT_TONES = {
+  accent: 'bg-fg',
+  good: 'bg-good',
+  bad: 'bg-bad',
+  muted: 'bg-faint',
 } as const
 
+/** Mono section label, its count, and a rule running out to the right edge. */
 export function SectionHeading({
   tone = 'accent',
+  count,
   className,
   children,
 }: {
-  tone?: keyof typeof HEADING_TONES
+  tone?: keyof typeof DOT_TONES
+  count?: number
   className?: string
   children: ReactNode
 }) {
   return (
-    <h2
-      className={cn(
-        'mb-4 flex items-center gap-2.5 text-[11px] font-semibold tracking-[0.12em] uppercase',
-        HEADING_TONES[tone],
-        className,
-      )}
-    >
-      <span aria-hidden className="lozenge" />
-      {children}
+    <h2 className={cn('mb-6 flex items-center gap-3', className)}>
+      <span aria-hidden className={cn('size-1.5 shrink-0 rounded-full', DOT_TONES[tone])} />
+      <span className="eyebrow text-fg/85">{children}</span>
+      {count !== undefined && <span className="font-mono text-[11px] leading-none text-faint tabular-nums">{count}</span>}
+      <span aria-hidden className="h-px flex-1 bg-edge" />
     </h2>
   )
 }
 
 const BADGE_TONES = {
-  accent: 'bg-accent/15 text-accent ring-accent/25',
-  good: 'bg-good/15 text-good ring-good/25',
-  bad: 'bg-bad/15 text-bad ring-bad/25',
-  muted: 'bg-white/[0.06] text-muted ring-white/10',
+  accent: 'bg-white/[0.09] text-fg',
+  good: 'bg-good/10 text-good',
+  bad: 'bg-bad/10 text-bad',
+  muted: 'text-muted ring-1 ring-edge-strong ring-inset',
 } as const
 
 export function Badge({
@@ -74,8 +93,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-md px-2 py-0.5 text-[11px] font-medium',
-        'ring-1 ring-inset',
+        'inline-flex h-5 items-center rounded-[5px] px-1.5 text-[11px] leading-none font-medium whitespace-nowrap',
         BADGE_TONES[tone],
         className,
       )}

@@ -3,17 +3,22 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { revalidatePath } from 'next/cache'
+import { splitTags } from '@/lib/indexing'
+import { parseMentions } from '@/lib/mentions'
 import { P } from '@/lib/paths'
-import { getCandidates, getLearnings } from '@/lib/store'
-import type { Learning, ReviewDecision, Verdict } from '@/lib/types'
+import { Invalid, parseJsonArray, readUploads, type PendingUpload } from '@/lib/uploads'
+import { getCandidates, getLearnings, resolveRefToken } from '@/lib/store'
+import type { Candidate, Learning, ReviewDecision, Verdict } from '@/lib/types'
 
 /**
- * Write side of the panel — append-only JSONL, nothing else.
+ * Write side of the panel. Two things only:
+ *   - append-only JSONL (REVIEW_LOG, LEARNINGS)
+ *   - raw reviewer uploads dropped into 09_OUTPUT/_uploads/<decision id>/
  *
- * The panel deliberately does not move files or touch the CSV registries. It
- * records intent; the worker observes REVIEW_LOG.jsonl and performs the actual
- * promotion, rejection and requeue. One writer for the filesystem means no
- * races against the PowerShell tools.
+ * The panel never names, moves or registers a file and never touches the CSV
+ * registries. It records intent; the worker observes REVIEW_LOG.jsonl, files
+ * the uploads, and performs the promotion, rejection and requeue. One writer
+ * for the registries means no races against the PowerShell tools.
  */
 
 const REVIEWER = process.env.SHM_REVIEWER || 'hamed'
@@ -33,6 +38,64 @@ export interface ActionResult {
 }
 
 /**
+ * The reference list only matters when this decision queues a generation: a
+ * denial that regenerates, or an accepted draft that buys the final. Returns
+ * undefined when it is irrelevant or unchanged.
+ */
+async function readRefs(
+  formData: FormData,
+  candidate: Candidate,
+  regenerates: boolean,
+  uploadIds: Set<string>,
+): Promise<string[] | undefined> {
+  const raw = parseJsonArray(formData, 'refs')
+  if (!raw || !regenerates) return undefined
+  if (raw.length > 12) throw new Invalid('At most 12 references.')
+
+  const refs: string[] = []
+  for (const r of raw) {
+    const token = String(r ?? '').trim()
+    if (token.startsWith('upload:')) {
+      if (!uploadIds.has(token.slice(7))) {
+        throw new Invalid(`Reference ${token} has no matching upload.`)
+      }
+    } else if (!token.startsWith('@') || !(await resolveRefToken(token))) {
+      throw new Invalid(`Reference ${token} does not resolve to a file in the index.`)
+    }
+    if (!refs.includes(token)) refs.push(token)
+  }
+
+  const before = candidate.sidecar.refs ?? []
+  const same = refs.length === before.length && refs.every((t, i) => t === before[i])
+  return same ? undefined : refs
+}
+
+/**
+ * An @-mention may only point at a reference this job actually carries -- the
+ * list under "References for the regeneration" (or the job's own list when
+ * nothing is regenerated). Anything else would describe an image the model
+ * never receives.
+ */
+async function checkMentions(
+  mentions: string[],
+  candidate: Candidate,
+  refs: string[] | undefined,
+): Promise<void> {
+  const list = refs ?? candidate.sidecar.refs ?? []
+  const paths = await Promise.all(list.map((r) => (r.startsWith('upload:') ? null : resolveRefToken(r))))
+  for (const m of mentions) {
+    const inList = m.startsWith('@upload:')
+      ? list.includes(m.slice(1))
+      : await resolveRefToken(m).then((p) => p !== null && paths.includes(p))
+    if (!inList) {
+      throw new Invalid(
+        `${m} is not one of the references for this job. Add it under References, or remove it from the note.`,
+      )
+    }
+  }
+}
+
+/**
  * Returns a result rather than throwing: a thrown error in a Server Action
  * surfaces as a full-page crash, which would lose the note Hamed just typed.
  */
@@ -43,8 +106,7 @@ export async function decide(
   const candidatePath = String(formData.get('candidate') ?? '')
   const verdict = String(formData.get('verdict') ?? '') as Verdict
   const notes = String(formData.get('notes') ?? '').trim()
-  const tags = String(formData.get('tags') ?? '')
-    .split(',').map((t) => t.trim()).filter(Boolean)
+  const tags = splitTags(String(formData.get('tags') ?? ''))
   const requeue = formData.get('requeue') === 'on'
 
   if (!candidatePath) return { ok: false, error: 'Missing candidate.' }
@@ -65,8 +127,27 @@ export async function decide(
   if (!candidate) return { ok: false, error: `Unknown candidate: ${candidatePath}` }
   if (candidate.decided) return { ok: true } // idempotent: already reviewed
 
+  const id = newId('rev')
+  const regenerates = verdict === 'denied' ? requeue : candidate.sidecar.stage === 'draft'
+
+  let uploads: PendingUpload[]
+  let refs: string[] | undefined
+  try {
+    uploads = await readUploads(formData, id)
+    const uploadIds = new Set(uploads.map((u) => u.meta.id))
+    refs = await readRefs(formData, candidate, regenerates, uploadIds)
+    await checkMentions(parseMentions(notes), candidate, refs)
+  } catch (e) {
+    if (e instanceof Invalid) return { ok: false, error: e.message }
+    throw e
+  }
+
+  // The review page checks first, then holds the real submit behind a few
+  // seconds of Undo. Errors must surface now, while the reviewer is still here.
+  if (formData.get('validateOnly') === '1') return { ok: true }
+
   const record: ReviewDecision = {
-    id: newId('rev'),
+    id,
     ts: new Date().toISOString(),
     reviewer: REVIEWER,
     candidate: candidatePath,
@@ -80,11 +161,27 @@ export async function decide(
     tags,
     model: candidate.sidecar.model,
     requeue: verdict === 'denied' ? requeue : false,
+    ...(refs && { refs, refsBefore: candidate.sidecar.refs ?? [] }),
+    ...(uploads.length > 0 && { uploads: uploads.map((u) => u.meta) }),
   }
 
-  await appendJsonl(P.reviewLog, record)
+  // Files first, decision second: the worker must never see a decision whose
+  // upload is not on disk yet. If the log append fails, take the files back.
+  const dir = path.join(P.uploads, id)
+  try {
+    if (uploads.length) {
+      await fs.mkdir(dir, { recursive: true })
+      for (const u of uploads) await fs.writeFile(path.join(P.root, u.meta.file), u.bytes)
+    }
+    await appendJsonl(P.reviewLog, record)
+  } catch (e) {
+    await fs.rm(dir, { recursive: true, force: true })
+    return { ok: false, error: `Could not save the decision: ${(e as Error).message}` }
+  }
+
   revalidatePath('/')
   revalidatePath('/queue')
+  revalidatePath('/decided')
   return { ok: true }
 }
 

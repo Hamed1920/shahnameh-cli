@@ -1,0 +1,55 @@
+{
+  "jobId": "J-20260903-W2P",
+  "parentJobId": null,
+  "hfJobId": "68d22747-cd8f-40b9-b5cc-e1fe3d5eb5a1",
+  "attempt": 1,
+  "target": "SHM-GRP-008-ATTENDANTS-JAMSHID",
+  "variant": "V01",
+  "model": "nano_banana_pro",
+  "prompt": "Group reference sheet. Five attendants of Jamshid's household standing in a shallow line inside a pale columned interior, low warm lamplight. Masks are smooth continuous pale human-like surfaces with small narrow eye openings. Fine pale court dress, cleaner and lighter than travel clothing: soft belted tunics in bone, pale rose and muted gold, with narrow woven trim. They carry vessels, folded cloth and a lamp - serving objects, not weapons, and they stand at ease rather than at post. Physically real and tactile, muted palette, soft directional light. No magic, no glow, no floating particles.",
+  "params": {
+    "aspect_ratio": "16:9",
+    "resolution": "2k"
+  },
+  "refs": [
+    "@GRP-005"
+  ],
+  "createdAt": "2026-09-03T12:50:31.925Z",
+  "costCredits": 2,
+  "candidates": [
+    {
+      "file": "T01.png",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_124940_68d22747-cd8f-40b9-b5cc-e1fe3d5eb5a1.png"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-03T12:49:40.305609Z",
+      "display_name": "Nano Banana Pro",
+      "id": "68d22747-cd8f-40b9-b5cc-e1fe3d5eb5a1",
+      "job_type": "nano_banana_pro",
+      "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_124940_68d22747-cd8f-40b9-b5cc-e1fe3d5eb5a1_min.webp",
+      "params": {
+        "application": null,
+        "aspect_ratio": "16:9",
+        "batch_size": 1,
+        "height": 1536,
+        "input_image": null,
+        "input_images": [
+          {
+            "id": "35d0509c-1b30-4d99-8f32-48fa0938a38b",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/35d0509c-1b30-4d99-8f32-48fa0938a38b.jpg"
+          }
+        ],
+        "prompt": "Group reference sheet. Five attendants of Jamshid's household standing in a shallow line inside a pale columned interior, low warm lamplight. Masks are smooth continuous pale human-like surfaces with small narrow eye openings. Fine pale court dress, cleaner and lighter than travel clothing: soft belted tunics in bone, pale rose and muted gold, with narrow woven trim. They carry vessels, folded cloth and a lamp - serving objects, not weapons, and they stand at ease rather than at post. Physically real and tactile, muted palette, soft directional light. No magic, no glow, no floating particles.",
+        "resolution": "2k",
+        "surface": null,
+        "width": 2752
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_124940_68d22747-cd8f-40b9-b5cc-e1fe3d5eb5a1.png",
+      "status": "completed"
+    }
+  ]
+}

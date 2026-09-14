@@ -35,7 +35,7 @@ export function Disclosure({
         onClick={() => setOpen((o) => !o)}
         className={cn(
           'focus-ring inline-flex cursor-pointer items-center gap-1.5 rounded',
-          'text-xs text-muted transition-colors duration-150 hover:text-fg',
+          'text-[13px] text-muted transition-colors duration-150 hover:text-fg',
         )}
       >
         <motion.span
@@ -59,7 +59,7 @@ export function Disclosure({
             transition={{ duration: 0.22, ease: EASE }}
             className="overflow-hidden"
           >
-            <div className="pt-2">{children}</div>
+            <div className="pt-3">{children}</div>
           </motion.div>
         )}
       </AnimatePresence>

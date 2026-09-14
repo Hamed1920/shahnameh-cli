@@ -9,13 +9,20 @@ import { NAV, SIDEBAR_COOKIE, SIDEBAR_RAIL, SIDEBAR_WIDTH } from '@/components/n
 import { EASE, SPRING } from '@/components/ui/motion-tokens'
 import { cn } from '@/lib/cn'
 
+const fade = {
+  initial: { opacity: 0, x: -4 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: -4 },
+  transition: { duration: 0.15, ease: EASE },
+}
+
 /**
  * Collapsible icon rail.
  *
  * Geometry note: every row is inset 8px (mx-2) and pads 12px, so an icon sits
  * 20px from the aside edge and its centre lands at 30px — exactly half the
- * 60px rail. That is why the icons do not drift sideways as the rail
- * collapses; only the labels move.
+ * 60px rail. The 24px mark is inset 18px for the same centre. That is why
+ * nothing drifts sideways as the rail collapses; only the labels move.
  *
  * Lives in the root layout, which persists across client navigations, so the
  * rail never remounts or replays its animation when you change page.
@@ -37,32 +44,29 @@ export function Sidebar({ defaultCollapsed }: { defaultCollapsed: boolean }) {
     <motion.aside
       // Tooltips escape this box, so it must not clip. Each row clips its own
       // label instead.
-      className="glass relative z-20 flex h-full shrink-0 flex-col border-r border-edge"
+      className="relative z-20 flex h-full shrink-0 flex-col border-r border-edge bg-ink"
       initial={false}
       animate={{ width: collapsed ? SIDEBAR_RAIL : SIDEBAR_WIDTH }}
       transition={SPRING}
     >
-      <div className="flex h-14 shrink-0 items-center gap-3 overflow-hidden border-b border-edge pl-5">
-        <span aria-hidden className="grid size-5 shrink-0 place-items-center">
-          <span className="size-2.5 rotate-45 rounded-[2px] bg-linear-to-br from-accent-lit to-accent-deep shadow-[0_0_14px_rgba(201,162,39,0.55)]" />
+      <div className="flex h-18 shrink-0 items-center gap-3 overflow-hidden pl-[18px]">
+        <span
+          aria-hidden
+          className="grid size-6 shrink-0 place-items-center rounded-md bg-fg font-sans text-[15px] leading-none text-ink"
+        >
+          ش
         </span>
         <AnimatePresence initial={false}>
           {!collapsed && (
-            <motion.span
-              initial={{ opacity: 0, x: -4 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -4 }}
-              transition={{ duration: 0.15, ease: EASE }}
-              className="text-sm font-semibold tracking-[0.14em] whitespace-nowrap text-accent"
-            >
-              SHAHNAMEH
+            <motion.span {...fade} className="font-display text-[22px] leading-none whitespace-nowrap text-fg">
+              Shahnameh
             </motion.span>
           )}
         </AnimatePresence>
       </div>
 
-      <nav aria-label="Sections" className="py-3">
-        <ul className="space-y-0.5">
+      <nav aria-label="Sections" className="pt-2">
+        <ul className="space-y-px">
           {NAV.map(({ href, label, icon: Icon }) => {
             const active = href === '/' ? pathname === '/' : pathname.startsWith(href)
             return (
@@ -75,9 +79,9 @@ export function Sidebar({ defaultCollapsed }: { defaultCollapsed: boolean }) {
                   onFocus={() => setHovered(href)}
                   onBlur={() => setHovered(null)}
                   className={cn(
-                    'focus-ring relative flex h-10 items-center gap-3 overflow-hidden rounded-lg px-3',
+                    'focus-ring relative flex h-9 items-center gap-3 overflow-hidden rounded-md px-3',
                     'transition-colors duration-150',
-                    active ? 'text-fg' : 'text-muted hover:bg-raise hover:text-fg',
+                    active ? 'text-fg' : 'text-muted hover:bg-white/[0.03] hover:text-fg',
                   )}
                 >
                   {active && (
@@ -85,29 +89,13 @@ export function Sidebar({ defaultCollapsed }: { defaultCollapsed: boolean }) {
                       aria-hidden
                       layoutId="nav-active"
                       transition={SPRING}
-                      className={cn(
-                        'absolute inset-0 rounded-lg ring-1 ring-accent/30 ring-inset',
-                        'bg-linear-to-r from-accent/22 to-accent/8',
-                        'shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_20px_-6px_rgba(201,162,39,0.6)]',
-                      )}
+                      className="absolute inset-0 rounded-md bg-white/[0.07]"
                     />
                   )}
-                  <Icon
-                    aria-hidden
-                    className={cn(
-                      'relative size-5 shrink-0 transition-colors duration-150',
-                      active && 'text-accent',
-                    )}
-                  />
+                  <Icon aria-hidden strokeWidth={1.75} className="relative size-5 shrink-0" />
                   <AnimatePresence initial={false}>
                     {!collapsed && (
-                      <motion.span
-                        initial={{ opacity: 0, x: -4 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -4 }}
-                        transition={{ duration: 0.15, ease: EASE }}
-                        className="relative text-sm font-medium whitespace-nowrap"
-                      >
+                      <motion.span {...fade} className="relative text-[13.5px] whitespace-nowrap">
                         {label}
                       </motion.span>
                     )}
@@ -123,9 +111,9 @@ export function Sidebar({ defaultCollapsed }: { defaultCollapsed: boolean }) {
                       exit={{ opacity: 0, x: -4, y: '-50%' }}
                       transition={{ duration: 0.14, ease: EASE }}
                       className={cn(
-                        'pointer-events-none absolute top-1/2 left-full z-50 ml-2',
-                        'rounded-md border border-edge bg-raise px-2.5 py-1.5',
-                        'text-xs whitespace-nowrap text-fg shadow-lg shadow-black/50',
+                        'pointer-events-none absolute top-1/2 left-full z-50 ml-3',
+                        'rounded-md border border-edge-strong bg-raise px-2.5 py-1.5',
+                        'text-xs whitespace-nowrap text-fg',
                       )}
                     >
                       {label}
@@ -138,31 +126,25 @@ export function Sidebar({ defaultCollapsed }: { defaultCollapsed: boolean }) {
         </ul>
       </nav>
 
-      <div className="mt-auto border-t border-edge p-2">
+      <div className="mt-auto p-2 pb-3">
         <button
           type="button"
           onClick={toggle}
           aria-expanded={!collapsed}
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           className={cn(
-            'focus-ring flex h-10 w-full cursor-pointer items-center gap-3 overflow-hidden rounded-lg px-3',
-            'text-muted transition-colors duration-150 hover:bg-raise hover:text-fg',
+            'focus-ring flex h-9 w-full cursor-pointer items-center gap-3 overflow-hidden rounded-md px-3',
+            'text-faint transition-colors duration-150 hover:bg-white/[0.03] hover:text-fg',
           )}
         >
           {collapsed ? (
-            <PanelLeftOpen aria-hidden className="size-5 shrink-0" />
+            <PanelLeftOpen aria-hidden strokeWidth={1.75} className="size-5 shrink-0" />
           ) : (
-            <PanelLeftClose aria-hidden className="size-5 shrink-0" />
+            <PanelLeftClose aria-hidden strokeWidth={1.75} className="size-5 shrink-0" />
           )}
           <AnimatePresence initial={false}>
             {!collapsed && (
-              <motion.span
-                initial={{ opacity: 0, x: -4 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -4 }}
-                transition={{ duration: 0.15, ease: EASE }}
-                className="text-sm whitespace-nowrap"
-              >
+              <motion.span {...fade} className="text-[13px] whitespace-nowrap">
                 Collapse
               </motion.span>
             )}

@@ -1,0 +1,100 @@
+{
+  "jobId": "J-20260903-DEX",
+  "parentJobId": null,
+  "hfJobId": "8a82747f-a73c-4248-8c28-0f4633621089",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "P08",
+  "target": "SHM-EP001-SC008-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP001-ZAHHAK-ENTRY/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nPreserve the same travel dust, weak crosswind, group order and Zahhak’s reliance on the new staff.\n\nSHOT 1 — GAIT AGAINST TERRAIN — 0:00–0:05:\n65mm close lateral view of staff, legs and steep gravel. Zahhak completes two slow physical phases of one gait cycle. The staff bites stone; the stronger foot advances; the lame side follows with visible weight transfer. Clothing grazes dust.\n\nSHOT 2 — PROCESSION IN WIDTH — 0:05–0:10:\n24mm very wide rear three-quarter shot across a broad ascending pass. Zahhak leads on foot near the lower left; the path bends through the full horizontal frame and rises toward the upper right. Nobles walk behind; riders trail at irregular distances. The weak banner creates a single restrained color or tonal break.\n\nSHOT 3 — RIDERS WAIT FOR HIM — 0:10–0:15:\n85mm compressed view across the slope. Several horses have already reached a higher turn and stand waiting while Zahhak slowly closes the distance below. One rider looks back, then lowers the gaze. This delay makes Zahhak’s physical limitation real without reducing his authority. End as the city’s distant outer wall first appears beyond the ridge.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nDry wind, staff striking gravel, uneven footsteps, sparse hoof movement, harness strain, horse breathing and no military rhythm.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: PROP_IRANIAN_BANNER.",
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": "false",
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V03",
+    "@REF-001/V02",
+    "@LOC-004",
+    "@PRP-001"
+  ],
+  "createdAt": "2026-09-03T13:58:55.659Z",
+  "costCredits": 37.5,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_135254_8a82747f-a73c-4248-8c28-0f4633621089.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-03T13:52:54.766178Z",
+      "display_name": "Seedance 2.5",
+      "id": "8a82747f-a73c-4248-8c28-0f4633621089",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": false,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "85203183-2705-4902-bb7f-d8ae7eae320d",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/85203183-2705-4902-bb7f-d8ae7eae320d.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a41c9ad4-337f-4d1c-9a7e-461d42eb25be",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/a41c9ad4-337f-4d1c-9a7e-461d42eb25be.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "9c291f62-17e2-4866-9314-d13ea2186a7d",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/9c291f62-17e2-4866-9314-d13ea2186a7d.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "7cd6462d-e2db-4bb0-94d4-002f0a857e2d",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/7cd6462d-e2db-4bb0-94d4-002f0a857e2d.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nPreserve the same travel dust, weak crosswind, group order and Zahhak’s reliance on the new staff.\n\nSHOT 1 — GAIT AGAINST TERRAIN — 0:00–0:05:\n65mm close lateral view of staff, legs and steep gravel. Zahhak completes two slow physical phases of one gait cycle. The staff bites stone; the stronger foot advances; the lame side follows with visible weight transfer. Clothing grazes dust.\n\nSHOT 2 — PROCESSION IN WIDTH — 0:05–0:10:\n24mm very wide rear three-quarter shot across a broad ascending pass. Zahhak leads on foot near the lower left; the path bends through the full horizontal frame and rises toward the upper right. Nobles walk behind; riders trail at irregular distances. The weak banner creates a single restrained color or tonal break.\n\nSHOT 3 — RIDERS WAIT FOR HIM — 0:10–0:15:\n85mm compressed view across the slope. Several horses have already reached a higher turn and stand waiting while Zahhak slowly closes the distance below. One rider looks back, then lowers the gaze. This delay makes Zahhak’s physical limitation real without reducing his authority. End as the city’s distant outer wall first appears beyond the ridge.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nDry wind, staff striking gravel, uneven footsteps, sparse hoof movement, harness strain, horse breathing and no military rhythm.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: PROP_IRANIAN_BANNER.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_135254_8a82747f-a73c-4248-8c28-0f4633621089.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_135254_8a82747f-a73c-4248-8c28-0f4633621089_thumbnail.webp"
+    }
+  ]
+}

@@ -39,10 +39,202 @@ Open decisions live in [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md) — 7 outstanding.
 - [ ] First real generation, then pin down the response schema in `worker/lib/hf.mjs`
 - [ ] Resolve the open questions
 - [ ] Define `SHM-EP001` and its shotlist
+- [ ] **Hamed: decide the GitHub repo's visibility** (public on 2026-09-14), then make the first
+      asset commit and push
 
 ---
 
 ## Log
+
+### 2026-09-14 — Assets go into git (via LFS) so other computers can work
+
+- **Policy reversed (Hamed: "make every reference, output, all that stuff not gitignored ... if
+  another device also wants to work they can").** The repo now carries the whole project. It was
+  code and metadata only.
+- `.gitignore` is still an allowlist. It now re-includes `01`–`09`, `99_INBOX` and `startup.md`,
+  working space under `09_OUTPUT/_*` included. The media-extension layer and the `*.docx` rule
+  are gone. `06_COSTUMES` and `99_INBOX` got `.gitkeep` so a clone has the full layout.
+- **Media via Git LFS.** Hamed chose LFS over plain git: 138 MB today, growing with every take.
+  The new `.gitattributes` covers images, video, audio, psd/ai and pdf/office docs. Repo-local LFS
+  hooks installed. A scratch-index test turned a 6 MB shot into a 130-byte pointer.
+- **Queue state now tracked:** `QUEUE.jsonl`, `state.json`, `FILINGS.jsonl`,
+  `INDEX_OPS_RESULTS.jsonl`. The worker skips jobs and decisions listed in `state.json`, so a
+  clone without it would replay all 16 past decisions, re-queuing finals and revisions and
+  spending credits. Still ignored: `worker.lock`, `*.log`, `*.tmp`, `*.bak`, sync scratch.
+- `*.jsonl merge=union`: every JSONL writer only appends, so two machines' panel decisions merge
+  cleanly. CSV registries and `state.json` are rewritten whole, hence the new rule in CLAUDE.md
+  and `startup.md` Part 7: **one worker at a time across all machines, pull before, push after.**
+- Not committed or pushed. `git add -A --dry-run` gives 173 paths, 68 of them media, with nothing
+  from `node_modules`, `.next` or `.env`. The stray root copy of the EP001 `.docx` is still left
+  out (the real one is in `07_EPISODES/.../script/`).
+
+### 2026-09-14 — References archiving applies within seconds, and says why when it can't
+
+Hamed's archive requests (CHR-001 V04, V05, then both again) sat at "waiting". Two causes:
+
+- **The worker was started before the References page existed.** It loads its code once, so it
+  never read `INDEX_OPS.jsonl`. It was stopped while idle and restarted. V05 was archived;
+  V04 was refused because P12 (SC012) is waiting for review with `@CHR-001/V04` in its
+  references. It can be archived once P12 is decided.
+- **Even new code only applied requests after the whole queue drained**, which can take an hour.
+  The worker now checks every 3 s, during generations too, under an in-process registry lock
+  shared with the passes (`exclusive()` in `worker.mjs`). Registries are re-read per job.
+  Tested in the sandbox against a stand-in Higgsfield CLI: requests applied 2.4 s after sending,
+  mid-generation.
+
+Also:
+- Archiving a look that an earlier request already archived is noted ("already archived") instead
+  of failing.
+- The in-use check now covers results waiting for review, and reads the worker's live state.
+- Archived V numbers are reserved (`archivedVariants`), so a new upload or move never takes a V
+  that is still in the archive.
+- The References page badge now says whether the worker is stopped or needs a restart for newer
+  code (lock pid + lock time vs worker file times), instead of "is the worker running?".
+
+### 2026-09-14 — Decided page shows the right take; accepted shot finals no longer overwrite
+
+- **Bugs found (Hamed: "buggy, duplicates, sometimes it doesn't show"):**
+  - the page looked in `07_EPISODES/*/shots/` for any file starting with the shot ID first, so
+    every approved draft showed its shot's final: SC001, SC002 and SC003 each appeared twice
+    with the same 1080p video, and the drafts in `_drafts/` were never shown;
+  - accepted entity finals (filed into an entity folder) could never be found;
+  - denied takes showed no video, and "regenerating" stayed on forever;
+  - nothing told draft, final or attempt apart; notes showed raw `@upload:u1`;
+  - before the live refresh, a decision committed on leaving Review did not appear until reload.
+- **Fix:** `lib/decided.ts` works each card out from what the worker did: its
+  `PROMOTED` / `DRAFT APPROVED` / `REJECTED` log lines, with the manifest and deterministic
+  paths as fallback. Each card shows its own take, stage, attempt, date, block label, and the
+  state of the job it queued. Checked on the live page: 16 cards, 16 distinct files, all load.
+- **Worker bug fixed (`promoteShot`):** a second accepted final of the same shot and variant
+  was copied over the first (the name reused Higgsfield's output index, always T01). It now
+  takes the next free `_Tnn` and reuses a byte-identical file on retry. Sandbox-tested; no real
+  shot had been overwritten yet. Live since the worker restart at 13:05Z.
+
+### 2026-09-14 — Review references reach the model's instructions, not just its inputs; live panel
+
+- **Audit (Hamed: "it ignores the references I give in reviews"):** delivery was fine.
+  - All 23 generated jobs: Higgsfield's echoed `params.medias` count equals the job's refs
+    (`image_references` + `mode omni_reference`, confirmed against `model get seedance_2_5`).
+  - All 16 decisions: the edited ref list, uploads filed as tokens, reaches the child job
+    exactly, and carries into later attempts and 1080p finals.
+- **The real faults were in the prompt text** (`buildPrompt`, now `worker/lib/prompt.mjs`):
+  - authored blocks say "DESIGN NOTE — no reference image exists for these yet, build them
+    from the description": J-20260914-345 and -FAJ attached the flag (`@PRP-016/V01`) and still
+    told the model to invent `PROP_IRANIAN_BANNER`;
+  - the image key was only added when a note @-mentioned a ref, so 345's "use the new flag photo"
+    sent three unexplained images;
+  - accumulated notes had no precedence ("go to loc-007" vs the later LOC-018 note).
+- **Fixes (worker):**
+  - the key is always appended when refs are attached, plus "each attached image is binding …
+    even where the text above describes it differently";
+  - the design note is reworded to defer to a named attached image;
+  - with more than one revision note: "oldest first … the later note wins";
+  - log line `MENTIONS` renamed `IMAGES`, logged for every job with refs.
+  Checked by rebuilding real queued prompts read-only; nothing generated. Live since the worker
+  restart at 13:05Z.
+- **Still open:** Farsi notes go to Seedance untranslated (the English box was removed on
+  purpose). The key and image names are English, which helps.
+- **Panel:** new videos now show within ~2 s (was a blind 30 s refresh; Queue/Decided never
+  refreshed). `lib/live.ts` + `/api/live` fingerprint the worker's files; `components/live-refresh.tsx`
+  in the root layout refreshes on change, held during Undo; a toast announces a new video.
+  Measured on the live panel: job.json at +343 s, on screen at +345 s.
+
+### 2026-09-14 — References page: manage the index from the panel
+
+- **Page:** new sidebar page `/references` (the Index page stays).
+  - Entities by kind, with thumbnails of every look.
+  - Search and status filter.
+  - Multi-select of entities, looks and archived looks, with a bulk bar: retire, restore, status,
+    move, role, set main, archive, restore, copy @refs, show in folder.
+  - Edit dialog (name, ID wording with a live preview, description, main look); add dialog
+    (uploads).
+- **How changes apply:** the panel appends requests to `00_PROJECT/review/INDEX_OPS.jsonl`. The
+  worker applies them (`worker/lib/index-ops.mjs`) as rollback-safe transactions and writes
+  outcomes to `00_PROJECT/queue/INDEX_OPS_RESULTS.jsonl`. Rules are in `INDEXING.md` §8b.
+  Nothing is deleted and no number is freed.
+- **Refactor:** upload validation moved to `lib/uploads.ts` (shared with review decisions).
+- **Tested on the sandbox:**
+  - every op directly: success cases, refusals (slug clash, retired target, unknown entity, file
+    in use by a queued job), and rollback of a half-applied move — registries byte-identical,
+    validator PASS;
+  - through the real UI on a production build: role, rename, archive and restore.
+
+### 2026-09-14 — Review page redesign
+
+- **Layout:** one candidate at a time (`app/review/review-workspace.tsx`, `review-stage.tsx`).
+  - Sticky queue strip in scene order.
+  - Large video.
+  - One numbered, editable reference row (the separate top gallery is gone). Removed files:
+    `app/ReviewCard.tsx`, `components/reference-gallery.tsx`.
+  - Decision panel pinned beside the video, from 1024px wide.
+- **Context:** readable title (block label + shot beats parsed from the prompt), credit estimate
+  for the choice (from `JOB_LEDGER.csv` prices), and earlier attempts with their notes and a
+  side-by-side compare. All built in `getReviewContexts` in `lib/store.ts`.
+- **Speed:**
+  - shortcuts A / D / J / K / Ctrl+Enter;
+  - a 6-second Undo — the decision is only sent when it expires; the server checks it first with
+    `validateOnly`, so errors show before the countdown;
+  - the page refreshes every 30 s to pick up new videos.
+- Tested on the live panel (read-only) and on the sandbox via a production build (submit, undo,
+  commit, empty-note refusal).
+
+### 2026-09-14 — @-mentions of references in review notes; single note box
+
+- **Picker:** typing `@` in a review note (or the "@ Reference" button) opens a searchable
+  picker of the references in use for that job, numbered in attachment order. The pick is
+  inserted as its token.
+- **Validation:** the panel rejects a mention that isn't in the job's reference list.
+- **Worker:**
+  - swaps `@upload:uN` mentions for the filed token when queueing the revision;
+  - at generation, rewrites each mention to `@ImageN (ID variant, name)`;
+  - appends a "Reference images, in the order they are attached" key;
+  - logs a `MENTIONS` line (now `IMAGES`, see above), and prints the full prompt on `--dry-run`.
+- **Unverified:** Seedance's own syntax for addressing a specific reference image is not in the
+  Higgsfield docs. The position + name + key format is deliberately redundant. Check the first
+  real mention-driven generation to see whether it followed.
+- **English box removed:** the "English version" note box is gone — one box for Farsi or English.
+  `notesEn` on older decisions is still honoured.
+
+### 2026-09-14 — Upload filing made crash-safe; shot renders validated
+
+- **Bug:** `rev_mu14epv4hnlg` (SC001 deny, Iranian flag upload) failed permanently. The worker
+  copied the image into `04_PROPS`, then Windows refused the manifest save (`EPERM` on rename).
+  That is a transient lock, most likely the panel reading the CSVs. The retry saw its own copy
+  and reported "already exists".
+- **Fixes (worker):**
+  - Registry and state saves retry while Windows reports the file busy (`replaceFile`).
+  - Upload filing rolls back the copied file and both CSVs on any error, so the retry is clean.
+  - An unregistered, byte-identical leftover is adopted rather than treated as a clash.
+  - Tested in the sandbox against real file locks (brief lock, leftover, long lock with rollback).
+- **Recovered:** the decision was un-failed and re-applied. Flag filed as **PRP-016**
+  (`PERISAN-IRANIAN-FLAG` — Hamed's spelling), SC001 attempt 3 queued as `J-20260914-345` with
+  `@PRP-016/V01` (37.5 credits).
+- **Validator:** accepted shot renders in `07_EPISODES/<episode>/shots/` are no longer orphans;
+  their names are checked against the shot-output grammar instead.
+
+### 2026-09-14 — Reference editing and uploads on review decisions, Farsi notes
+
+- **Accept/Deny can now change a job's references.** Remove one, add one from the index, or
+  upload an image. Uploads are filed by the worker as a new `_V` of an existing entity or as a
+  new entity (worker allocates the number, same max+1 rule as `Ingest-Jobs.ps1`). The new
+  `refs` list goes into the revision (deny + regenerate) or the 1080p final (accepted draft).
+- The panel now writes raw uploads to `09_OUTPUT/_uploads/<decision-id>/`. This is the one exception to
+  "JSONL only", recorded in `CLAUDE.md`, `INDEXING.md` §9 and `10_PANEL/README.md`.
+- A decision whose upload or refs can't be applied is marked failed in `state.json`
+  (`failedDecisions`), logged to `00_PROJECT/queue/FILINGS.jsonl`, and the candidate returns to
+  Review. Nothing is moved or queued.
+- Notes and tags accept Farsi (right-to-left). The optional `notesEn` is what the revision prompt
+  uses. `Build-ContextPack.ps1` now reads learnings as UTF-8, and `/learn` reads `notesEn`.
+- **Worker fixes:**
+  - the missing `rel` import that crashed on approved drafts;
+  - `job.json` now keeps `basePrompt`, `revisionNotes` and `label`, so attempt 3+ no longer
+    stacks duplicate revision blocks.
+- Tested end to end in an `SHM_ROOT` sandbox (headless Chrome + worker).
+  **A second sandbox pass spent 37.5 real credits** on a throwaway draft (Higgsfield
+  `3e8059d8`). A sandbox is not credit-safe; see the CLAUDE.md rule.
+- **Known gap, not fixed:** `promoteShot` puts accepted shot videos in
+  `07_EPISODES/.../shots/` with no manifest row. The validator reports them as ORPHAN FILE, so the
+  first accepted final will fail validation until shots are exempted or registered.
 
 ### 2026-09-03 — Review panel, generation worker, and the learning loop
 

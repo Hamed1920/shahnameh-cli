@@ -3,7 +3,9 @@ import path from 'node:path'
 import { P } from './paths'
 import { parseCsv } from './csv'
 import type {
-  AssetRow, Candidate, Entity, Learning, QueueItem, ReviewDecision, StagingSidecar,
+  ArchivedLook, AssetRow, AttemptEntry, Candidate, CatalogEntity, Entity, Filing, IndexOp,
+  IndexOpResult, Learning, LibraryData, LibraryEntity, QueueItem, ReviewContext, ReviewDecision,
+  StagingSidecar, WorkerStatus,
 } from './types'
 
 /**
@@ -11,8 +13,9 @@ import type {
  * never cached — the worker mutates these files underneath us, so a cached
  * read would show Hamed a stale queue.
  *
- * The panel NEVER writes CSVs or moves asset files. It only appends JSONL
- * (see actions.ts). The worker is the single writer for everything else.
+ * The panel NEVER writes CSVs or moves asset files. It appends JSONL and drops
+ * raw uploads into 09_OUTPUT/_uploads (see actions.ts). The worker is the single
+ * writer for everything else, including filing those uploads.
  */
 
 async function readText(file: string): Promise<string> {
@@ -47,6 +50,40 @@ export async function getDecisions(): Promise<ReviewDecision[]> {
   return readJsonl<ReviewDecision>(P.reviewLog)
 }
 
+export async function getFilings(): Promise<Filing[]> {
+  return readJsonl<Filing>(P.filings)
+}
+
+/**
+ * Every live entity with the files behind each of its variants, for the
+ * reference picker. Highest take wins per variant, as in resolveRefToken.
+ */
+export async function getCatalog(): Promise<CatalogEntity[]> {
+  const [entities, assets] = await Promise.all([getEntities(), getAssets()])
+  return entities
+    .filter((e) => e.status !== 'RETIRED')
+    .map((e) => {
+      const best = new Map<string, AssetRow>()
+      for (const a of assets) {
+        if (a.entity_id !== e.id) continue
+        const prev = best.get(a.variant)
+        if (!prev || a.take > prev.take) best.set(a.variant, a)
+      }
+      return {
+        id: e.id,
+        shortId: e.short_id,
+        kind: e.kind,
+        slug: e.slug,
+        name: e.name,
+        canonical: e.canonical_variant,
+        variants: [...best.values()]
+          .sort((a, b) => a.variant.localeCompare(b.variant))
+          .map((a) => ({ variant: a.variant, path: `${a.folder}/${a.filename}` })),
+      }
+    })
+    .sort((a, b) => a.id.localeCompare(b.id))
+}
+
 export async function getQueue(): Promise<QueueItem[]> {
   return readJsonl<QueueItem>(P.queue)
 }
@@ -65,9 +102,21 @@ export async function getLearnings(): Promise<Learning[]> {
  * image has no target entity and cannot be promoted safely.
  */
 export async function getCandidates(): Promise<Candidate[]> {
-  const decisions = await getDecisions()
+  const [decisions, state] = await Promise.all([getDecisions(), getWorkerState()])
+  // A decision the worker could not apply (a bad upload, say) hands the
+  // candidate back for review rather than stranding it in _staging.
+  const failed = (state?.failedDecisions ?? {}) as Record<string, string>
   const byCandidate = new Map<string, ReviewDecision>()
-  for (const d of decisions) byCandidate.set(d.candidate, d)
+  const failedFor = new Map<string, { id: string; reason: string }>()
+  for (const d of decisions) {
+    if (failed[d.id]) {
+      byCandidate.delete(d.candidate)
+      failedFor.set(d.candidate, { id: d.id, reason: failed[d.id] })
+    } else {
+      byCandidate.set(d.candidate, d)
+      failedFor.delete(d.candidate)
+    }
+  }
 
   let batches: string[]
   try {
@@ -94,6 +143,7 @@ export async function getCandidates(): Promise<Candidate[]> {
         resultUrl: c.resultUrl,
         sidecar,
         decided: byCandidate.get(rel) ?? null,
+        failedDecision: failedFor.get(rel) ?? null,
       })
     }
   }
@@ -152,8 +202,227 @@ export async function getReferenceFor(
   return null
 }
 
+/**
+ * The job the worker is generating right now, if any: the most recent GENERATE
+ * line in worker.log for a job the worker has not yet recorded as processed.
+ */
+export async function getGeneratingJobId(processed: Set<string>): Promise<string | null> {
+  const lines = (await readText(P.workerLog)).trimEnd().split('\n').slice(-200)
+  for (let i = lines.length - 1; i >= 0; i--) {
+    const m = lines[i].match(/\sGENERATE (\S+)/)
+    if (m) return processed.has(m[1]) ? null : m[1]
+    if (/\sworker started /.test(lines[i])) return null // restarted since: nothing in flight
+  }
+  return null
+}
+
 export async function getWorkerState(): Promise<Record<string, unknown> | null> {
   const t = await readText(P.workerState)
   if (!t.trim()) return null
   try { return JSON.parse(t) } catch { return null }
+}
+
+// ---------------------------------------------------------------- review context
+
+interface QueueJob {
+  jobId: string
+  parentJobId?: string | null
+  attempt?: number
+  stage?: 'draft' | 'final' | null
+  label?: string | null
+  model?: string
+  params?: Record<string, unknown>
+  refs?: string[]
+}
+
+async function exists(rel: string): Promise<boolean> {
+  try { await fs.access(path.join(P.root, rel)); return true } catch { return false }
+}
+
+/** Where the worker put a decided candidate's file. */
+async function locateDecided(d: ReviewDecision, stage: string | null | undefined): Promise<string | null> {
+  const base = path.basename(d.candidate)
+  const guesses =
+    d.verdict === 'denied'
+      ? [`09_OUTPUT/_rejected/${d.hfJobId}/${base}`]
+      : stage === 'draft'
+        ? [`09_OUTPUT/_drafts/${d.hfJobId}/${base}`]
+        : []
+  for (const g of [...guesses, d.candidate]) if (await exists(g)) return g
+  return null
+}
+
+const titleCase = (s: string) =>
+  s.toLowerCase().replace(/(^|[\s\-/])([\p{L}])/gu, (_, a: string, b: string) => a + b.toUpperCase())
+
+/** "SHOT 1 — CONVERGENCE — 0:00–0:07" headings, as readable beats. */
+function beatsOf(prompt: string): string[] {
+  return [...String(prompt ?? '').matchAll(/SHOT \d+ — ([^—\n]+?) —/g)].map((m) => titleCase(m[1].trim()))
+}
+
+/**
+ * Title, shot beats, earlier attempts and credit estimates for each candidate.
+ * Everything is derived from files the worker already writes: the queue links
+ * each revision to its parent, the review log says what happened to it, and
+ * the ledger records what each generation cost.
+ */
+export async function getReviewContexts(candidates: Candidate[]): Promise<Map<string, ReviewContext>> {
+  const [queue, decisions, state, ledgerText, cfgText] = await Promise.all([
+    readJsonl<QueueJob>(P.queue),
+    getDecisions(),
+    getWorkerState(),
+    readText(P.ledger),
+    readText(path.join(process.cwd(), 'worker', 'config.json')),
+  ])
+  const failed = (state?.failedDecisions ?? {}) as Record<string, string>
+  const jobs = new Map(queue.map((j) => [j.jobId, j]))
+  const decisionFor = new Map<string, ReviewDecision>()
+  for (const d of decisions) if (!failed[d.id]) decisionFor.set(d.jobId, d)
+
+  let cfg: Record<string, unknown> = {}
+  try { cfg = JSON.parse(cfgText) } catch { /* estimates just go missing */ }
+
+  // Last real price per model + resolution + duration, from generated jobs.
+  const priceKey = (model: unknown, p: Record<string, unknown> | undefined) =>
+    `${model}|${p?.resolution ?? ''}|${p?.duration ?? ''}`
+  const prices = new Map<string, number>()
+  for (const row of parseCsv(ledgerText) as unknown as Record<string, string>[]) {
+    const cost = parseFloat(row.cost)
+    const job = jobs.get(row.job_id)
+    if (row.state === 'GENERATED' && Number.isFinite(cost) && job) prices.set(priceKey(job.model, job.params), cost)
+  }
+
+  const out = new Map<string, ReviewContext>()
+  for (const c of candidates) {
+    const s = c.sidecar
+    const history: AttemptEntry[] = []
+    let label = s.label ?? null
+    let parent = s.parentJobId
+    for (let guard = 0; parent && guard < 12; guard++) {
+      const job = jobs.get(parent)
+      const d = decisionFor.get(parent)
+      label ??= job?.label ?? null
+      history.unshift({
+        jobId: parent,
+        attempt: job?.attempt ?? 1,
+        stage: job?.stage ?? null,
+        verdict: d?.verdict ?? null,
+        notes: d ? (d.notesEn || d.notes || '') : '',
+        tags: d?.tags ?? [],
+        decidedAt: d?.ts ?? null,
+        video: d ? await locateDecided(d, job?.stage) : null,
+        refs: job?.refs ?? [],
+      })
+      parent = job?.parentJobId ?? null
+    }
+
+    const m = s.target.match(/^SHM-(EP\d{3})(?:-(SC\d{3}))?(?:-(SH\d{4}))?/)
+    const finalParams = { ...s.params, resolution: cfg.videoFinalResolution }
+    out.set(c.path, {
+      label,
+      episode: m?.[1] ?? null,
+      scene: m?.[2] ?? null,
+      shot: m?.[3] ?? null,
+      beats: beatsOf((s as StagingSidecar & { basePrompt?: string }).basePrompt ?? s.prompt),
+      history,
+      cost: {
+        regenerate: s.costCredits ?? prices.get(priceKey(s.model, s.params)) ?? null,
+        final: s.stage === 'draft' ? (prices.get(priceKey(s.model, finalParams)) ?? null) : null,
+      },
+    })
+  }
+  return out
+}
+
+
+// ---------------------------------------------------------------- references library
+
+/** Everything the References page manages, plus what the worker has and has not applied yet. */
+export async function getLibrary(): Promise<LibraryData> {
+  const [entities, assets, ops, results, state, archiveLog, worker] = await Promise.all([
+    getEntities(),
+    getAssets(),
+    readJsonl<IndexOp>(P.indexOps),
+    readJsonl<IndexOpResult>(P.indexOpResults),
+    getWorkerState(),
+    readJsonl<Record<string, unknown>>(path.join(P.archive, 'index.jsonl')),
+    getWorkerStatus(),
+  ])
+
+  const library: LibraryEntity[] = entities.map((e) => {
+    const byVariant = new Map<string, AssetRow[]>()
+    for (const a of assets) {
+      if (a.entity_id !== e.id) continue
+      byVariant.set(a.variant, [...(byVariant.get(a.variant) ?? []), a])
+    }
+    const looks = [...byVariant.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([variant, rows]) => {
+        const top = [...rows].sort((a, b) => b.take.localeCompare(a.take))[0]
+        return {
+          variant, takes: rows.length, role: top.role, status: top.status,
+          path: `${top.folder}/${top.filename}`, filename: top.filename, source: top.source, added: top.added,
+        }
+      })
+    return {
+      id: e.id, shortId: e.short_id, kind: e.kind, number: e.number, slug: e.slug, name: e.name,
+      family: e.family, status: e.status, canonical: e.canonical_variant, description: e.description,
+      flags: (e.flags || '').split(';').map((f) => f.trim()).filter(Boolean), looks,
+    }
+  })
+
+  const restored = new Set(archiveLog.filter((x) => x.restored).map((x) => String(x.archiveId)))
+  const archived: ArchivedLook[] = []
+  for (const x of archiveLog) {
+    if (x.restored || restored.has(String(x.archiveId))) continue
+    const row = (x.row ?? {}) as Record<string, string>
+    try { await fs.access(path.join(P.root, String(x.file))) } catch { continue }
+    archived.push({
+      archiveId: String(x.archiveId), shortId: String(x.short_id), entityId: String(x.entity_id),
+      variant: row.variant ?? '', take: row.take ?? '', role: row.role ?? '', file: String(x.file),
+      by: String(x.by ?? ''), ts: String(x.ts ?? ''),
+    })
+  }
+
+  const processed = new Set((state?.processedOps ?? []) as string[])
+  const typeOf = new Map(ops.map((o) => [o.id, o.type]))
+  return {
+    entities: library,
+    archived: archived.reverse(),
+    pending: ops.filter((o) => !processed.has(o.id)),
+    results: results.slice(-30).reverse().map((r) => ({ ...r, type: typeOf.get(r.opId) })),
+    worker,
+  }
+}
+
+/**
+ * Is the worker running, and is it running the current code?
+ *
+ * The worker loads its code once, at start. A worker started before an update
+ * keeps running without it, which looks exactly like "the button does nothing".
+ * Its lock file holds the pid and was written as it started, so compare that
+ * time with the newest file in worker/.
+ */
+export async function getWorkerStatus(): Promise<WorkerStatus> {
+  let pid: number
+  let startedMs: number
+  try {
+    const [text, stat] = await Promise.all([fs.readFile(P.workerLock, 'utf8'), fs.stat(P.workerLock)])
+    pid = parseInt(text.trim(), 10)
+    startedMs = stat.mtimeMs
+  } catch {
+    return { running: false, outdated: false }
+  }
+  let alive = false
+  if (Number.isFinite(pid) && pid > 0) {
+    try { process.kill(pid, 0); alive = true } catch (e) { alive = (e as NodeJS.ErrnoException).code === 'EPERM' }
+  }
+  if (!alive) return { running: false, outdated: false }
+
+  const dir = path.join(process.cwd(), 'worker')
+  const libs = await fs.readdir(path.join(dir, 'lib')).catch(() => [] as string[])
+  const files = ['worker.mjs', 'config.json', ...libs.map((f) => path.join('lib', f))]
+  const times = await Promise.all(files.map((f) => fs.stat(path.join(dir, f)).then((s) => s.mtimeMs, () => 0)))
+  // A second of slack: an editor can touch a file in the same moment the worker starts.
+  return { running: true, outdated: Math.max(...times) > startedMs + 1000, startedAt: new Date(startedMs).toISOString() }
 }

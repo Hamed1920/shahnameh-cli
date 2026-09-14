@@ -2,11 +2,12 @@
 /**
  * Shahnameh generation worker.
  *
- * Single writer for asset files and the CSV registries. Does four things:
+ * Single writer for asset files and the CSV registries. Does five things:
  *   1. drains QUEUE.jsonl  -> higgsfield generate -> download to _staging
  *   2. acts on REVIEW_LOG.jsonl verdicts -> promote or reject
  *   3. builds revision jobs from denials, with approved learnings applied
- *   4. records everything in JOB_LEDGER.csv and queue/state.json
+ *   4. applies References-page requests from INDEX_OPS.jsonl, every few seconds
+ *   5. records everything in JOB_LEDGER.csv and queue/state.json
  *
  * Usage:
  *   node worker/worker.mjs            watch loop
@@ -17,11 +18,13 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
-  P, ROOT, appendJsonl, findEntity, isShotId, loadEntities, log, readCsv, readJsonl,
+  P, ROOT, appendJsonl, findEntity, isShotId, loadEntities, log, readCsv, readJsonl, rel,
   readState, resolveRef, shotFolder, writeCsv, writeState,
 } from './lib/project.mjs'
 import { estimateCost, extractJobId, extractResultUrls, hfJson, isAuthenticated, paramsToArgs } from './lib/hf.mjs'
-import { promote, reject } from './lib/promote.mjs'
+import { FilingError, checkUploads, fileUpload, promote, reject } from './lib/promote.mjs'
+import { runIndexOps } from './lib/index-ops.mjs'
+import { buildPrompt } from './lib/prompt.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const argv = process.argv.slice(2)
@@ -92,19 +95,6 @@ async function applicableLearnings(entity) {
     .map((l) => l.rule)
 }
 
-function buildPrompt(base, learnings, revisionNotes) {
-  const parts = [base.trim()]
-  if (revisionNotes?.length) {
-    parts.push('', 'Revision — the previous attempt was rejected for these reasons. Fix them:')
-    for (const n of revisionNotes) parts.push(`- ${n}`)
-  }
-  if (learnings.length) {
-    parts.push('', 'Established requirements for this subject:')
-    for (const l of learnings) parts.push(`- ${l}`)
-  }
-  return parts.join('\n')
-}
-
 async function download(url, dest) {
   const res = await fetch(url)
   if (!res.ok) throw new Error(`download ${res.status} ${res.statusText}`)
@@ -123,6 +113,49 @@ function extFromUrl(url, fallback = '.png') {
 // Accumulated across a dry run so we can report one total before any spend.
 const dryTotal = { jobs: 0, credits: 0, unpriced: 0 }
 
+/**
+ * What a queued job needs before it can be priced: its target, its references
+ * resolved to files, and the final prompt. `{ skip }` when it cannot run.
+ */
+async function planJob(job, entities, assets) {
+  // A shot target is valid but is not an entity; it renders into the episode.
+  const shot = isShotId(job.target) ? job.target : null
+  const entity = shot ? null : findEntity(entities, job.target)
+  if (!shot && !entity) return { skip: `unknown target ${job.target}` }
+  const targetId = shot ?? entity.id
+
+  // Resolve reference tokens to real paths before spending anything.
+  const refPaths = []
+  const refInfo = []
+  for (const token of job.refs ?? []) {
+    const r = await resolveRef(token, entities, assets)
+    if (!r.ok) return { skip: `unresolved ref ${token}: ${r.reason}` }
+    refPaths.push(r.path)
+    refInfo.push({ path: r.path, entity: r.entity, variant: r.variant })
+  }
+
+  const learnings = await applicableLearnings(entity)
+  const { prompt, mentioned } = await buildPrompt(job.prompt, learnings, job.revisionNotes, refInfo, entities, assets)
+  if (refInfo.length) {
+    const key = refInfo.map((r, i) => `@Image${i + 1}=${r.entity.short_id}/${r.variant}`).join(' ')
+    await log(`IMAGES ${job.jobId}: ${key}${mentioned ? ' (mentioned in text)' : ''}`)
+    if (DRY) await log(`DRY-RUN prompt for ${job.jobId}:
+${prompt}`)
+  }
+  const model = job.model || cfg.defaultImageModel
+  const params = { prompt, ...(job.params ?? {}) }
+
+  // Array -> repeated --image-references flags (see paramsToArgs).
+  if (refPaths.length) params.image_references = refPaths
+
+  // Seedance rejects reference media in the default t2v mode; supplying
+  // references without switching mode fails the job after it is priced.
+  if (refPaths.length && /^seedance/.test(model) && !params.mode) {
+    params.mode = 'omni_reference'
+  }
+  return { shot, entity, targetId, refPaths, prompt, model, params }
+}
+
 async function runQueue(state) {
   const queue = await readJsonl(P.queue)
   const done = new Set(state.processedJobs)
@@ -134,47 +167,22 @@ async function runQueue(state) {
     return 0
   }
 
-  const [entities, { rows: assets }] = await Promise.all([loadEntities(), readCsv(P.manifest)])
   let count = 0
 
   for (const job of pending) {
-    // A shot target is valid but is not an entity; it renders into the episode.
-    const shot = isShotId(job.target) ? job.target : null
-    const entity = shot ? null : findEntity(entities, job.target)
-    if (!shot && !entity) {
-      await log(`SKIP ${job.jobId}: unknown target ${job.target}`)
+    // Read the registries per job, under the registry lock: index requests are
+    // applied while earlier jobs generate, so a copy from the start of the run
+    // can be minutes out of date.
+    const plan = await exclusive(async () => {
+      const [entities, { rows: assets }] = await Promise.all([loadEntities(), readCsv(P.manifest)])
+      return planJob(job, entities, assets)
+    })
+    if (plan.skip) {
+      await log(`SKIP ${job.jobId}: ${plan.skip}`)
       state.processedJobs.push(job.jobId)
       continue
     }
-    const targetId = shot ?? entity.id
-
-    // Resolve reference tokens to real paths before spending anything.
-    const refPaths = []
-    let refFailure = null
-    for (const token of job.refs ?? []) {
-      const r = await resolveRef(token, entities, assets)
-      if (!r.ok) { refFailure = `${token}: ${r.reason}`; break }
-      refPaths.push(r.path)
-    }
-    if (refFailure) {
-      await log(`SKIP ${job.jobId}: unresolved ref ${refFailure}`)
-      state.processedJobs.push(job.jobId)
-      continue
-    }
-
-    const learnings = await applicableLearnings(entity)
-    const prompt = buildPrompt(job.prompt, learnings, job.revisionNotes)
-    const model = job.model || cfg.defaultImageModel
-    const params = { prompt, ...(job.params ?? {}) }
-
-    // Array -> repeated --image-references flags (see paramsToArgs).
-    if (refPaths.length) params.image_references = refPaths
-
-    // Seedance rejects reference media in the default t2v mode; supplying
-    // references without switching mode fails the job after it is priced.
-    if (refPaths.length && /^seedance/.test(model) && !params.mode) {
-      params.mode = 'omni_reference'
-    }
+    const { shot, entity, targetId, refPaths, prompt, model, params } = plan
 
     const { credits } = await estimateCost(model, params)
     await log(`COST ${job.jobId} ${model} = ${credits ?? 'unknown'} credits`)
@@ -258,6 +266,10 @@ async function runQueue(state) {
       variant: job.variant || entity.canonical_variant || 'V01',
       model,
       prompt,
+      // The un-augmented prompt and the notes so far. Revisions rebuild from
+      // these; without them attempt 3 stacks a second revision block on the first.
+      basePrompt: job.basePrompt ?? job.prompt,
+      revisionNotes: job.revisionNotes ?? [],
       params: job.params ?? {},
       refs: job.refs ?? [],
       createdAt: new Date().toISOString(),
@@ -303,22 +315,56 @@ async function runDecisions(state) {
         sidecar = JSON.parse(await fs.readFile(path.join(batchDir, 'job.json'), 'utf8'))
       } catch { /* candidate may predate sidecars */ }
 
+      const uploads = Array.isArray(d.uploads) ? d.uploads : []
+
       if (DRY) {
+        if (uploads.length) {
+          try {
+            for (const line of await checkUploads(uploads)) await log(`DRY-RUN would file ${line}`)
+          } catch (e) {
+            if (!(e instanceof FilingError)) throw e
+            await log(`DRY-RUN filing would FAIL for ${d.id}: ${e.message}`)
+          }
+        }
+        if (Array.isArray(d.refs)) await log(`DRY-RUN refs for ${d.id}: ${d.refs.join(', ') || '(none)'}`)
         await log(`DRY-RUN would ${d.verdict} ${d.candidate}`)
         continue
       }
+
+      // Uploads are filed, and the new reference list proven resolvable, BEFORE
+      // the candidate is moved or anything is queued. A decision either applies
+      // whole or not at all -- never a half-applied change that then spends.
+      let refs = sidecar?.refs ?? []
+      let uploadTokens = {}
+      try {
+        const tokens = await fileDecisionUploads(d, uploads)
+        uploadTokens = tokens
+        if (Array.isArray(d.refs)) {
+          refs = await resolveDecisionRefs(d.refs, tokens)
+          await log(`REFS ${d.id}: [${(sidecar?.refs ?? []).join(', ')}] -> [${refs.join(', ')}]`)
+        }
+      } catch (e) {
+        if (!(e instanceof FilingError)) throw e
+        await appendJsonl(P.filings, { decisionId: d.id, ok: false, reason: e.message, ts: new Date().toISOString() })
+        await log(`FAILED decision ${d.id}: ${e.message}. Candidate returned to review.`)
+        state.failedDecisions = { ...(state.failedDecisions ?? {}), [d.id]: e.message }
+        state.processedDecisions.push(d.id)
+        count++
+        continue
+      }
+
       if (d.verdict === 'accepted') {
         // Approving a cheap draft does not promote it — it buys the expensive
         // final. Only a final render becomes the entity's asset.
         if (sidecar?.stage === 'draft') {
           await archiveDraft(d)
-          await enqueueFinal(d, sidecar)
+          await enqueueFinal(d, sidecar, refs)
         } else {
           await promote(d, sidecar)
         }
       } else {
         await reject(d)
-        if (d.requeue) await enqueueRevision(d, sidecar, entities)
+        if (d.requeue) await enqueueRevision(d, sidecar, entities, refs, uploadTokens)
       }
       state.processedDecisions.push(d.id)
       count++
@@ -328,6 +374,48 @@ async function runDecisions(state) {
     }
   }
   return count
+}
+
+/**
+ * File every upload on a decision. Already-filed uploads (a retry after a crash)
+ * reuse their recorded token instead of being filed twice.
+ * Returns { uploadId: '@KIND-NNN/Vnn' }.
+ */
+async function fileDecisionUploads(decision, uploads) {
+  const tokens = {}
+  if (uploads.length === 0) return tokens
+
+  for (const f of await readJsonl(P.filings)) {
+    if (f.decisionId === decision.id && f.ok && f.uploadId) tokens[f.uploadId] = f.token
+  }
+  await checkUploads(uploads, new Set(Object.keys(tokens)))
+
+  for (const u of uploads) {
+    if (tokens[u.id]) continue
+    const filed = await fileUpload(u, decision)
+    tokens[u.id] = filed.token
+    await appendJsonl(P.filings, {
+      decisionId: decision.id, uploadId: u.id, ok: true, token: filed.token,
+      entity: filed.entity, filename: filed.filename, ts: new Date().toISOString(),
+    })
+  }
+  // Every file has moved into the index; drop the emptied working folder.
+  await fs.rmdir(path.join(P.uploads, decision.id)).catch(() => {})
+  return tokens
+}
+
+/** Swap upload placeholders for real tokens and prove every token resolves to a file. */
+async function resolveDecisionRefs(list, tokens) {
+  const [entities, { rows: assets }] = await Promise.all([loadEntities(), readCsv(P.manifest)])
+  const out = []
+  for (const raw of list) {
+    const token = String(raw).startsWith('upload:') ? tokens[String(raw).slice(7)] : String(raw)
+    if (!token) throw new FilingError(`reference ${raw} points at an upload that was not filed`)
+    const r = await resolveRef(token, entities, assets)
+    if (!r.ok) throw new FilingError(`reference ${token}: ${r.reason}`)
+    if (!out.includes(token)) out.push(token)
+  }
+  return out
 }
 
 /** Keep the approved draft as a record; it is not the deliverable. */
@@ -348,7 +436,7 @@ async function archiveDraft(decision) {
  * same variant — the only thing that changes is quality, so the shot Hamed
  * approved is the shot he gets.
  */
-async function enqueueFinal(decision, sidecar) {
+async function enqueueFinal(decision, sidecar, refs) {
   const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, '')
   const jobId = `J-${stamp}-${Math.random().toString(36).slice(2, 5).toUpperCase()}`
   const params = { ...(sidecar.params ?? {}), resolution: cfg.videoFinalResolution }
@@ -364,7 +452,7 @@ async function enqueueFinal(decision, sidecar) {
     prompt: sidecar.basePrompt ?? sidecar.prompt,
     basePrompt: sidecar.basePrompt ?? sidecar.prompt,
     params,
-    refs: sidecar.refs ?? [],
+    refs: refs ?? sidecar.refs ?? [],
     revisionNotes: sidecar.revisionNotes ?? [],
     label: sidecar.label ?? null,
     enqueuedAt: new Date().toISOString(),
@@ -373,7 +461,7 @@ async function enqueueFinal(decision, sidecar) {
   await log(`FINAL QUEUED ${sidecar.jobId} -> ${jobId} at ${cfg.videoFinalResolution}`)
 }
 
-async function enqueueRevision(decision, sidecar, entities) {
+async function enqueueRevision(decision, sidecar, entities, refs, uploadTokens = {}) {
   if (!sidecar) { await log(`SKIP revision for ${decision.id}: no sidecar`); return }
 
   const attempt = (sidecar.attempt ?? 1) + 1
@@ -385,7 +473,11 @@ async function enqueueRevision(decision, sidecar, entities) {
   // Carry every prior note forward so attempt 3 does not reintroduce the fault
   // that attempt 2 was told to fix.
   const priorNotes = (sidecar.revisionNotes ?? [])
-  const revisionNotes = [...priorNotes, decision.notes].filter(Boolean)
+  // The reviewer may write in Farsi; an English version, when given, is what the model reads.
+  // An "@upload:u1" mention becomes the token that upload was filed as.
+  const note = String(decision.notesEn || decision.notes || '')
+    .replace(/@upload:(u\d{1,3})(?![\w/-])/g, (m, id) => uploadTokens[id] ?? m)
+  const revisionNotes = [...priorNotes, note].filter(Boolean)
 
   const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, '')
   const jobId = `J-${stamp}-${Math.random().toString(36).slice(2, 5).toUpperCase()}`
@@ -402,21 +494,64 @@ async function enqueueRevision(decision, sidecar, entities) {
     prompt: sidecar.basePrompt ?? sidecar.prompt,
     basePrompt: sidecar.basePrompt ?? sidecar.prompt,
     params: sidecar.params ?? {},
-    refs: sidecar.refs ?? [],
+    refs: refs ?? sidecar.refs ?? [],
     revisionNotes,
+    label: sidecar.label ?? null,
     enqueuedAt: new Date().toISOString(),
     enqueuedBy: 'worker:revision',
   })
-  await log(`REQUEUED ${sidecar.jobId} -> ${jobId} (attempt ${attempt}) reason: ${decision.notes}`)
+  await log(`REQUEUED ${sidecar.jobId} -> ${jobId} (attempt ${attempt}) reason: ${note}`)
 }
 
 // ---------------------------------------------------------------- main
 
+/**
+ * The worker's state, shared by the passes and the index-op watcher. Read once
+ * at start: only the worker writes state.json, and the in-use checks must see a
+ * job that is generating right now as still pending.
+ */
+let state
+
+// In-process registry lock. A generation waits minutes on the CLI, and the
+// References page should not wait with it, so index requests are applied
+// during generations. Anything that reads the registries and then writes them
+// (or relies on files staying put) holds this; the generation itself does not.
+let lockTail = Promise.resolve()
+async function exclusive(fn) {
+  let release
+  const mine = new Promise((r) => { release = r })
+  const before = lockTail
+  lockTail = lockTail.then(() => mine)
+  await before
+  try { return await fn() } finally { release() }
+}
+
+/** Apply requests from the References page. Returns how many were handled. */
+async function applyIndexOps() {
+  const n = await exclusive(() => runIndexOps(state, { dry: DRY }))
+  if (n) await writeState(state)
+  return n
+}
+
+/**
+ * Between passes the loop sleeps only pollSeconds, but a pass that generates
+ * can take many minutes. Check for index requests every few seconds regardless.
+ * Files used by a queued or generating job are safe: index-ops refuses to move them.
+ */
+const INDEX_OPS_EVERY_MS = 3000
+function watchIndexOps() {
+  const tick = async () => {
+    try { await applyIndexOps() } catch (e) { await log(`INDEX OPS ERROR: ${e.stack ?? e.message}`) }
+    setTimeout(tick, INDEX_OPS_EVERY_MS)
+  }
+  setTimeout(tick, INDEX_OPS_EVERY_MS)
+}
+
 async function pass() {
-  const state = await readState()
   const generated = await runQueue(state)
-  const decided = await runDecisions(state)
+  const decided = await exclusive(() => runDecisions(state))
   await writeState(state)
+  const managed = await applyIndexOps()
 
   // One total, so the spend can be reported and approved before anything runs.
   if (DRY && dryTotal.jobs > 0) {
@@ -426,7 +561,7 @@ async function pass() {
       + ` | ceilings: ${cfg.perJobCostCeilingCredits}/job, ${cfg.costCeilingCredits} total`,
     )
   }
-  return generated + decided
+  return generated + decided + managed
 }
 
 async function main() {
@@ -440,8 +575,10 @@ async function main() {
 
   try {
     await log(`worker started (once=${ONCE} dryRun=${DRY} root=${ROOT})`)
+    state = await readState()
 
     if (ONCE) { await pass(); return }
+    if (!DRY) watchIndexOps()
     for (;;) {
       try { await pass() } catch (e) { await log(`PASS ERROR: ${e.stack ?? e.message}`) }
       await new Promise((r) => setTimeout(r, cfg.pollSeconds * 1000))

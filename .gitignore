@@ -1,68 +1,47 @@
 # =====================================================================
-#  ALLOWLIST. Everything is ignored unless explicitly re-included below.
+#  ALLOWLIST. Everything in the root is ignored unless re-included below.
 #
-#  This repo is CODE AND PROJECT METADATA ONLY. Generated assets - images,
-#  video, Higgsfield outputs, staging and rejected candidates - must NEVER
-#  be committed.
+#  The repo carries the WHOLE project - code, metadata AND assets - so any
+#  machine can clone it and pick the work up. Media is stored through Git
+#  LFS (see .gitattributes); never commit an image or video as a plain blob.
 #
-#  A denylist would mean remembering to exclude every new asset folder.
-#  An allowlist means a new folder is excluded by default and someone has
-#  to deliberately opt it in. That is the safer default for an absolute
-#  rule, so do not convert this back to a denylist.
+#  It stays an allowlist so a stray file or folder dropped in the root stays
+#  out until someone deliberately opts it in. Do not convert it to a denylist.
+#  A new top-level folder has to be added here.
 # =====================================================================
 
 /*
 
 # --- re-included: code and metadata -----------------------------------
 !/.gitignore
+!/.gitattributes
 !/CLAUDE.md
 !/README.md
+!/startup.md
 !/00_PROJECT/
 !/10_PANEL/
 !/.claude/
 
-# Episode folders: the TEXT is project metadata (prompts, shotlists, asset maps)
-# and belongs in the repo. The rendered video and the binary source documents do
-# not. The global media rules below still apply on top of this.
+# --- re-included: assets, working space included ----------------------
+# 09_OUTPUT/_staging, _drafts, _rejected, _uploads and _archive travel too:
+# another machine's panel reviews from _staging, shows attempt history from
+# _drafts and _rejected, and restores from _archive.
+!/01_CHARACTERS/
+!/02_GROUPS/
+!/03_LOCATIONS/
+!/04_PROPS/
+!/05_CREATURES/
+!/06_COSTUMES/
 !/07_EPISODES/
-!/07_EPISODES/**/
-!/07_EPISODES/**/*.md
-!/07_EPISODES/**/*.txt
-!/07_EPISODES/**/*.json
-!/07_EPISODES/**/*.csv
-*.docx
-*.doc
-*.pptx
-*.xlsx
-
-# --- asset folders stay ignored, listed here only for readers ---------
-#   01_CHARACTERS  02_GROUPS   03_LOCATIONS  04_PROPS  05_CREATURES
-#   06_COSTUMES    07_EPISODES 08_REFERENCE  09_OUTPUT 99_INBOX
+!/08_REFERENCE/
+!/09_OUTPUT/
+!/99_INBOX/
 
 # --- vendored third-party skills: reinstall, do not commit -------------
 #   npx skills add higgsfield-ai/skills
 /.agents/
 /skills-lock.json
 /.claude/skills/higgsfield-*
-
-# --- second layer: never any media, anywhere, whatever the path -------
-*.png
-*.jpg
-*.jpeg
-*.webp
-*.gif
-*.bmp
-*.tif
-*.tiff
-*.mp4
-*.mov
-*.webm
-*.avi
-*.mkv
-*.wav
-*.mp3
-*.psd
-*.ai
 
 # --- node / next ------------------------------------------------------
 node_modules/
@@ -87,13 +66,15 @@ next-env.d.ts
 00_PROJECT/sync/receipts/*
 !00_PROJECT/sync/receipts/.gitkeep
 00_PROJECT/sync/PLAN-*.json
-# The work queue and worker state are transient. The review log and the learning
-# corpus are NOT - they are the project's accumulated judgement, so they stay versioned.
-00_PROJECT/queue/QUEUE.jsonl
-00_PROJECT/queue/state.json
+# The queue and worker state DO travel (QUEUE.jsonl, state.json, FILINGS.jsonl,
+# INDEX_OPS_RESULTS.jsonl). They tell a worker on a fresh clone which jobs and
+# decisions are already done - without state.json it would replay every past
+# decision and spend credits again. Only the per-machine lock and log, and
+# half-written temp files, stay out.
 00_PROJECT/queue/worker.lock
 00_PROJECT/queue/*.log
 00_PROJECT/registry/*.bak
+*.tmp
 
 # --- os / editor ------------------------------------------------------
 Thumbs.db

@@ -1,0 +1,100 @@
+{
+  "jobId": "J-20260903-8OL",
+  "parentJobId": null,
+  "hfJobId": "6278fc57-2911-4821-9d1a-ca2faa9854ee",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "P05",
+  "target": "SHM-EP001-SC005-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP001-ZAHHAK-ENTRY/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nThe Royal Serpent Staff remains horizontal on the principal noble’s raised hands. Preserve all kneeling positions and exposed gifts.\n\nSHOT 1 — HELD WEIGHT — 0:00–0:05:\n85mm shallow-focus profile. The principal noble’s forearms begin to tremble almost imperceptibly under the horizontal staff. He does not lower it. Behind him, other bowed figures remain soft. The camera stays close enough to feel effort but avoids theatrical suffering.\n\nSHOT 2 — ZAHHAK’S MEASURE — 0:05–0:10:\n65mm frontal medium close-up. Zahhak’s masked head travels slowly from the lowered Iranian banner across the vessel and insignia, finally stopping on the staff. His old staff remains vertical beside him. Two serpents independently follow different objects; another continues breathing against his back.\n\nSHOT 3 — DECISION WITHOUT SPEECH — 0:10–0:15:\n40mm wide side composition spanning Zahhak on the right and the kneeling delegation across the left. Zahhak shifts his seated weight forward and closes one hand around the throne edge. The principal noble recognizes the movement and bows his head deeper, but nobody celebrates. End exactly as Zahhak begins lifting the old staff from the floor.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nNearly silent room tone, subtle arm strain, cloth tension, serpent scales, Zahhak’s glove tightening on stone and the old staff beginning to scrape.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: PROP_ZAHHAK_OLD_STAFF, PROP_IRANIAN_BANNER, PROP_RITUAL_VESSEL, PROP_POWER_INSIGNIA.",
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": "false",
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V02",
+    "@REF-001/V02",
+    "@LOC-009",
+    "@PRP-001"
+  ],
+  "createdAt": "2026-09-03T13:35:04.839Z",
+  "costCredits": 37.5,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_132858_6278fc57-2911-4821-9d1a-ca2faa9854ee.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-03T13:28:58.829063Z",
+      "display_name": "Seedance 2.5",
+      "id": "6278fc57-2911-4821-9d1a-ca2faa9854ee",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": false,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "14553a3b-9cee-420f-82c9-d641ead71980",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/14553a3b-9cee-420f-82c9-d641ead71980.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "9b135754-5de4-4868-9fb0-5c07ef5c8d1c",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/9b135754-5de4-4868-9fb0-5c07ef5c8d1c.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "ec6f9a48-865d-4319-bc1d-fec511c561fd",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/ec6f9a48-865d-4319-bc1d-fec511c561fd.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "bc9005f6-3225-48dc-9829-131544cdcdd6",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/bc9005f6-3225-48dc-9829-131544cdcdd6.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nThe Royal Serpent Staff remains horizontal on the principal noble’s raised hands. Preserve all kneeling positions and exposed gifts.\n\nSHOT 1 — HELD WEIGHT — 0:00–0:05:\n85mm shallow-focus profile. The principal noble’s forearms begin to tremble almost imperceptibly under the horizontal staff. He does not lower it. Behind him, other bowed figures remain soft. The camera stays close enough to feel effort but avoids theatrical suffering.\n\nSHOT 2 — ZAHHAK’S MEASURE — 0:05–0:10:\n65mm frontal medium close-up. Zahhak’s masked head travels slowly from the lowered Iranian banner across the vessel and insignia, finally stopping on the staff. His old staff remains vertical beside him. Two serpents independently follow different objects; another continues breathing against his back.\n\nSHOT 3 — DECISION WITHOUT SPEECH — 0:10–0:15:\n40mm wide side composition spanning Zahhak on the right and the kneeling delegation across the left. Zahhak shifts his seated weight forward and closes one hand around the throne edge. The principal noble recognizes the movement and bows his head deeper, but nobody celebrates. End exactly as Zahhak begins lifting the old staff from the floor.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nNearly silent room tone, subtle arm strain, cloth tension, serpent scales, Zahhak’s glove tightening on stone and the old staff beginning to scrape.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: PROP_ZAHHAK_OLD_STAFF, PROP_IRANIAN_BANNER, PROP_RITUAL_VESSEL, PROP_POWER_INSIGNIA.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_132858_6278fc57-2911-4821-9d1a-ca2faa9854ee.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_132858_6278fc57-2911-4821-9d1a-ca2faa9854ee_thumbnail.webp"
+    }
+  ]
+}

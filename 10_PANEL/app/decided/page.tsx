@@ -1,118 +1,136 @@
-import fs from 'node:fs/promises'
-import path from 'node:path'
-import { ROOT } from '@/lib/paths'
-import { assetUrl, isVideo } from '@/lib/asset'
-import { getDecisions } from '@/lib/store'
-import type { ReviewDecision } from '@/lib/types'
+import { DecisionDetails } from '@/components/decision-details'
+import { ShowInFolder } from '@/components/show-in-folder'
 import { Card, EmptyState } from '@/components/ui/card'
 import { Reveal } from '@/components/ui/reveal'
 import { Badge, PageHeader, SectionHeading } from '@/components/ui/text'
+import { assetUrl, isVideo } from '@/lib/asset'
+import { getDecidedEntries, type DecidedEntry, type FollowUp } from '@/lib/decided'
 
 export const dynamic = 'force-dynamic'
 
-/**
- * Where a decided candidate ended up. The worker moves the file out of
- * _staging, so the path recorded on the decision is stale by design — search
- * the destinations in the order the worker uses them.
- */
-async function locate(d: ReviewDecision): Promise<string | null> {
-  const base = path.basename(d.candidate)
-  const guesses =
-    d.verdict === 'denied'
-      ? [path.join('09_OUTPUT', '_rejected', d.hfJobId, base)]
-      : [
-          path.join('07_EPISODES'), // shot finals, resolved below
-          path.join('09_OUTPUT', '_drafts', d.hfJobId, base),
-          d.candidate,
-        ]
+const when = (iso: string) =>
+  new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
 
-  for (const g of guesses) {
-    if (g === '07_EPISODES') {
-      try {
-        const eps = await fs.readdir(path.join(ROOT, '07_EPISODES'))
-        for (const ep of eps) {
-          const dir = path.join(ROOT, '07_EPISODES', ep, 'shots')
-          let names: string[] = []
-          try {
-            names = await fs.readdir(dir)
-          } catch {
-            continue
-          }
-          const hit = names.find((n) => n.startsWith(d.target))
-          if (hit) return `07_EPISODES/${ep}/shots/${hit}`
-        }
-      } catch {
-        /* no episodes yet */
-      }
-      continue
-    }
-    try {
-      await fs.access(path.join(ROOT, g))
-      return g.split(path.sep).join('/')
-    } catch {
-      /* next */
-    }
+/** The take as it is now: the approved draft, the filed final, or the rejected render. */
+function Media({ entry }: { entry: DecidedEntry }) {
+  if (!entry.file) {
+    return (
+      <div className="grid aspect-video w-full place-items-center rounded-lg border border-dashed border-edge p-4 text-center text-xs text-muted">
+        {entry.missing}
+      </div>
+    )
   }
-  return null
+  const src = assetUrl(entry.file)
+  return isVideo(entry.file) ? (
+    <video src={src} className="checker aspect-video w-full rounded-lg object-contain" controls muted loop playsInline preload="metadata" />
+  ) : (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt={entry.title} className="checker aspect-video w-full rounded-lg object-contain" />
+  )
+}
+
+/** Which shot, which pass, which attempt, and when -- what tells two SC001 cards apart. */
+function Heading({ entry }: { entry: DecidedEntry }) {
+  const d = entry.decision
+  const approvedDraft = d.verdict === 'accepted' && entry.stage === 'draft'
+  return (
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
+      <span className="text-sm font-medium text-fg">{entry.title}</span>
+      <span className="font-mono text-xs text-muted">{entry.where}</span>
+      {entry.stage && (
+        <Badge tone={d.verdict === 'accepted' && !approvedDraft ? 'good' : 'muted'}>
+          {approvedDraft ? 'draft approved' : entry.stage}
+        </Badge>
+      )}
+      {entry.attempt > 1 && <Badge tone="muted">attempt {entry.attempt}</Badge>}
+      {entry.status === 'waiting' && <Badge tone="accent">waiting for the worker</Badge>}
+      {entry.status === 'failed' && <Badge tone="bad">not applied, back on Review</Badge>}
+      <span className="ml-auto font-mono text-[11px] text-faint tabular-nums">{when(d.ts)}</span>
+    </div>
+  )
+}
+
+const FOLLOW_UP: Record<FollowUp['state'], { text: string; tone: 'accent' | 'good' | 'bad' | 'muted' }> = {
+  queued: { text: 'queued', tone: 'muted' },
+  generating: { text: 'generating now', tone: 'accent' },
+  'not-generated': { text: 'did not generate, see the worker log', tone: 'bad' },
+  'to-review': { text: 'waiting for your review', tone: 'accent' },
+  accepted: { text: 'accepted', tone: 'good' },
+  denied: { text: 'denied', tone: 'bad' },
+}
+
+/** What the decision set off, and where that stands now. */
+function FollowUpLine({ entry }: { entry: DecidedEntry }) {
+  const d = entry.decision
+  const f = entry.followUp
+  if (entry.status === 'failed') return null
+
+  if (!f) {
+    let text: string | null = null
+    if (d.verdict === 'denied') {
+      text = !d.requeue
+        ? 'Not regenerated.'
+        : entry.status === 'waiting'
+          ? 'Regenerates once the worker applies this.'
+          : 'No regeneration was queued (attempt limit reached?), see the worker log.'
+    } else if (entry.stage === 'draft' && entry.status === 'waiting') {
+      text = 'The 1080p final is queued once the worker applies this.'
+    }
+    return text ? <p className="text-xs text-muted">{text}</p> : null
+  }
+
+  const s = FOLLOW_UP[f.state]
+  return (
+    <p className="flex flex-wrap items-center gap-2 text-xs text-muted">
+      <span>{f.stage === 'final' && entry.stage === 'draft' ? '1080p final' : `Attempt ${f.attempt}`}</span>
+      <Badge tone={s.tone}>{s.text}</Badge>
+      <span className="font-mono text-[11px] text-faint">{f.jobId}</span>
+    </p>
+  )
+}
+
+function Location({ entry }: { entry: DecidedEntry }) {
+  if (!entry.file) return null
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+      <span className="min-w-0 font-mono text-[11px] break-all text-faint">{entry.file}</span>
+      <ShowInFolder path={entry.file} />
+    </div>
+  )
 }
 
 export default async function DecidedPage() {
-  const decisions = (await getDecisions()).slice().reverse()
-  const located = await Promise.all(decisions.map(async (d) => ({ d, at: await locate(d) })))
-  const accepted = located.filter((x) => x.d.verdict === 'accepted')
-  const denied = located.filter((x) => x.d.verdict === 'denied')
+  const entries = await getDecidedEntries()
+  const accepted = entries.filter((e) => e.decision.verdict === 'accepted')
+  const denied = entries.filter((e) => e.decision.verdict === 'denied')
 
   return (
-    <div className="space-y-10">
-      <PageHeader title="Decided">
-        Everything you have accepted or denied, and where each file now lives. Nothing is deleted —
+    <div className="space-y-12">
+      <PageHeader title="Decided" meta={`${entries.length} decisions, newest first`}>
+        Everything you have accepted or denied, and where each take now lives. Nothing is deleted:
         a denied take is kept as the evidence <code className="text-fg">/learn</code> distils rules
         from.
       </PageHeader>
 
       <section>
-        <SectionHeading tone="good">Accepted ({accepted.length})</SectionHeading>
+        <SectionHeading tone="good" count={accepted.length}>Accepted</SectionHeading>
         {accepted.length === 0 ? (
           <EmptyState>Nothing accepted yet.</EmptyState>
         ) : (
           <div className="grid gap-4 lg:grid-cols-2">
-            {accepted.map(({ d, at }, i) => (
-              <Reveal key={d.id} index={i} lift>
-                <Card interactive className="p-4">
-                  {at ? (
-                    isVideo(at) ? (
-                      <video
-                        src={assetUrl(at)}
-                        className="checker w-full rounded-lg"
-                        controls
-                        muted
-                        loop
-                        preload="metadata"
-                      />
-                    ) : (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={assetUrl(at)}
-                        alt={d.target}
-                        className="checker w-full rounded-lg"
-                      />
-                    )
-                  ) : (
-                    <div className="rounded-lg border border-dashed border-edge p-6 text-center text-xs text-muted">
-                      File is being moved by the worker
-                    </div>
+            {accepted.map((e, i) => (
+              <Reveal key={e.decision.id} index={i}>
+                <Card interactive className="space-y-3 p-4">
+                  <Media entry={e} />
+                  <Heading entry={e} />
+                  {e.notes && (
+                    <p className="text-xs leading-relaxed text-muted" dir="auto">
+                      <span className="text-good">why it worked:</span> {e.notes}
+                    </p>
                   )}
-                  <div className="mt-3">
-                    <div className="font-mono text-xs text-fg">
-                      {d.target} {d.variant} {d.take}
-                    </div>
-                    <div className="mt-1 font-mono text-xs break-all text-muted">{at ?? '—'}</div>
-                    {d.notes && (
-                      <p className="mt-2 text-xs leading-relaxed text-muted">
-                        <span className="text-good">why it worked:</span> {d.notes}
-                      </p>
-                    )}
-                  </div>
+                  <FollowUpLine entry={e} />
+                  <DecisionDetails decision={e.decision} filings={e.filings} failed={e.failedReason ?? undefined} />
+                  <Location entry={e} />
                 </Card>
               </Reveal>
             ))}
@@ -121,24 +139,26 @@ export default async function DecidedPage() {
       </section>
 
       <section>
-        <SectionHeading tone="bad">Denied ({denied.length})</SectionHeading>
+        <SectionHeading tone="bad" count={denied.length}>Denied</SectionHeading>
         {denied.length === 0 ? (
           <EmptyState>Nothing denied.</EmptyState>
         ) : (
-          <div className="space-y-2">
-            {denied.map(({ d, at }, i) => (
-              <Reveal key={d.id} index={i}>
-                <Card interactive className="px-4 py-3.5 text-sm">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-mono text-xs text-fg">
-                      {d.target} {d.take}
-                    </span>
-                    {d.requeue && <Badge tone="accent">regenerating</Badge>}
+          <div className="space-y-3">
+            {denied.map((e, i) => (
+              <Reveal key={e.decision.id} index={i}>
+                <Card interactive className="flex flex-col gap-4 p-4 sm:flex-row">
+                  <div className="shrink-0 sm:w-64">
+                    <Media entry={e} />
                   </div>
-                  <p className="mt-1.5 text-xs leading-relaxed text-muted">{d.notes}</p>
-                  <p className="mt-1.5 font-mono text-[10px] break-all text-muted/70">
-                    {at ?? 'file pending move'}
-                  </p>
+                  <div className="min-w-0 flex-1 space-y-2.5">
+                    <Heading entry={e} />
+                    <p className="text-sm leading-relaxed whitespace-pre-line text-fg/90" dir="auto">
+                      {e.notes}
+                    </p>
+                    <FollowUpLine entry={e} />
+                    <DecisionDetails decision={e.decision} filings={e.filings} failed={e.failedReason ?? undefined} />
+                    <Location entry={e} />
+                  </div>
                 </Card>
               </Reveal>
             ))}

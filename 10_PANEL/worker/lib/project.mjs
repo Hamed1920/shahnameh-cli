@@ -22,6 +22,12 @@ export const P = {
   staging: path.join(ROOT, '09_OUTPUT', '_staging'),
   rejected: path.join(ROOT, '09_OUTPUT', '_rejected'),
   drafts: path.join(ROOT, '09_OUTPUT', '_drafts'),
+  uploads: path.join(ROOT, '09_OUTPUT', '_uploads'),
+  filings: path.join(ROOT, '00_PROJECT', 'queue', 'FILINGS.jsonl'),
+  // References page: requests written by the panel, results by the worker.
+  indexOps: path.join(ROOT, '00_PROJECT', 'review', 'INDEX_OPS.jsonl'),
+  indexOpResults: path.join(ROOT, '00_PROJECT', 'queue', 'INDEX_OPS_RESULTS.jsonl'),
+  archive: path.join(ROOT, '09_OUTPUT', '_archive'),
 }
 
 export const rel = (abs) => path.relative(ROOT, abs).split(path.sep).join('/')
@@ -51,11 +57,38 @@ export async function readCsv(file) {
   return parseCsv(await readText(file))
 }
 
+/**
+ * Replace `file` with `tmp`, retrying while Windows reports the target busy.
+ *
+ * On Windows a rename over a file fails with EPERM/EBUSY/EACCES while any other
+ * process has it open -- including the panel, which reads the registries many
+ * times per page render, right when a fresh decision makes the worker write
+ * them. The lock lasts milliseconds; give up only after a few seconds.
+ */
+export async function replaceFile(tmp, file) {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      await fs.rename(tmp, file)
+      return
+    } catch (e) {
+      if (!['EPERM', 'EBUSY', 'EACCES'].includes(e.code) || attempt >= 25) throw e
+      await new Promise((r) => setTimeout(r, Math.min(40 * attempt, 400)))
+    }
+  }
+}
+
 /** Atomic-ish CSV write: temp file then rename, so a crash cannot truncate a registry. */
 export async function writeCsv(file, rows, header) {
   const tmp = file + '.tmp'
   await fs.writeFile(tmp, toCsv(rows, header), 'utf8')
-  await fs.rename(tmp, file)
+  await replaceFile(tmp, file)
+}
+
+/** Put a file back exactly as it was read (used to roll back a half-applied change). */
+export async function restoreText(file, text) {
+  const tmp = file + '.tmp'
+  await fs.writeFile(tmp, text, 'utf8')
+  await replaceFile(tmp, file)
 }
 
 export async function loadEntities() {
@@ -141,9 +174,30 @@ export async function readState() {
   }
 }
 
-export async function writeState(state) {
-  await fs.mkdir(path.dirname(P.state), { recursive: true })
-  const tmp = P.state + '.tmp'
-  await fs.writeFile(tmp, JSON.stringify({ ...state, updatedAt: new Date().toISOString() }, null, 2))
-  await fs.rename(tmp, P.state)
+// One save at a time. The index-op watcher and a pass can both save while a
+// generation is running, and two writes to the same temp file would collide.
+let stateWrites = Promise.resolve()
+
+export function writeState(state) {
+  const run = stateWrites.then(async () => {
+    await fs.mkdir(path.dirname(P.state), { recursive: true })
+    const tmp = P.state + '.tmp'
+    await fs.writeFile(tmp, JSON.stringify({ ...state, updatedAt: new Date().toISOString() }, null, 2))
+    await replaceFile(tmp, P.state)
+  })
+  stateWrites = run.catch(() => {})
+  return run
+}
+
+/**
+ * Variants of an entity that sit in the archive. A look number is never handed
+ * out again while its old look can still be restored, or @CHR-001/V04 in past
+ * notes would silently point at a different picture.
+ */
+export async function archivedVariants(shortId) {
+  const index = await readJsonl(path.join(P.archive, 'index.jsonl'))
+  const restored = new Set(index.filter((x) => x.restored).map((x) => x.archiveId))
+  return index
+    .filter((x) => !x.restored && !restored.has(x.archiveId) && x.short_id === shortId && x.row?.variant)
+    .map((x) => x.row.variant)
 }

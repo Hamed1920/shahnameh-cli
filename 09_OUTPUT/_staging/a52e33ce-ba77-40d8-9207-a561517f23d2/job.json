@@ -1,0 +1,100 @@
+{
+  "jobId": "J-20260903-YZC",
+  "parentJobId": null,
+  "hfJobId": "a52e33ce-ba77-40d8-9207-a561517f23d2",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "P02",
+  "target": "SHM-EP001-SC002-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP001-ZAHHAK-ENTRY/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nThe delegation has just stopped outside. Keep the same clothing wear, gift count, weak wind and travel dust.\n\nSHOT 1 — THRESHOLD — 0:00–0:05:\n32mm low view from inside the dark entrance looking outward. The first two nobles cross from cold exterior light into shadow, followed by the others. Their eyes need time to adjust; one hand briefly touches the stone wall. The gifts pass close to the lens and partially block the frame.\n\nSHOT 2 — DISTANCE TO POWER — 0:05–0:10:\n24mm symmetrical-but-imperfect horizontal wide shot from the rear of the hall. Zahhak sits far across the width on a low severe platform, almost motionless, old staff planted beside his stronger leg. The nobles enter as a compressed group, then spread laterally into a restrained shallow arc. Empty stone dominates between them and Zahhak.\n\nSHOT 3 — STOPPING LINE — 0:10–0:15:\n65mm side view compressed across the line of nobles. Their feet stop at slightly different moments. One gift bearer takes half a step too far, notices, and returns into line. Zahhak remains soft in the distant background while one living serpent turns toward the new arrivals. End before anyone kneels.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nExterior wind narrows into interior room tone, shoes crossing the threshold, gifts brushing cloth, one uneven last footstep and subtle serpent scales.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: PROP_ZAHHAK_OLD_STAFF.",
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": "false",
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V02",
+    "@REF-001/V02",
+    "@LOC-009",
+    "@PRP-010/V01"
+  ],
+  "createdAt": "2026-09-03T13:15:14.839Z",
+  "costCredits": 37.5,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_131313_a52e33ce-ba77-40d8-9207-a561517f23d2.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-03T13:13:13.804504Z",
+      "display_name": "Seedance 2.5",
+      "id": "a52e33ce-ba77-40d8-9207-a561517f23d2",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": false,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "82a550d2-870e-4075-88ec-431181abf870",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/82a550d2-870e-4075-88ec-431181abf870.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "f9769dbe-199e-4156-8a14-c46de66e3f7b",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/f9769dbe-199e-4156-8a14-c46de66e3f7b.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a0b317ce-00b6-4fe8-b64d-88d777c137e9",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/a0b317ce-00b6-4fe8-b64d-88d777c137e9.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "862599a3-0317-4deb-94a7-75a58ca6f146",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/862599a3-0317-4deb-94a7-75a58ca6f146.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nThe delegation has just stopped outside. Keep the same clothing wear, gift count, weak wind and travel dust.\n\nSHOT 1 — THRESHOLD — 0:00–0:05:\n32mm low view from inside the dark entrance looking outward. The first two nobles cross from cold exterior light into shadow, followed by the others. Their eyes need time to adjust; one hand briefly touches the stone wall. The gifts pass close to the lens and partially block the frame.\n\nSHOT 2 — DISTANCE TO POWER — 0:05–0:10:\n24mm symmetrical-but-imperfect horizontal wide shot from the rear of the hall. Zahhak sits far across the width on a low severe platform, almost motionless, old staff planted beside his stronger leg. The nobles enter as a compressed group, then spread laterally into a restrained shallow arc. Empty stone dominates between them and Zahhak.\n\nSHOT 3 — STOPPING LINE — 0:10–0:15:\n65mm side view compressed across the line of nobles. Their feet stop at slightly different moments. One gift bearer takes half a step too far, notices, and returns into line. Zahhak remains soft in the distant background while one living serpent turns toward the new arrivals. End before anyone kneels.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nExterior wind narrows into interior room tone, shoes crossing the threshold, gifts brushing cloth, one uneven last footstep and subtle serpent scales.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: PROP_ZAHHAK_OLD_STAFF.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_131313_a52e33ce-ba77-40d8-9207-a561517f23d2.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_131313_a52e33ce-ba77-40d8-9207-a561517f23d2_thumbnail.webp"
+    }
+  ]
+}

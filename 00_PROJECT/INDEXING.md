@@ -283,7 +283,44 @@ original_filename, added, notes
 
 `role` vocabulary: `HERO`, `TURNAROUND`, `PLATE`, `DETAIL`, `BOARD`, `RENDER`.
 
+`role` says what kind of picture a file is. It is a filing label only — nothing in generation
+reads it; the validator just checks the value is in this list.
+
+| Role | Meaning | Example |
+|---|---|---|
+| `HERO` | The main "this is what it looks like" image, usually the first good one | LOC-007 V01 dark monolith facade |
+| `PLATE` | One specific look or version; several plates of one subject sit side by side as V01, V02… | CHR-001 Zahhak V01, V02, V03 |
+| `TURNAROUND` | One object from several angles (front, side, back) on a single sheet | PRP-001 V01 turnaround sheet |
+| `DETAIL` | A close-up of one part: a mask, a hand, a pattern | — |
+| `BOARD` | A mood or contact sheet: many images in one grid, not one object | REF-001 civilization caste board |
+| `RENDER` | A generation accepted in the review panel. Set by the worker only | — |
+
+For a reviewer upload: a first good image of something new → `HERO`; another look of something
+that already has one → `PLATE`; a collage → `BOARD`. The panel's role help (`?`) carries the same
+definitions in Persian (`10_PANEL/components/role-help.tsx`) — keep the two in step.
+
 ---
+
+## 8b. Retiring, archiving, renaming and moving
+
+Done from the panel's References page and applied by the worker. None of them frees a number.
+
+- **Retire:** `status` becomes `RETIRED`. The entity keeps its number, rows and files. Pickers
+  hide it, and uploads can't attach to it. Restoring sets `CONCEPT`, or a chosen status.
+- **Archive a look:** every manifest row for that entity + variant is removed, and its files move
+  to `09_OUTPUT/_archive/<archive-id>/`. The removed row is saved in
+  `09_OUTPUT/_archive/index.jsonl`. If the main look was archived, the lowest remaining variant
+  becomes canonical; with no looks left the entity gets `NO-ASSET`. Restoring puts the file back,
+  under the next free `_V` if its old variant has been reused since.
+- **Rename:** only the slug and name change. `SHM-PRP-016-OLD` becomes `SHM-PRP-016-NEW`, every
+  file of the entity is renamed to match, and `related` links elsewhere are updated. `short_id`
+  never changes, so `@PRP-016` tokens keep resolving. Full IDs written into documents by hand
+  (e.g. an episode's `ASSET_MAP.md`) are not rewritten.
+- **Move looks:** a look re-files under another entity as that entity's next `_V`, keeping its
+  takes and descriptor.
+
+Archive, move and rename are refused while a queued job or an unapplied decision still points at
+the files involved.
 
 ## 9. Number allocation
 
@@ -292,6 +329,11 @@ original_filename, added, notes
 - Only the CLI assigns numbers. An external authoring surface proposes a `NEW/KIND/SLUG` and the
   CLI resolves it — see `SYNC_PROTOCOL.md` §3. This is what makes collisions structurally
   impossible rather than merely unlikely.
+- The one other allocator is the panel worker. A reviewer can upload a reference in the review
+  panel and propose it as a new entity (kind + English name). The worker assigns the number at
+  filing time using the same rule as `Ingest-Jobs.ps1` — highest number of that kind, `RETIRED`
+  included, plus one — and rejects a slug that already exists. An upload attached to an existing
+  entity gets that entity's next `_V` instead. Either way the manifest row has `source` = `upload`.
 - `PRP-010` was hand-assigned in v1.0, leaving `003`–`009` free. They stay free. Gaps are not
   errors.
 

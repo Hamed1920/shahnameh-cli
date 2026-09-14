@@ -49,11 +49,60 @@ the panel all touch the same files.
 | Process | Writes |
 |---|---|
 | **Worker** | asset files, `ASSET_MANIFEST.csv`, `ENTITIES.csv`, `JOB_LEDGER.csv`, `QUEUE.jsonl` |
-| **Panel** | `REVIEW_LOG.jsonl`, `LEARNINGS.jsonl` — **append-only, nothing else** |
+| **Worker** (also) | files reviewer uploads, `FILINGS.jsonl`, `state.json` `failedDecisions` |
+| **Panel** | `REVIEW_LOG.jsonl`, `LEARNINGS.jsonl` — **append-only**; raw uploads into `09_OUTPUT/_uploads/<decision-id>/` |
 | **PowerShell tools** | registries, when the worker is not running |
 
-The panel never moves a file or edits a CSV. It records a decision; the worker acts on it. One
-writer for the filesystem means no torn CSVs and no races.
+The panel never names, moves or registers a file and never edits a CSV. It records a decision
+(and drops any uploaded image beside it); the worker acts on it. One writer for the registries
+means no torn CSVs and no races.
+
+## References page
+
+`/references` browses every entity by kind, with its looks, and manages them. Each change is a
+request appended to `00_PROJECT/review/INDEX_OPS.jsonl`. The worker applies it
+(`worker/lib/index-ops.mjs`) and records the outcome in `00_PROJECT/queue/INDEX_OPS_RESULTS.jsonl`.
+While requests are pending, the page polls and shows each result. The worker checks for requests
+every 3 seconds, including while a generation is running (they share an in-process registry lock
+with the passes), so a result normally shows within seconds. If it doesn't, the page says whether
+the worker is stopped or was started before its code last changed (`getWorkerStatus`, from
+`queue/worker.lock`).
+
+| Request | What the worker does |
+|---|---|
+| `add` | Files uploads exactly like review uploads (new look or new entity). |
+| `rename` | Name, description, and the ID wording. It renames every file and updates `related` links. The number is kept, so `@KIND-NNN` tokens still resolve. |
+| `retire` / `restore` / `status` | Entity status. Retired entities leave the pickers but keep their number and files. |
+| `canonical` / `role` | Main look; role on selected looks. |
+| `archive` / `unarchive` | Moves a look to `09_OUTPUT/_archive/<id>/` and saves its manifest row in `index.jsonl`. A look already archived by an earlier request is noted, not refused. Its V number stays reserved while archived, so new looks never reuse it. |
+| `move` | Re-files looks under another entity as its next V numbers. |
+
+Every request is validated in full, then applied as one transaction: file moves are recorded and
+both CSVs snapshotted, so a failure part-way puts everything back. Archive, move and rename are
+refused while something still needs the files: a queued or generating job, an unapplied decision,
+or a result waiting for review (its revision or final reuses the same references). A refusal is recorded
+and shown; an I/O error (a locked file) is retried on the next pass.
+
+## References on a decision
+
+On the Accept/Deny form a reviewer can remove references, add one from the index, or upload an
+image. An upload is filed either as a **new look** of an existing entity (its next `_V`) or as a
+**new entity** (the worker assigns the number). The decision records the full new `refs` list,
+with `upload:<id>` placeholders the worker swaps for the filed token.
+
+- Reference edits only apply when the decision generates something: a denial with *Regenerate*
+  ticked, or an accepted **draft** (the edits go into the 1080p final).
+- Uploads, reference changes and resolvability are all checked **before** the candidate is moved.
+  A decision that fails (for example a name that already exists) is marked failed in
+  `state.json`, logged to `FILINGS.jsonl`, and the candidate goes back on the Review page.
+- Notes may be written in Farsi or English, in one box, and go into the revision prompt as written.
+  (Older decisions may carry `notesEn`; the worker still prefers it when present.)
+- **@-mentions.** Typing `@` in the note opens a searchable picker of the references in use for
+  this job (only those). A mention is stored as its token (`@LOC-007/V02`, or `@upload:u1` for an
+  upload on the same decision, swapped for the filed token when the revision is queued). When
+  building the prompt the worker rewrites each mention to the attached image's position and name
+  (`@Image2 (LOC-007 V02, Royal Audience Platform)`) and appends a key listing every attached
+  image. The panel rejects a mention that isn't in the job's reference list.
 
 ## Queue a generation
 

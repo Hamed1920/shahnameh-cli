@@ -1,0 +1,100 @@
+{
+  "jobId": "J-20260903-4AC",
+  "parentJobId": null,
+  "hfJobId": "a222d943-d91f-49c7-abc5-82c5eae05655",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "P11",
+  "target": "SHM-EP001-SC011-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP001-ZAHHAK-ENTRY/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nZahhak has just crossed the main threshold. Jamshid is already descending in the escape version of his unchanged identity.\n\nSHOT 1 — ASCENDING CAUSEWAY — 0:00–0:05:\n35mm controlled low three-quarter tracking shot. Zahhak advances two heavy phases up the royal ramp, staff first. Nobles follow lower in frame and spread across the width without crowding him. Serpents move independently with gait and weak wind. The camera retreats upward at his exact pace.\n\nSHOT 2 — DESCENDING STAIR — 0:05–0:10:\nMatch Zahhak’s staff landing to Jamshid’s hand striking a rough stone rail. 28mm close handheld camera retreats below him down narrow stairs. Jamshid takes several quick downward steps, one sideways to recover balance. His hand drags along the wall; shoulders pitch forward; the camera briefly loses part of him behind a foreground corner.\n\nSHOT 3 — TWO DIRECTIONS — 0:10–0:15:\nIntercut two short physically matched fragments: 2.5 seconds of Zahhak’s staff and lame gait rising across broad palace steps, then 2.5 seconds of Jamshid’s feet dropping down the last service ramp toward the lower gate. Preserve opposing screen direction and elevation. End on Jamshid seeing the huge kneeling area and flightless mount ahead, but do not mount yet.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nSlow staff-foot rhythm and distant followers, hard cut to quick breath and scraping hand, then alternating step impacts with no score or artificial transition sound.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: CHAR_JAMSHID_ESCAPE, LOC_ROYAL_CAUSEWAY, LOC_LOWER_GATE_MOUNT.",
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": "false",
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V03",
+    "@REF-001/V02",
+    "@LOC-011/V01",
+    "@PRP-001"
+  ],
+  "createdAt": "2026-09-03T14:19:02.307Z",
+  "costCredits": 37.5,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_141100_a222d943-d91f-49c7-abc5-82c5eae05655.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-03T14:11:00.806752Z",
+      "display_name": "Seedance 2.5",
+      "id": "a222d943-d91f-49c7-abc5-82c5eae05655",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": false,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "55ec9515-8e1a-4e46-bb9c-85533d659bce",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/55ec9515-8e1a-4e46-bb9c-85533d659bce.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "7b48780d-b617-47b9-9de9-217f87b35c42",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/7b48780d-b617-47b9-9de9-217f87b35c42.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "220617a9-4f45-4779-ae47-4d612d75c3ca",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/220617a9-4f45-4779-ae47-4d612d75c3ca.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "364a34f4-5269-4915-b913-beced0849dbc",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/364a34f4-5269-4915-b913-beced0849dbc.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nZahhak has just crossed the main threshold. Jamshid is already descending in the escape version of his unchanged identity.\n\nSHOT 1 — ASCENDING CAUSEWAY — 0:00–0:05:\n35mm controlled low three-quarter tracking shot. Zahhak advances two heavy phases up the royal ramp, staff first. Nobles follow lower in frame and spread across the width without crowding him. Serpents move independently with gait and weak wind. The camera retreats upward at his exact pace.\n\nSHOT 2 — DESCENDING STAIR — 0:05–0:10:\nMatch Zahhak’s staff landing to Jamshid’s hand striking a rough stone rail. 28mm close handheld camera retreats below him down narrow stairs. Jamshid takes several quick downward steps, one sideways to recover balance. His hand drags along the wall; shoulders pitch forward; the camera briefly loses part of him behind a foreground corner.\n\nSHOT 3 — TWO DIRECTIONS — 0:10–0:15:\nIntercut two short physically matched fragments: 2.5 seconds of Zahhak’s staff and lame gait rising across broad palace steps, then 2.5 seconds of Jamshid’s feet dropping down the last service ramp toward the lower gate. Preserve opposing screen direction and elevation. End on Jamshid seeing the huge kneeling area and flightless mount ahead, but do not mount yet.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nSlow staff-foot rhythm and distant followers, hard cut to quick breath and scraping hand, then alternating step impacts with no score or artificial transition sound.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: CHAR_JAMSHID_ESCAPE, LOC_ROYAL_CAUSEWAY, LOC_LOWER_GATE_MOUNT.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_141100_a222d943-d91f-49c7-abc5-82c5eae05655.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_141100_a222d943-d91f-49c7-abc5-82c5eae05655_thumbnail.webp"
+    }
+  ]
+}

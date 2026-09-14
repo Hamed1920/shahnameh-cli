@@ -29,6 +29,16 @@ beginning). Both verdicts matter:
 
 An accept with no note carries no signal. Don't invent one; count it and move on.
 
+Notes may be in **Farsi**. Some older decisions also carry `notesEn`, the reviewer's own English
+version — prefer it when present. Notes can contain @-mentions such as `@LOC-007/V02`: that is
+the exact reference image the reviewer meant, so keep the ID in any rule you derive from it. Tags may be Farsi
+too. Always write rules in English: they are injected into English prompts. Read the files as
+UTF-8 (`Get-Content -Encoding UTF8` in PowerShell 5.1), or the Farsi arrives garbled.
+
+A decision may also carry `refs` / `refsBefore` / `uploads`: the reviewer changed which reference
+images the job used. A repeated swap (the same wrong location replaced by the same right one) is
+worth a rule about which reference belongs with which subject.
+
 ## 2. Cluster
 
 Group decisions by what they actually have in common — the same entity, the same family, the

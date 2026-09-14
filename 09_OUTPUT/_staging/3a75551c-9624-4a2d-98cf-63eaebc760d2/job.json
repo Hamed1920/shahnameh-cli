@@ -1,0 +1,104 @@
+{
+  "jobId": "J-20260914-31J",
+  "parentJobId": "J-20260914-R8B",
+  "hfJobId": "3a75551c-9624-4a2d-98cf-63eaebc760d2",
+  "attempt": 2,
+  "stage": "final",
+  "label": "P03",
+  "target": "SHM-EP001-SC003-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP001-ZAHHAK-ENTRY/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nPreserve the exact shallow arc, Zahhak’s seated position, old staff placement, gift bearers and light direction from Block 02.\n\nSHOT 1 — FIRST KNEE — 0:00–0:05:\n50mm eye-level lateral composition. The principal noble lowers to one knee first, with visible strain and a small balance correction. Two others follow at different speeds; the remaining nobles bow their torsos and place one hand on the chest. No perfectly synchronized movement.\n\nSHOT 2 — THE COLLECTIVE DECISION — 0:05–0:10:\n35mm wide three-quarter view from near Zahhak’s platform. The kneeling group fills the lower left and center of the horizontal frame while Zahhak’s old staff and one inactive hand occupy the right foreground. One noble raises both empty palms briefly toward him, then lowers them. The gesture communicates request and surrender of authority without dialogue.\n\nSHOT 3 — ZAHHAK DOES NOT ANSWER — 0:10–0:15:\n85mm close view of Zahhak’s masked head, shoulder and serpents. His body remains still. First a serpent slowly turns toward the nobles; only afterward Zahhak’s head rotates a few degrees in the same direction. His breathing remains calm. End on the silence before acceptance.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nFabric tightening, knees contacting stone at different moments, one restrained breath from the petitioners, low hall air and a soft scale crossing heavy clothing.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: PROP_ZAHHAK_OLD_STAFF.\n\nRevision — the previous attempt was rejected for these reasons. Fix them:\n- از ضحاک جدید که آپلود کردم استفاده کن.\r\nاز این @Image4 (CHR-001 V05, Zahhak)  ضحاک\n\nReference images, in the order they are attached:\n- @Image1: REF-001 V02, Civilization Caste Board\n- @Image2: LOC-009 V01, Ceremonial Reception Hall\n- @Image3: PRP-010 V01, Diplomatic Gift Set\n- @Image4: CHR-001 V05, Zahhak",
+  "basePrompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nPreserve the exact shallow arc, Zahhak’s seated position, old staff placement, gift bearers and light direction from Block 02.\n\nSHOT 1 — FIRST KNEE — 0:00–0:05:\n50mm eye-level lateral composition. The principal noble lowers to one knee first, with visible strain and a small balance correction. Two others follow at different speeds; the remaining nobles bow their torsos and place one hand on the chest. No perfectly synchronized movement.\n\nSHOT 2 — THE COLLECTIVE DECISION — 0:05–0:10:\n35mm wide three-quarter view from near Zahhak’s platform. The kneeling group fills the lower left and center of the horizontal frame while Zahhak’s old staff and one inactive hand occupy the right foreground. One noble raises both empty palms briefly toward him, then lowers them. The gesture communicates request and surrender of authority without dialogue.\n\nSHOT 3 — ZAHHAK DOES NOT ANSWER — 0:10–0:15:\n85mm close view of Zahhak’s masked head, shoulder and serpents. His body remains still. First a serpent slowly turns toward the nobles; only afterward Zahhak’s head rotates a few degrees in the same direction. His breathing remains calm. End on the silence before acceptance.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nFabric tightening, knees contacting stone at different moments, one restrained breath from the petitioners, low hall air and a soft scale crossing heavy clothing.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: PROP_ZAHHAK_OLD_STAFF.",
+  "revisionNotes": [
+    "از ضحاک جدید که آپلود کردم استفاده کن.\r\nاز این @CHR-001/V05  ضحاک"
+  ],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": "false",
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@REF-001/V02",
+    "@LOC-009",
+    "@PRP-010/V01",
+    "@CHR-001/V05"
+  ],
+  "createdAt": "2026-09-14T12:30:16.225Z",
+  "costCredits": 135,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260914_122525_3a75551c-9624-4a2d-98cf-63eaebc760d2.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-14T12:25:25.063046Z",
+      "display_name": "Seedance 2.5",
+      "id": "3a75551c-9624-4a2d-98cf-63eaebc760d2",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": false,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "f40c89dd-3e95-477e-a21b-a1bf6b9c51e4",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/f40c89dd-3e95-477e-a21b-a1bf6b9c51e4.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "ba6dfa2f-b435-49ef-901d-b3b151b60f40",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/ba6dfa2f-b435-49ef-901d-b3b151b60f40.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a7297fe2-a024-457f-a297-5576146d6141",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/a7297fe2-a024-457f-a297-5576146d6141.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "e210d27a-c9b0-4d98-a1ef-b94158ec59dd",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/e210d27a-c9b0-4d98-a1ef-b94158ec59dd.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nPreserve the exact shallow arc, Zahhak’s seated position, old staff placement, gift bearers and light direction from Block 02.\n\nSHOT 1 — FIRST KNEE — 0:00–0:05:\n50mm eye-level lateral composition. The principal noble lowers to one knee first, with visible strain and a small balance correction. Two others follow at different speeds; the remaining nobles bow their torsos and place one hand on the chest. No perfectly synchronized movement.\n\nSHOT 2 — THE COLLECTIVE DECISION — 0:05–0:10:\n35mm wide three-quarter view from near Zahhak’s platform. The kneeling group fills the lower left and center of the horizontal frame while Zahhak’s old staff and one inactive hand occupy the right foreground. One noble raises both empty palms briefly toward him, then lowers them. The gesture communicates request and surrender of authority without dialogue.\n\nSHOT 3 — ZAHHAK DOES NOT ANSWER — 0:10–0:15:\n85mm close view of Zahhak’s masked head, shoulder and serpents. His body remains still. First a serpent slowly turns toward the nobles; only afterward Zahhak’s head rotates a few degrees in the same direction. His breathing remains calm. End on the silence before acceptance.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nFabric tightening, knees contacting stone at different moments, one restrained breath from the petitioners, low hall air and a soft scale crossing heavy clothing.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: PROP_ZAHHAK_OLD_STAFF.\n\nRevision — the previous attempt was rejected for these reasons. Fix them:\n- از ضحاک جدید که آپلود کردم استفاده کن.\r\nاز این @Image4 (CHR-001 V05, Zahhak)  ضحاک\n\nReference images, in the order they are attached:\n- @Image1: REF-001 V02, Civilization Caste Board\n- @Image2: LOC-009 V01, Ceremonial Reception Hall\n- @Image3: PRP-010 V01, Diplomatic Gift Set\n- @Image4: CHR-001 V05, Zahhak",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260914_122525_3a75551c-9624-4a2d-98cf-63eaebc760d2.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260914_122525_3a75551c-9624-4a2d-98cf-63eaebc760d2_thumbnail.webp"
+    }
+  ]
+}

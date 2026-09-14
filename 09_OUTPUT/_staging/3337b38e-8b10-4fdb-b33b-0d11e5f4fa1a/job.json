@@ -1,0 +1,118 @@
+{
+  "jobId": "J-20260903-IA1",
+  "parentJobId": null,
+  "hfJobId": "3337b38e-8b10-4fdb-b33b-0d11e5f4fa1a",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "P09",
+  "target": "SHM-EP001-SC009-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP001-ZAHHAK-ENTRY/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nZahhak’s group has just revealed the distant Iranian wall. Preserve their direction of travel and the same weather.\n\nSHOT 1 — DUST APPROACHES — 0:00–0:05:\n85mm telephoto landscape. Zahhak’s delegation crosses laterally below the distant Iranian wall, compressed by heatless haze and dust. The riders remain behind the walking figure. No charge. The staff flashes only as dark material, never magical.\n\nSHOT 2 — JAMSHID SEES — 0:05–0:10:\nMatch the horizontal dust line to the edge of a high opening inside the unchanged Hall of Columns. 85mm view from behind a foreground column. Jamshid stands in royal dress and sees the distant moving line. His head snaps toward it; one hand clamps the stone edge; breath stops for one beat. The mask never changes.\n\nSHOT 3 — POSTS EMPTY — 0:10–0:15:\n40mm slightly high wide view across the hall. Exactly two attendants quietly abandon separate posts and disappear through opposite side passages. Jamshid turns his torso before his feet catch up, noticing the new empty width around him. The camera drifts backward and a column cuts him toward the edge of frame. End as he steps away from the central axis.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nDistant hooves and wind, then interior air, fingers gripping stone, attendants’ receding cloth and footsteps, Jamshid’s shortened breath.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: LOC_IRAN_OUTSKIRTS, PROP_JAMSHID_REGALIA.",
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": "false",
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V03",
+    "@REF-001/V02",
+    "@CHR-002/V01",
+    "@GRP-005",
+    "@LOC-006",
+    "@PRP-001"
+  ],
+  "createdAt": "2026-09-03T14:04:54.255Z",
+  "costCredits": 37.5,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_135918_3337b38e-8b10-4fdb-b33b-0d11e5f4fa1a.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-03T13:59:18.400808Z",
+      "display_name": "Seedance 2.5",
+      "id": "3337b38e-8b10-4fdb-b33b-0d11e5f4fa1a",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": false,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "62fe8edc-72cd-47cf-a1ff-40f26c775d5c",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/62fe8edc-72cd-47cf-a1ff-40f26c775d5c.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "4cb693cf-ebc9-4512-8fbb-da2082fd837b",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/4cb693cf-ebc9-4512-8fbb-da2082fd837b.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "0903ba31-e36e-4975-b0cb-de8546f27e92",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/0903ba31-e36e-4975-b0cb-de8546f27e92.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "c70ddf73-0988-4160-9145-5a754fe1e4c4",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/c70ddf73-0988-4160-9145-5a754fe1e4c4.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "72b42515-3d48-4aa4-827f-66372f6c8423",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/72b42515-3d48-4aa4-827f-66372f6c8423.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "ad82542a-e99d-4560-af02-3e36dedaca3c",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/ad82542a-e99d-4560-af02-3e36dedaca3c.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nZahhak’s group has just revealed the distant Iranian wall. Preserve their direction of travel and the same weather.\n\nSHOT 1 — DUST APPROACHES — 0:00–0:05:\n85mm telephoto landscape. Zahhak’s delegation crosses laterally below the distant Iranian wall, compressed by heatless haze and dust. The riders remain behind the walking figure. No charge. The staff flashes only as dark material, never magical.\n\nSHOT 2 — JAMSHID SEES — 0:05–0:10:\nMatch the horizontal dust line to the edge of a high opening inside the unchanged Hall of Columns. 85mm view from behind a foreground column. Jamshid stands in royal dress and sees the distant moving line. His head snaps toward it; one hand clamps the stone edge; breath stops for one beat. The mask never changes.\n\nSHOT 3 — POSTS EMPTY — 0:10–0:15:\n40mm slightly high wide view across the hall. Exactly two attendants quietly abandon separate posts and disappear through opposite side passages. Jamshid turns his torso before his feet catch up, noticing the new empty width around him. The camera drifts backward and a column cuts him toward the edge of frame. End as he steps away from the central axis.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nDistant hooves and wind, then interior air, fingers gripping stone, attendants’ receding cloth and footsteps, Jamshid’s shortened breath.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: LOC_IRAN_OUTSKIRTS, PROP_JAMSHID_REGALIA.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_135918_3337b38e-8b10-4fdb-b33b-0d11e5f4fa1a.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_135918_3337b38e-8b10-4fdb-b33b-0d11e5f4fa1a_thumbnail.webp"
+    }
+  ]
+}

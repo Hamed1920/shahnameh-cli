@@ -1,0 +1,49 @@
+{
+  "jobId": "J-20260903-JIC",
+  "parentJobId": null,
+  "hfJobId": "c5ddb4bf-d912-42da-ad9b-fcbd334d384d",
+  "attempt": 1,
+  "stage": null,
+  "label": "LOC-013 Zahhak outer court",
+  "target": "SHM-LOC-013-COURT-ZAHHAK-OUTER",
+  "variant": "V01",
+  "model": "nano_banana_pro",
+  "prompt": "Wide architectural plate, 24mm, frontal. The outer courtyard of a severe dark stone complex: a broad empty flagstone yard enclosed by heavy blunt walls, a deep shadowed gateway on the far side, iron tethering rings and a low stone water trough along one wall. Flat overcast light, no sun. The space is built for waiting, not for ceremony - no decoration, no banners, no statuary. Horizontal cinematic frame using the full width. Physically real and tactile, muted grey and cold brown palette, worn stone and standing water. No people, no animals, no magic, no glow.",
+  "params": {
+    "aspect_ratio": "16:9",
+    "resolution": "2k"
+  },
+  "refs": [],
+  "createdAt": "2026-09-03T12:59:06.806Z",
+  "costCredits": 2,
+  "candidates": [
+    {
+      "file": "T01.png",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_125810_c5ddb4bf-d912-42da-ad9b-fcbd334d384d.png"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-03T12:58:10.64171Z",
+      "display_name": "Nano Banana Pro",
+      "id": "c5ddb4bf-d912-42da-ad9b-fcbd334d384d",
+      "job_type": "nano_banana_pro",
+      "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_125810_c5ddb4bf-d912-42da-ad9b-fcbd334d384d_min.webp",
+      "params": {
+        "application": null,
+        "aspect_ratio": "16:9",
+        "batch_size": 1,
+        "height": 1536,
+        "input_image": null,
+        "input_images": [],
+        "prompt": "Wide architectural plate, 24mm, frontal. The outer courtyard of a severe dark stone complex: a broad empty flagstone yard enclosed by heavy blunt walls, a deep shadowed gateway on the far side, iron tethering rings and a low stone water trough along one wall. Flat overcast light, no sun. The space is built for waiting, not for ceremony - no decoration, no banners, no statuary. Horizontal cinematic frame using the full width. Physically real and tactile, muted grey and cold brown palette, worn stone and standing water. No people, no animals, no magic, no glow.",
+        "resolution": "2k",
+        "surface": null,
+        "width": 2752
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_125810_c5ddb4bf-d912-42da-ad9b-fcbd334d384d.png",
+      "status": "completed"
+    }
+  ]
+}

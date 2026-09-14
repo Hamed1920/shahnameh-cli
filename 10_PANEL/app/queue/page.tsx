@@ -1,4 +1,6 @@
-import { getCandidates, getDecisions, getQueue, getWorkerState } from '@/lib/store'
+import {
+  getCandidates, getDecisions, getFilings, getGeneratingJobId, getQueue, getWorkerState,
+} from '@/lib/store'
 import { EmptyState, StatTile } from '@/components/ui/card'
 import { Reveal } from '@/components/ui/reveal'
 import { Table, Td, Th, Thead, Tr } from '@/components/ui/table'
@@ -7,15 +9,22 @@ import { Badge, PageHeader, SectionHeading } from '@/components/ui/text'
 export const dynamic = 'force-dynamic'
 
 export default async function QueuePage() {
-  const [queue, decisions, candidates, state] = await Promise.all([
+  const [queue, decisions, candidates, state, filings] = await Promise.all([
     getQueue(),
     getDecisions(),
     getCandidates(),
     getWorkerState(),
+    getFilings(),
   ])
+  const failedIds = Object.keys((state?.failedDecisions ?? {}) as Record<string, string>)
+  const failures = filings.filter((f) => !f.ok && failedIds.includes(f.decisionId)).reverse()
 
-  const done = new Set(candidates.map((c) => c.sidecar.jobId))
-  const waiting = queue.filter((q) => !done.has(q.jobId))
+  // The worker's own record is the truth. "Has a file in _staging" is not: a
+  // candidate leaves _staging once it is decided, which made finished jobs
+  // reappear here as if they were still waiting.
+  const processed = new Set((state?.processedJobs ?? []) as string[])
+  const waiting = queue.filter((q) => !processed.has(q.jobId))
+  const generating = await getGeneratingJobId(processed)
   const accepted = decisions.filter((d) => d.verdict === 'accepted').length
   const denied = decisions.filter((d) => d.verdict === 'denied').length
 
@@ -52,6 +61,34 @@ export default async function QueuePage() {
         )}
       </section>
 
+      {failures.length > 0 && (
+        <section>
+          <SectionHeading tone="bad">Decisions the worker could not apply ({failures.length})</SectionHeading>
+          <p className="mb-3 max-w-3xl text-sm text-muted">
+            Usually a problem with an uploaded reference. Nothing was moved or generated, and each
+            candidate is back on the Review page to decide again.
+          </p>
+          <Table>
+            <Thead>
+              <tr>
+                <Th>Decision</Th>
+                <Th>Reason</Th>
+                <Th>When</Th>
+              </tr>
+            </Thead>
+            <tbody>
+              {failures.map((f) => (
+                <Tr key={f.decisionId + f.ts}>
+                  <Td className="font-mono text-xs text-fg">{f.decisionId}</Td>
+                  <Td className="text-xs text-bad">{f.reason}</Td>
+                  <Td className="text-xs text-muted">{f.ts.slice(0, 16).replace('T', ' ')}</Td>
+                </Tr>
+              ))}
+            </tbody>
+          </Table>
+        </section>
+      )}
+
       <section>
         <SectionHeading>Waiting to generate ({waiting.length})</SectionHeading>
         {waiting.length === 0 ? (
@@ -72,6 +109,11 @@ export default async function QueuePage() {
                 <Tr key={q.jobId}>
                   <Td className="font-mono text-xs">
                     <span className="text-fg">{q.jobId}</span>
+                    {q.jobId === generating && (
+                      <Badge tone="accent" className="ml-2">
+                        generating now
+                      </Badge>
+                    )}
                     {q.parentJobId && (
                       <div className="text-muted">from {q.parentJobId}</div>
                     )}

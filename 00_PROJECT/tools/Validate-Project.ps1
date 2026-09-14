@@ -163,6 +163,13 @@ function Test-ShmWorkingPath {
     return $false
 }
 
+# Accepted shot renders live in 07_EPISODES/<episode>/shots/ and are NOT manifest
+# rows by design (INDEXING.md section 7: the manifest indexes reusable entities;
+# a shot's provenance is JOB_LEDGER.csv and the review log). Check their name
+# against the shot-output grammar instead of reporting them as orphans.
+$RX_SHOT_FILE = '^SHM-EP\d{3}(-SQ\d{2})?-SC\d{3}-SH\d{4}_V\d{2}(_T\d{2})?\.(png|jpg|jpeg|webp|mp4|mov)$'
+$episodesDir  = Join-Path $Root '07_EPISODES'
+
 $onDisk = @{}
 foreach ($d in $ASSET_DIRS) {
     $p = Join-Path $Root $d
@@ -170,7 +177,17 @@ foreach ($d in $ASSET_DIRS) {
     Get-ChildItem -LiteralPath $p -Recurse -File |
         Where-Object { $MEDIA_EXT -contains $_.Extension.ToLower() } |
         Where-Object { -not (Test-ShmWorkingPath -FullPath $_.FullName -RootPath $Root) } |
-        ForEach-Object { $onDisk[$_.Name] = $_ }
+        ForEach-Object {
+            $isShotRender = ($_.Directory.Name -ceq 'shots') -and
+                            ($_.Directory.Parent.Parent.FullName -eq $episodesDir)
+            if ($isShotRender) {
+                if ($_.Name -cnotmatch $RX_SHOT_FILE) {
+                    Add-Err "SHOT render name fails grammar: $($_.FullName.Substring($Root.Length + 1))"
+                }
+            } else {
+                $onDisk[$_.Name] = $_
+            }
+        }
 }
 
 foreach ($name in $onDisk.Keys) {

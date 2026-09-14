@@ -1,0 +1,39 @@
+# =====================================================================
+#  Media is stored through Git LFS, so clones stay fast as renders pile up.
+#  git-lfs ships with Git for Windows; run `git lfs install` once per machine
+#  so pushes upload the media and not just its pointers.
+# =====================================================================
+
+# --- images -----------------------------------------------------------
+*.png   filter=lfs diff=lfs merge=lfs -text
+*.jpg   filter=lfs diff=lfs merge=lfs -text
+*.jpeg  filter=lfs diff=lfs merge=lfs -text
+*.webp  filter=lfs diff=lfs merge=lfs -text
+*.gif   filter=lfs diff=lfs merge=lfs -text
+*.bmp   filter=lfs diff=lfs merge=lfs -text
+*.tif   filter=lfs diff=lfs merge=lfs -text
+*.tiff  filter=lfs diff=lfs merge=lfs -text
+*.psd   filter=lfs diff=lfs merge=lfs -text
+*.ai    filter=lfs diff=lfs merge=lfs -text
+
+# --- video and audio --------------------------------------------------
+*.mp4   filter=lfs diff=lfs merge=lfs -text
+*.mov   filter=lfs diff=lfs merge=lfs -text
+*.webm  filter=lfs diff=lfs merge=lfs -text
+*.avi   filter=lfs diff=lfs merge=lfs -text
+*.mkv   filter=lfs diff=lfs merge=lfs -text
+*.wav   filter=lfs diff=lfs merge=lfs -text
+*.mp3   filter=lfs diff=lfs merge=lfs -text
+
+# --- source documents -------------------------------------------------
+*.pdf   filter=lfs diff=lfs merge=lfs -text
+*.docx  filter=lfs diff=lfs merge=lfs -text
+*.doc   filter=lfs diff=lfs merge=lfs -text
+*.pptx  filter=lfs diff=lfs merge=lfs -text
+*.xlsx  filter=lfs diff=lfs merge=lfs -text
+
+# --- append-only logs: a merge keeps both machines' new lines ---------
+# The panel and worker only ever append to JSONL, so union is safe here. The CSV
+# registries and queue/state.json are rewritten whole and are NOT union-merged:
+# only one worker runs at a time, across all machines (see CLAUDE.md).
+*.jsonl merge=union

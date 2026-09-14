@@ -7,23 +7,19 @@ import { cn } from '@/lib/cn'
  */
 export function Table({ className, children }: React.ComponentProps<'table'>) {
   return (
-    <div className="scroll-pane-x rounded-xl border border-edge">
+    <div className="scroll-pane-x rounded-xl border border-edge bg-panel/60">
       <table className={cn('w-full border-collapse text-sm', className)}>{children}</table>
     </div>
   )
 }
 
 export function Thead({ children }: React.ComponentProps<'thead'>) {
-  return (
-    <thead className="bg-panel text-left text-[11px] uppercase tracking-[0.08em] text-muted">
-      {children}
-    </thead>
-  )
+  return <thead className="text-left text-faint">{children}</thead>
 }
 
 export function Th({ className, children, ...props }: React.ComponentProps<'th'>) {
   return (
-    <th className={cn('px-4 py-3 font-medium whitespace-nowrap', className)} {...props}>
+    <th className={cn('eyebrow px-5 pt-4 pb-3.5 font-medium whitespace-nowrap', className)} {...props}>
       {children}
     </th>
   )
@@ -33,7 +29,7 @@ export function Tr({ className, children, ...props }: React.ComponentProps<'tr'>
   return (
     <tr
       className={cn(
-        'border-t border-edge align-top transition-colors duration-150 hover:bg-raise',
+        'border-t border-edge align-top transition-colors duration-150 hover:bg-white/[0.02]',
         className,
       )}
       {...props}
@@ -45,7 +41,7 @@ export function Tr({ className, children, ...props }: React.ComponentProps<'tr'>
 
 export function Td({ className, children, ...props }: React.ComponentProps<'td'>) {
   return (
-    <td className={cn('px-4 py-3', className)} {...props}>
+    <td className={cn('px-5 py-4', className)} {...props}>
       {children}
     </td>
   )

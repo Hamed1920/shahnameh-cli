@@ -1,9 +1,10 @@
-import { CheckCheck, Inbox, Library, ListOrdered, Sparkles } from 'lucide-react'
+import { CheckCheck, Images, Inbox, Library, ListOrdered, Sparkles } from 'lucide-react'
 
-/** The five sections of the panel, in review-loop order. */
+/** The sections of the panel, in review-loop order. */
 export const NAV = [
   { href: '/', label: 'Review', icon: Inbox },
   { href: '/decided', label: 'Decided', icon: CheckCheck },
+  { href: '/references', label: 'References', icon: Images },
   { href: '/entities', label: 'Index', icon: Library },
   { href: '/learnings', label: 'Learnings', icon: Sparkles },
   { href: '/queue', label: 'Queue', icon: ListOrdered },

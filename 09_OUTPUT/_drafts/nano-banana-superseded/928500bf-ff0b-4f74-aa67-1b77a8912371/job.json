@@ -1,0 +1,55 @@
+{
+  "jobId": "J-20260903-8B7",
+  "parentJobId": null,
+  "hfJobId": "928500bf-ff0b-4f74-aa67-1b77a8912371",
+  "attempt": 1,
+  "target": "SHM-GRP-007-RIDERS-IRANIAN",
+  "variant": "V01",
+  "model": "nano_banana_pro",
+  "prompt": "Group reference sheet. Five Iranian riders standing dismounted beside their tack on a cold rocky plain, overcast daylight. Masks are smooth continuous pale human-like surfaces with small narrow eye openings, matching the established Iranian mask language. Practical riding dress: short travel coats over layered wool, leather belts, wrapped legs, dust and sweat marks. They carry harness, water skins and rolled cloth, not weapons. A political escort, deliberately not a war party: no armour plates, no shields, no drawn blades, no formation. Physically real and tactile, muted desaturated palette, natural overcast light, visible wear and travel dust. No magic, no glow, no heroic posing.",
+  "params": {
+    "aspect_ratio": "16:9",
+    "resolution": "2k"
+  },
+  "refs": [
+    "@REF-001/V02"
+  ],
+  "createdAt": "2026-09-03T12:49:34.257Z",
+  "costCredits": 2,
+  "candidates": [
+    {
+      "file": "T01.png",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_124857_928500bf-ff0b-4f74-aa67-1b77a8912371.png"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-03T12:48:57.6149Z",
+      "display_name": "Nano Banana Pro",
+      "id": "928500bf-ff0b-4f74-aa67-1b77a8912371",
+      "job_type": "nano_banana_pro",
+      "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_124857_928500bf-ff0b-4f74-aa67-1b77a8912371_min.webp",
+      "params": {
+        "application": null,
+        "aspect_ratio": "16:9",
+        "batch_size": 1,
+        "height": 1536,
+        "input_image": null,
+        "input_images": [
+          {
+            "id": "45d435e6-e7f2-4a89-b09a-48f1f06d66d9",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/45d435e6-e7f2-4a89-b09a-48f1f06d66d9.jpg"
+          }
+        ],
+        "prompt": "Group reference sheet. Five Iranian riders standing dismounted beside their tack on a cold rocky plain, overcast daylight. Masks are smooth continuous pale human-like surfaces with small narrow eye openings, matching the established Iranian mask language. Practical riding dress: short travel coats over layered wool, leather belts, wrapped legs, dust and sweat marks. They carry harness, water skins and rolled cloth, not weapons. A political escort, deliberately not a war party: no armour plates, no shields, no drawn blades, no formation. Physically real and tactile, muted desaturated palette, natural overcast light, visible wear and travel dust. No magic, no glow, no heroic posing.",
+        "resolution": "2k",
+        "surface": null,
+        "width": 2752
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_124857_928500bf-ff0b-4f74-aa67-1b77a8912371.png",
+      "status": "completed"
+    }
+  ]
+}

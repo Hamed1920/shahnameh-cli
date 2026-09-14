@@ -18,8 +18,20 @@ export const P = {
   queue: path.join(ROOT, '00_PROJECT', 'queue', 'QUEUE.jsonl'),
   workerState: path.join(ROOT, '00_PROJECT', 'queue', 'state.json'),
   workerLog: path.join(ROOT, '00_PROJECT', 'queue', 'worker.log'),
+  /** Holds the running worker's pid; its modified time is when that worker started. */
+  workerLock: path.join(ROOT, '00_PROJECT', 'queue', 'worker.lock'),
   staging: path.join(ROOT, '09_OUTPUT', '_staging'),
   rejected: path.join(ROOT, '09_OUTPUT', '_rejected'),
+  drafts: path.join(ROOT, '09_OUTPUT', '_drafts'),
+  /** Raw reviewer uploads, waiting for the worker to file them. Working space. */
+  uploads: path.join(ROOT, '09_OUTPUT', '_uploads'),
+  /** Worker-written record of what each upload became. */
+  filings: path.join(ROOT, '00_PROJECT', 'queue', 'FILINGS.jsonl'),
+  /** References page requests (panel appends) and their outcomes (worker appends). */
+  indexOps: path.join(ROOT, '00_PROJECT', 'review', 'INDEX_OPS.jsonl'),
+  indexOpResults: path.join(ROOT, '00_PROJECT', 'queue', 'INDEX_OPS_RESULTS.jsonl'),
+  /** Archived looks and their saved registry rows. Working space. */
+  archive: path.join(ROOT, '09_OUTPUT', '_archive'),
 }
 
 /**

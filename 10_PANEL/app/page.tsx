@@ -1,66 +1,40 @@
-import { getPending, getReferenceFor, resolveRefToken } from '@/lib/store'
-import type { Candidate, ResolvedReference } from '@/lib/types'
-import { ReviewCard } from './ReviewCard'
-import { EmptyState } from '@/components/ui/card'
-import { Reveal } from '@/components/ui/reveal'
-import { PageHeader } from '@/components/ui/text'
+import { getCatalog, getPending, getReferenceFor, getReviewContexts, resolveRefToken } from '@/lib/store'
+import type { ReviewItem } from '@/lib/types'
+import { ReviewWorkspace } from './review/review-workspace'
 
 export const dynamic = 'force-dynamic'
 
 /**
- * Every reference behind one candidate, resolved to a file the reviewer can
- * actually look at.
- *
- * The job's own `refs` are the images the model was given. For an entity
- * target there is additionally a canonical plate, which is the thing to judge
- * likeness against and is not necessarily one of those refs -- so it goes
- * first when it is not already in the list.
+ * Review, one candidate at a time. Everything is resolved here on the server;
+ * the workspace only arranges it and holds the reviewer's unsaved input.
  */
-async function referencesFor(c: Candidate): Promise<ResolvedReference[]> {
-  const tokens = c.sidecar.refs ?? []
-  const fromPrompt = await Promise.all(
-    tokens.map(async (token) => ({ token, path: await resolveRefToken(token) })),
+export default async function ReviewPage() {
+  const [pending, catalog] = await Promise.all([getPending(), getCatalog()])
+  const contexts = await getReviewContexts(pending)
+
+  const items: ReviewItem[] = await Promise.all(
+    pending.map(async (candidate) => {
+      const tokens = candidate.sidecar.refs ?? []
+      const editable = await Promise.all(
+        tokens.map(async (token) => ({ token, path: await resolveRefToken(token) })),
+      )
+      // An entity target's canonical plate is the thing to judge likeness
+      // against, and is not necessarily one of the refs the job was given.
+      const canonical = await getReferenceFor(candidate.sidecar.target, candidate.sidecar.variant, tokens)
+      const plate =
+        canonical && !editable.some((r) => r.path === canonical)
+          ? { token: [candidate.sidecar.target, candidate.sidecar.variant].filter(Boolean).join(' '), path: canonical }
+          : null
+      return { candidate, editable, plate, context: contexts.get(candidate.path)! }
+    }),
   )
 
-  const canonical = await getReferenceFor(c.sidecar.target, c.sidecar.variant, tokens)
-  if (canonical && !fromPrompt.some((r) => r.path === canonical)) {
-    const label = [c.sidecar.target, c.sidecar.variant].filter(Boolean).join(' ')
-    return [{ token: label, path: canonical }, ...fromPrompt]
-  }
-  return fromPrompt
-}
-
-export default async function ReviewQueue() {
-  const pending = await getPending()
-
-  const withRefs = await Promise.all(
-    pending.map(async (candidate) => ({
-      candidate,
-      references: await referencesFor(candidate),
-    })),
+  // Scene order, so a sequence is reviewed the way it will be watched.
+  items.sort(
+    (a, b) =>
+      a.candidate.sidecar.target.localeCompare(b.candidate.sidecar.target) ||
+      a.candidate.sidecar.createdAt.localeCompare(b.candidate.sidecar.createdAt),
   )
 
-  return (
-    <div className="space-y-8">
-      <PageHeader title="Review queue" meta={pending.length + ' awaiting review'} />
-
-      {pending.length === 0 ? (
-        <EmptyState className="py-20">
-          <p className="text-base text-fg">Nothing to review.</p>
-          <p className="mx-auto mt-3 max-w-md">
-            Generations land in <code className="text-fg">09_OUTPUT/_staging</code> once the worker
-            runs. Queue one with <code className="text-fg">node worker/enqueue.mjs</code>.
-          </p>
-        </EmptyState>
-      ) : (
-        <div className="space-y-6">
-          {withRefs.map(({ candidate, references }, i) => (
-            <Reveal key={candidate.path} index={i}>
-              <ReviewCard candidate={candidate} references={references} />
-            </Reveal>
-          ))}
-        </div>
-      )}
-    </div>
-  )
+  return <ReviewWorkspace items={items} catalog={catalog} />
 }

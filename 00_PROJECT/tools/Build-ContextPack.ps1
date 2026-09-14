@@ -170,7 +170,9 @@ $learnPath = Join-Path $Root '00_PROJECT\review\LEARNINGS.jsonl'
 $approved = @()
 if (Test-Path -LiteralPath $learnPath) {
     $byId = [ordered]@{}
-    foreach ($line in (Get-Content -LiteralPath $learnPath)) {
+    # -Encoding UTF8: the JSONL is BOM-less UTF-8 and PS 5.1 would otherwise read it
+    # as ANSI, mangling any Farsi in a rule or its evidence.
+    foreach ($line in (Get-Content -LiteralPath $learnPath -Encoding UTF8)) {
         if ([string]::IsNullOrWhiteSpace($line)) { continue }
         try { $obj = $line | ConvertFrom-Json } catch { continue }
         $byId[$obj.id] = $obj    # last write wins

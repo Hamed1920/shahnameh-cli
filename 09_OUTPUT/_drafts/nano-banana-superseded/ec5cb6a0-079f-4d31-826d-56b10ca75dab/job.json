@@ -1,0 +1,49 @@
+{
+  "jobId": "J-20260903-EFL",
+  "parentJobId": null,
+  "hfJobId": "ec5cb6a0-079f-4d31-826d-56b10ca75dab",
+  "attempt": 1,
+  "stage": null,
+  "label": "LOC-014 Iran outskirts",
+  "target": "SHM-LOC-014-OUTSKIRTS-IRAN",
+  "variant": "V01",
+  "model": "nano_banana_pro",
+  "prompt": "Wide establishing plate, 24mm. The healthy liveable edge of an ancient Iranian city in late afternoon: low mudbrick and pale stone buildings, irrigation channels running with water, cultivated plots, rows of cypress and fruit trees, dust roads. The settlement is intact, tended and partly green - deliberately NOT a ruin, not post-apocalyptic, not abandoned. Warm low sun raking across the walls. Horizontal cinematic frame with a wide open sky. Physically real and tactile, muted natural palette of ochre, sage and pale stone. No people, no smoke, no magic, no glow.",
+  "params": {
+    "aspect_ratio": "16:9",
+    "resolution": "2k"
+  },
+  "refs": [],
+  "createdAt": "2026-09-03T13:00:14.936Z",
+  "costCredits": 2,
+  "candidates": [
+    {
+      "file": "T01.png",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_125908_ec5cb6a0-079f-4d31-826d-56b10ca75dab.png"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-03T12:59:08.754972Z",
+      "display_name": "Nano Banana Pro",
+      "id": "ec5cb6a0-079f-4d31-826d-56b10ca75dab",
+      "job_type": "nano_banana_pro",
+      "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_125908_ec5cb6a0-079f-4d31-826d-56b10ca75dab_min.webp",
+      "params": {
+        "application": null,
+        "aspect_ratio": "16:9",
+        "batch_size": 1,
+        "height": 1536,
+        "input_image": null,
+        "input_images": [],
+        "prompt": "Wide establishing plate, 24mm. The healthy liveable edge of an ancient Iranian city in late afternoon: low mudbrick and pale stone buildings, irrigation channels running with water, cultivated plots, rows of cypress and fruit trees, dust roads. The settlement is intact, tended and partly green - deliberately NOT a ruin, not post-apocalyptic, not abandoned. Warm low sun raking across the walls. Horizontal cinematic frame with a wide open sky. Physically real and tactile, muted natural palette of ochre, sage and pale stone. No people, no smoke, no magic, no glow.",
+        "resolution": "2k",
+        "surface": null,
+        "width": 2752
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_125908_ec5cb6a0-079f-4d31-826d-56b10ca75dab.png",
+      "status": "completed"
+    }
+  ]
+}

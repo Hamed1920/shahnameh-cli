@@ -23,14 +23,24 @@ Run `/project-log` at the start of a session, or read directly:
   re-rolled → new `_T`.**
 - **Only the CLI allocates numbers.** Chat and Cowork propose `NEW/KIND/SLUG`; the CLI assigns.
   This is the only reason collisions are impossible. Never allocate one by hand either — let
-  `Ingest-Jobs.ps1` do it.
+  `Ingest-Jobs.ps1` do it, or the worker when it files a reviewer upload proposed as a new
+  entity in the panel (same max+1 rule).
 - **Numbers are never reused**, including after `RETIRED`.
 - **Never move or rename an asset** without updating `registry/ASSET_MANIFEST.csv`.
 - **Never auto-create a missing target entity** to make a job succeed. Reject and ask.
 - **The validator must pass** before you finish any session that touched files or registries.
 - Anything you can't classify goes in `99_INBOX/`, never the project root.
 - **The worker is the only process that moves asset files or edits the CSV registries.** The
-  panel appends to JSONL and nothing else. Don't add a second writer.
+  panel appends to JSONL, plus one exception: it drops raw reviewer uploads into
+  `09_OUTPUT/_uploads/<decision-id>/`, which the worker then names, files and registers. The
+  References page works the same way: it appends requests (rename, retire, archive, move, role,
+  main look, add) to `00_PROJECT/review/INDEX_OPS.jsonl` and the worker applies them
+  (`worker/lib/index-ops.mjs`). Don't add a second writer.
+- **Nothing is deleted from the index.** Retiring keeps an entity's number and files. Archiving a
+  look moves it to `09_OUTPUT/_archive/` with its registry row saved, so it can be restored.
+  Renaming changes the ID wording and the files, never the number.
+- **When testing the worker against an `SHM_ROOT` sandbox, it still spends real credits.** Mark
+  every sandbox queue job processed before any non-dry pass.
 - **Never mark a learning `approved` yourself** - only Hamed does, in the panel. Only approved
   rules reach a prompt.
 - **Never spend credits without pricing first.** `generate cost` before `generate create`.
@@ -72,13 +82,23 @@ Any path segment starting with `_` is working space and is ignored by the valida
 
 ## Git
 
-Remote: `https://github.com/Hamed1920/shahnameh-cli.git` — **code and project metadata only.**
+Remote: `https://github.com/Hamed1920/shahnameh-cli.git` — **the whole project: code, metadata and
+assets**, so another machine can clone it and work. Anyone who can see the repo can download
+every render.
 
-- **Never commit assets.** `.gitignore` is an allowlist (`/*` deny, then re-include) precisely so
-  a new asset folder is excluded by default. Do not convert it to a denylist.
+- **Media goes through Git LFS** (`.gitattributes`). Never commit an image or video as a plain
+  blob. `git lfs install` once per machine, or pushes send pointers without the media.
+- `.gitignore` is still an allowlist (`/*` deny, then re-include) so a stray root file stays out
+  until opted in. Do not convert it to a denylist. A new top-level folder must be added to it.
+- **One worker at a time, across all machines.** The CSV registries and `queue/state.json` are
+  rewritten whole, so two workers between syncs conflict. `state.json` is tracked on purpose:
+  without it a worker would replay every past decision and spend credits. Pull before starting
+  the worker; commit and push after stopping it. The panel can run anywhere, since JSONL is
+  append-only and union-merged.
 - **Author is Hamed alone.** No `Co-Authored-By` trailers, no "Generated with" lines, no Claude
   attribution of any kind.
-- Verify before pushing: `git add -A --dry-run` should list no media files.
+- Verify before pushing: `git add -A --dry-run` lists nothing from `node_modules`, `.next` or
+  `.env`, and after staging `git lfs ls-files` lists every media file.
 
 ## Environment
 

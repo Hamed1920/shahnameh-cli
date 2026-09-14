@@ -1,0 +1,55 @@
+{
+  "jobId": "J-20260903-AKN",
+  "parentJobId": null,
+  "hfJobId": "43b46c0c-57ea-4547-a820-071e70a1430f",
+  "attempt": 1,
+  "target": "SHM-GRP-006-NOBLES-IRANIAN",
+  "variant": "V01",
+  "model": "nano_banana_pro",
+  "prompt": "Group reference sheet. Six Iranian nobles and commanders standing in a loose irregular line against a plain cold stone wall, overcast daylight. Each figure is visibly different in height, build, age and bearing. Masks are smooth continuous pale human-like surfaces with small narrow eye openings and no mouth - never skull, skeletal or Day-of-the-Dead. Heavy travel-worn layered robes in muted ochre, oxblood, dust grey and deep indigo, with restrained metal clasps at the shoulder. They read as tired petitioners who have travelled a long way, not as an army: no armour, no raised weapons, no formation. Physically real and tactile, natural light, muted desaturated palette, fine fabric and dust detail. No magic, no glow, no floating particles, no heroic posing.",
+  "params": {
+    "aspect_ratio": "16:9",
+    "resolution": "2k"
+  },
+  "refs": [
+    "@REF-001/V02"
+  ],
+  "createdAt": "2026-09-03T12:48:51.833Z",
+  "costCredits": 2,
+  "candidates": [
+    {
+      "file": "T01.png",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_124810_43b46c0c-57ea-4547-a820-071e70a1430f.png"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-03T12:48:10.07963Z",
+      "display_name": "Nano Banana Pro",
+      "id": "43b46c0c-57ea-4547-a820-071e70a1430f",
+      "job_type": "nano_banana_pro",
+      "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_124810_43b46c0c-57ea-4547-a820-071e70a1430f_min.webp",
+      "params": {
+        "application": null,
+        "aspect_ratio": "16:9",
+        "batch_size": 1,
+        "height": 1536,
+        "input_image": null,
+        "input_images": [
+          {
+            "id": "26212f88-8bd9-4ed7-80dd-aa4480b2f2d9",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/26212f88-8bd9-4ed7-80dd-aa4480b2f2d9.jpg"
+          }
+        ],
+        "prompt": "Group reference sheet. Six Iranian nobles and commanders standing in a loose irregular line against a plain cold stone wall, overcast daylight. Each figure is visibly different in height, build, age and bearing. Masks are smooth continuous pale human-like surfaces with small narrow eye openings and no mouth - never skull, skeletal or Day-of-the-Dead. Heavy travel-worn layered robes in muted ochre, oxblood, dust grey and deep indigo, with restrained metal clasps at the shoulder. They read as tired petitioners who have travelled a long way, not as an army: no armour, no raised weapons, no formation. Physically real and tactile, natural light, muted desaturated palette, fine fabric and dust detail. No magic, no glow, no floating particles, no heroic posing.",
+        "resolution": "2k",
+        "surface": null,
+        "width": 2752
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260903_124810_43b46c0c-57ea-4547-a820-071e70a1430f.png",
+      "status": "completed"
+    }
+  ]
+}

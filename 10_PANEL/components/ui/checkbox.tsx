@@ -22,15 +22,14 @@ export function Checkbox({
         className,
       )}
     >
-      <span className="relative grid size-[18px] shrink-0 place-items-center">
+      <span className="relative grid size-4 shrink-0 place-items-center">
         <input
           type="checkbox"
           className={cn(
-            'focus-ring peer size-full cursor-pointer appearance-none rounded-[5px]',
-            'border border-edge bg-sunken shadow-[inset_0_1px_2px_rgba(0,0,0,0.4)]',
-            'transition-colors duration-150 group-hover:border-edge-strong',
-            'checked:border-accent-deep checked:bg-linear-to-b checked:from-accent-lit checked:to-accent-deep',
-            'checked:shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]',
+            'focus-ring peer size-full cursor-pointer appearance-none rounded-[4px]',
+            'border border-edge-strong bg-transparent',
+            'transition-colors duration-150 group-hover:border-muted',
+            'checked:border-fg checked:bg-fg',
           )}
           {...props}
         />
@@ -38,7 +37,7 @@ export function Checkbox({
           aria-hidden
           strokeWidth={3.5}
           className={cn(
-            'pointer-events-none absolute size-3 scale-50 text-ink opacity-0',
+            'pointer-events-none absolute size-2.5 scale-50 text-ink opacity-0',
             'transition-[opacity,transform] duration-150 ease-out-quint',
             'peer-checked:scale-100 peer-checked:opacity-100',
           )}
