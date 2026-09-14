@@ -1,19 +1,30 @@
 'use client'
 
-import { useActionState, useState } from 'react'
+import { useActionState, useId, useState } from 'react'
 import { useFormStatus } from 'react-dom'
+import { AnimatePresence, motion } from 'motion/react'
 import { decide, type ActionResult } from './actions'
-import type { Candidate } from '@/lib/types'
+import { ReferenceGallery } from '@/components/reference-gallery'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Disclosure } from '@/components/ui/disclosure'
+import { Field, Input, Textarea } from '@/components/ui/field'
+import { EASE, SPRING_SNAPPY } from '@/components/ui/motion-tokens'
+import { Badge } from '@/components/ui/text'
+import { assetUrl, isVideo } from '@/lib/asset'
+import { cn } from '@/lib/cn'
+import type { Candidate, ResolvedReference } from '@/lib/types'
 
-function assetUrl(rel: string) {
-  return `/api/asset?path=${encodeURIComponent(rel)}`
+function PaneLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="mb-3 text-[11px] font-medium tracking-[0.1em] text-muted uppercase">{children}</p>
+  )
 }
 
-const isVideo = (p: string) => /\.(mp4|mov|webm)$/i.test(p)
-
-/** Renders a candidate or reference, picking the right element for its type. */
-function Media({ path, alt, dim }: { path: string; alt: string; dim?: boolean }) {
-  const cls = `checker w-full rounded border border-[var(--color-edge)] object-contain${dim ? ' opacity-90' : ''}`
+/** Renders the candidate, picking the right element for its type. */
+function Media({ path, alt }: { path: string; alt: string }) {
+  const cls = 'checker w-full rounded-xl border border-edge object-contain'
   if (isVideo(path)) {
     return (
       <video
@@ -33,166 +44,161 @@ function Media({ path, alt, dim }: { path: string; alt: string; dim?: boolean })
 
 function Submit({ label, tone }: { label: string; tone: 'good' | 'bad' }) {
   const { pending } = useFormStatus()
-  const bg = tone === 'good' ? 'var(--color-good)' : 'var(--color-bad)'
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      style={{ backgroundColor: bg }}
-      className="rounded px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-    >
-      {pending ? 'Saving…' : label}
-    </button>
+    <Button type="submit" tone={tone} pending={pending}>
+      {label}
+    </Button>
   )
 }
 
 export function ReviewCard({
   candidate,
-  referencePath,
+  references,
 }: {
   candidate: Candidate
-  referencePath: string | null
+  references: ResolvedReference[]
 }) {
   const [verdict, setVerdict] = useState<'accepted' | 'denied' | null>(null)
   const [result, formAction] = useActionState<ActionResult | null, FormData>(decide, null)
+  // Scoped per card, so one card's sliding pill never chases another's.
+  const pillId = useId()
   const s = candidate.sidecar
 
   return (
-    <article className="rounded-lg border border-[var(--color-edge)] bg-[var(--color-panel)]">
-      <div className="grid gap-4 p-4 lg:grid-cols-2">
+    <Card className="overflow-hidden transition-colors duration-200 hover:border-edge-strong">
+      <div className="grid gap-6 p-5 lg:grid-cols-2">
         <div>
-          <p className="mb-2 text-xs uppercase tracking-wide text-[var(--color-muted)]">
-            Candidate · {candidate.take}
-          </p>
-          <Media
-            path={candidate.path}
-            alt={`${s.target} ${s.variant} ${candidate.take}`}
-          />
+          <PaneLabel>Candidate &middot; {candidate.take}</PaneLabel>
+          <Media path={candidate.path} alt={`${s.target} ${s.variant} ${candidate.take}`} />
         </div>
         <div>
-          <p className="mb-2 text-xs uppercase tracking-wide text-[var(--color-muted)]">
-            Reference {referencePath ? '' : '— none on file'}
-          </p>
-          {referencePath ? (
-            <Media path={referencePath} alt="reference" dim />
-          ) : (
-            <div className="flex h-48 items-center justify-center rounded border border-dashed border-[var(--color-edge)] p-4 text-center text-sm text-[var(--color-muted)]">
-              {s.refs?.length
-                ? `Generated from ${s.refs.length} reference${s.refs.length > 1 ? 's' : ''}: ${s.refs.join(', ')}`
-                : 'No reference on file'}
-            </div>
-          )}
+          <PaneLabel>
+            References
+            {references.length > 0 && <> &middot; {references.length}</>}
+          </PaneLabel>
+          <ReferenceGallery references={references} />
         </div>
       </div>
 
-      <div className="border-t border-[var(--color-edge)] px-4 py-3 text-sm">
-        <div className="mb-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[var(--color-muted)]">
-          <span className="font-mono text-white">{s.target}</span>
+      <div className="border-t border-edge px-5 py-4">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted">
+          <span className="font-mono text-fg">{s.target}</span>
           <span>{s.variant}</span>
           {s.stage && (
-            <span
-              className={
-                s.stage === 'draft'
-                  ? 'rounded bg-[var(--color-accent)]/20 px-2 py-0.5 text-xs font-medium text-[var(--color-accent)]'
-                  : 'rounded bg-[var(--color-good)]/20 px-2 py-0.5 text-xs font-medium text-[var(--color-good)]'
-              }
-            >
-              {s.stage === 'draft' ? 'DRAFT — approving buys the 1080p final' : 'FINAL'}
-            </span>
+            <Badge tone={s.stage === 'draft' ? 'accent' : 'good'}>
+              {s.stage === 'draft'
+                ? 'DRAFT — approving buys the 1080p final'
+                : 'FINAL'}
+            </Badge>
           )}
-          <span>model {s.model}</span>
-          <span>job {s.jobId}</span>
-          {s.attempt > 1 && (
-            <span className="text-[var(--color-accent)]">attempt {s.attempt}</span>
-          )}
+          <span className="text-xs">model {s.model}</span>
+          <span className="text-xs">job {s.jobId}</span>
+          {s.attempt > 1 && <Badge tone="accent">attempt {s.attempt}</Badge>}
         </div>
-        <details className="mb-3">
-          <summary className="cursor-pointer text-[var(--color-muted)]">Prompt</summary>
-          <pre className="mt-2 whitespace-pre-wrap rounded bg-black/40 p-3 text-xs leading-relaxed">
+
+        <Disclosure summary="Prompt" className="mt-4">
+          <pre className="scroll-pane max-h-64 rounded-xl border border-edge bg-sunken/70 p-4 text-xs leading-relaxed whitespace-pre-wrap">
             {s.prompt}
           </pre>
-        </details>
+        </Disclosure>
 
-        <form action={formAction} className="space-y-3">
+        <form action={formAction} className="mt-5">
           <input type="hidden" name="candidate" value={candidate.path} />
           <input type="hidden" name="verdict" value={verdict ?? ''} />
 
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => setVerdict('accepted')}
-              className={`rounded border px-3 py-1.5 text-sm ${
-                verdict === 'accepted'
-                  ? 'border-[var(--color-good)] bg-[var(--color-good)]/20 text-white'
-                  : 'border-[var(--color-edge)] text-[var(--color-muted)]'
-              }`}
-            >
-              Accept
-            </button>
-            <button
-              type="button"
-              onClick={() => setVerdict('denied')}
-              className={`rounded border px-3 py-1.5 text-sm ${
-                verdict === 'denied'
-                  ? 'border-[var(--color-bad)] bg-[var(--color-bad)]/20 text-white'
-                  : 'border-[var(--color-edge)] text-[var(--color-muted)]'
-              }`}
-            >
-              Deny
-            </button>
+          <div className="flex gap-2.5">
+            {(['accepted', 'denied'] as const).map((v) => {
+              const on = verdict === v
+              return (
+                <button
+                  key={v}
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() => setVerdict(v)}
+                  className={cn(
+                    'focus-ring relative h-10 cursor-pointer rounded-lg border px-5 text-sm font-medium',
+                    'transition-colors duration-150',
+                    on
+                      ? cn('text-fg', v === 'accepted' ? 'border-good/60' : 'border-bad/60')
+                      : 'border-edge bg-white/[0.03] text-muted hover:border-edge-strong hover:bg-white/[0.07] hover:text-fg',
+                  )}
+                >
+                  {on && (
+                    <motion.span
+                      aria-hidden
+                      layoutId={pillId}
+                      transition={SPRING_SNAPPY}
+                      className={cn(
+                        'absolute inset-0 rounded-lg',
+                        v === 'accepted' ? 'bg-good/20' : 'bg-bad/20',
+                      )}
+                    />
+                  )}
+                  <span className="relative">{v === 'accepted' ? 'Accept' : 'Deny'}</span>
+                </button>
+              )
+            })}
           </div>
 
-          {verdict && (
-            <>
-              <label className="block">
-                <span className="text-xs text-[var(--color-muted)]">
-                  {verdict === 'denied'
-                    ? 'What is wrong? (required — this becomes the fix)'
-                    : 'Why did this one work? (optional, but it is how the system learns)'}
-                </span>
-                <textarea
-                  name="notes"
-                  rows={3}
-                  required={verdict === 'denied'}
-                  className="mt-1 w-full rounded border border-[var(--color-edge)] bg-black/40 p-2 text-sm"
-                  placeholder={
-                    verdict === 'denied'
-                      ? 'e.g. road reads modern, tyre tracks visible'
-                      : 'e.g. the mask silhouette and crown height are exactly right'
-                  }
-                />
-              </label>
+          <AnimatePresence initial={false}>
+            {verdict && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.25, ease: EASE }}
+                className="overflow-hidden"
+              >
+                <div className="space-y-5 pt-5">
+                  <Field
+                    label={
+                      verdict === 'denied'
+                        ? 'What is wrong? (required — this becomes the fix)'
+                        : 'Why did this one work? (optional, but it is how the system learns)'
+                    }
+                  >
+                    <Textarea
+                      name="notes"
+                      rows={3}
+                      required={verdict === 'denied'}
+                      placeholder={
+                        verdict === 'denied'
+                          ? 'e.g. road reads modern, tyre tracks visible'
+                          : 'e.g. the mask silhouette and crown height are exactly right'
+                      }
+                    />
+                  </Field>
 
-              <label className="block">
-                <span className="text-xs text-[var(--color-muted)]">Tags (comma separated)</span>
-                <input
-                  name="tags"
-                  className="mt-1 w-full rounded border border-[var(--color-edge)] bg-black/40 p-2 text-sm"
-                  placeholder="anachronism, lighting, silhouette"
-                />
-              </label>
+                  <Field label="Tags (comma separated)">
+                    <Input name="tags" placeholder="anachronism, lighting, silhouette" />
+                  </Field>
 
-              {verdict === 'denied' && (
-                <label className="flex items-center gap-2 text-sm text-[var(--color-muted)]">
-                  <input type="checkbox" name="requeue" defaultChecked />
-                  Regenerate with this note applied
-                </label>
-              )}
+                  {verdict === 'denied' && (
+                    <Checkbox
+                      name="requeue"
+                      defaultChecked
+                      label="Regenerate with this note applied"
+                    />
+                  )}
 
-              {result?.error && (
-                <p className="rounded border border-[var(--color-bad)] bg-[var(--color-bad)]/10 p-2 text-sm text-[var(--color-bad)]">
-                  {result.error}
-                </p>
-              )}
+                  {result?.error && (
+                    <p className="rounded-lg border border-bad/50 bg-bad/10 px-4 py-3 text-sm text-bad">
+                      {result.error}
+                    </p>
+                  )}
 
-              <Submit
-                label={verdict === 'accepted' ? 'Accept' : 'Deny'}
-                tone={verdict === 'accepted' ? 'good' : 'bad'}
-              />
-            </>
-          )}
+                  <div className="flex pt-1">
+                    <Submit
+                      label={verdict === 'accepted' ? 'Accept' : 'Deny'}
+                      tone={verdict === 'accepted' ? 'good' : 'bad'}
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </form>
       </div>
-    </article>
+    </Card>
   )
 }

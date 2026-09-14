@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import { cookies } from 'next/headers'
+import { MotionProvider } from '@/components/motion-provider'
+import { SIDEBAR_COOKIE } from '@/components/nav-items'
+import { Sidebar } from '@/components/sidebar'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -7,36 +10,24 @@ export const metadata: Metadata = {
   description: 'Review, accept and deny Higgsfield outputs for the Shahnameh project.',
 }
 
-const NAV = [
-  { href: '/', label: 'Review' },
-  { href: '/entities', label: 'Index' },
-  { href: '/learnings', label: 'Learnings' },
-  { href: '/queue', label: 'Queue' },
-]
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const collapsed = (await cookies()).get(SIDEBAR_COOKIE)?.value === '1'
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="min-h-screen">
-        <header className="border-b border-[var(--color-edge)] bg-[var(--color-panel)]">
-          <div className="mx-auto flex max-w-[1600px] items-center gap-6 px-6 py-3">
-            <span className="text-sm font-semibold tracking-wide text-[var(--color-accent)]">
-              SHAHNAMEH
-            </span>
-            <nav className="flex gap-4 text-sm">
-              {NAV.map((n) => (
-                <Link
-                  key={n.href}
-                  href={n.href}
-                  className="text-[var(--color-muted)] transition-colors hover:text-white"
-                >
-                  {n.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        </header>
-        <main className="mx-auto max-w-[1600px] px-6 py-6">{children}</main>
+      {/*
+        Fixed-viewport shell: the document never scrolls, <main> is the only
+        scroller, and `scroll-pane` reserves its scrollbar gutter permanently.
+        That is what stops the centred content jumping sideways when a page
+        grows tall enough to need a scrollbar, or when a review card expands.
+      */}
+      <body className="flex h-dvh overflow-hidden antialiased">
+        <MotionProvider>
+          <Sidebar defaultCollapsed={collapsed} />
+          <main className="scroll-pane flex-1">
+            <div className="mx-auto max-w-[1600px] px-8 pt-8 pb-16">{children}</div>
+          </main>
+        </MotionProvider>
       </body>
     </html>
   )

@@ -1,24 +1,195 @@
 @import 'tailwindcss';
 
+/* ---------------------------------------------------------------------------
+   Design tokens. Tailwind v4 is CSS-first: this @theme block IS the config,
+   and there is deliberately no tailwind.config.* file. Every token here also
+   generates utilities -- --color-panel gives bg-panel/text-panel/border-panel,
+   --ease-out-quint gives ease-out-quint. Use those, not var() in arbitrary
+   values.
+--------------------------------------------------------------------------- */
 @theme {
-  --color-ink: #0d0f12;
-  --color-panel: #16191f;
+  /* Surfaces, darkest to lightest. */
+  --color-ink: #0d0f12; /* page */
+  --color-panel: #16191f; /* cards, rail */
+  --color-raise: #1c2029; /* hover / elevated */
+  --color-sunken: #0a0c0f; /* inputs, code blocks */
+
+  /* Lines. */
   --color-edge: #262b34;
+  --color-edge-strong: #343b47; /* hover borders, scrollbar thumb */
+
+  /* Text. */
+  --color-fg: #e7e9ee;
   --color-muted: #8b94a3;
-  --color-accent: #c9a227;
+
+  /* Meaning. */
+  --color-accent: #c9a227; /* Shahnameh gold: active, headings */
   --color-good: #3f9d5a;
   --color-bad: #c0524a;
+
+  /* Secondary hues, used only in the ground washes -- gold, lapis and a
+     manuscript crimson, which is the palette the source material is
+     illuminated in. */
+  --color-lapis: #2f6fb5;
+  --color-crimson: #8c2f3a;
+
+  /* Lit/deep pairs drive the button gradients -- a filled control is a
+     vertical ramp from -lit to -deep, not a flat fill. */
+  --color-accent-lit: #e0bb44;
+  --color-accent-deep: #ab8a1d;
+  --color-good-lit: #4cb06a;
+  --color-good-deep: #327c46;
+  --color-bad-lit: #d1615a;
+  --color-bad-deep: #9e4139;
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------------------------------------------------------------------------
+   App shell. The document itself never scrolls -- <main> is the only scroller
+   (see app/layout.tsx). That is what keeps the centred content from jumping
+   sideways when a page grows tall enough to need a scrollbar.
+
+   The ink base lives on <html> so the two decorative layers below can sit
+   above it (z-index: -1) and still show through every translucent surface.
+--------------------------------------------------------------------------- */
+html {
+  background: var(--color-ink);
 }
 
 html,
 body {
-  background: var(--color-ink);
-  color: #e7e9ee;
+  height: 100%;
+  overflow: hidden;
   color-scheme: dark;
 }
 
 body {
+  color: var(--color-fg);
   font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+/* Layer 1: three colour washes -- gold from the top left, lapis from the top
+   right, crimson rising from the bottom. These are what the glass surfaces
+   actually have to blur; over a flat ground a backdrop-filter is invisible
+   work, which is exactly how the first pass ended up looking like grey paint. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(70rem 50rem at 4% -16%, --alpha(var(--color-accent) / 16%), transparent 60%),
+    radial-gradient(55rem 46rem at 104% 6%, --alpha(var(--color-lapis) / 15%), transparent 58%),
+    radial-gradient(52rem 40rem at 46% 118%, --alpha(var(--color-crimson) / 11%), transparent 60%);
+}
+
+/* Layer 2: a khatam eight-point star lattice -- the diamond and the square
+   struck on the same circle, which is the girih figure the manuscripts are
+   ruled with -- over a fine film grain that also kills banding in the washes. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23c9a227' stroke-opacity='.17' stroke-width='1'%3E%3Cpath d='M32 0 64 32 32 64 0 32Z'/%3E%3Cpath d='M9.4 9.4h45.2v45.2H9.4z'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+  background-size:
+    64px 64px,
+    180px 180px;
+}
+
+/* ---------------------------------------------------------------------------
+   Scrollbars. Standards-only: scrollbar-width / scrollbar-color /
+   scrollbar-gutter, no ::-webkit-scrollbar. The webkit pseudo-elements would
+   let us round the thumb, but they override scrollbar-color in modern Chrome
+   and do nothing in Firefox -- two sources of truth for one visual is how this
+   drifts. Chrome 121+, Edge, Firefox and Safari 18.2+ honour these; anything
+   older quietly falls back to the platform scrollbar.
+
+   `stable` is the whole point: it reserves the gutter whether or not the bar
+   is showing, so appearing and disappearing scrollbars never reflow content.
+--------------------------------------------------------------------------- */
+@utility scroll-pane {
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-edge-strong) transparent;
+}
+
+@utility scroll-pane-x {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-edge-strong) transparent;
+}
+
+/* ---------------------------------------------------------------------------
+   Surface treatments. All three are translucent on purpose -- the star lattice
+   and the washes have to read through them, or the glass is just grey paint.
+--------------------------------------------------------------------------- */
+
+/* Fixed chrome: the rail and the lightbox. Heaviest blur. */
+@utility glass {
+  background-color: --alpha(var(--color-panel) / 55%);
+  backdrop-filter: blur(20px) saturate(150%);
+}
+
+@utility glass-deep {
+  background-color: --alpha(var(--color-ink) / 72%);
+  backdrop-filter: blur(24px) saturate(130%);
+}
+
+/* Cards. Lighter blur than the chrome, since a long queue can carry dozens of
+   these -- if scrolling a big review queue ever stutters, this is the knob. */
+@utility pane {
+  background-color: --alpha(var(--color-panel) / 55%);
+  backdrop-filter: blur(10px) saturate(130%);
+}
+
+/* The 1px catch-light along a raised top edge. Half of what makes a surface
+   read as physical rather than painted. */
+@utility edge-lit {
+  box-shadow:
+    inset 0 1px 0 0 --alpha(#ffffff / 7%),
+    0 1px 2px 0 --alpha(#000000 / 35%);
+}
+
+/* Hairline that fades out at both ends, gold at the leading edge. */
+@utility hairline {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(
+    to right,
+    --alpha(var(--color-accent) / 45%),
+    var(--color-edge) 22%,
+    var(--color-edge) 70%,
+    transparent
+  );
+}
+
+/* Small gold lozenge marking a section heading. Drawn rather than a glyph, so
+   this stylesheet stays ASCII. */
+@utility lozenge {
+  display: inline-block;
+  width: 0.4rem;
+  height: 0.4rem;
+  rotate: 45deg;
+  border-radius: 1px;
+  background: currentColor;
+}
+
+/* ---------------------------------------------------------------------------
+   Focus. There was not a single focus style in this app before; every
+   interactive primitive uses this one.
+--------------------------------------------------------------------------- */
+@utility focus-ring {
+  &:focus-visible {
+    outline: 2px solid --alpha(var(--color-accent) / 70%);
+    outline-offset: 2px;
+  }
 }
 
 /* Checkerboard so transparent PNGs and dark plates are both readable. */
@@ -29,5 +200,22 @@ body {
     linear-gradient(45deg, transparent 75%, #1b1f26 75%),
     linear-gradient(-45deg, transparent 75%, #1b1f26 75%);
   background-size: 16px 16px;
-  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  background-position:
+    0 0,
+    0 8px,
+    8px -8px,
+    -8px 0;
+}
+
+/* Covers the plain CSS transitions. Motion components are handled by
+   <MotionConfig reducedMotion="user"> in app/layout.tsx. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

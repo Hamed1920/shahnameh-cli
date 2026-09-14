@@ -106,3 +106,11 @@ export interface QueueItem {
   enqueuedAt: string
   enqueuedBy: string
 }
+
+/** A prompt reference token paired with the asset it resolved to, if any. */
+export interface ResolvedReference {
+  /** The token as written in the job, e.g. SHM-CHR-001-ZAHHAK/V02/T01. */
+  token: string
+  /** Project-relative, forward-slashed. Null when nothing on disk matches. */
+  path: string | null
+}

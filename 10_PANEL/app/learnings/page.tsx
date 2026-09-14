@@ -1,5 +1,11 @@
 import { getDecisions, getLearnings } from '@/lib/store'
 import { decideLearning } from '../actions'
+import { Button } from '@/components/ui/button'
+import { Card, EmptyState } from '@/components/ui/card'
+import { Disclosure } from '@/components/ui/disclosure'
+import { Textarea } from '@/components/ui/field'
+import { Reveal } from '@/components/ui/reveal'
+import { Badge, PageHeader, SectionHeading } from '@/components/ui/text'
 
 export const dynamic = 'force-dynamic'
 
@@ -18,111 +24,90 @@ export default async function LearningsPage() {
   const rejected = learnings.filter((l) => l.status === 'rejected')
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-lg font-semibold">Learnings</h1>
-        <p className="mt-1 max-w-3xl text-sm text-[var(--color-muted)]">
-          Rules distilled from your accept and deny notes by <code className="text-white">/learn</code>.
-          Only <span className="text-[var(--color-good)]">approved</span> rules are ever injected
-          into prompts or shipped to Claude Chat and Cowork — nothing here influences a generation
-          until you say so.
-        </p>
-      </div>
+    <div className="space-y-10">
+      <PageHeader title="Learnings">
+        Rules distilled from your accept and deny notes by <code className="text-fg">/learn</code>.
+        Only <span className="text-good">approved</span> rules are ever injected into prompts or
+        shipped to Claude Chat and Cowork — nothing here influences a generation until you say so.
+      </PageHeader>
 
       <section>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[var(--color-accent)]">
-          Awaiting your decision ({proposed.length})
-        </h2>
+        <SectionHeading>Awaiting your decision ({proposed.length})</SectionHeading>
         {proposed.length === 0 ? (
-          <p className="rounded border border-dashed border-[var(--color-edge)] p-6 text-sm text-[var(--color-muted)]">
-            Nothing proposed. Run <code className="text-white">/learn</code> after some reviews.
-          </p>
+          <EmptyState>
+            Nothing proposed. Run <code className="text-fg">/learn</code> after some reviews.
+          </EmptyState>
         ) : (
           <div className="space-y-4">
-            {proposed.map((l) => (
-              <form
-                key={l.id}
-                action={decideLearning}
-                className="rounded-lg border border-[var(--color-edge)] bg-[var(--color-panel)] p-4"
-              >
-                <input type="hidden" name="id" value={l.id} />
-                <div className="mb-2 flex gap-3 text-xs text-[var(--color-muted)]">
-                  <span className="font-mono">{l.id}</span>
-                  <span className="rounded bg-black/40 px-2">{scopeLabel(l.scope)}</span>
-                </div>
-                <textarea
-                  name="rule"
-                  rows={2}
-                  defaultValue={l.rule}
-                  className="w-full rounded border border-[var(--color-edge)] bg-black/40 p-2 text-sm"
-                />
-                <details className="mt-2">
-                  <summary className="cursor-pointer text-xs text-[var(--color-muted)]">
-                    Evidence ({l.evidence.length})
-                  </summary>
-                  <ul className="mt-2 space-y-1 text-xs text-[var(--color-muted)]">
-                    {l.evidence.map((id) => {
-                      const d = byId.get(id)
-                      return (
-                        <li key={id}>
-                          <span className="font-mono">{id}</span>
-                          {d ? ` — ${d.verdict}: ${d.notes}` : ' — (decision not found)'}
-                        </li>
-                      )
-                    })}
-                  </ul>
-                </details>
-                <div className="mt-3 flex gap-2">
-                  <button
-                    name="status"
-                    value="approved"
-                    className="rounded bg-[var(--color-good)] px-4 py-1.5 text-sm text-white"
-                  >
-                    Approve
-                  </button>
-                  <button
-                    name="status"
-                    value="rejected"
-                    className="rounded border border-[var(--color-edge)] px-4 py-1.5 text-sm text-[var(--color-muted)]"
-                  >
-                    Reject
-                  </button>
-                </div>
-              </form>
+            {proposed.map((l, i) => (
+              <Reveal key={l.id} index={i}>
+                <Card className="p-5 transition-colors duration-200 hover:border-edge-strong">
+                  <form action={decideLearning}>
+                    <input type="hidden" name="id" value={l.id} />
+                    <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-muted">
+                      <span className="font-mono">{l.id}</span>
+                      <Badge>{scopeLabel(l.scope)}</Badge>
+                    </div>
+
+                    <Textarea name="rule" rows={2} defaultValue={l.rule} />
+
+                    <Disclosure summary={`Evidence (${l.evidence.length})`} className="mt-4">
+                      <ul className="space-y-1 text-xs leading-relaxed text-muted">
+                        {l.evidence.map((id) => {
+                          const d = byId.get(id)
+                          return (
+                            <li key={id}>
+                              <span className="font-mono">{id}</span>
+                              {d ? ` — ${d.verdict}: ${d.notes}` : ' — (decision not found)'}
+                            </li>
+                          )
+                        })}
+                      </ul>
+                    </Disclosure>
+
+                    <div className="mt-5 flex gap-2.5">
+                      <Button type="submit" name="status" value="approved" tone="good" size="sm">
+                        Approve
+                      </Button>
+                      <Button type="submit" name="status" value="rejected" size="sm">
+                        Reject
+                      </Button>
+                    </div>
+                  </form>
+                </Card>
+              </Reveal>
             ))}
           </div>
         )}
       </section>
 
       <section>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[var(--color-good)]">
-          In force ({approved.length})
-        </h2>
-        <ul className="space-y-2">
-          {approved.map((l) => (
-            <li
-              key={l.id}
-              className="rounded border border-[var(--color-edge)] bg-[var(--color-panel)] p-3 text-sm"
-            >
-              <span className="mr-2 rounded bg-black/40 px-2 text-xs text-[var(--color-muted)]">
-                {scopeLabel(l.scope)}
-              </span>
-              {l.rule}
-            </li>
-          ))}
-          {approved.length === 0 && (
-            <li className="text-sm text-[var(--color-muted)]">None yet.</li>
-          )}
-        </ul>
+        <SectionHeading tone="good">In force ({approved.length})</SectionHeading>
+        {approved.length === 0 ? (
+          <EmptyState>None yet.</EmptyState>
+        ) : (
+          <ul className="space-y-2">
+            {approved.map((l, i) => (
+              <li key={l.id}>
+                <Reveal index={i}>
+                  <Card interactive className="px-4 py-3.5 text-sm leading-relaxed">
+                    <Badge className="mr-2 align-middle">{scopeLabel(l.scope)}</Badge>
+                    {l.rule}
+                  </Card>
+                </Reveal>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       {rejected.length > 0 && (
         <section>
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[var(--color-muted)]">
-            Rejected ({rejected.length})
-          </h2>
-          <ul className="space-y-1 text-sm text-[var(--color-muted)] line-through">
-            {rejected.map((l) => <li key={l.id}>{l.rule}</li>)}
+          <SectionHeading tone="muted">Rejected ({rejected.length})</SectionHeading>
+          <ul className="space-y-1 text-sm text-muted/70 line-through">
+            {rejected.map((l) => (
+              <li key={l.id}>{l.rule}</li>
+            ))}
           </ul>
         </section>
       )}

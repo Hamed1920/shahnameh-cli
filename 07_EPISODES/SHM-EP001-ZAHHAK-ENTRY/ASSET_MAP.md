@@ -48,7 +48,7 @@ existing variants already encode exactly that, so no new Zahhak art is needed:
 | `LOC_ZAHHAK_AUDIENCE_HALL` | `SHM-LOC-009-CEREMONIAL-RECEPTION-HALL` | **READY** — the empty dais is Zahhak's "low severe platform" |
 | `LOC_IRAN_MAIN_GATE` | `SHM-LOC-002-GATE-CEREMONIAL-CYPRESS-COURT` | **READY** — **resolves Q2**: bronze door that opens from inside; cypresses and water channels read as the liveable Iran the doc requires |
 | `LOC_HALL_OF_COLUMNS` | `SHM-LOC-006-HALL-OF-COLUMNS` | **READY** — renamed from `MERDAS-PRIVATE-HALL`; same number, same image |
-| `LOC_ZAHHAK_APPROACH` | `SHM-LOC-012-APPROACH-ZAHHAK-DOMAIN` | **NEEDS ART** |
+| `LOC_ZAHHAK_APPROACH` | `SHM-LOC-007-ROYAL-AUDIENCE-PLATFORM` | **READY** — corrected after P01 review: the building they approach is LOC-007, whose interior is LOC-009 |
 | `LOC_ZAHHAK_OUTER_COURT` | `SHM-LOC-013-COURT-ZAHHAK-OUTER` | **NEEDS ART** |
 | `LOC_IRAN_OUTSKIRTS` | `SHM-LOC-014-OUTSKIRTS-IRAN` | **NEEDS ART** |
 | `LOC_ROYAL_CAUSEWAY` | `SHM-LOC-015-CAUSEWAY-ROYAL` | **NEEDS ART** |

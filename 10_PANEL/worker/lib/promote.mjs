@@ -1,7 +1,8 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import {
-  P, ROOT, appendJsonl, findEntity, loadEntities, log, readCsv, rel, writeCsv,
+  P, ROOT, appendJsonl, findEntity, isShotId, loadEntities, log, readCsv, rel,
+  shotFolder, writeCsv,
 } from './project.mjs'
 
 /**
@@ -29,7 +30,32 @@ function nextTake(assets, entityId, variant) {
   return 'T' + String(n).padStart(2, '0')
 }
 
+/**
+ * A shot renders into the episode, not into an entity folder, and is not
+ * tracked in ASSET_MANIFEST.csv — that registry indexes reusable entities, and
+ * a shot belongs to exactly one episode. Its provenance lives in JOB_LEDGER.csv
+ * and the review log instead.
+ */
+async function promoteShot(decision, sidecar) {
+  const folder = sidecar?.outputFolder ?? (await shotFolder(decision.target))
+  const destDir = path.join(ROOT, folder)
+  await fs.mkdir(destDir, { recursive: true })
+
+  const src = path.join(ROOT, decision.candidate)
+  const ext = path.extname(src).toLowerCase()
+  const take = decision.take && decision.take !== 'T01' ? `_${decision.take}` : ''
+  const filename = `${decision.target}_${decision.variant || 'V01'}${take}${ext}`
+  const dest = path.join(destDir, filename)
+
+  await fs.copyFile(src, dest)
+  await fs.rm(src, { force: true })
+  await log(`PROMOTED ${decision.candidate} -> ${folder}/${filename}`)
+  return rel(dest)
+}
+
 export async function promote(decision, sidecar) {
+  if (isShotId(decision.target)) return promoteShot(decision, sidecar)
+
   const entities = await loadEntities()
   const ent = findEntity(entities, decision.target)
   if (!ent) throw new Error(`promote: unknown entity ${decision.target}`)
