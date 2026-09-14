@@ -15,17 +15,17 @@ const when = (iso: string) =>
 function Media({ entry }: { entry: DecidedEntry }) {
   if (!entry.file) {
     return (
-      <div className="grid aspect-video w-full place-items-center rounded-lg border border-dashed border-edge p-4 text-center text-xs text-muted">
+      <div className="grid aspect-video w-full place-items-center rounded-lg border border-dashed border-edge-strong p-4 text-center text-[13px] text-muted">
         {entry.missing}
       </div>
     )
   }
   const src = assetUrl(entry.file)
   return isVideo(entry.file) ? (
-    <video src={src} className="checker aspect-video w-full rounded-lg object-contain" controls muted loop playsInline preload="metadata" />
+    <video src={src} className="aspect-video w-full rounded-lg border border-edge bg-black object-contain" controls muted loop playsInline preload="metadata" />
   ) : (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={entry.title} className="checker aspect-video w-full rounded-lg object-contain" />
+    <img src={src} alt={entry.title} className="checker aspect-video w-full rounded-lg border border-edge object-contain" />
   )
 }
 
@@ -34,8 +34,8 @@ function Heading({ entry }: { entry: DecidedEntry }) {
   const d = entry.decision
   const approvedDraft = d.verdict === 'accepted' && entry.stage === 'draft'
   return (
-    <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
-      <span className="text-sm font-medium text-fg">{entry.title}</span>
+    <div className="flex flex-wrap items-center gap-x-2.5 gap-y-2">
+      <span className="mr-1 font-display text-2xl leading-none text-fg">{entry.title}</span>
       <span className="font-mono text-xs text-muted">{entry.where}</span>
       {entry.stage && (
         <Badge tone={d.verdict === 'accepted' && !approvedDraft ? 'good' : 'muted'}>
@@ -105,10 +105,10 @@ export default async function DecidedPage() {
   const denied = entries.filter((e) => e.decision.verdict === 'denied')
 
   return (
-    <div className="space-y-12">
-      <PageHeader title="Decided" meta={`${entries.length} decisions, newest first`}>
+    <div className="space-y-16">
+      <PageHeader title="Decided" eyebrow="Review log" meta={`${entries.length} decisions, newest first`}>
         Everything you have accepted or denied, and where each take now lives. Nothing is deleted:
-        a denied take is kept as the evidence <code className="text-fg">/learn</code> distils rules
+        a denied take is kept as the evidence <code className="font-mono text-[13px] text-fg">/learn</code> distils rules
         from.
       </PageHeader>
 
@@ -117,15 +117,15 @@ export default async function DecidedPage() {
         {accepted.length === 0 ? (
           <EmptyState>Nothing accepted yet.</EmptyState>
         ) : (
-          <div className="grid gap-4 lg:grid-cols-2">
+          <div className="grid gap-5 lg:grid-cols-2">
             {accepted.map((e, i) => (
               <Reveal key={e.decision.id} index={i}>
-                <Card interactive className="space-y-3 p-4">
+                <Card interactive className="space-y-4 p-5">
                   <Media entry={e} />
                   <Heading entry={e} />
                   {e.notes && (
-                    <p className="text-xs leading-relaxed text-muted" dir="auto">
-                      <span className="text-good">why it worked:</span> {e.notes}
+                    <p className="text-[13px] leading-relaxed text-fg/85" dir="auto">
+                      <span className="eyebrow mr-2 text-good">why it worked</span> {e.notes}
                     </p>
                   )}
                   <FollowUpLine entry={e} />
@@ -146,11 +146,11 @@ export default async function DecidedPage() {
           <div className="space-y-3">
             {denied.map((e, i) => (
               <Reveal key={e.decision.id} index={i}>
-                <Card interactive className="flex flex-col gap-4 p-4 sm:flex-row">
-                  <div className="shrink-0 sm:w-64">
+                <Card interactive className="flex flex-col gap-6 p-5 sm:flex-row">
+                  <div className="shrink-0 sm:w-72">
                     <Media entry={e} />
                   </div>
-                  <div className="min-w-0 flex-1 space-y-2.5">
+                  <div className="min-w-0 flex-1 space-y-3.5">
                     <Heading entry={e} />
                     <p className="text-sm leading-relaxed whitespace-pre-line text-fg/90" dir="auto">
                       {e.notes}

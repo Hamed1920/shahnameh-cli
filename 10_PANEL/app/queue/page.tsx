@@ -36,8 +36,8 @@ export default async function QueuePage() {
   ]
 
   return (
-    <div className="space-y-10">
-      <PageHeader title="Queue & worker" />
+    <div className="space-y-16">
+      <PageHeader title="Queue & worker" eyebrow="Generation" meta={generating ? `generating ${generating}` : 'idle'} />
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {stats.map((s, i) => (
@@ -50,21 +50,21 @@ export default async function QueuePage() {
       <section>
         <SectionHeading>Worker</SectionHeading>
         {state ? (
-          <pre className="scroll-pane max-h-80 rounded-xl border border-edge bg-sunken p-4 text-xs leading-relaxed">
+          <pre className="scroll-pane max-h-96 rounded-xl border border-edge bg-sunken p-6 font-mono text-xs leading-[1.7] text-fg/80">
             {JSON.stringify(state, null, 2)}
           </pre>
         ) : (
           <EmptyState>
-            The worker has not run yet. Start it from <code className="text-fg">10_PANEL</code>:{' '}
-            <code className="text-fg">npm run worker</code>
+            The worker has not run yet. Start it from <code className="font-mono text-[13px] text-fg">10_PANEL</code>:{' '}
+            <code className="font-mono text-[13px] text-fg">npm run worker</code>
           </EmptyState>
         )}
       </section>
 
       {failures.length > 0 && (
         <section>
-          <SectionHeading tone="bad">Decisions the worker could not apply ({failures.length})</SectionHeading>
-          <p className="mb-3 max-w-3xl text-sm text-muted">
+          <SectionHeading tone="bad" count={failures.length}>Decisions the worker could not apply</SectionHeading>
+          <p className="mb-5 max-w-3xl text-sm leading-relaxed text-muted">
             Usually a problem with an uploaded reference. Nothing was moved or generated, and each
             candidate is back on the Review page to decide again.
           </p>
@@ -81,7 +81,7 @@ export default async function QueuePage() {
                 <Tr key={f.decisionId + f.ts}>
                   <Td className="font-mono text-xs text-fg">{f.decisionId}</Td>
                   <Td className="text-xs text-bad">{f.reason}</Td>
-                  <Td className="text-xs text-muted">{f.ts.slice(0, 16).replace('T', ' ')}</Td>
+                  <Td className="font-mono text-xs whitespace-nowrap text-muted">{f.ts.slice(0, 16).replace('T', ' ')}</Td>
                 </Tr>
               ))}
             </tbody>
@@ -90,7 +90,7 @@ export default async function QueuePage() {
       )}
 
       <section>
-        <SectionHeading>Waiting to generate ({waiting.length})</SectionHeading>
+        <SectionHeading count={waiting.length}>Waiting to generate</SectionHeading>
         {waiting.length === 0 ? (
           <EmptyState>Queue is empty.</EmptyState>
         ) : (
@@ -108,28 +108,28 @@ export default async function QueuePage() {
               {waiting.map((q) => (
                 <Tr key={q.jobId}>
                   <Td className="font-mono text-xs">
-                    <span className="text-fg">{q.jobId}</span>
+                    <span className="font-medium text-fg">{q.jobId}</span>
                     {q.jobId === generating && (
                       <Badge tone="accent" className="ml-2">
                         generating now
                       </Badge>
                     )}
                     {q.parentJobId && (
-                      <div className="text-muted">from {q.parentJobId}</div>
+                      <div className="mt-1 text-faint">from {q.parentJobId}</div>
                     )}
                   </Td>
                   <Td className="font-mono text-xs text-fg">
                     {q.target} {q.variant}
                   </Td>
-                  <Td className="text-xs text-muted">{q.model}</Td>
+                  <Td className="font-mono text-xs text-muted">{q.model}</Td>
                   <Td className="text-xs">
                     {q.attempt > 1 ? (
                       <Badge tone="accent">{q.attempt}</Badge>
                     ) : (
-                      <span className="text-muted">{q.attempt}</span>
+                      <span className="font-mono text-muted">{q.attempt}</span>
                     )}
                   </Td>
-                  <Td className="max-w-md text-xs leading-relaxed text-muted">
+                  <Td className="max-w-md text-[13px] leading-relaxed text-muted">
                     {q.prompt.slice(0, 200)}
                     {q.prompt.length > 200 ? '…' : ''}
                   </Td>

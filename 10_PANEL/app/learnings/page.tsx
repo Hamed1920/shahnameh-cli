@@ -24,40 +24,44 @@ export default async function LearningsPage() {
   const rejected = learnings.filter((l) => l.status === 'rejected')
 
   return (
-    <div className="space-y-10">
-      <PageHeader title="Learnings">
-        Rules distilled from your accept and deny notes by <code className="text-fg">/learn</code>.
+    <div className="space-y-16">
+      <PageHeader
+        title="Learnings"
+        eyebrow="Prompt rules"
+        meta={`${approved.length} in force · ${proposed.length} proposed`}
+      >
+        Rules distilled from your accept and deny notes by <code className="font-mono text-[13px] text-fg">/learn</code>.
         Only <span className="text-good">approved</span> rules are ever injected into prompts or
         shipped to Claude Chat and Cowork — nothing here influences a generation until you say so.
       </PageHeader>
 
       <section>
-        <SectionHeading>Awaiting your decision ({proposed.length})</SectionHeading>
+        <SectionHeading count={proposed.length}>Awaiting your decision</SectionHeading>
         {proposed.length === 0 ? (
           <EmptyState>
-            Nothing proposed. Run <code className="text-fg">/learn</code> after some reviews.
+            Nothing proposed. Run <code className="font-mono text-[13px] text-fg">/learn</code> after some reviews.
           </EmptyState>
         ) : (
           <div className="space-y-4">
             {proposed.map((l, i) => (
               <Reveal key={l.id} index={i}>
-                <Card className="p-5 transition-colors duration-200 hover:border-edge-strong">
+                <Card className="p-6 transition-colors duration-200 hover:border-edge-strong">
                   <form action={decideLearning}>
                     <input type="hidden" name="id" value={l.id} />
-                    <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-muted">
-                      <span className="font-mono">{l.id}</span>
+                    <div className="mb-4 flex flex-wrap items-center gap-2.5 text-xs text-muted">
+                      <span className="font-mono text-faint">{l.id}</span>
                       <Badge>{scopeLabel(l.scope)}</Badge>
                     </div>
 
-                    <Textarea name="rule" rows={2} defaultValue={l.rule} />
+                    <Textarea name="rule" rows={2} defaultValue={l.rule} className="text-[15px]" />
 
-                    <Disclosure summary={`Evidence (${l.evidence.length})`} className="mt-4">
-                      <ul className="space-y-1 text-xs leading-relaxed text-muted">
+                    <Disclosure summary={`Evidence (${l.evidence.length})`} className="mt-5">
+                      <ul className="space-y-2 border-l border-edge pl-4 text-[13px] leading-relaxed text-muted">
                         {l.evidence.map((id) => {
                           const d = byId.get(id)
                           return (
                             <li key={id}>
-                              <span className="font-mono">{id}</span>
+                              <span className="font-mono text-xs text-faint">{id}</span>
                               {d ? ` — ${d.verdict}: ${d.notes}` : ' — (decision not found)'}
                             </li>
                           )
@@ -65,7 +69,7 @@ export default async function LearningsPage() {
                       </ul>
                     </Disclosure>
 
-                    <div className="mt-5 flex gap-2.5">
+                    <div className="mt-6 flex gap-2">
                       <Button type="submit" name="status" value="approved" tone="good" size="sm">
                         Approve
                       </Button>
@@ -82,17 +86,17 @@ export default async function LearningsPage() {
       </section>
 
       <section>
-        <SectionHeading tone="good">In force ({approved.length})</SectionHeading>
+        <SectionHeading tone="good" count={approved.length}>In force</SectionHeading>
         {approved.length === 0 ? (
           <EmptyState>None yet.</EmptyState>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-3">
             {approved.map((l, i) => (
               <li key={l.id}>
                 <Reveal index={i}>
-                  <Card interactive className="px-4 py-3.5 text-sm leading-relaxed">
-                    <Badge className="mr-2 align-middle">{scopeLabel(l.scope)}</Badge>
-                    {l.rule}
+                  <Card interactive className="flex items-start gap-4 px-6 py-5 text-[15px] leading-relaxed">
+                    <Badge className="mt-0.5 shrink-0">{scopeLabel(l.scope)}</Badge>
+                    <span className="text-fg/90">{l.rule}</span>
                   </Card>
                 </Reveal>
               </li>
@@ -103,8 +107,8 @@ export default async function LearningsPage() {
 
       {rejected.length > 0 && (
         <section>
-          <SectionHeading tone="muted">Rejected ({rejected.length})</SectionHeading>
-          <ul className="space-y-1 text-sm text-muted/70 line-through">
+          <SectionHeading tone="muted" count={rejected.length}>Rejected</SectionHeading>
+          <ul className="space-y-2 text-sm text-faint line-through decoration-edge-strong">
             {rejected.map((l) => (
               <li key={l.id}>{l.rule}</li>
             ))}
