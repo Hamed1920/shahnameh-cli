@@ -4,7 +4,7 @@ import { P } from './paths'
 import { parseCsv } from './csv'
 import type {
   ArchivedLook, AssetRow, AttemptEntry, BatchStatus, BatchView, Candidate, CatalogEntity, Entity, Filing, IndexOp,
-  IndexOpResult, JobRequest, JobRequestEvent, Learning, LibraryData, LibraryEntity, QueueItem, RegenerationView,
+  IndexOpResult, JobRequest, JobRequestEvent, Learning, LibraryData, LibraryEntity, PromptLibraryItem, QueueItem, RegenerationView,
   ReviewContext, ReviewDecision, LookUse, StagingSidecar, WorkerStatus,
 } from './types'
 
@@ -475,6 +475,67 @@ export async function getRegenerations(): Promise<Map<string, RegenerationView[]
   return out
 }
 
+/**
+ * Every prompt ever queued, for the library on the Prompts page. A revision or
+ * a 1080p final is the same prompt tried again, so each chain (a job and
+ * everything queued after it via parentJobId) is one entry, shown as its
+ * latest attempt. Newest first.
+ */
+export async function getPromptLibrary(): Promise<PromptLibraryItem[]> {
+  type Row = QueueItem & {
+    basePrompt?: string; stage?: 'draft' | 'final' | null; label?: string | null; revisionNotes?: string[]
+  }
+  const [queue, decisions, state, ledgerText] = await Promise.all([
+    readJsonl<Row>(P.queue), getDecisions(), getWorkerState(), readText(P.ledger),
+  ])
+  const processed = new Set((state?.processedJobs ?? []) as string[])
+  const failedDecisions = (state?.failedDecisions ?? {}) as Record<string, string>
+  const generating = await getGeneratingJobId(processed)
+  const ledger = new Map<string, string>()
+  for (const row of parseCsv(ledgerText) as unknown as Record<string, string>[]) ledger.set(row.job_id, row.state)
+  const verdict = new Map<string, ReviewDecision['verdict']>()
+  for (const d of decisions) if (!failedDecisions[d.id]) verdict.set(d.jobId, d.verdict)
+
+  const byId = new Map(queue.map((q) => [q.jobId, q]))
+  const rootOf = (q: Row) => {
+    let cur = q
+    for (let guard = 0; cur.parentJobId && byId.has(cur.parentJobId) && guard < 50; guard++) cur = byId.get(cur.parentJobId)!
+    return cur.jobId
+  }
+  const chains = new Map<string, Row[]>()
+  for (const q of queue) {
+    if (!q?.jobId) continue
+    const root = rootOf(q)
+    chains.set(root, [...(chains.get(root) ?? []), q])
+  }
+
+  const out: PromptLibraryItem[] = []
+  for (const [rootJobId, jobs] of chains) {
+    const sorted = [...jobs].sort((a, b) => String(a.enqueuedAt ?? '').localeCompare(String(b.enqueuedAt ?? '')))
+    const last = sorted.at(-1)!
+    const v = verdict.get(last.jobId)
+    out.push({
+      rootJobId,
+      jobId: last.jobId,
+      label: [...sorted].reverse().find((j) => j.label)?.label ?? null,
+      target: last.target,
+      attempts: sorted.length,
+      enqueuedAt: last.enqueuedAt,
+      prompt: last.basePrompt ?? last.prompt,
+      refs: last.refs ?? [],
+      model: last.model,
+      stage: last.stage ?? null,
+      variant: last.variant || 'V01',
+      params: (last.params ?? {}) as PromptLibraryItem['params'],
+      revisionNotes: last.revisionNotes ?? [],
+      state: !processed.has(last.jobId)
+        ? last.jobId === generating ? 'generating' : 'queued'
+        : v ?? (ledger.get(last.jobId) === 'GENERATED' ? 'to-review' : 'failed'),
+    })
+  }
+  return out.sort((a, b) => String(b.enqueuedAt).localeCompare(String(a.enqueuedAt)))
+}
+
 // ---------------------------------------------------------------- references library
 
 /** Everything the References page manages, plus what the worker has and has not applied yet. */
@@ -580,6 +641,9 @@ async function getLookUsage(
  * time with the newest file in worker/.
  */
 export async function getWorkerStatus(): Promise<WorkerStatus> {
+  const autostartOff = String(process.env.SHM_WORKER ?? '').toLowerCase() === 'off'
+    ? 'SHM_WORKER=off on this machine'
+    : process.env.SHM_ROOT && !process.env.SHM_HIGGSFIELD_JS ? 'sandbox SHM_ROOT without the stub CLI' : null
   let pid: number
   let startedMs: number
   try {
@@ -587,18 +651,18 @@ export async function getWorkerStatus(): Promise<WorkerStatus> {
     pid = parseInt(text.trim(), 10)
     startedMs = stat.mtimeMs
   } catch {
-    return { running: false, outdated: false }
+    return { running: false, outdated: false, autostartOff }
   }
   let alive = false
   if (Number.isFinite(pid) && pid > 0) {
     try { process.kill(pid, 0); alive = true } catch (e) { alive = (e as NodeJS.ErrnoException).code === 'EPERM' }
   }
-  if (!alive) return { running: false, outdated: false }
+  if (!alive) return { running: false, outdated: false, autostartOff }
 
   const dir = path.join(process.cwd(), 'worker')
   const libs = await fs.readdir(path.join(dir, 'lib')).catch(() => [] as string[])
   const files = ['worker.mjs', 'config.json', ...libs.map((f) => path.join('lib', f))]
   const times = await Promise.all(files.map((f) => fs.stat(path.join(dir, f)).then((s) => s.mtimeMs, () => 0)))
   // A second of slack: an editor can touch a file in the same moment the worker starts.
-  return { running: true, outdated: Math.max(...times) > startedMs + 1000, startedAt: new Date(startedMs).toISOString() }
+  return { running: true, outdated: Math.max(...times) > startedMs + 1000, startedAt: new Date(startedMs).toISOString(), autostartOff }
 }

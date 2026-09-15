@@ -282,6 +282,8 @@ export interface IndexOpResult {
 
 export interface WorkerStatus {
   running: boolean
+  /** Why the panel will not start the worker on this machine, or null when it keeps it running. */
+  autostartOff?: string | null
   /** Running, but started before its code last changed, so newer features are missing. */
   outdated: boolean
   startedAt?: string
@@ -334,7 +336,8 @@ export type JobRequest =
       type: 'batch.submit'
       batchId: string
       name: string
-      source: { kind: 'paste' | 'files'; files: string[] }
+      /** `library`: started again from the prompt library; `files` holds the job it was copied from. */
+      source: { kind: 'paste' | 'files' | 'library'; files: string[] }
       defaults: BatchDefaults
       jobs: BatchJobInput[]
     })
@@ -410,6 +413,27 @@ export interface RegenerateSource {
   variant: string
   params: Record<string, string | number | boolean>
   revisionNotes: string[]
+}
+
+/** One prompt in the Prompts page library: a job and every attempt queued after it, shown as its latest attempt. */
+export interface PromptLibraryItem {
+  /** The first job in the chain. */
+  rootJobId: string
+  /** The latest attempt, which the Generate dialog starts from. */
+  jobId: string
+  label: string | null
+  target: string
+  attempts: number
+  enqueuedAt: string
+  prompt: string
+  refs: string[]
+  model: string
+  stage: 'draft' | 'final' | null
+  variant: string
+  params: Record<string, string | number | boolean>
+  /** Notes the latest attempt carried. A fresh run does not inherit them. */
+  revisionNotes: string[]
+  state: 'queued' | 'generating' | 'failed' | 'to-review' | 'accepted' | 'denied'
 }
 
 /** A Regenerate request and what became of it, for the Decided page. */

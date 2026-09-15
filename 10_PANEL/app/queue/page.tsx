@@ -27,6 +27,8 @@ export default async function QueuePage() {
   const processed = new Set((state?.processedJobs ?? []) as string[])
   const waiting = queue.filter((q) => !processed.has(q.jobId))
   const generating = await getGeneratingJobId(processed)
+  // Jobs the worker will not start yet, and why (a spend ceiling, not logged in).
+  const held = (state?.held ?? {}) as Record<string, { reason: string; credits: number | null; since: string }>
   const accepted = decisions.filter((d) => d.verdict === 'accepted').length
   const denied = decisions.filter((d) => d.verdict === 'denied').length
 
@@ -56,7 +58,7 @@ export default async function QueuePage() {
             {JSON.stringify(state, null, 2)}
           </pre>
         ) : (
-          <EmptyState>The worker has not run yet. Start it with the button above.</EmptyState>
+          <EmptyState>The worker has not run yet. The panel starts it on its own.</EmptyState>
         )}
       </section>
 
@@ -112,6 +114,14 @@ export default async function QueuePage() {
                       <Badge tone="accent" className="ml-2">
                         generating now
                       </Badge>
+                    )}
+                    {q.jobId !== generating && held[q.jobId] && (
+                      <Badge tone="bad" className="ml-2">
+                        held
+                      </Badge>
+                    )}
+                    {q.jobId !== generating && held[q.jobId] && (
+                      <div className="mt-1 max-w-xs font-sans text-bad">{held[q.jobId].reason}</div>
                     )}
                     {q.parentJobId && (
                       <div className="mt-1 text-faint">from {q.parentJobId}</div>

@@ -1,5 +1,5 @@
 {
-  "_comment": "Ceilings are sized against the account balance seen 2026-09-03: 5346.5 credits, ultra plan. costCeilingCredits is per worker run, not lifetime - it pauses the queue rather than failing, and resets when queue/state.json spentCredits is cleared. Models verified against `model list` 2026-09-03: nano_banana_2 does NOT exist as a job type; the Nano Banana 2 family is nano_banana_flash / _2_lite / _pro. Video is seedance_2_5, matching the source document. Video is generated as a 480p DRAFT first (37.5 credits vs 135 at 1080p); approving a draft in the panel queues the identical job at 1080p rather than promoting the draft. videoSound: seedance_2_5 has generate_audio (boolean, default true, verified 2026-09-15); the worker turns it on for every video job unless the job or the reviewer says otherwise. models / aspectRatios / videoDurations feed the Prompts page pickers.",
+  "_comment": "Ceilings were sized against the account balance seen 2026-09-03: 5346.5 credits, ultra plan; the account changed on 2026-09-15 (ultra, 6650.5 credits, same models verified). costCeilingCredits caps generation spend over the last costWindowHours (a rolling window read from JOB_LEDGER.csv, not state.spentCredits, which is a lifetime total); a job that would pass it is held, shown on the Queue page, and runs once older spend leaves the window. Models verified against `model list` 2026-09-03: nano_banana_2 does NOT exist as a job type; the Nano Banana 2 family is nano_banana_flash / _2_lite / _pro. Video is seedance_2_5, matching the source document. Video is generated as a 480p DRAFT first (37.5 credits vs 135 at 1080p); approving a draft in the panel queues the identical job at 1080p rather than promoting the draft. videoSound: seedance_2_5 has generate_audio (boolean, default true, verified 2026-09-15); the worker turns it on for every video job unless the job or the reviewer says otherwise. models / aspectRatios / videoDurations feed the Prompts page pickers.",
   "defaultImageModel": "nano_banana_pro",
   "defaultVideoModel": "seedance_2_5",
   "models": {
@@ -12,6 +12,7 @@
   "maxJobsPerRun": 12,
   "perJobCostCeilingCredits": 250,
   "costCeilingCredits": 1500,
+  "costWindowHours": 24,
   "waitTimeout": "25m",
   "waitInterval": "5s",
   "maxAttempts": 4,

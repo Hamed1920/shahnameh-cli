@@ -48,6 +48,8 @@ Run `/project-log` at the start of a session, or read directly:
 - **Never mark a learning `approved` yourself** - only Hamed does, in the panel. Only approved
   rules reach a prompt.
 - **Never spend credits without pricing first.** `generate cost` before `generate create`.
+- **The spend ceiling is a rolling window.** `costCeilingCredits` per `costWindowHours`, summed from
+  `JOB_LEDGER.csv`; a job over it is held (`state.held`, shown on the Queue page), never failed.
 
 ## Tools
 
@@ -64,7 +66,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File "00_PROJECT\tools\Ingest
 
 ```powershell
 # review panel + generation worker (from 10_PANEL)
-npm run up         # both in one terminal; the Queue page can also start/stop the worker
+npm run up         # same as dev; the panel server starts the worker and keeps it running
 npm run dev        # http://localhost:3000
 npm run worker     # add --dry-run to price without spending
 npm test           # prompt parser tests
@@ -102,8 +104,10 @@ every render.
   until opted in. Do not convert it to a denylist. A new top-level folder must be added to it.
 - **One worker at a time, across all machines.** The CSV registries and `queue/state.json` are
   rewritten whole, so two workers between syncs conflict. `state.json` is tracked on purpose:
-  without it a worker would replay every past decision and spend credits. Pull before starting
-  the worker; commit and push after stopping it. The panel can run anywhere, since JSONL is
+  without it a worker would replay every past decision and spend credits. The panel's server
+  starts the worker and keeps it running (`lib/worker-supervisor.ts`), so on any other machine
+  set `SHM_WORKER=off` in `10_PANEL/.env.local` before running the panel. Pull before starting
+  the panel; commit and push after stopping the worker (`queue/worker.stop`). The panel can run anywhere, since JSONL is
   append-only and union-merged.
 - **Author is Hamed alone.** No `Co-Authored-By` trailers, no "Generated with" lines, no Claude
   attribution of any kind.

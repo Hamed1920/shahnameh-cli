@@ -10,10 +10,10 @@ Next.js 16.3 · React 19.2 · Tailwind 4 · localhost only.
 
 ```powershell
 cd 10_PANEL
-npm run up         # panel at http://localhost:3000 and the worker, one terminal
+npm run up         # panel at http://localhost:3000; its server starts the worker and keeps it running
 # or separately:
 npm run dev        # panel only
-npm run worker     # generation worker, in a second terminal (or Start it from the Queue page)
+npm run worker     # generation worker by hand, only with SHM_WORKER=off (otherwise the panel runs it)
 ```
 
 > If PowerShell blocks `npm` with "running scripts is disabled", either use `npm.cmd run dev`

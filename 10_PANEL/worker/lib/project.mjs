@@ -165,6 +165,25 @@ export async function log(line) {
   await fs.appendFile(P.log, msg + '\n', 'utf8')
 }
 
+/**
+ * Credits spent on generations in the last `hours`, from the ledger. The spend
+ * ceiling is a rolling window over this, not state.spentCredits: that is a
+ * lifetime total, and with a worker that never stops it only ever grows, so a
+ * ceiling on it eventually holds every job for good.
+ */
+export async function spentWithin(hours) {
+  const { rows } = await readCsv(P.ledger)
+  const since = Date.now() - hours * 3600_000
+  let total = 0
+  for (const r of rows) {
+    if (r.state !== 'GENERATED') continue
+    const cost = parseFloat(r.cost)
+    const at = Date.parse(r.ingested)
+    if (Number.isFinite(cost) && Number.isFinite(at) && at >= since) total += cost
+  }
+  return total
+}
+
 export async function readState() {
   const t = await readText(P.state)
   if (!t.trim()) return { processedJobs: [], processedDecisions: [], spentCredits: 0 }

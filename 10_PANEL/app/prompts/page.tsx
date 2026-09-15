@@ -1,21 +1,23 @@
 import { WorkerControls } from '@/components/worker-controls'
 import { PageHeader } from '@/components/ui/text'
 import {
-  getBatches, getCatalog, getGeneratingJobId, getKnownShots, getWorkerConfig, getWorkerState, getWorkerStatus,
+  getBatches, getCatalog, getGeneratingJobId, getKnownShots, getPromptLibrary, getWorkerConfig, getWorkerState, getWorkerStatus,
 } from '@/lib/store'
 import type { BatchDefaults } from '@/lib/types'
 import { Batches } from './batches'
 import { PromptIntake, type IntakeConfig } from './prompt-intake'
+import { PromptLibrary } from './prompt-library'
 
 export const dynamic = 'force-dynamic'
 
 /**
  * Prompts in, priced batches out. The page parses in the browser, the worker
  * checks and prices, and nothing spends until the batch is approved here.
+ * Below the batches, every prompt already queued, ready to start again.
  */
 export default async function PromptsPage() {
-  const [catalog, batches, worker, cfg, knownShots, state] = await Promise.all([
-    getCatalog(), getBatches(), getWorkerStatus(), getWorkerConfig(), getKnownShots(), getWorkerState(),
+  const [catalog, batches, worker, cfg, knownShots, state, library] = await Promise.all([
+    getCatalog(), getBatches(), getWorkerStatus(), getWorkerConfig(), getKnownShots(), getWorkerState(), getPromptLibrary(),
   ])
   const generating = await getGeneratingJobId(new Set((state?.processedJobs ?? []) as string[]))
 
@@ -44,6 +46,7 @@ export default async function PromptsPage() {
 
       <PromptIntake catalog={catalog} cfg={intakeCfg} knownShots={knownShots} />
       <Batches batches={batches} worker={worker} />
+      <PromptLibrary items={library} catalog={catalog} cfg={intakeCfg} batches={batches} />
     </div>
   )
 }

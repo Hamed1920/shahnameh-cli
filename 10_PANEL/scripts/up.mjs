@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 /**
- * Start the panel and the worker together:  npm run up
+ * Start the panel:  npm run up
  *
- * Both run as children of this process with their output prefixed. Ctrl+C
- * stops both. If the worker exits at once (a worker is already running on
- * this or another machine, or it is not authenticated), its output is shown
- * and the panel keeps running, where the Queue page can start it later.
+ * The panel's server starts the worker itself and keeps it running
+ * (lib/worker-supervisor.ts), so this is now the same as npm run dev, with
+ * the output prefixed. Kept so the command people know still works.
  *
  * SHM_ROOT and SHM_HIGGSFIELD_JS pass through untouched, so a sandbox works.
  */
@@ -36,12 +35,11 @@ function run(name, args) {
 }
 
 const panel = run('panel', [path.join(ROOT, 'node_modules', 'next', 'dist', 'bin', 'next'), 'dev', ...extra])
-const worker = run('worker', [path.join(ROOT, 'worker', 'worker.mjs')])
 
 const stop = () => {
-  for (const c of [worker, panel]) { try { c.kill() } catch { /* already gone */ } }
+  try { panel.kill() } catch { /* already gone */ }
   setTimeout(() => process.exit(0), 500)
 }
 process.on('SIGINT', stop)
 process.on('SIGTERM', stop)
-panel.on('exit', () => { try { worker.kill() } catch { /* gone */ } process.exit(0) })
+panel.on('exit', () => process.exit(0))

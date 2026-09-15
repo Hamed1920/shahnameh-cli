@@ -49,7 +49,7 @@ export function Batches({ batches, worker }: { batches: BatchView[]; worker: Wor
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), 5000); return () => clearInterval(t) }, [])
   const waited = oldest ? now - new Date(oldest).getTime() : 0
   const waitNote = !oldest ? null
-    : !worker.running ? 'The worker isn’t running, so nothing is checked or priced. Start it above.'
+    : !worker.running ? worker.autostartOff ? `The worker isn’t running here (${worker.autostartOff}), so nothing is checked or priced.` : 'The worker is starting…'
     : worker.outdated && waited > 10000 ? 'Restart the worker: it is running code from before the last update.'
     : waited > 30000 ? 'Taking longer than usual. Check the worker log for errors.'
     : null

@@ -2,12 +2,11 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Coins, Plus, RotateCcw, X } from 'lucide-react'
+import { Coins, RotateCcw } from 'lucide-react'
 import { requestRegenerate } from '@/app/decided/actions'
-import { IndexPicker } from '@/components/index-picker'
+import { GenerationSettings, settingsFrom, type GenerationConfig, type GenerationSettingsValue } from '@/components/generation-settings'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Field, Input, Select, Textarea } from '@/components/ui/field'
+import { Field, Textarea } from '@/components/ui/field'
 import { Modal } from '@/components/ui/modal'
 import { Badge } from '@/components/ui/text'
 import { isVideoModel } from '@/lib/batch-rules'
@@ -15,11 +14,7 @@ import type { CatalogEntity, RegenerateSource, RegenerationView } from '@/lib/ty
 
 const when = (iso: string) => new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
 
-export interface RegenerateConfig {
-  models: { image: string[]; video: string[] }
-  aspectRatios: string[]
-  videoDurations: number[]
-}
+export type RegenerateConfig = GenerationConfig
 
 /**
  * Run an accepted take's job again, with anything changed: the prompt, the
@@ -45,34 +40,18 @@ export function RegenerateButton({
   const [error, setError] = useState<string | null>(null)
 
   const [prompt, setPrompt] = useState(source?.prompt ?? '')
-  const [refs, setRefs] = useState<string[]>(source?.refs ?? [])
-  const [model, setModel] = useState(source?.model ?? '')
-  const [stage, setStage] = useState<'draft' | 'final'>(source?.stage ?? 'draft')
-  const [variant, setVariant] = useState(source?.variant ?? 'V01')
-  const [aspect, setAspect] = useState(String(source?.params.aspect_ratio ?? cfg.aspectRatios[0] ?? '16:9'))
-  const [duration, setDuration] = useState(String(source?.params.duration ?? cfg.videoDurations[0] ?? 15))
-  const [sound, setSound] = useState(source ? String(source.params.generate_audio) !== 'false' : true)
+  const [settings, setSettings] = useState<GenerationSettingsValue>(() => settingsFrom(source, cfg))
   const [note, setNote] = useState('')
+  const { model, stage, duration, sound } = settings
 
   const video = isVideoModel(model)
   const priceStillValid = source
     && model === source.model
     && (!video || (stage === (source.stage ?? 'draft') && String(duration) === String(source.params.duration ?? '') && sound === (String(source.params.generate_audio) !== 'false')))
-  const refName = (token: string) => {
-    const [id, v] = token.replace(/^@/, '').split('/')
-    const e = catalog.find((x) => x.id === id || x.shortId === id)
-    return e ? `${e.shortId}${v ? '/' + v : ''} ${e.name}` : token
-  }
 
   function reset() {
     setPrompt(source?.prompt ?? '')
-    setRefs(source?.refs ?? [])
-    setModel(source?.model ?? '')
-    setStage(source?.stage ?? 'draft')
-    setVariant(source?.variant ?? 'V01')
-    setAspect(String(source?.params.aspect_ratio ?? cfg.aspectRatios[0] ?? '16:9'))
-    setDuration(String(source?.params.duration ?? cfg.videoDurations[0] ?? 15))
-    setSound(source ? String(source.params.generate_audio) !== 'false' : true)
+    setSettings(settingsFrom(source, cfg))
     setNote('')
     setError(null)
   }
@@ -84,10 +63,10 @@ export function RegenerateButton({
     fd.set('jobId', jobId)
     fd.set('decisionId', decisionId)
     fd.set('prompt', prompt)
-    fd.set('refs', JSON.stringify(refs))
+    fd.set('refs', JSON.stringify(settings.refs))
     fd.set('model', model)
-    fd.set('variant', variant)
-    fd.set('aspect_ratio', aspect)
+    fd.set('variant', settings.variant)
+    fd.set('aspect_ratio', settings.aspect)
     if (video) {
       fd.set('stage', stage)
       fd.set('duration', duration)
@@ -160,73 +139,18 @@ export function RegenerateButton({
           </div>
 
           <div className="space-y-4">
-            <div className="space-y-2">
-              <span className="block text-[12.5px] text-muted">References, in the order the model gets them</span>
-              <div className="flex flex-wrap items-center gap-1.5">
-                {refs.map((t, n) => (
-                  <span key={t} className="inline-flex h-7 items-center gap-1.5 rounded-md border border-edge-strong pl-2.5 pr-1 font-mono text-[11.5px] text-fg">
-                    <span className="text-faint">{n + 1}</span> {refName(t)}
-                    <button type="button" aria-label={`Remove ${t}`} onClick={() => setRefs(refs.filter((x) => x !== t))} className="focus-ring grid size-5 cursor-pointer place-items-center rounded text-muted hover:text-fg">
-                      <X aria-hidden className="size-3" />
-                    </button>
-                  </span>
-                ))}
-                <Button type="button" size="sm" tone="outline" onClick={() => setPicker(true)}>
-                  <Plus aria-hidden className="size-3.5" /> Add
-                </Button>
-              </div>
-            </div>
-
-            <Field label="Model">
-              <Select value={model} onChange={(e) => setModel(e.target.value)}>
-                <optgroup label="Video">{cfg.models.video.map((m) => <option key={m} value={m}>{m}</option>)}</optgroup>
-                <optgroup label="Image">{cfg.models.image.map((m) => <option key={m} value={m}>{m}</option>)}</optgroup>
-                {model && !cfg.models.video.includes(model) && !cfg.models.image.includes(model) && <option value={model}>{model}</option>}
-              </Select>
-            </Field>
-            <div className="grid grid-cols-2 gap-3">
-              <Field label="Look">
-                <Input dir="ltr" value={variant} onChange={(e) => setVariant(e.target.value.toUpperCase())} className="font-mono" />
-              </Field>
-              <Field label="Aspect ratio">
-                <Select value={aspect} onChange={(e) => setAspect(e.target.value)}>
-                  {cfg.aspectRatios.map((a) => <option key={a} value={a}>{a}</option>)}
-                  {!cfg.aspectRatios.includes(aspect) && <option value={aspect}>{aspect}</option>}
-                </Select>
-              </Field>
-            </div>
-            {video && (
-              <>
-                <div className="grid grid-cols-2 gap-3">
-                  <Field label="First render">
-                    <Select value={stage} onChange={(e) => setStage(e.target.value as 'draft' | 'final')}>
-                      <option value="draft">draft</option>
-                      <option value="final">final</option>
-                    </Select>
-                  </Field>
-                  <Field label="Duration">
-                    <Select value={duration} onChange={(e) => setDuration(e.target.value)}>
-                      {cfg.videoDurations.map((d) => <option key={d} value={String(d)}>{d} s</option>)}
-                      {!cfg.videoDurations.map(String).includes(duration) && <option value={duration}>{duration} s</option>}
-                    </Select>
-                  </Field>
-                </div>
-                <Checkbox checked={sound} onChange={(e) => setSound(e.target.checked)} label="Sound" />
-              </>
-            )}
+            <GenerationSettings
+              value={settings}
+              onChange={(patch) => setSettings((s) => ({ ...s, ...patch }))}
+              catalog={catalog}
+              cfg={cfg}
+              picker={picker}
+              onPicker={setPicker}
+            />
             {error && <p className="rounded-md border border-bad/35 bg-bad/8 px-3 py-2 text-xs leading-relaxed text-bad" dir="auto">{error}</p>}
           </div>
         </div>
       </Modal>
-
-      <IndexPicker
-        open={picker}
-        mode="ref"
-        title="Add a reference"
-        catalog={catalog}
-        onClose={() => setPicker(false)}
-        onPickRef={(token) => { if (!refs.includes(token)) setRefs([...refs, token]); setPicker(false) }}
-      />
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import {
-  P, appendJsonl, loadEntities, log, readCsv, readJsonl, readText, resolveRef, restoreText, writeCsv,
+  P, appendJsonl, loadEntities, log, readCsv, readJsonl, readText, resolveRef, restoreText, spentWithin, writeCsv,
 } from './project.mjs'
 import { parseCsv } from './csv.mjs'
 import { checkBatch, isVideoModel, makeJob, newJobId } from './batch.mjs'
@@ -146,9 +146,10 @@ const HANDLERS = {
         queued++
       }
       const total = st.priced?.total ?? null
-      const room = cfg.costCeilingCredits - (state.spentCredits ?? 0)
+      const hours = Number(cfg.costWindowHours ?? 24)
+      const room = cfg.costCeilingCredits - (await spentWithin(hours))
       const ceilingNote = total != null && total > room
-        ? `${total} credits is more than the ${room} left under costCeilingCredits this run; the worker will hold the rest until spentCredits is cleared in queue/state.json`
+        ? `${total} credits is more than the ${room} left under costCeilingCredits for the last ${hours} h; the worker holds the rest and starts them as older spend leaves the window`
         : undefined
       await emit({ batchId: req.batchId, reqId: req.id, event: 'queued', jobIds, assigned, total, ...(ceilingNote && { ceilingNote }) })
       await log(`BATCH ${req.batchId} approved: ${queued} job(s) queued${assigned.length ? `, reserved ${assigned.map((a) => a.id).join(', ')}` : ''}`)

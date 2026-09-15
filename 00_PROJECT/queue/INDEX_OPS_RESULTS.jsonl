@@ -6,3 +6,5 @@
 {"opId":"op_mu19wipnsw4t","ok":false,"reason":"@CHR-001/V04 is used by P12 SHM-EP001-SC012-SH0010, which is waiting for review. Decide it first (you can swap that reference when you do).","ts":"2026-09-14T13:23:02.629Z"}
 {"opId":"op_mu1bebeluxa2","ok":true,"summary":"archived CHR-001/V04. P12 (waiting for review) uses @CHR-001 instead of @CHR-001/V04","ts":"2026-09-14T14:04:51.539Z"}
 {"opId":"op_mu1bes4i09ry","ok":true,"summary":"CHR-001 main look -> V03","ts":"2026-09-14T14:05:11.965Z"}
+{"opId":"op_mu2flc5igk2n","ok":true,"summary":"CHR-001 main look -> V02","ts":"2026-09-15T13:09:47.219Z"}
+{"opId":"op_mu2pnx1wfnog","ok":true,"summary":"CHR-001 main look -> V06","ts":"2026-09-15T13:32:01.713Z"}

@@ -24,7 +24,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
   P, ROOT, appendJsonl, loadEntities, log, readCsv, readJsonl, rel,
-  readState, resolveRef, shotFolder, writeCsv, writeState,
+  readState, resolveRef, shotFolder, spentWithin, writeCsv, writeState,
 } from './lib/project.mjs'
 import { estimateCost, extractJobId, extractResultUrls, hfJson, isAuthenticated, paramsToArgs } from './lib/hf.mjs'
 import { FilingError, checkUploads, fileUpload, promote, reject } from './lib/promote.mjs'
@@ -117,14 +117,42 @@ const ledgerType = (model) => (isVideoModel(model) ? 'generate.video' : 'generat
 // Accumulated across a dry run so we can report one total before any spend.
 const dryTotal = { jobs: 0, credits: 0, unpriced: 0 }
 
+const COST_WINDOW_HOURS = Number(cfg.costWindowHours ?? 24)
+// A held job is looked at again after this long, not every pass: each look
+// plans and prices it, and the loop runs every few seconds.
+const HOLD_RECHECK_MS = 60_000
+const heldUntil = new Map()
+
+/**
+ * Record why a job is not generating, in state.held, so the panel can say so
+ * instead of showing it as simply queued. Logged once per reason, not per pass.
+ */
+async function hold(state, jobId, reason, credits = null) {
+  heldUntil.set(jobId, Date.now() + HOLD_RECHECK_MS)
+  const prev = state.held?.[jobId]
+  if (prev?.reason === reason) return
+  state.held = { ...(state.held ?? {}), [jobId]: { reason, credits, since: prev?.since ?? new Date().toISOString() } }
+  await log(`HOLD ${jobId}: ${reason}`)
+  await writeState(state)
+}
+
+function unhold(state, jobId) {
+  heldUntil.delete(jobId)
+  if (!state.held?.[jobId]) return
+  const { [jobId]: _, ...rest } = state.held
+  state.held = rest
+}
+
 async function runQueue(state) {
   const queue = await readJsonl(P.queue)
   const done = new Set(state.processedJobs)
+  // Holds for jobs that are no longer pending (processed, or gone) are stale.
+  for (const id of Object.keys(state.held ?? {})) if (done.has(id) || !queue.some((q) => q.jobId === id)) unhold(state, id)
   const pending = queue.filter((q) => !done.has(q.jobId)).slice(0, cfg.maxJobsPerRun)
   if (pending.length === 0) return 0
 
   if (!DRY && !(await isAuthenticated())) {
-    await log(`HOLD ${pending.length} queued job(s): not authenticated. Run: higgsfield auth login`)
+    for (const job of pending) await hold(state, job.jobId, 'not authenticated: run higgsfield auth login')
     return 0
   }
 
@@ -132,6 +160,7 @@ async function runQueue(state) {
 
   for (const job of pending) {
     if (await stopRequested()) await stopNow('before ' + job.jobId)
+    if (!DRY && (heldUntil.get(job.jobId) ?? 0) > Date.now()) continue
 
     // Read the registries per job, under the registry lock: index requests are
     // applied while earlier jobs generate, so a copy from the start of the run
@@ -151,13 +180,15 @@ async function runQueue(state) {
     await log(`COST ${job.jobId} ${model} = ${credits ?? 'unknown'} credits`)
 
     if (credits != null && credits > cfg.perJobCostCeilingCredits) {
-      await log(`HOLD ${job.jobId}: ${credits} credits exceeds perJobCostCeilingCredits ${cfg.perJobCostCeilingCredits}`)
+      await hold(state, job.jobId, `${credits} credits is more than perJobCostCeilingCredits ${cfg.perJobCostCeilingCredits}`, credits)
       continue
     }
-    if (credits != null && state.spentCredits + credits > cfg.costCeilingCredits) {
-      await log(`HOLD ${job.jobId}: would exceed costCeilingCredits ${cfg.costCeilingCredits} (spent ${state.spentCredits})`)
+    const recent = await spentWithin(COST_WINDOW_HOURS)
+    if (credits != null && recent + credits > cfg.costCeilingCredits) {
+      await hold(state, job.jobId, `${credits} credits would pass costCeilingCredits ${cfg.costCeilingCredits} for the last ${COST_WINDOW_HOURS} h (${recent} spent); it runs once older spend leaves the window`, credits)
       continue
     }
+    unhold(state, job.jobId)
 
     if (DRY) {
       dryTotal.jobs++
@@ -551,7 +582,7 @@ async function pass() {
     await log(
       `DRY-RUN TOTAL: ${dryTotal.jobs} job(s), ${dryTotal.credits} credits`
       + (dryTotal.unpriced ? ` (+${dryTotal.unpriced} could not be priced)` : '')
-      + ` | ceilings: ${cfg.perJobCostCeilingCredits}/job, ${cfg.costCeilingCredits} total`,
+      + ` | ceilings: ${cfg.perJobCostCeilingCredits}/job, ${cfg.costCeilingCredits} per ${COST_WINDOW_HOURS} h`,
     )
   }
   return generated + decided + managed + requested
