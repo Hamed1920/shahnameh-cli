@@ -53,8 +53,8 @@ export async function planJob(job, entities, assets, { cfg, dry = false, priceOn
   const learnings = await applicableLearnings(entity)
   const { prompt, mentioned } = await buildPrompt(job.prompt, learnings, job.revisionNotes, refInfo, entities, assets)
   if (refInfo.length && !priceOnly) {
-    const key = refInfo.map((r, i) => `@Image${i + 1}=${r.entity.short_id}/${r.variant}`).join(' ')
-    await log(`IMAGES ${job.jobId}: ${key}${mentioned ? ' (mentioned in text)' : ''}`)
+    const key = refInfo.map((r, i) => `image_${i + 1}=${r.entity.short_id}/${r.variant}`).join(' ')
+    await log(`IMAGES ${job.jobId}: ${key}${mentioned ? ' (called in the text)' : ' (none called in the text; each named once at the end)'}`)
     if (dry) await log(`DRY-RUN prompt for ${job.jobId}:\n${prompt}`)
   }
   const model = job.model || cfg.defaultImageModel

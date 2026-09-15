@@ -114,6 +114,16 @@ Done:
 - Hamed approved `L-0001` in the panel and set CHR-001's main look to V02 (`op_mu2flc5igk2n`,
   waiting for the worker).
 
+- **References written the panel's way.** Hamed: when he references an image in the Higgsfield
+  panel with `@`, a re-used job shows it as a reference, but the worker's jobs came back "messed
+  up". Diagnosis from the account's own panel-made jobs (`generate list --json`): the panel stores
+  an inline token `<<<image_N>>>` (1-based, attachment order) where the mention sits, or
+  `<<<uuid>>>` for a saved Element via `reference_elements`, which the CLI refuses. The worker
+  wrote `@Image2 (…)` prose and appended a list of every image. Now `worker/lib/prompt.mjs`
+  rewrites each mention to `<<<image_N>>>` inline, appends nothing, and gives an attached image
+  the text never calls one naming sentence. Verified in the sandbox on the CLI argv. The result
+  quality was never the complaint; the point is that a job re-used in the panel is correct.
+
 Not done / to watch:
 - PDF extraction is last and optional: pdf.js gives Persian in visual order; the page shows the
   extracted text and asks for `.docx`.

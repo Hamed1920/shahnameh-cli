@@ -2,7 +2,8 @@ import { resolveRef } from './project.mjs'
 
 /**
  * The prompt a generation actually sends: the authored text, the reviewer's
- * revision notes, approved learnings, and a key to the attached images.
+ * revision notes, approved learnings, with every reference written the way
+ * Higgsfield's own panel writes it.
  *
  * Kept apart from worker.mjs so it can be exercised against real queued jobs
  * without starting the worker (and without spending anything).
@@ -14,7 +15,17 @@ import { resolveRef } from './project.mjs'
  * tokens before a job is queued, so only index tokens reach this point).
  */
 const MENTION_RX = /@((?:CHR|GRP|LOC|PRP|CRT|COS|VEH|FX|REF)-\d{3}(?:\/V\d{2}(?:\/T\d{2})?)?)(?![\w/-])/g
-export const REF_KEY_HEADING = 'Reference images, in the order they are attached:'
+
+/**
+ * How Higgsfield's panel refers to an attached image inside a prompt. When
+ * you type @ there and pick an upload, the stored prompt reads `<<<image_2>>>`
+ * for the second attachment, 1-based, in attachment order (captured from the
+ * account's own panel-made jobs, 2026-09-15). Saved Elements become
+ * `<<<uuid>>>` instead, but the CLI does not take reference_elements, so the
+ * worker only ever attaches images. Writing the same token means a job re-used
+ * from the panel shows its references as references, not as stray text.
+ */
+export const imageToken = (n) => `<<<image_${n}>>>`
 
 /**
  * Authored blocks end with "DESIGN NOTE — no reference image exists for these
@@ -26,38 +37,38 @@ export const REF_KEY_HEADING = 'Reference images, in the order they are attached
 const DESIGN_NOTE_RX = /no reference image exists for these yet, build them from the description above/
 
 /**
- * Seedance receives references as an ordered list of images plus a prompt; a
- * bare "@LOC-007" means nothing to it. Rewrite every mention to the attached
- * image's position AND its name, so the model can tie the words to the picture
- * whichever way it reads them. `refs` is [{ path, entity, variant }] in
- * attachment order.
+ * Rewrite every @-mention to the attached image's token, so the text calls the
+ * picture the way the panel does. `refs` is [{ path, entity, variant }] in
+ * attachment order. A mention of something that is not attached keeps its
+ * name, so the sentence still reads. Returns the positions it referenced.
  */
 async function annotateMentions(text, refs, entities, assets) {
   const src = String(text ?? '')
   const matches = [...src.matchAll(MENTION_RX)]
-  if (matches.length === 0) return { text: src, used: false }
+  const used = new Set()
+  if (matches.length === 0) return { text: src, used }
   let out = ''
   let last = 0
   for (const m of matches) {
     const r = await resolveRef(m[1], entities, assets)
     let label = m[0]
     if (r.ok) {
-      const name = `${r.entity.short_id} ${r.variant}, ${r.entity.name}`
       const at = refs.findIndex((x) => x.path === r.path)
-      label = at >= 0 ? `@Image${at + 1} (${name})` : name
+      if (at >= 0) { label = imageToken(at + 1); used.add(at) }
+      else label = `${r.entity.short_id} ${r.variant}, ${r.entity.name}`
     }
     out += src.slice(last, m.index) + label
     last = m.index + m[0].length
   }
-  return { text: out + src.slice(last), used: true }
+  return { text: out + src.slice(last), used }
 }
 
-/** Returns { prompt, mentioned }. */
+/** Returns { prompt, mentioned }. `mentioned` is true when any text called an attached image. */
 export async function buildPrompt(base, learnings, revisionNotes, refs, entities, assets) {
-  let mentioned = false
+  const used = new Set()
   const annotate = async (s) => {
     const a = await annotateMentions(s, refs, entities, assets)
-    mentioned ||= a.used
+    for (const i of a.used) used.add(i)
     return a.text
   }
 
@@ -65,7 +76,7 @@ export async function buildPrompt(base, learnings, revisionNotes, refs, entities
   if (refs.length) {
     body = body.replace(
       DESIGN_NOTE_RX,
-      'no reference image was planned for these, so build them from the description above (but if the reference key at the end names an attached image of one of them, match that image instead)',
+      'no reference image was planned for these, so build them from the description above (but if one of them is called with an attached image in this prompt, match that image instead)',
     )
   }
   const parts = [body]
@@ -84,16 +95,16 @@ export async function buildPrompt(base, learnings, revisionNotes, refs, entities
     for (const l of learnings) parts.push(`- ${await annotate(l)}`)
   }
 
-  // Always, not only when a note mentions one: an image the text never names is
-  // an image the model is free to ignore. A reference added in review with a
-  // note like "use the new flag photo" has no mention to hang a key on.
-  if (refs.length) {
-    parts.push(
-      '',
-      REF_KEY_HEADING,
-      ...refs.map((r, i) => `- @Image${i + 1}: ${r.entity.short_id} ${r.variant}, ${r.entity.name}`),
-      'Each attached image is binding. Wherever its subject appears, match the image exactly, even where the text above describes it differently.',
-    )
+  // An attached image the text never calls is one the model is free to ignore
+  // (a reference added in review with a note like "use the new flag photo"
+  // has no mention to hang a token on). Each such image gets one plain
+  // sentence naming what it is, and nothing more: no list, no heading.
+  const unmentioned = refs.map((r, i) => ({ r, i })).filter(({ i }) => !used.has(i))
+  if (unmentioned.length) {
+    parts.push('')
+    for (const { r, i } of unmentioned) {
+      parts.push(`${imageToken(i + 1)} is ${r.entity.name} (${r.entity.short_id} ${r.variant}); match it wherever ${r.entity.name} appears.`)
+    }
   }
-  return { prompt: parts.join('\n'), mentioned }
+  return { prompt: parts.join('\n'), mentioned: used.size > 0 }
 }

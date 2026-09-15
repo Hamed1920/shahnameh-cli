@@ -37,7 +37,7 @@ append(P.req, {
   id: id(), ts: new Date().toISOString(), reviewer: 'test', type: 'batch.submit', batchId: B1, name: 'flow one',
   source: { kind: 'paste', files: [] }, defaults: { model: 'seedance_2_5', aspect_ratio: '16:9', duration: 15, stage: 'draft', generate_audio: true },
   jobs: [
-    { key: 'r1', label: 'P01', target: 'CHR-001', variant: null, model: 'nano_banana_pro', refs: ['@CHR-001/V02'], params: { aspect_ratio: '16:9' }, prompt: 'Zahhak turnaround, museum lighting' },
+    { key: 'r1', label: 'P01', target: 'CHR-001', variant: null, model: 'nano_banana_pro', refs: ['@CHR-001/V02'], params: { aspect_ratio: '16:9' }, prompt: 'Zahhak turnaround of @CHR-001/V02, museum lighting' },
     { key: 'r2', label: 'P02', target: 'SHM-EP001-SC099-SH0010', variant: null, model: 'seedance_2_5', stage: 'draft', refs: ['@CHR-001/V02', '@LOC-009'], params: { aspect_ratio: '16:9', duration: 15, generate_audio: true }, prompt: PROMPT_FA },
     { key: 'r3', label: 'P03', target: 'NEW/PRP/TEST-STAFF-' + RUN, newEntity: { kind: 'PRP', slug: 'TEST-STAFF-' + RUN, name: 'Test Staff', description: 'A staff for the test' }, variant: null, model: 'nano_banana_pro', refs: [], params: { aspect_ratio: '1:1' }, prompt: 'iron capped staff' },
     { key: 'r4', label: 'P04', target: 'CHR-999', variant: null, model: 'nano_banana_pro', refs: [], params: {}, prompt: 'unknown target row' },
@@ -73,6 +73,13 @@ const stagingDirs = fs.readdirSync(P.staging).filter((d) => d.startsWith('stub-'
 const sidecars = stagingDirs.map((d) => JSON.parse(fs.readFileSync(path.join(P.staging, d, 'job.json'), 'utf8')))
 const vid = sidecars.find((s) => s.label === 'P02')
 ok(vid && vid.params.generate_audio === true && vid.candidates[0].file === 'T01.mp4', 'video sidecar: sound true, T01.mp4 downloaded')
+// References are written the way Higgsfield's panel writes them: an inline <<<image_N>>> token, no list at the end.
+const img = sidecars.find((s) => s.label === 'P01')
+ok(img && img.prompt.startsWith('Zahhak turnaround of <<<image_1>>>, museum lighting'), 'a mention becomes the inline <<<image_1>>> token')
+ok(!/@Image\d|Reference images, in the order|binding/.test(img.prompt), 'no @ImageN text and no appended reference list')
+ok(vid.prompt.startsWith(PROMPT_FA) && vid.prompt.includes('<<<image_1>>> is Zahhak') && vid.prompt.includes('<<<image_2>>> is'), 'unmentioned attachments get one naming sentence each')
+const sent = calls.filter((c) => c.args[1] === 'create' && c.args.includes('--prompt')).at(-1)
+ok(sent && sent.args[sent.args.indexOf('--prompt') + 1].includes('<<<image_1>>>') && sent.args.filter((a) => a === '--image-references').length === 2, 'CLI argv carries the token prompt and one --image-references per attachment')
 const calls = jsonl(process.env.STUB_LOG)
 const create = calls.filter((c) => c.args[0] === 'generate' && c.args[1] === 'create' && c.args[2] === 'seedance_2_5')
 ok(create.length >= 1 && create.at(-1).args.includes('--generate-audio') && create.at(-1).args[create.at(-1).args.indexOf('--generate-audio') + 1] === 'true', 'stub saw --generate-audio true')

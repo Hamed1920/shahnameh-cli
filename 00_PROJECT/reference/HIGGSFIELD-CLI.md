@@ -119,6 +119,16 @@ video_edit | video_extension; t2v accepts no reference media, omni_reference nee
 The worker passes `--generate-audio true|false` on every video job (`videoSound` in
 `worker/config.json`, overridden per job or per decision from the panel).
 
+### How the web panel writes references into a prompt (captured from `generate list --json`, 2026-09-15)
+
+When you type `@` in the Higgsfield panel and pick an attached image, the stored `params.prompt`
+carries an inline token `<<<image_N>>>`, N being the 1-based position in `params.medias`. A saved
+Element (the panel's "@ Elements") is written `<<<element-uuid>>>` and listed in
+`params.reference_elements`. **The CLI rejects `reference_elements`** ("Unknown params"), so the
+worker attaches images with `--image-references` and writes `<<<image_N>>>` tokens itself
+(`worker/lib/prompt.mjs`). It never writes `@Image1` prose or a list of images at the end: the
+panel does not do that, and a job re-used from the panel would show it as stray text.
+
 ## Account / cost control
 
 ```

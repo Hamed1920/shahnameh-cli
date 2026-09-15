@@ -161,9 +161,12 @@ with `upload:<id>` placeholders the worker swaps for the filed token.
 - **@-mentions.** Typing `@` in the note opens a searchable picker of the references in use for
   this job (only those). A mention is stored as its token (`@LOC-007/V02`, or `@upload:u1` for an
   upload on the same decision, swapped for the filed token when the revision is queued). When
-  building the prompt the worker rewrites each mention to the attached image's position and name
-  (`@Image2 (LOC-007 V02, Royal Audience Platform)`) and appends a key listing every attached
-  image. The panel rejects a mention that isn't in the job's reference list.
+  building the prompt the worker rewrites each mention to the token Higgsfield's own panel uses
+  for an attached image, `<<<image_2>>>` (1-based, in attachment order), inline where the mention
+  sits; nothing is listed at the end. An attached image the text never calls gets one sentence
+  naming it (`<<<image_3>>> is Ceremonial Reception Hall (LOC-009 V01); match it wherever ...`),
+  so it is still called. A job re-used from the Higgsfield panel therefore shows its references
+  as references. The panel rejects a mention that isn't in the job's reference list.
 
 ## Queue a generation
 
