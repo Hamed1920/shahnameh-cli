@@ -9,13 +9,17 @@
     "worker": "node worker/worker.mjs",
     "worker:once": "node worker/worker.mjs --once",
     "worker:dry": "node worker/worker.mjs --once --dry-run",
-    "enqueue": "node worker/enqueue.mjs"
+    "enqueue": "node worker/enqueue.mjs",
+    "test": "node --test lib/*.test.ts",
+    "up": "node scripts/up.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
+    "fflate": "^0.8.3",
     "lucide-react": "^1.40.0",
     "motion": "^13.2.0",
     "next": "16.3.4",
+    "pdfjs-dist": "^6.3.289",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "tailwind-merge": "^3.6.0"

@@ -1,6 +1,7 @@
 import {
-  getCandidates, getDecisions, getFilings, getGeneratingJobId, getQueue, getWorkerState,
+  getCandidates, getDecisions, getFilings, getGeneratingJobId, getQueue, getWorkerState, getWorkerStatus,
 } from '@/lib/store'
+import { WorkerControls } from '@/components/worker-controls'
 import { EmptyState, StatTile } from '@/components/ui/card'
 import { Reveal } from '@/components/ui/reveal'
 import { Table, Td, Th, Thead, Tr } from '@/components/ui/table'
@@ -9,12 +10,13 @@ import { Badge, PageHeader, SectionHeading } from '@/components/ui/text'
 export const dynamic = 'force-dynamic'
 
 export default async function QueuePage() {
-  const [queue, decisions, candidates, state, filings] = await Promise.all([
+  const [queue, decisions, candidates, state, filings, worker] = await Promise.all([
     getQueue(),
     getDecisions(),
     getCandidates(),
     getWorkerState(),
     getFilings(),
+    getWorkerStatus(),
   ])
   const failedIds = Object.keys((state?.failedDecisions ?? {}) as Record<string, string>)
   const failures = filings.filter((f) => !f.ok && failedIds.includes(f.decisionId)).reverse()
@@ -37,7 +39,7 @@ export default async function QueuePage() {
 
   return (
     <div className="space-y-16">
-      <PageHeader title="Queue & worker" eyebrow="Generation" meta={generating ? `generating ${generating}` : 'idle'} />
+      <PageHeader title="Queue & worker" eyebrow="Generation" meta={<WorkerControls status={worker} generating={generating} />} />
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {stats.map((s, i) => (
@@ -54,10 +56,7 @@ export default async function QueuePage() {
             {JSON.stringify(state, null, 2)}
           </pre>
         ) : (
-          <EmptyState>
-            The worker has not run yet. Start it from <code className="font-mono text-[13px] text-fg">10_PANEL</code>:{' '}
-            <code className="font-mono text-[13px] text-fg">npm run worker</code>
-          </EmptyState>
+          <EmptyState>The worker has not run yet. Start it with the button above.</EmptyState>
         )}
       </section>
 

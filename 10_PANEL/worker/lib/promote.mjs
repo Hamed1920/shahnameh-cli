@@ -215,11 +215,48 @@ export async function checkUploads(uploads, alreadyFiled = new Set()) {
 }
 
 /**
+ * Next free entity number for a kind: max of every row of that kind, RETIRED
+ * included, plus one -- the same rule as Ingest-Jobs.ps1, so numbers are never
+ * reused. The only allocators in the system are that script, fileUpload below,
+ * and the batch approver (worker/lib/job-requests.mjs); all three call this.
+ */
+export function nextEntityNumber(rows, kind) {
+  const used = rows.filter((e) => e.kind === kind).map((e) => parseInt(e.number, 10)).filter((n) => Number.isFinite(n))
+  return String(used.length ? Math.max(...used) + 1 : 1).padStart(3, '0')
+}
+
+/**
+ * Reserve a number for a NEW/KIND/SLUG proposal: pushes a row shaped exactly
+ * like the one Ingest-Jobs.ps1 writes (RESERVED, NO-ASSET, no look yet) and
+ * returns it. The caller writes the CSV.
+ */
+export function reserveEntity(rows, { kind, slug, name, description, by }) {
+  const nnn = nextEntityNumber(rows, kind)
+  const row = {
+    id: `SHM-${kind}-${nnn}-${slug}`,
+    short_id: `${kind}-${nnn}`,
+    kind,
+    number: nnn,
+    slug,
+    name: String(name || '').trim() || slug.replace(/-/g, ' '),
+    family: slug.split('-')[0],
+    status: 'RESERVED',
+    canonical_variant: '',
+    variant_count: '0',
+    folder: FOLDER_FOR[kind],
+    related: '',
+    flags: 'NO-ASSET',
+    description: String(description || '').trim() || `Reserved by ${by}. Description pending.`,
+  }
+  rows.push(row)
+  return row
+}
+
+/**
  * File one reviewer upload into the index: a new variant of an existing entity,
  * or a brand-new entity. Returns the @-token that now resolves to it.
  *
- * Numbers are allocated here with the same rule as Ingest-Jobs.ps1 -- max of
- * every row of that kind, RETIRED included, plus one -- so they are never reused.
+ * Numbers are allocated with nextEntityNumber, the same rule as Ingest-Jobs.ps1.
  */
 export async function fileUpload(upload, decision) {
   const { src, ext } = uploadSource(upload)
@@ -242,9 +279,7 @@ export async function fileUpload(upload, decision) {
     const slug = entitySlug(upload.name)
     const clash = eRows.find((e) => e.slug === slug)
     if (clash) throw new FilingError(`${upload.id}: slug '${slug}' already exists as ${clash.id}`)
-    const used = eRows.filter((e) => e.kind === kind).map((e) => parseInt(e.number, 10))
-      .filter((n) => Number.isFinite(n))
-    const nnn = String(used.length ? Math.max(...used) + 1 : 1).padStart(3, '0')
+    const nnn = nextEntityNumber(eRows, kind)
     ent = {
       id: `SHM-${kind}-${nnn}-${slug}`,
       short_id: `${kind}-${nnn}`,

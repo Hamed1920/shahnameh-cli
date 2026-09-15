@@ -79,7 +79,7 @@ export function Lightbox({
               className="w-full max-w-6xl overflow-hidden rounded-2xl border border-edge bg-panel"
             >
               {current.video ? (
-                <video src={current.src} className="checker max-h-[72vh] w-full object-contain" controls autoPlay loop muted playsInline />
+                <video src={current.src} className="checker max-h-[72vh] w-full object-contain" controls autoPlay loop playsInline />
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={current.src} alt={current.title} className="checker max-h-[72vh] w-full object-contain" />

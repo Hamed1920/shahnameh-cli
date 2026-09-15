@@ -89,7 +89,11 @@ export function ReviewStage({
   const [notes, setNotes] = useState('')
   const [tags, setTags] = useState('')
   const [requeue, setRequeue] = useState(true)
+  // Sound is on by default for whatever this decision queues, whatever this take had.
+  const [sound, setSound] = useState(true)
   const [error, setError] = useState<string | null>(candidate.failedDecision?.reason ?? null)
+  const isVideoJob = /^(seedance|kling|veo|wan|hailuo|grok_video)/.test(s.model)
+  const wasSilent = String(s.params?.generate_audio) === 'false'
   const [checking, setChecking] = useState(false)
   const [comparing, setComparing] = useState<AttemptEntry | null>(null)
   const edits = useReferenceEdits(item.editable)
@@ -233,6 +237,7 @@ export function ReviewStage({
               <Badge tone={s.stage === 'draft' ? 'accent' : 'good'}>{s.stage === 'draft' ? 'draft' : 'final'}</Badge>
             )}
             {s.attempt > 1 && <Badge>attempt {s.attempt}</Badge>}
+            {isVideoJob && wasSilent && <Badge tone="muted">silent</Badge>}
             <span className="ml-1 font-mono text-muted">{s.model}</span>
             <span className="text-faint">·</span>
             <span className="font-mono text-faint">{s.jobId}</span>
@@ -366,6 +371,20 @@ export function ReviewStage({
                       <Checkbox name="requeue" checked={requeue} onChange={(e) => setRequeue(e.target.checked)} label="Regenerate with this note applied" />
                     )}
 
+                    {isVideoJob && regenerates && (
+                      <div className="space-y-1.5">
+                        <Checkbox
+                          name="sound"
+                          checked={sound}
+                          onChange={(e) => setSound(e.target.checked)}
+                          label={verdict === 'denied' ? 'Sound on the regeneration' : 'Sound on the final'}
+                        />
+                        <p className="text-xs text-faint">
+                          {wasSilent ? 'This take was generated silent.' : 'This take was generated with sound.'}
+                        </p>
+                      </div>
+                    )}
+
                     {costLine && (
                       <p className="flex items-start gap-2.5 border-t border-edge pt-4 text-xs leading-relaxed text-muted">
                         <Coins aria-hidden strokeWidth={1.75} className="mt-px size-3.5 shrink-0 text-fg/70" />
@@ -412,7 +431,7 @@ export function ReviewStage({
             {(verdict || notes || tags || edits.changed || edits.uploads.length > 0) && (
               <button
                 type="button"
-                onClick={() => { setVerdict(null); setNotes(''); setTags(''); setRequeue(true); setError(null); edits.reset() }}
+                onClick={() => { setVerdict(null); setNotes(''); setTags(''); setRequeue(true); setSound(true); setError(null); edits.reset() }}
                 className="focus-ring mx-auto mt-4 flex cursor-pointer items-center gap-1.5 rounded text-xs text-faint transition-colors duration-150 hover:text-fg"
               >
                 <RotateCcw aria-hidden className="size-3" /> Start over

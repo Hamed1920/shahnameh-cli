@@ -10,8 +10,10 @@ Next.js 16.3 · React 19.2 · Tailwind 4 · localhost only.
 
 ```powershell
 cd 10_PANEL
-npm run dev        # panel at http://localhost:3000
-npm run worker     # generation worker, in a second terminal
+npm run up         # panel at http://localhost:3000 and the worker, one terminal
+# or separately:
+npm run dev        # panel only
+npm run worker     # generation worker, in a second terminal (or Start it from the Queue page)
 ```
 
 > If PowerShell blocks `npm` with "running scripts is disabled", either use `npm.cmd run dev`
@@ -49,13 +51,63 @@ the panel all touch the same files.
 | Process | Writes |
 |---|---|
 | **Worker** | asset files, `ASSET_MANIFEST.csv`, `ENTITIES.csv`, `JOB_LEDGER.csv`, `QUEUE.jsonl` |
-| **Worker** (also) | files reviewer uploads, `FILINGS.jsonl`, `state.json` `failedDecisions` |
-| **Panel** | `REVIEW_LOG.jsonl`, `LEARNINGS.jsonl` — **append-only**; raw uploads into `09_OUTPUT/_uploads/<decision-id>/` |
+| **Worker** (also) | files reviewer uploads, `FILINGS.jsonl`, `state.json` `failedDecisions`, `INDEX_OPS_RESULTS.jsonl`, `JOB_REQUEST_RESULTS.jsonl` |
+| **Panel** | `REVIEW_LOG.jsonl`, `LEARNINGS.jsonl`, `INDEX_OPS.jsonl`, `JOB_REQUESTS.jsonl` — **append-only**; raw uploads into `09_OUTPUT/_uploads/<decision-id>/`; `queue/worker.stop` to ask the worker to stop |
 | **PowerShell tools** | registries, when the worker is not running |
 
 The panel never names, moves or registers a file and never edits a CSV. It records a decision
 (and drops any uploaded image beside it); the worker acts on it. One writer for the registries
-means no torn CSVs and no races.
+means no torn CSVs and no races. Two panel tabs appending at the same instant could in theory
+interleave one JSONL line; appends are serialised inside the panel process and a torn line is
+skipped on read, which is enough for a localhost panel with one reviewer.
+
+## Prompts page
+
+`/prompts` is where prompts come in. Paste text, SHM-JOB blocks or a batch JSON array, or drop
+`.txt`, `.md`, `.json`, `.docx` or `.pdf` files (docx is unzipped and de-tagged on the server;
+pdf goes through pdf.js and its text order is unreliable for Persian, so the extracted text is
+shown before parsing and `.docx` is recommended). `lib/prompt-parser.ts` splits a document into
+prompt blocks on `P01` / `PROMPT 2` / `پرامپت ۳` headings, then `SHOT n`, then numbered items,
+then blank lines, and keeps each block's text as written. Text before the first heading (a
+document's rules) can be prepended to every prompt with one checkbox.
+
+Each row gets a target — an entity from the index, a shot id, or a **new entity** — plus look,
+model, first render (draft/final), references (from the same picker as Review) and the prompt.
+Batch settings cover model, aspect ratio, duration and **Sound** (on by default). A row with a
+problem blocks Submit until it is fixed or removed; nothing is silently skipped.
+
+Submit appends one `batch.submit` line to `00_PROJECT/review/JOB_REQUESTS.jsonl`. The worker
+(`worker/lib/job-requests.mjs`) validates every row against the registries, pre-assigns job ids,
+then prices each job with `higgsfield generate cost` outside its registry lock and appends
+events to `00_PROJECT/queue/JOB_REQUEST_RESULTS.jsonl`: `validated`, one `price` per job,
+`priced`. **Nothing generates until Approve** on the page appends `batch.approve` with the total
+it showed; a total that changed since is refused and shown again. On approve the worker reserves
+a number for each `NEW/KIND/SLUG` (same rule as every other allocator), appends the jobs to
+`QUEUE.jsonl` as `panel:batch`, and records the receipt (`queued`, with the assigned ids).
+Discard is allowed until then and burns nothing. `state.json` keeps the cursor in
+`processedRequests`.
+
+**Regenerate** on an accepted take (Decided page) is the same channel, type `regenerate`: the
+worker re-queues the accepted job from its `QUEUE.jsonl` record as the next attempt, with an
+optional note and the Sound choice, and the result comes to Review like any other take; accepting
+it files the next `_T`. One click is the approval, as with a deny-and-regenerate.
+
+## Sound
+
+`seedance_2_5` generates audio unless told not to. The worker turns `generate_audio` on for every
+video job that does not say otherwise (`videoSound` in `config.json`), the Review form has a
+Sound checkbox for the revision or final a decision queues, and the Prompts page has one per
+batch. Older jobs and sidecars carry the string `"false"` from the first EP001 batch file; the
+worker normalises it to a boolean, so those stay silent only if a reviewer leaves Sound off.
+
+## Worker from the panel
+
+The Queue and Prompts pages show whether the worker is running (from `queue/worker.lock`) and can
+start it (spawned detached, console in `queue/worker.stdout.log`), stop it after its current job
+(the panel writes `queue/worker.stop`; the worker exits between jobs and releases its lock), or
+restart it when it is running code from before an update. Force stop kills the process: the
+Higgsfield job keeps running server-side and its credits are spent, so it sits behind a confirm.
+`npm run up` starts the panel and the worker together in one terminal.
 
 ## References page
 
@@ -165,3 +217,27 @@ references cannot be resolved is skipped before any spend.
   generation produces no downloadable URL, the worker writes `raw-response.json` into the
   staging folder instead of guessing — tighten those two functions against it.
 - Video review renders as an `<img>`; it needs a `<video>` branch once the first video lands.
+
+## Sandbox testing (spends nothing)
+
+The worker can be pointed at a copy of the project with `SHM_ROOT`, and at a stand-in CLI with
+`SHM_HIGGSFIELD_JS`. `scripts/stub-higgsfield.js` answers `auth token`, `model get`,
+`generate cost` (12 credits for an image, 37.5 / 135 for a 480p / 1080p video) and
+`generate create` (a completed job whose `result_url` is served by `scripts/sandbox-serve.mjs`),
+and logs every argv to `STUB_LOG`. **A sandbox worker without the stub spends real credits.**
+
+```powershell
+robocopy "D:\...\Shahnameh CLI" C:\path\to\sandbox /E /XD node_modules .next .git .agents /XF worker.lock
+node scripts/sandbox-serve.mjs C:\path\to\sandbox 3199
+$env:SHM_ROOT='C:\path\to\sandbox'; $env:SHM_HIGGSFIELD_JS="$PWD\scripts\stub-higgsfield.js"
+$env:STUB_LOG='C:\path\to\stub-calls.jsonl'; $env:STUB_VIDEO='09_OUTPUT/_drafts/<id>/T01.mp4'
+$env:STUB_IMAGE='01_CHARACTERS/<some>.jpeg'
+node worker/worker.mjs
+node scripts/sandbox-flows.mjs C:\path\to\sandbox   # submit, price, approve, discard, regenerate, stop
+```
+
+`sandbox-flows.mjs` is the end-to-end check for the Prompts channel: it appends the same lines the
+panel appends and asserts what the worker does (numbers reserved only at approval, `--generate-audio`
+on the CLI argv, stale totals refused, graceful stop). The panel itself cannot run a second dev
+server from the same folder, and Turbopack refuses a junctioned `node_modules`, so page rendering
+is checked against the running panel with plain GETs.

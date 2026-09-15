@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // pdf.js is loaded at runtime by lib/documents.ts; bundling its legacy build breaks it.
+  serverExternalPackages: ["pdfjs-dist"],
   experimental: {
     serverActions: {
       // Reviewer uploads go through the decide action. Server Actions cap the

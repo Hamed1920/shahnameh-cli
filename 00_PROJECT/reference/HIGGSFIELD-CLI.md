@@ -107,6 +107,18 @@ higgsfield model get <job_type>              # params, defaults, enums
 Known job types seen in examples: `nano_banana_2`, `seedance_2_0`.
 Run `model list --json` once authenticated and record the real catalogue here.
 
+### `seedance_2_5` (captured with `model get seedance_2_5 --json`, 2026-09-15)
+
+Params: `aspect_ratio` (auto, 21:9, 16:9, 4:3, 1:1, 3:4, 9:16; default 16:9), `audio_references`
+(array), `bitrate_mode` (standard | high), `duration` (integer, default 5), `start_image`,
+`end_image`, `extension_mode` (backward | forward, video_extension only), **`generate_audio`
+(boolean, default `true`)**, `image_references` (array), `mode` (t2v | omni_reference |
+video_edit | video_extension; t2v accepts no reference media, omni_reference needs at least one),
+`prompt` (required), `resolution` (480p | 720p | 1080p; default 720p), `video_references`.
+
+The worker passes `--generate-audio true|false` on every video job (`videoSound` in
+`worker/config.json`, overridden per job or per decision from the panel).
+
 ## Account / cost control
 
 ```

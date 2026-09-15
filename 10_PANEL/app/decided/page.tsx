@@ -1,4 +1,5 @@
 import { DecisionDetails } from '@/components/decision-details'
+import { RegenerateButton } from '@/components/regenerate-button'
 import { ShowInFolder } from '@/components/show-in-folder'
 import { Card, EmptyState } from '@/components/ui/card'
 import { Reveal } from '@/components/ui/reveal'
@@ -22,7 +23,7 @@ function Media({ entry }: { entry: DecidedEntry }) {
   }
   const src = assetUrl(entry.file)
   return isVideo(entry.file) ? (
-    <video src={src} className="aspect-video w-full rounded-lg border border-edge bg-black object-contain" controls muted loop playsInline preload="metadata" />
+    <video src={src} className="aspect-video w-full rounded-lg border border-edge bg-black object-contain" controls loop playsInline preload="metadata" />
   ) : (
     // eslint-disable-next-line @next/next/no-img-element
     <img src={src} alt={entry.title} className="checker aspect-video w-full rounded-lg border border-edge object-contain" />
@@ -131,6 +132,15 @@ export default async function DecidedPage() {
                   <FollowUpLine entry={e} />
                   <DecisionDetails decision={e.decision} filings={e.filings} failed={e.failedReason ?? undefined} />
                   <Location entry={e} />
+                  {e.status === 'applied' && (
+                    <RegenerateButton
+                      jobId={e.decision.jobId}
+                      decisionId={e.decision.id}
+                      credits={e.regenerateCredits}
+                      isVideo={e.isVideo}
+                      regenerations={e.regenerations}
+                    />
+                  )}
                 </Card>
               </Reveal>
             ))}

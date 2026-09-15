@@ -2,29 +2,36 @@
 /**
  * Shahnameh generation worker.
  *
- * Single writer for asset files and the CSV registries. Does five things:
+ * Single writer for asset files and the CSV registries. Does six things:
  *   1. drains QUEUE.jsonl  -> higgsfield generate -> download to _staging
  *   2. acts on REVIEW_LOG.jsonl verdicts -> promote or reject
  *   3. builds revision jobs from denials, with approved learnings applied
  *   4. applies References-page requests from INDEX_OPS.jsonl, every few seconds
- *   5. records everything in JOB_LEDGER.csv and queue/state.json
+ *   5. validates, prices and (once approved) queues Prompts-page batches and
+ *      Regenerate requests from JOB_REQUESTS.jsonl, every few seconds
+ *   6. records everything in JOB_LEDGER.csv and queue/state.json
  *
  * Usage:
  *   node worker/worker.mjs            watch loop
  *   node worker/worker.mjs --once     one pass, then exit
  *   node worker/worker.mjs --dry-run  plan and price only, generate nothing
+ *
+ * The panel can ask a running worker to stop by creating queue/worker.stop;
+ * the worker finishes the job in hand, then exits and releases its lock.
  */
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
-  P, ROOT, appendJsonl, findEntity, isShotId, loadEntities, log, readCsv, readJsonl, rel,
+  P, ROOT, appendJsonl, loadEntities, log, readCsv, readJsonl, rel,
   readState, resolveRef, shotFolder, writeCsv, writeState,
 } from './lib/project.mjs'
 import { estimateCost, extractJobId, extractResultUrls, hfJson, isAuthenticated, paramsToArgs } from './lib/hf.mjs'
 import { FilingError, checkUploads, fileUpload, promote, reject } from './lib/promote.mjs'
 import { runIndexOps } from './lib/index-ops.mjs'
-import { buildPrompt } from './lib/prompt.mjs'
+import { planJob } from './lib/plan.mjs'
+import { isVideoModel } from './lib/batch.mjs'
+import { configure as configureRequests, priceBatches, runJobRequests } from './lib/job-requests.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const argv = process.argv.slice(2)
@@ -32,6 +39,7 @@ const ONCE = argv.includes('--once')
 const DRY = argv.includes('--dry-run')
 
 const cfg = JSON.parse(await fs.readFile(path.join(HERE, 'config.json'), 'utf8'))
+configureRequests(cfg)
 
 const LEDGER_HEADER = [
   'job_id', 'content_hash', 'author', 'type', 'target', 'resolved_target', 'variant',
@@ -70,29 +78,23 @@ async function acquireLock() {
 }
 async function releaseLock() { await fs.rm(P.lock, { force: true }) }
 
+/** The panel asked this worker to stop. Checked between jobs, never mid-generation. */
+async function stopRequested() {
+  try { await fs.access(P.stopFlag); return true } catch { return false }
+}
+async function stopNow(where) {
+  await fs.rm(P.stopFlag, { force: true })
+  await log(`worker stopping: panel request (${where})`)
+  if (state) await writeState(state)
+  await releaseLock()
+  process.exit(0)
+}
+
 async function ledgerAppend(entry) {
   const { header, rows } = await readCsv(P.ledger)
   const h = header.length ? [...new Set([...header, ...LEDGER_HEADER])] : LEDGER_HEADER
   rows.push(entry)
   await writeCsv(P.ledger, rows, h)
-}
-
-/** Approved learnings whose scope matches this target. Nothing else is ever injected. */
-async function applicableLearnings(entity) {
-  const all = await readJsonl(P.learnings)
-  const latest = new Map()
-  for (const l of all) latest.set(l.id, l)
-  return [...latest.values()]
-    .filter((l) => l.status === 'approved')
-    .filter((l) => {
-      const s = l.scope ?? {}
-      if (!entity) return !s.entity && !s.family && !s.kind
-      if (s.entity) return entity && s.entity === entity.id
-      if (s.family) return entity && entity.family === s.family
-      if (s.kind) return entity && entity.kind === s.kind
-      return true
-    })
-    .map((l) => l.rule)
 }
 
 async function download(url, dest) {
@@ -108,53 +110,12 @@ function extFromUrl(url, fallback = '.png') {
   return m ? m[0].toLowerCase() : fallback
 }
 
+const ledgerType = (model) => (isVideoModel(model) ? 'generate.video' : 'generate.image')
+
 // ---------------------------------------------------------------- generate
 
 // Accumulated across a dry run so we can report one total before any spend.
 const dryTotal = { jobs: 0, credits: 0, unpriced: 0 }
-
-/**
- * What a queued job needs before it can be priced: its target, its references
- * resolved to files, and the final prompt. `{ skip }` when it cannot run.
- */
-async function planJob(job, entities, assets) {
-  // A shot target is valid but is not an entity; it renders into the episode.
-  const shot = isShotId(job.target) ? job.target : null
-  const entity = shot ? null : findEntity(entities, job.target)
-  if (!shot && !entity) return { skip: `unknown target ${job.target}` }
-  const targetId = shot ?? entity.id
-
-  // Resolve reference tokens to real paths before spending anything.
-  const refPaths = []
-  const refInfo = []
-  for (const token of job.refs ?? []) {
-    const r = await resolveRef(token, entities, assets)
-    if (!r.ok) return { skip: `unresolved ref ${token}: ${r.reason}` }
-    refPaths.push(r.path)
-    refInfo.push({ path: r.path, entity: r.entity, variant: r.variant })
-  }
-
-  const learnings = await applicableLearnings(entity)
-  const { prompt, mentioned } = await buildPrompt(job.prompt, learnings, job.revisionNotes, refInfo, entities, assets)
-  if (refInfo.length) {
-    const key = refInfo.map((r, i) => `@Image${i + 1}=${r.entity.short_id}/${r.variant}`).join(' ')
-    await log(`IMAGES ${job.jobId}: ${key}${mentioned ? ' (mentioned in text)' : ''}`)
-    if (DRY) await log(`DRY-RUN prompt for ${job.jobId}:
-${prompt}`)
-  }
-  const model = job.model || cfg.defaultImageModel
-  const params = { prompt, ...(job.params ?? {}) }
-
-  // Array -> repeated --image-references flags (see paramsToArgs).
-  if (refPaths.length) params.image_references = refPaths
-
-  // Seedance rejects reference media in the default t2v mode; supplying
-  // references without switching mode fails the job after it is priced.
-  if (refPaths.length && /^seedance/.test(model) && !params.mode) {
-    params.mode = 'omni_reference'
-  }
-  return { shot, entity, targetId, refPaths, prompt, model, params }
-}
 
 async function runQueue(state) {
   const queue = await readJsonl(P.queue)
@@ -170,12 +131,14 @@ async function runQueue(state) {
   let count = 0
 
   for (const job of pending) {
+    if (await stopRequested()) await stopNow('before ' + job.jobId)
+
     // Read the registries per job, under the registry lock: index requests are
     // applied while earlier jobs generate, so a copy from the start of the run
     // can be minutes out of date.
     const plan = await exclusive(async () => {
       const [entities, { rows: assets }] = await Promise.all([loadEntities(), readCsv(P.manifest)])
-      return planJob(job, entities, assets)
+      return planJob(job, entities, assets, { cfg, dry: DRY })
     })
     if (plan.skip) {
       await log(`SKIP ${job.jobId}: ${plan.skip}`)
@@ -200,7 +163,7 @@ async function runQueue(state) {
       dryTotal.jobs++
       if (credits != null) dryTotal.credits += credits
       else dryTotal.unpriced++
-      await log(`DRY-RUN would generate ${job.jobId} -> ${targetId} ${job.variant} (${model}) refs=${refPaths.length}`)
+      await log(`DRY-RUN would generate ${job.jobId} -> ${targetId} ${job.variant} (${model}) refs=${refPaths.length}${isVideoModel(model) ? ` sound=${params.generate_audio}` : ''}`)
       continue
     }
 
@@ -209,13 +172,13 @@ async function runQueue(state) {
       ...paramsToArgs(params),
       '--wait', '--wait-timeout', cfg.waitTimeout, '--wait-interval', cfg.waitInterval,
     ]
-    await log(`GENERATE ${job.jobId} ${targetId} ${job.variant} model=${model}`)
+    await log(`GENERATE ${job.jobId} ${targetId} ${job.variant} model=${model}${isVideoModel(model) ? ` sound=${params.generate_audio}` : ''}`)
     const res = await hfJson(args, { timeoutMs: 25 * 60_000 })
 
     if (res.code !== 0) {
       await log(`FAIL ${job.jobId}: exit ${res.code} ${res.stderr.trim().slice(0, 400)}`)
       await ledgerAppend({
-        job_id: job.jobId, content_hash: '', author: job.enqueuedBy, type: 'generate.image',
+        job_id: job.jobId, content_hash: '', author: job.enqueuedBy, type: ledgerType(model),
         target: job.target, resolved_target: targetId, variant: job.variant, engine: 'higgsfield',
         state: 'FAILED', ingested: new Date().toISOString(), source_file: 'queue',
         parent_job_id: job.parentJobId ?? '', hf_job_id: '', attempt: String(job.attempt ?? 1),
@@ -253,6 +216,11 @@ async function runQueue(state) {
       }
     }
 
+    // The sidecar keeps the normalised params (a real boolean for sound), so a
+    // revision or final inherits what was actually sent.
+    const sentParams = { ...(job.params ?? {}) }
+    if (isVideoModel(model)) sentParams.generate_audio = params.generate_audio
+
     await fs.writeFile(path.join(dir, 'job.json'), JSON.stringify({
       jobId: job.jobId,
       parentJobId: job.parentJobId ?? null,
@@ -270,7 +238,7 @@ async function runQueue(state) {
       // these; without them attempt 3 stacks a second revision block on the first.
       basePrompt: job.basePrompt ?? job.prompt,
       revisionNotes: job.revisionNotes ?? [],
-      params: job.params ?? {},
+      params: sentParams,
       refs: job.refs ?? [],
       createdAt: new Date().toISOString(),
       costCredits: credits ?? null,
@@ -279,7 +247,7 @@ async function runQueue(state) {
     }, null, 2))
 
     await ledgerAppend({
-      job_id: job.jobId, content_hash: '', author: job.enqueuedBy, type: 'generate.image',
+      job_id: job.jobId, content_hash: '', author: job.enqueuedBy, type: ledgerType(model),
       target: job.target, resolved_target: targetId, variant: job.variant, engine: 'higgsfield',
       state: 'GENERATED', ingested: new Date().toISOString(), source_file: 'queue',
       parent_job_id: job.parentJobId ?? '', hf_job_id: hfJobId,
@@ -432,6 +400,17 @@ async function archiveDraft(decision) {
 }
 
 /**
+ * The parameters a decision's follow-up job carries: the sidecar's, with the
+ * reviewer's Sound choice on top when the model makes video. Absent a choice,
+ * the sidecar value stands and planJob fills a missing one with the default (on).
+ */
+function paramsFor(decision, sidecar) {
+  const params = { ...(sidecar.params ?? {}) }
+  if (isVideoModel(sidecar.model) && typeof decision.sound === 'boolean') params.generate_audio = decision.sound
+  return params
+}
+
+/**
  * Re-run an approved draft at final resolution. Same prompt, same references,
  * same variant — the only thing that changes is quality, so the shot Hamed
  * approved is the shot he gets.
@@ -439,7 +418,7 @@ async function archiveDraft(decision) {
 async function enqueueFinal(decision, sidecar, refs) {
   const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, '')
   const jobId = `J-${stamp}-${Math.random().toString(36).slice(2, 5).toUpperCase()}`
-  const params = { ...(sidecar.params ?? {}), resolution: cfg.videoFinalResolution }
+  const params = { ...paramsFor(decision, sidecar), resolution: cfg.videoFinalResolution }
 
   await appendJsonl(P.queue, {
     jobId,
@@ -458,7 +437,7 @@ async function enqueueFinal(decision, sidecar, refs) {
     enqueuedAt: new Date().toISOString(),
     enqueuedBy: 'worker:final',
   })
-  await log(`FINAL QUEUED ${sidecar.jobId} -> ${jobId} at ${cfg.videoFinalResolution}`)
+  await log(`FINAL QUEUED ${sidecar.jobId} -> ${jobId} at ${cfg.videoFinalResolution}${'generate_audio' in params ? ` sound=${params.generate_audio}` : ''}`)
 }
 
 async function enqueueRevision(decision, sidecar, entities, refs, uploadTokens = {}) {
@@ -481,6 +460,7 @@ async function enqueueRevision(decision, sidecar, entities, refs, uploadTokens =
 
   const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, '')
   const jobId = `J-${stamp}-${Math.random().toString(36).slice(2, 5).toUpperCase()}`
+  const params = paramsFor(decision, sidecar)
 
   await appendJsonl(P.queue, {
     jobId,
@@ -493,21 +473,21 @@ async function enqueueRevision(decision, sidecar, entities, refs, uploadTokens =
     model: sidecar.model,
     prompt: sidecar.basePrompt ?? sidecar.prompt,
     basePrompt: sidecar.basePrompt ?? sidecar.prompt,
-    params: sidecar.params ?? {},
+    params,
     refs: refs ?? sidecar.refs ?? [],
     revisionNotes,
     label: sidecar.label ?? null,
     enqueuedAt: new Date().toISOString(),
     enqueuedBy: 'worker:revision',
   })
-  await log(`REQUEUED ${sidecar.jobId} -> ${jobId} (attempt ${attempt}) reason: ${note}`)
+  await log(`REQUEUED ${sidecar.jobId} -> ${jobId} (attempt ${attempt})${'generate_audio' in params ? ` sound=${params.generate_audio}` : ''} reason: ${note}`)
 }
 
 // ---------------------------------------------------------------- main
 
 /**
- * The worker's state, shared by the passes and the index-op watcher. Read once
- * at start: only the worker writes state.json, and the in-use checks must see a
+ * The worker's state, shared by the passes and the watchers. Read once at
+ * start: only the worker writes state.json, and the in-use checks must see a
  * job that is generating right now as still pending.
  */
 let state
@@ -534,17 +514,29 @@ async function applyIndexOps() {
 }
 
 /**
+ * Prompts-page batches and Regenerate requests. Validation and approval are
+ * quick and run under the lock; pricing spawns the CLI per job and runs
+ * without it, so a long batch never stalls decisions or index requests.
+ */
+async function applyJobRequests() {
+  const n = await exclusive(() => runJobRequests(state, { dry: DRY }))
+  if (n) await writeState(state)
+  await priceBatches(state, { dry: DRY, exclusive })
+  return n
+}
+
+/**
  * Between passes the loop sleeps only pollSeconds, but a pass that generates
- * can take many minutes. Check for index requests every few seconds regardless.
+ * can take many minutes. Check for panel requests every few seconds regardless.
  * Files used by a queued or generating job are safe: index-ops refuses to move them.
  */
-const INDEX_OPS_EVERY_MS = 3000
-function watchIndexOps() {
+const WATCH_EVERY_MS = 3000
+function watch(name, fn) {
   const tick = async () => {
-    try { await applyIndexOps() } catch (e) { await log(`INDEX OPS ERROR: ${e.stack ?? e.message}`) }
-    setTimeout(tick, INDEX_OPS_EVERY_MS)
+    try { await fn() } catch (e) { await log(`${name} ERROR: ${e.stack ?? e.message}`) }
+    setTimeout(tick, WATCH_EVERY_MS)
   }
-  setTimeout(tick, INDEX_OPS_EVERY_MS)
+  setTimeout(tick, WATCH_EVERY_MS)
 }
 
 async function pass() {
@@ -552,6 +544,7 @@ async function pass() {
   const decided = await exclusive(() => runDecisions(state))
   await writeState(state)
   const managed = await applyIndexOps()
+  const requested = await applyJobRequests()
 
   // One total, so the spend can be reported and approved before anything runs.
   if (DRY && dryTotal.jobs > 0) {
@@ -561,7 +554,7 @@ async function pass() {
       + ` | ceilings: ${cfg.perJobCostCeilingCredits}/job, ${cfg.costCeilingCredits} total`,
     )
   }
-  return generated + decided + managed
+  return generated + decided + managed + requested
 }
 
 async function main() {
@@ -574,13 +567,19 @@ async function main() {
   process.on('SIGTERM', cleanup)
 
   try {
+    // A stop flag left by a crash must not stop this worker before it starts.
+    await fs.rm(P.stopFlag, { force: true })
     await log(`worker started (once=${ONCE} dryRun=${DRY} root=${ROOT})`)
     state = await readState()
 
     if (ONCE) { await pass(); return }
-    if (!DRY) watchIndexOps()
+    if (!DRY) {
+      watch('INDEX OPS', applyIndexOps)
+      watch('JOB REQUESTS', applyJobRequests)
+    }
     for (;;) {
       try { await pass() } catch (e) { await log(`PASS ERROR: ${e.stack ?? e.message}`) }
+      if (await stopRequested()) await stopNow('idle')
       await new Promise((r) => setTimeout(r, cfg.pollSeconds * 1000))
     }
   } finally {

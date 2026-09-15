@@ -14,7 +14,9 @@ import { P } from './paths'
 
 const FILES = [
   P.reviewLog, P.queue, P.workerLog, P.filings, P.ledger, P.entities, P.manifest,
-  P.learnings, P.indexOps, P.indexOpResults,
+  P.learnings, P.indexOps, P.indexOpResults, P.jobRequests, P.jobRequestResults,
+  // The lock is what "worker running" is read from; Start/Stop must show within a poll.
+  P.workerLock,
 ]
 
 /**

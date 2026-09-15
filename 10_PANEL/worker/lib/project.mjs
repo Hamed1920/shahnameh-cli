@@ -28,6 +28,13 @@ export const P = {
   indexOps: path.join(ROOT, '00_PROJECT', 'review', 'INDEX_OPS.jsonl'),
   indexOpResults: path.join(ROOT, '00_PROJECT', 'queue', 'INDEX_OPS_RESULTS.jsonl'),
   archive: path.join(ROOT, '09_OUTPUT', '_archive'),
+  // Prompts page and Regenerate: requests written by the panel, outcomes by the worker.
+  jobRequests: path.join(ROOT, '00_PROJECT', 'review', 'JOB_REQUESTS.jsonl'),
+  jobRequestResults: path.join(ROOT, '00_PROJECT', 'queue', 'JOB_REQUEST_RESULTS.jsonl'),
+  // Panel-requested graceful stop: the worker exits after the job in progress.
+  stopFlag: path.join(ROOT, '00_PROJECT', 'queue', 'worker.stop'),
+  // Console output of a worker started from the panel (crash traces, "already running").
+  workerStdout: path.join(ROOT, '00_PROJECT', 'queue', 'worker.stdout.log'),
 }
 
 export const rel = (abs) => path.relative(ROOT, abs).split(path.sep).join('/')

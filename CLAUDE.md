@@ -23,8 +23,9 @@ Run `/project-log` at the start of a session, or read directly:
   re-rolled → new `_T`.**
 - **Only the CLI allocates numbers.** Chat and Cowork propose `NEW/KIND/SLUG`; the CLI assigns.
   This is the only reason collisions are impossible. Never allocate one by hand either — let
-  `Ingest-Jobs.ps1` do it, or the worker when it files a reviewer upload proposed as a new
-  entity in the panel (same max+1 rule).
+  `Ingest-Jobs.ps1` do it, or the worker: when it files a reviewer upload proposed as a new
+  entity, or when it approves a Prompts-page batch with a `NEW/KIND/SLUG` row (same max+1 rule,
+  `nextEntityNumber` in `worker/lib/promote.mjs`).
 - **Numbers are never reused**, including after `RETIRED`.
 - **Never move or rename an asset** without updating `registry/ASSET_MANIFEST.csv`.
 - **Never auto-create a missing target entity** to make a job succeed. Reject and ask.
@@ -35,7 +36,10 @@ Run `/project-log` at the start of a session, or read directly:
   `09_OUTPUT/_uploads/<decision-id>/`, which the worker then names, files and registers. The
   References page works the same way: it appends requests (rename, retire, archive, move, role,
   main look, add) to `00_PROJECT/review/INDEX_OPS.jsonl` and the worker applies them
-  (`worker/lib/index-ops.mjs`). Don't add a second writer.
+  (`worker/lib/index-ops.mjs`). The Prompts page and Regenerate append to
+  `00_PROJECT/review/JOB_REQUESTS.jsonl`; the worker validates and prices, and only after Hamed
+  approves the priced batch in the panel does it queue the jobs (`worker/lib/job-requests.mjs`).
+  Don't add a second writer.
 - **Nothing is deleted from the index.** Retiring keeps an entity's number and files. Archiving a
   look moves it to `09_OUTPUT/_archive/` with its registry row saved, so it can be restored.
   Renaming changes the ID wording and the files, never the number.
@@ -59,10 +63,16 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File "00_PROJECT\tools\Ingest
 ```
 
 ```powershell
-# review panel + generation worker (separate terminals, from 10_PANEL)
+# review panel + generation worker (from 10_PANEL)
+npm run up         # both in one terminal; the Queue page can also start/stop the worker
 npm run dev        # http://localhost:3000
 npm run worker     # add --dry-run to price without spending
+npm test           # prompt parser tests
 ```
+
+Hamed's normal path for new prompts is now the panel's **Prompts** page (paste or drop a
+document, fix targets, submit, approve the priced total). `/run-prompts` and `/sync-in` remain
+for documents that need judgement or non-generation SHM-JOB types.
 
 Skills: `/project-log`, `/sync-out`, `/sync-in`, `/sync-check`, `/learn`.
 

@@ -79,6 +79,8 @@ export interface ReviewDecision {
   tags: string[]
   model: string
   requeue: boolean
+  /** Audio for the job this decision queues (revision or final). Absent when nothing is queued. */
+  sound?: boolean
   promotedTo?: string
   /** English version of the note. When present it is what the model reads. */
   notesEn?: string
@@ -293,4 +295,106 @@ export interface LibraryData {
   /** Most recent outcomes, newest first, joined with their request. */
   results: (IndexOpResult & { type?: IndexOpType })[]
   worker: WorkerStatus
+}
+
+// ---------------------------------------------------------------- Prompts page / job requests
+
+/** Batch-wide settings the Prompts page applies to every row that has no override. */
+export interface BatchDefaults {
+  model: string
+  aspect_ratio: string
+  duration: number
+  stage: 'draft' | 'final'
+  generate_audio: boolean
+}
+
+/** One row of a submitted batch, as the worker validates it. `target` may be `NEW/KIND/SLUG`. */
+export interface BatchJobInput {
+  key: string
+  label: string | null
+  target: string
+  newEntity?: { kind: string; slug: string; name?: string; description?: string }
+  variant: string | null
+  model: string | null
+  stage?: 'draft' | 'final' | null
+  refs: string[]
+  params: Record<string, string | number | boolean>
+  /** Verbatim. Never reworded by the panel or the worker. */
+  prompt: string
+}
+
+interface JobRequestBase {
+  id: string
+  ts: string
+  reviewer: string
+}
+
+export type JobRequest =
+  | (JobRequestBase & {
+      type: 'batch.submit'
+      batchId: string
+      name: string
+      source: { kind: 'paste' | 'files'; files: string[] }
+      defaults: BatchDefaults
+      jobs: BatchJobInput[]
+    })
+  | (JobRequestBase & { type: 'batch.approve'; batchId: string; expectedTotal: number | null })
+  | (JobRequestBase & { type: 'batch.discard'; batchId: string })
+  | (JobRequestBase & { type: 'regenerate'; jobId: string; decisionId: string; note?: string; sound?: boolean })
+
+export type JobRequestType = JobRequest['type']
+
+/** One line of JOB_REQUEST_RESULTS.jsonl. Every line names the batch or request it belongs to. */
+export type JobRequestEvent = { batchId?: string | null; reqId?: string; ts: string } & (
+  | { event: 'validated'; jobs: { key: string; ok: boolean; reason?: string; target: string; jobId: string }[]; newEntities: { key: string; kind: string; slug: string }[] }
+  | { event: 'rejected'; reason: string }
+  | { event: 'price'; key: string; credits: number | null }
+  | { event: 'priced'; total: number; unpriced: number }
+  | { event: 'queued'; jobIds: Record<string, string>; assigned: { key: string; proposal: string; id: string; shortId: string }[]; total: number | null; ceilingNote?: string }
+  | { event: 'discarded' }
+  | { event: 'error'; reason: string }
+)
+
+export type BatchStatus = 'received' | 'validated' | 'pricing' | 'priced' | 'approving' | 'queued' | 'discarded' | 'rejected'
+
+export interface BatchJobView {
+  key: string
+  label: string | null
+  target: string
+  assignedId: string | null
+  jobId: string | null
+  model: string
+  stage: 'draft' | 'final' | null
+  ok: boolean
+  reason: string | null
+  credits: number | null
+  prompt: string
+}
+
+/** A submitted batch as the Prompts page shows it, folded from requests and events. */
+export interface BatchView {
+  batchId: string
+  name: string
+  submittedAt: string
+  status: BatchStatus
+  jobs: BatchJobView[]
+  total: number | null
+  unpriced: number
+  /** The last error or refusal, if any. */
+  message: string | null
+  ceilingNote: string | null
+  newEntities: { key: string; kind: string; slug: string; assigned: string | null }[]
+  /** Request ids the worker has not processed yet. */
+  pending: string[]
+}
+
+/** A Regenerate request and what became of it, for the Decided page. */
+export interface RegenerationView {
+  reqId: string
+  ts: string
+  note: string
+  sound: boolean | null
+  state: 'waiting' | 'queued' | 'rejected'
+  jobId: string | null
+  reason: string | null
 }

@@ -40,9 +40,12 @@ how well reference images are honoured.
 
 ### Q9 — Spend ceilings
 
-The worker holds any job over **60 credits** and pauses entirely after **200 credits** in a run
-(`perJobCostCeilingCredits` / `costCeilingCredits`). Those are placeholders chosen without
-knowing the plan's credit balance. Set them against the real budget.
+The worker holds any job over **250 credits** and pauses entirely after **1500 credits** in a run
+(`perJobCostCeilingCredits` / `costCeilingCredits` in `10_PANEL/worker/config.json`). On
+2026-09-15 `queue/state.json` shows 1462.5 spent, so after one more 37.5-credit draft every job
+will HOLD until the ceiling is raised or `spentCredits` is cleared. The Prompts page says so on a
+batch that would cross the line, but the decision is yours: is the ceiling per run, per day, or per
+episode?
 
 ### Q10 — Are these uploads new looks of existing entities?
 

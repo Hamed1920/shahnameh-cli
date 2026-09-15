@@ -329,11 +329,17 @@ the files involved.
 - Only the CLI assigns numbers. An external authoring surface proposes a `NEW/KIND/SLUG` and the
   CLI resolves it — see `SYNC_PROTOCOL.md` §3. This is what makes collisions structurally
   impossible rather than merely unlikely.
-- The one other allocator is the panel worker. A reviewer can upload a reference in the review
-  panel and propose it as a new entity (kind + English name). The worker assigns the number at
-  filing time using the same rule as `Ingest-Jobs.ps1` — highest number of that kind, `RETIRED`
-  included, plus one — and rejects a slug that already exists. An upload attached to an existing
-  entity gets that entity's next `_V` instead. Either way the manifest row has `source` = `upload`.
+- The one other allocator is the panel worker, in two places, both using the same rule as
+  `Ingest-Jobs.ps1` — highest number of that kind, `RETIRED` included, plus one
+  (`nextEntityNumber` in `10_PANEL/worker/lib/promote.mjs`) — and both rejecting a slug that
+  already exists:
+  - A reviewer can upload a reference in the review panel and propose it as a new entity (kind +
+    English name). The worker assigns the number at filing time. An upload attached to an existing
+    entity gets that entity's next `_V` instead. Either way the manifest row has `source` = `upload`.
+  - A Prompts-page batch can target `NEW/KIND/SLUG`. The worker assigns the number **when the
+    batch is approved**, not when it is submitted or priced, so a discarded batch burns nothing.
+    The row is written exactly as `Ingest-Jobs.ps1` writes it (`RESERVED`, `NO-ASSET`), with
+    `Reserved by <batch id>` in the description until a look lands.
 - `PRP-010` was hand-assigned in v1.0, leaving `003`–`009` free. They stay free. Gaps are not
   errors.
 

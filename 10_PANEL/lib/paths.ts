@@ -32,6 +32,13 @@ export const P = {
   indexOpResults: path.join(ROOT, '00_PROJECT', 'queue', 'INDEX_OPS_RESULTS.jsonl'),
   /** Archived looks and their saved registry rows. Working space. */
   archive: path.join(ROOT, '09_OUTPUT', '_archive'),
+  /** Prompts page and Regenerate requests (panel appends) and their outcomes (worker appends). */
+  jobRequests: path.join(ROOT, '00_PROJECT', 'review', 'JOB_REQUESTS.jsonl'),
+  jobRequestResults: path.join(ROOT, '00_PROJECT', 'queue', 'JOB_REQUEST_RESULTS.jsonl'),
+  /** Written by the panel to ask the running worker to stop after its current job. */
+  stopFlag: path.join(ROOT, '00_PROJECT', 'queue', 'worker.stop'),
+  /** Console output of a worker started from the panel. */
+  workerStdout: path.join(ROOT, '00_PROJECT', 'queue', 'worker.stdout.log'),
 }
 
 /**

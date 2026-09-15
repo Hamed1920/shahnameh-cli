@@ -3,9 +3,9 @@ import path from 'node:path'
 import { P } from './paths'
 import { parseCsv } from './csv'
 import type {
-  ArchivedLook, AssetRow, AttemptEntry, Candidate, CatalogEntity, Entity, Filing, IndexOp,
-  IndexOpResult, Learning, LibraryData, LibraryEntity, QueueItem, ReviewContext, ReviewDecision,
-  LookUse, StagingSidecar, WorkerStatus,
+  ArchivedLook, AssetRow, AttemptEntry, BatchStatus, BatchView, Candidate, CatalogEntity, Entity, Filing, IndexOp,
+  IndexOpResult, JobRequest, JobRequestEvent, Learning, LibraryData, LibraryEntity, QueueItem, RegenerationView,
+  ReviewContext, ReviewDecision, LookUse, StagingSidecar, WorkerStatus,
 } from './types'
 
 /**
@@ -266,31 +266,44 @@ function beatsOf(prompt: string): string[] {
  * each revision to its parent, the review log says what happened to it, and
  * the ledger records what each generation cost.
  */
-export async function getReviewContexts(candidates: Candidate[]): Promise<Map<string, ReviewContext>> {
-  const [queue, decisions, state, ledgerText, cfgText] = await Promise.all([
-    readJsonl<QueueJob>(P.queue),
-    getDecisions(),
-    getWorkerState(),
-    readText(P.ledger),
-    readText(path.join(process.cwd(), 'worker', 'config.json')),
-  ])
-  const failed = (state?.failedDecisions ?? {}) as Record<string, string>
+/** worker/config.json, as the worker reads it. Empty when it cannot be read; estimates just go missing. */
+export async function getWorkerConfig(): Promise<Record<string, unknown>> {
+  try { return JSON.parse(await readText(path.join(process.cwd(), 'worker', 'config.json'))) } catch { return {} }
+}
+
+/**
+ * What one job costs, by everything the price depends on: model, resolution,
+ * duration and whether audio is generated. Sound is part of the key so a silent
+ * take's price is never shown for a job with sound.
+ */
+export const priceKey = (model: unknown, p: Record<string, unknown> | undefined) =>
+  `${model}|${p?.resolution ?? ''}|${p?.duration ?? ''}|${p?.generate_audio === undefined ? '' : String(p.generate_audio)}`
+
+/** Last real price per priceKey, from the ledger's generated jobs. */
+export async function getPriceTable(): Promise<Map<string, number>> {
+  const [queue, ledgerText] = await Promise.all([readJsonl<QueueJob>(P.queue), readText(P.ledger)])
   const jobs = new Map(queue.map((j) => [j.jobId, j]))
-  const decisionFor = new Map<string, ReviewDecision>()
-  for (const d of decisions) if (!failed[d.id]) decisionFor.set(d.jobId, d)
-
-  let cfg: Record<string, unknown> = {}
-  try { cfg = JSON.parse(cfgText) } catch { /* estimates just go missing */ }
-
-  // Last real price per model + resolution + duration, from generated jobs.
-  const priceKey = (model: unknown, p: Record<string, unknown> | undefined) =>
-    `${model}|${p?.resolution ?? ''}|${p?.duration ?? ''}`
   const prices = new Map<string, number>()
   for (const row of parseCsv(ledgerText) as unknown as Record<string, string>[]) {
     const cost = parseFloat(row.cost)
     const job = jobs.get(row.job_id)
     if (row.state === 'GENERATED' && Number.isFinite(cost) && job) prices.set(priceKey(job.model, job.params), cost)
   }
+  return prices
+}
+
+export async function getReviewContexts(candidates: Candidate[]): Promise<Map<string, ReviewContext>> {
+  const [queue, decisions, state, prices, cfg] = await Promise.all([
+    readJsonl<QueueJob>(P.queue),
+    getDecisions(),
+    getWorkerState(),
+    getPriceTable(),
+    getWorkerConfig(),
+  ])
+  const failed = (state?.failedDecisions ?? {}) as Record<string, string>
+  const jobs = new Map(queue.map((j) => [j.jobId, j]))
+  const decisionFor = new Map<string, ReviewDecision>()
+  for (const d of decisions) if (!failed[d.id]) decisionFor.set(d.jobId, d)
 
   const out = new Map<string, ReviewContext>()
   for (const c of candidates) {
@@ -334,6 +347,133 @@ export async function getReviewContexts(candidates: Candidate[]): Promise<Map<st
   return out
 }
 
+
+// ---------------------------------------------------------------- prompts page
+
+/** Distinct shot ids that have been generation targets, for the Shot picker's suggestions. */
+export async function getKnownShots(): Promise<string[]> {
+  const queue = await readJsonl<QueueItem>(P.queue)
+  return [...new Set(queue.map((q) => q.target).filter((t) => /^SHM-EP\d{3}/.test(t)))].sort()
+}
+
+/**
+ * Every submitted batch as the Prompts page shows it: requests folded with the
+ * worker's events, newest first. Mirrors foldBatch in worker/lib/job-requests.mjs.
+ */
+export async function getBatches(): Promise<BatchView[]> {
+  const [requests, events, state] = await Promise.all([
+    readJsonl<JobRequest>(P.jobRequests),
+    readJsonl<JobRequestEvent>(P.jobRequestResults),
+    getWorkerState(),
+  ])
+  const processed = new Set((state?.processedRequests ?? []) as string[])
+  const out: BatchView[] = []
+
+  for (const req of requests) {
+    if (req.type !== 'batch.submit') continue
+    const mine = events.filter((e) => e.batchId === req.batchId)
+    let status: BatchStatus = 'received'
+    let message: string | null = null
+    let ceilingNote: string | null = null
+    let total: number | null = null
+    let unpriced = 0
+    const prices = new Map<string, number | null>()
+    const verdicts = new Map<string, { ok: boolean; reason?: string; target: string; jobId: string }>()
+    const assigned = new Map<string, string>()
+    let validatedNew: { key: string; kind: string; slug: string }[] = []
+
+    for (const e of mine) {
+      switch (e.event) {
+        case 'validated':
+          status = 'validated'
+          for (const j of e.jobs) verdicts.set(j.key, j)
+          validatedNew = e.newEntities
+          break
+        case 'price':
+          prices.set(e.key, e.credits)
+          if (status === 'validated') status = 'pricing'
+          break
+        case 'priced':
+          status = 'priced'; total = e.total; unpriced = e.unpriced
+          break
+        case 'queued':
+          status = 'queued'; total = e.total ?? total; ceilingNote = e.ceilingNote ?? null
+          for (const a of e.assigned) assigned.set(a.proposal, a.id)
+          break
+        case 'discarded': status = 'discarded'; break
+        case 'rejected':
+          message = e.reason
+          if ((e as { scope?: string }).scope === 'batch') status = 'rejected'
+          break
+        case 'error': message = e.reason; break
+      }
+    }
+    const pending = requests
+      .filter((r) => (r.type === 'batch.approve' || r.type === 'batch.discard') && r.batchId === req.batchId && !processed.has(r.id))
+      .map((r) => r.id)
+    if (!processed.has(req.id)) pending.unshift(req.id)
+    if (status === 'priced' && requests.some((r) => r.type === 'batch.approve' && r.batchId === req.batchId && !processed.has(r.id))) status = 'approving'
+
+    out.push({
+      batchId: req.batchId,
+      name: req.name,
+      submittedAt: req.ts,
+      status,
+      total,
+      unpriced,
+      message,
+      ceilingNote,
+      pending,
+      newEntities: validatedNew.map((n) => ({ ...n, assigned: assigned.get(`NEW/${n.kind}/${n.slug}`) ?? null })),
+      jobs: req.jobs.map((j) => {
+        const v = verdicts.get(j.key)
+        const model = j.model || String(req.defaults?.model ?? '')
+        return {
+          key: j.key,
+          label: j.label,
+          target: j.target,
+          assignedId: assigned.get(j.target) ?? null,
+          jobId: v?.jobId || null,
+          model,
+          stage: j.stage ?? (/^(seedance|kling|veo|wan|hailuo|grok_video)/.test(model) ? req.defaults?.stage ?? 'draft' : null),
+          ok: v ? v.ok : true,
+          reason: v?.reason ?? null,
+          credits: prices.get(j.key) ?? null,
+          prompt: j.prompt,
+        }
+      }),
+    })
+  }
+  return out.reverse()
+}
+
+/** Regenerate requests and what became of them, keyed by the accepted job they re-run. */
+export async function getRegenerations(): Promise<Map<string, RegenerationView[]>> {
+  const [requests, events, state] = await Promise.all([
+    readJsonl<JobRequest>(P.jobRequests),
+    readJsonl<JobRequestEvent>(P.jobRequestResults),
+    getWorkerState(),
+  ])
+  const processed = new Set((state?.processedRequests ?? []) as string[])
+  const out = new Map<string, RegenerationView[]>()
+  for (const r of requests) {
+    if (r.type !== 'regenerate') continue
+    const ev = events.filter((e) => e.reqId === r.id)
+    const queued = ev.find((e) => e.event === 'queued')
+    const rejected = ev.find((e) => e.event === 'rejected')
+    const view: RegenerationView = {
+      reqId: r.id,
+      ts: r.ts,
+      note: r.note ?? '',
+      sound: typeof r.sound === 'boolean' ? r.sound : null,
+      state: queued ? 'queued' : rejected && processed.has(r.id) ? 'rejected' : 'waiting',
+      jobId: queued && queued.event === 'queued' ? queued.jobIds[r.jobId] ?? null : null,
+      reason: rejected && rejected.event === 'rejected' ? rejected.reason : null,
+    }
+    out.set(r.jobId, [...(out.get(r.jobId) ?? []), view])
+  }
+  return out
+}
 
 // ---------------------------------------------------------------- references library
 

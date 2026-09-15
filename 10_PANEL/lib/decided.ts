@@ -2,9 +2,9 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { P } from './paths'
 import {
-  getAssets, getDecisions, getFilings, getGeneratingJobId, getQueue, getWorkerState,
+  getAssets, getDecisions, getFilings, getGeneratingJobId, getPriceTable, getQueue, getRegenerations, getWorkerState, priceKey,
 } from './store'
-import type { Filing, QueueItem, ReviewDecision, StagingSidecar } from './types'
+import type { Filing, QueueItem, RegenerationView, ReviewDecision, StagingSidecar } from './types'
 
 /**
  * Everything the Decided page shows about each decision, worked out from what
@@ -43,6 +43,11 @@ export interface DecidedEntry {
   /** The job this decision queued: the regeneration or the 1080p final. */
   followUp: FollowUp | null
   filings: Filing[]
+  /** Regenerate requests made from this card, newest last. */
+  regenerations: RegenerationView[]
+  /** What one more take of this job costs, from the ledger, if known. */
+  regenerateCredits: number | null
+  isVideo: boolean
 }
 
 async function exists(rel: string): Promise<boolean> {
@@ -76,8 +81,8 @@ async function sidecars(): Promise<Map<string, StagingSidecar>> {
 }
 
 export async function getDecidedEntries(): Promise<DecidedEntry[]> {
-  const [decisions, filings, state, queue, assets, moves, byBatch] = await Promise.all([
-    getDecisions(), getFilings(), getWorkerState(), getQueue(), getAssets(), movesFromLog(), sidecars(),
+  const [decisions, filings, state, queue, assets, moves, byBatch, regenerations, prices] = await Promise.all([
+    getDecisions(), getFilings(), getWorkerState(), getQueue(), getAssets(), movesFromLog(), sidecars(), getRegenerations(), getPriceTable(),
   ])
   const failed = (state?.failedDecisions ?? {}) as Record<string, string>
   const processedDecisions = new Set((state?.processedDecisions ?? []) as string[])
@@ -168,6 +173,9 @@ export async function getDecidedEntries(): Promise<DecidedEntry[]> {
       const notes = (d.notes ?? '').replace(/@?upload:(u\d{1,3})(?![\w/-])/g, (m, id: string) => {
         return mine.find((f) => f.ok && f.uploadId === id)?.token ?? m
       })
+      // The queue record is what a regeneration re-runs; its params give the price key.
+      const q = queueById.get(d.jobId)
+      const regenerateCredits = s?.costCredits ?? (q ? prices.get(priceKey(q.model, q.params)) ?? null : null)
 
       const m = d.target.match(/^SHM-(EP\d{3})(?:-(SC\d{3}))?(?:-(SH\d{4}))?/)
       const where = m ? [m[1], m[2], m[3]].filter(Boolean).join(' · ') : d.target
@@ -184,6 +192,9 @@ export async function getDecidedEntries(): Promise<DecidedEntry[]> {
         notes,
         followUp,
         filings: mine,
+        regenerations: regenerations.get(d.jobId) ?? [],
+        regenerateCredits,
+        isVideo: /^(seedance|kling|veo|wan|hailuo|grok_video)/.test(d.model ?? ''),
       }
     }),
   )

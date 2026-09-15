@@ -72,6 +72,7 @@ next-env.d.ts
 # decision and spend credits again. Only the per-machine lock and log, and
 # half-written temp files, stay out.
 00_PROJECT/queue/worker.lock
+00_PROJECT/queue/worker.stop
 00_PROJECT/queue/*.log
 00_PROJECT/registry/*.bak
 *.tmp

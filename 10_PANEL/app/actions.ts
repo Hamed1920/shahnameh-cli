@@ -161,6 +161,8 @@ export async function decide(
     tags,
     model: candidate.sidecar.model,
     requeue: verdict === 'denied' ? requeue : false,
+    // The Sound checkbox only means something when this decision queues a job.
+    ...(regenerates && { sound: formData.get('sound') === 'on' }),
     ...(refs && { refs, refsBefore: candidate.sidecar.refs ?? [] }),
     ...(uploads.length > 0 && { uploads: uploads.map((u) => u.meta) }),
   }

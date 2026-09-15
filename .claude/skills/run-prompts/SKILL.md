@@ -9,6 +9,15 @@ Hamed's normal workflow: he hands over a document or pastes a pile of prompts an
 This turns that into queued, priced, reference-resolved generations without him doing any
 bookkeeping.
 
+**First choice since 2026-09-15: the panel's Prompts page** (`http://localhost:3000/prompts`). It
+takes pasted text, SHM-JOB blocks, batch JSON, `.txt/.md/.docx/.pdf`, splits the document
+deterministically (`10_PANEL/lib/prompt-parser.ts`), lets Hamed set targets and references with
+pickers, and the worker validates, prices and waits for his Approve before spending. Use this
+skill when a document needs judgement the page cannot give: mapping an author's own IDs to
+entities, spotting a spec that contradicts an existing asset, or ordering stills before video.
+Even then, the batch can be handed to the page (paste the batch JSON) instead of
+`enqueue-batch.mjs`, so the spend gate is his click.
+
 Paths are relative to `D:\Digianzu\Shahnameh MODERN\Shahnameh CLI`.
 
 ---
@@ -102,6 +111,10 @@ Write a JSON array to `00_PROJECT/sync/batch-<name>.json`:
     "params": { "aspect_ratio": "16:9", "duration": "15" } }
 ]
 ```
+
+Sound is **on** for every video unless a row says `"generate_audio": false` (the worker's
+`videoSound` default). Never write `"generate_audio": "false"` into a batch unless the shot is
+meant to be silent: that string is exactly what kept every EP001 block silent until 2026-09-15.
 
 Then:
 
