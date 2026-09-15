@@ -1,0 +1,104 @@
+{
+  "jobId": "J-20260915-E06",
+  "parentJobId": "J-20260915-OQ8",
+  "hfJobId": "58a1dd90-024a-4d14-92a4-3d82e37b3727",
+  "attempt": 2,
+  "stage": "final",
+  "label": "P06",
+  "target": "SHM-EP001-SC006-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP001-ZAHHAK-ENTRY/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nDirect continuation: Zahhak has just begun lifting the old staff; the new staff remains held horizontally by the principal noble.\n\nSHOT 1 — OLD AUTHORITY SET DOWN — 0:00–0:05:\n85mm detail at seat height. Zahhak transfers weight onto the throne arm, lifts the old staff and lays it horizontally on bare stone beside the seat. The movement is slow because he physically depends on it. No attendant helps. The old staff makes one dry impact.\n\nSHOT 2 — THE HANDOVER — 0:05–0:10:\n50mm low three-quarter view close to the principal noble’s hands. Zahhak leans forward, grips the Royal Serpent Staff near its balance point and tests its weight. The noble releases only after Zahhak has control. One natural serpent crosses Zahhak’s forearm but does not touch the staff symbolically.\n\nSHOT 3 — ACCEPTANCE — 0:10–0:15:\n35mm wide horizontal frame. Zahhak plants the new staff vertically and transfers visible body weight onto it, then rises only partway from the seat. His lame side lags. The principal noble bows until his torso is almost parallel to the floor; the others follow unevenly. Zahhak’s chin lifts only a few centimeters. End on the new staff dividing ruler and petitioners.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nOld wood or metal scraping stone, one dry impact, glove tightening on the new staff, fabric strain as Zahhak shifts, a firm new staff strike and silence after its decay.\n\nDESIGN NOTE — no reference image was planned for these, so build them from the description above (but if one of them is called with an attached image in this prompt, match that image instead) and keep them identical across blocks: PROP_ZAHHAK_OLD_STAFF.\n\nRevision — the previous attempt was rejected for these reasons. Fix them:\n- remove the flag\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in <<<image_1>>>. Never show a bare human face.\n\n<<<image_2>>> is Ceremonial Reception Hall (LOC-009 V01); match it wherever Ceremonial Reception Hall appears.\n<<<image_3>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.\n<<<image_4>>> is Zahhak (CHR-001 V06); match it wherever Zahhak appears.",
+  "basePrompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nDirect continuation: Zahhak has just begun lifting the old staff; the new staff remains held horizontally by the principal noble.\n\nSHOT 1 — OLD AUTHORITY SET DOWN — 0:00–0:05:\n85mm detail at seat height. Zahhak transfers weight onto the throne arm, lifts the old staff and lays it horizontally on bare stone beside the seat. The movement is slow because he physically depends on it. No attendant helps. The old staff makes one dry impact.\n\nSHOT 2 — THE HANDOVER — 0:05–0:10:\n50mm low three-quarter view close to the principal noble’s hands. Zahhak leans forward, grips the Royal Serpent Staff near its balance point and tests its weight. The noble releases only after Zahhak has control. One natural serpent crosses Zahhak’s forearm but does not touch the staff symbolically.\n\nSHOT 3 — ACCEPTANCE — 0:10–0:15:\n35mm wide horizontal frame. Zahhak plants the new staff vertically and transfers visible body weight onto it, then rises only partway from the seat. His lame side lags. The principal noble bows until his torso is almost parallel to the floor; the others follow unevenly. Zahhak’s chin lifts only a few centimeters. End on the new staff dividing ruler and petitioners.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nOld wood or metal scraping stone, one dry impact, glove tightening on the new staff, fabric strain as Zahhak shifts, a firm new staff strike and silence after its decay.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: PROP_ZAHHAK_OLD_STAFF.",
+  "revisionNotes": [
+    "remove the flag"
+  ],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@REF-001/V02",
+    "@LOC-009",
+    "@PRP-001",
+    "@CHR-001/V06"
+  ],
+  "createdAt": "2026-09-15T13:58:46.053Z",
+  "costCredits": 135,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_134959_58a1dd90-024a-4d14-92a4-3d82e37b3727.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-15T13:49:59.835917Z",
+      "display_name": "Seedance 2.5",
+      "id": "58a1dd90-024a-4d14-92a4-3d82e37b3727",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "13e38840-7044-480d-b0fc-bdaf2f8747f0",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/13e38840-7044-480d-b0fc-bdaf2f8747f0.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "3938c1e2-3da4-44cb-90e8-adb334d0a4c1",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/3938c1e2-3da4-44cb-90e8-adb334d0a4c1.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "0b0f72c4-c11a-4bec-bc1d-7d6fead371f3",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/0b0f72c4-c11a-4bec-bc1d-7d6fead371f3.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "0e53479f-67ae-45ff-8033-ba070732b1d2",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/0e53479f-67ae-45ff-8033-ba070732b1d2.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nDirect continuation: Zahhak has just begun lifting the old staff; the new staff remains held horizontally by the principal noble.\n\nSHOT 1 — OLD AUTHORITY SET DOWN — 0:00–0:05:\n85mm detail at seat height. Zahhak transfers weight onto the throne arm, lifts the old staff and lays it horizontally on bare stone beside the seat. The movement is slow because he physically depends on it. No attendant helps. The old staff makes one dry impact.\n\nSHOT 2 — THE HANDOVER — 0:05–0:10:\n50mm low three-quarter view close to the principal noble’s hands. Zahhak leans forward, grips the Royal Serpent Staff near its balance point and tests its weight. The noble releases only after Zahhak has control. One natural serpent crosses Zahhak’s forearm but does not touch the staff symbolically.\n\nSHOT 3 — ACCEPTANCE — 0:10–0:15:\n35mm wide horizontal frame. Zahhak plants the new staff vertically and transfers visible body weight onto it, then rises only partway from the seat. His lame side lags. The principal noble bows until his torso is almost parallel to the floor; the others follow unevenly. Zahhak’s chin lifts only a few centimeters. End on the new staff dividing ruler and petitioners.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nOld wood or metal scraping stone, one dry impact, glove tightening on the new staff, fabric strain as Zahhak shifts, a firm new staff strike and silence after its decay.\n\nDESIGN NOTE — no reference image was planned for these, so build them from the description above (but if one of them is called with an attached image in this prompt, match that image instead) and keep them identical across blocks: PROP_ZAHHAK_OLD_STAFF.\n\nRevision — the previous attempt was rejected for these reasons. Fix them:\n- remove the flag\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in <<<image_1>>>. Never show a bare human face.\n\n<<<image_2>>> is Ceremonial Reception Hall (LOC-009 V01); match it wherever Ceremonial Reception Hall appears.\n<<<image_3>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.\n<<<image_4>>> is Zahhak (CHR-001 V06); match it wherever Zahhak appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_134959_58a1dd90-024a-4d14-92a4-3d82e37b3727.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_134959_58a1dd90-024a-4d14-92a4-3d82e37b3727_thumbnail.webp"
+    }
+  ]
+}
