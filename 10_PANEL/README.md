@@ -87,10 +87,13 @@ a number for each `NEW/KIND/SLUG` (same rule as every other allocator), appends 
 Discard is allowed until then and burns nothing. `state.json` keeps the cursor in
 `processedRequests`.
 
-**Regenerate** on an accepted take (Decided page) is the same channel, type `regenerate`: the
-worker re-queues the accepted job from its `QUEUE.jsonl` record as the next attempt, with an
-optional note and the Sound choice, and the result comes to Review like any other take; accepting
-it files the next `_T`. One click is the approval, as with a deny-and-regenerate.
+**Regenerate** on an accepted take (Decided page) is the same channel, type `regenerate`. It opens
+a dialog prefilled from the accepted job's `QUEUE.jsonl` record where the prompt, references (same
+picker as Review), model, first render, look, aspect ratio, duration, sound and a note can all be
+changed; anything left alone is kept. The worker checks the references, re-queues the job as the
+next attempt (moving the resolution with a draft/final change), and the result comes to Review
+like any other take; accepting it files the next `_T`. The click is the approval, as with a
+deny-and-regenerate; the ledger price is shown while the settings that decide it are unchanged.
 
 ## Sound
 

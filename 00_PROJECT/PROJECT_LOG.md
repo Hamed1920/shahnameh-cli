@@ -74,11 +74,13 @@ Done:
   on) for the revision or final a decision queues, stored as `sound` on the decision; a silent
   take shows a `silent` badge. The Decided and lightbox players are no longer muted. The price
   cache key now includes the audio flag.
-- **Regenerate.** On Decided, an accepted take has a Regenerate button with an optional note and
-  the Sound choice, priced from the ledger. It appends a `regenerate` request; the worker
-  re-queues the job from its `QUEUE.jsonl` record as the next attempt (`enqueuedBy:
-  panel:regenerate`, no `maxAttempts` cap). The result comes to Review; accepting files the next
-  `_T`.
+- **Regenerate.** On Decided, an accepted take has a Regenerate button that opens a dialog
+  prefilled from the accepted job: prompt, references (index picker), model, first render, look,
+  aspect ratio, duration, Sound and a note can all be changed (Hamed asked for this after the
+  first version, which only took a note). It appends a `regenerate` request with the overrides;
+  the worker checks the references, re-queues the job from its `QUEUE.jsonl` record as the next
+  attempt (`enqueuedBy: panel:regenerate`, no `maxAttempts` cap, resolution follows a draft/final
+  change), and the result comes to Review; accepting files the next `_T`.
 - **Prompts page** (`/prompts`). Paste text, SHM-JOB blocks or batch JSON, or drop
   `.txt/.md/.json/.docx/.pdf`. `lib/prompt-parser.ts` (pure, 9 `node --test` cases) splits on
   `P01`/`PROMPT n`/`پرامپت n` headings first, then `SHOT n`, numbered items, blank lines, keeps

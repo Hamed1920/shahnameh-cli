@@ -105,6 +105,21 @@ await until(() => state().processedJobs.includes(child.jobId), 'regeneration gen
 const rcalls = jsonl(process.env.STUB_LOG).filter((c) => c.args[1] === 'create')
 ok(rcalls.at(-1).args[rcalls.at(-1).args.indexOf('--generate-audio') + 1] === 'false', 'regeneration sent --generate-audio false')
 
+// ------------------------------------------------ 5b. regenerate with everything changed
+const R3 = id()
+append(P.req, { id: R3, ts: new Date().toISOString(), reviewer: 'test', type: 'regenerate', jobId: SRC, decisionId: 'rev_mu19vrjsbra1',
+  prompt: 'A completely rewritten prompt.', refs: ['@CHR-001/V02'], model: 'seedance_2_5', stage: 'draft', variant: 'V02',
+  params: { aspect_ratio: '9:16', duration: 5 }, sound: true, note: '' })
+const rq3 = await until(() => jsonl(P.res).find((e) => e.reqId === R3 && e.event === 'queued'), 'override regenerate queued')
+const child3 = jsonl(P.queue).find((j) => j.jobId === rq3.jobIds[SRC])
+ok(child3.basePrompt === 'A completely rewritten prompt.' && child3.prompt === child3.basePrompt, 'override: prompt replaced')
+ok(JSON.stringify(child3.refs) === JSON.stringify(['@CHR-001/V02']) && child3.variant === 'V02', 'override: refs and look replaced')
+ok(child3.stage === 'draft' && child3.params.resolution === '480p' && child3.params.aspect_ratio === '9:16' && child3.params.duration === 5 && child3.params.generate_audio === true, 'override: draft resolution follows the stage, aspect, duration, sound applied')
+const R4 = id()
+append(P.req, { id: R4, ts: new Date().toISOString(), reviewer: 'test', type: 'regenerate', jobId: SRC, decisionId: 'rev_mu19vrjsbra1', refs: ['@CHR-001/V09'] })
+const r4 = await until(() => jsonl(P.res).find((e) => e.reqId === R4), 'bad ref regenerate handled')
+ok(r4.event === 'rejected' && String(r4.reason).includes('reference @CHR-001/V09'), 'override with an unresolvable reference refused')
+
 // ------------------------------------------------ 6. unknown regenerate target refused
 const R2 = id()
 append(P.req, { id: R2, ts: new Date().toISOString(), reviewer: 'test', type: 'regenerate', jobId: 'J-NOPE', decisionId: 'x' })

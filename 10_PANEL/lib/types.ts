@@ -340,7 +340,20 @@ export type JobRequest =
     })
   | (JobRequestBase & { type: 'batch.approve'; batchId: string; expectedTotal: number | null })
   | (JobRequestBase & { type: 'batch.discard'; batchId: string })
-  | (JobRequestBase & { type: 'regenerate'; jobId: string; decisionId: string; note?: string; sound?: boolean })
+  | (JobRequestBase & {
+      type: 'regenerate'
+      jobId: string
+      decisionId: string
+      note?: string
+      sound?: boolean
+      /** Overrides. Anything absent is kept from the accepted job. */
+      prompt?: string
+      refs?: string[]
+      model?: string
+      stage?: 'draft' | 'final'
+      variant?: string
+      params?: Record<string, string | number | boolean>
+    })
 
 export type JobRequestType = JobRequest['type']
 
@@ -386,6 +399,17 @@ export interface BatchView {
   newEntities: { key: string; kind: string; slug: string; assigned: string | null }[]
   /** Request ids the worker has not processed yet. */
   pending: string[]
+}
+
+/** The accepted job as the Regenerate dialog starts from it. */
+export interface RegenerateSource {
+  prompt: string
+  refs: string[]
+  model: string
+  stage: 'draft' | 'final' | null
+  variant: string
+  params: Record<string, string | number | boolean>
+  revisionNotes: string[]
 }
 
 /** A Regenerate request and what became of it, for the Decided page. */

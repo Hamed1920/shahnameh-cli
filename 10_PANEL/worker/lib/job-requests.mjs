@@ -1,5 +1,5 @@
 import {
-  P, appendJsonl, loadEntities, log, readCsv, readJsonl, readText, restoreText, writeCsv,
+  P, appendJsonl, loadEntities, log, readCsv, readJsonl, readText, resolveRef, restoreText, writeCsv,
 } from './project.mjs'
 import { parseCsv } from './csv.mjs'
 import { checkBatch, isVideoModel, makeJob, newJobId } from './batch.mjs'
@@ -169,37 +169,68 @@ const HANDLERS = {
   /**
    * Run an accepted take's job again. The queue record is the source of
    * truth: the staging sidecar leaves with the file when a take is promoted.
+   * The request may change the prompt, references, model, first render,
+   * look, parameters and sound; anything it does not name is kept as it was.
    */
   async regenerate(req, { state, dry }) {
     const queue = await readJsonl(P.queue)
     const src = queue.find((q) => q.jobId === req.jobId)
     if (!src) fail(`job ${req.jobId} is not in the queue file`)
     if (!(state.processedJobs ?? []).includes(req.jobId)) fail(`job ${req.jobId} has not generated yet`)
+
+    const model = String(req.model || src.model)
+    const stage = req.stage === 'draft' || req.stage === 'final' ? req.stage : (src.stage ?? null)
+    const variant = String(req.variant || src.variant || 'V01').toUpperCase()
+    if (!/^V\d{2}$/.test(variant)) fail(`look '${variant}' is not V01, V02, ...`)
+    const basePrompt = String(req.prompt ?? '').trim() || (src.basePrompt ?? src.prompt)
+    const refs = Array.isArray(req.refs) ? [...new Set(req.refs.map((r) => String(r).trim()).filter(Boolean))] : (src.refs ?? [])
+    const { entities, assets } = await registries()
+    for (const token of refs) {
+      const r = await resolveRef(token, entities, assets)
+      if (!r.ok) fail(`reference ${token}: ${r.reason}`)
+    }
+    const params = { ...(src.params ?? {}) }
+    // Going from draft to final (or back) moves the resolution with it, unless the request sets one.
+    if (isVideoModel(model) && stage && stage !== (src.stage ?? null)) {
+      params.resolution = stage === 'final' ? cfg.videoFinalResolution : cfg.videoDraftResolution
+    }
+    if (req.params && typeof req.params === 'object') {
+      for (const [k, v] of Object.entries(req.params)) if (v !== undefined && v !== null && v !== '') params[k] = v
+    }
+    if (isVideoModel(model)) {
+      if (typeof req.sound === 'boolean') params.generate_audio = req.sound
+    } else {
+      delete params.generate_audio; delete params.duration; delete params.resolution
+    }
     if (dry) { await log(`DRY-RUN would regenerate ${req.jobId}`); return }
 
     const jobId = newJobId()
     const note = String(req.note ?? '').trim()
-    const params = { ...(src.params ?? {}) }
-    if (isVideoModel(src.model) && typeof req.sound === 'boolean') params.generate_audio = req.sound
+    const changed = []
+    if (basePrompt !== (src.basePrompt ?? src.prompt)) changed.push('prompt')
+    if (JSON.stringify(refs) !== JSON.stringify(src.refs ?? [])) changed.push('refs')
+    if (model !== src.model) changed.push(`model ${model}`)
+    if (stage !== (src.stage ?? null)) changed.push(`stage ${stage}`)
+    if (variant !== String(src.variant || 'V01').toUpperCase()) changed.push(`look ${variant}`)
     await appendJsonl(P.queue, {
       jobId,
       parentJobId: src.jobId,
       attempt: (src.attempt ?? 1) + 1,
-      stage: src.stage ?? null,
+      stage,
       target: src.target,
-      variant: src.variant,
-      model: src.model,
-      prompt: src.basePrompt ?? src.prompt,
-      basePrompt: src.basePrompt ?? src.prompt,
+      variant,
+      model,
+      prompt: basePrompt,
+      basePrompt,
       params,
-      refs: src.refs ?? [],
+      refs,
       revisionNotes: [...(src.revisionNotes ?? []), note].filter(Boolean),
       label: src.label ?? null,
       enqueuedAt: new Date().toISOString(),
       enqueuedBy: 'panel:regenerate',
     })
     await emit({ batchId: null, reqId: req.id, event: 'queued', jobIds: { [req.jobId]: jobId }, assigned: [], total: null })
-    await log(`REGENERATE ${req.jobId} -> ${jobId} (attempt ${(src.attempt ?? 1) + 1})${note ? ` note: ${note}` : ''}`)
+    await log(`REGENERATE ${req.jobId} -> ${jobId} (attempt ${(src.attempt ?? 1) + 1})${changed.length ? ` changed: ${changed.join(', ')}` : ''}${note ? ` note: ${note}` : ''}`)
   },
 }
 

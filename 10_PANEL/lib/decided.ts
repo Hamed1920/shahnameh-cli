@@ -4,7 +4,7 @@ import { P } from './paths'
 import {
   getAssets, getDecisions, getFilings, getGeneratingJobId, getPriceTable, getQueue, getRegenerations, getWorkerState, priceKey,
 } from './store'
-import type { Filing, QueueItem, RegenerationView, ReviewDecision, StagingSidecar } from './types'
+import type { Filing, QueueItem, RegenerateSource, RegenerationView, ReviewDecision, StagingSidecar } from './types'
 
 /**
  * Everything the Decided page shows about each decision, worked out from what
@@ -48,6 +48,8 @@ export interface DecidedEntry {
   /** What one more take of this job costs, from the ledger, if known. */
   regenerateCredits: number | null
   isVideo: boolean
+  /** The accepted job as queued, for the Regenerate dialog. Null when the queue record is gone. */
+  source: RegenerateSource | null
 }
 
 async function exists(rel: string): Promise<boolean> {
@@ -174,8 +176,19 @@ export async function getDecidedEntries(): Promise<DecidedEntry[]> {
         return mine.find((f) => f.ok && f.uploadId === id)?.token ?? m
       })
       // The queue record is what a regeneration re-runs; its params give the price key.
-      const q = queueById.get(d.jobId)
+      const q = queueById.get(d.jobId) as (QueueItem & { basePrompt?: string; stage?: 'draft' | 'final' | null; revisionNotes?: string[] }) | undefined
       const regenerateCredits = s?.costCredits ?? (q ? prices.get(priceKey(q.model, q.params)) ?? null : null)
+      const source: RegenerateSource | null = q
+        ? {
+            prompt: q.basePrompt ?? q.prompt,
+            refs: q.refs ?? [],
+            model: q.model,
+            stage: q.stage ?? null,
+            variant: q.variant || 'V01',
+            params: (q.params ?? {}) as RegenerateSource['params'],
+            revisionNotes: q.revisionNotes ?? [],
+          }
+        : null
 
       const m = d.target.match(/^SHM-(EP\d{3})(?:-(SC\d{3}))?(?:-(SH\d{4}))?/)
       const where = m ? [m[1], m[2], m[3]].filter(Boolean).join(' · ') : d.target
@@ -195,6 +208,7 @@ export async function getDecidedEntries(): Promise<DecidedEntry[]> {
         regenerations: regenerations.get(d.jobId) ?? [],
         regenerateCredits,
         isVideo: /^(seedance|kling|veo|wan|hailuo|grok_video)/.test(d.model ?? ''),
+        source,
       }
     }),
   )
