@@ -7,17 +7,11 @@ Resolve one by deleting it and logging the decision with `/project-log`.
 
 ---
 
-### Q3 — Confirm Zahhak's canonical look
-
-`SHM-CHR-001-ZAHHAK` canonical is provisionally `V03` (dragon-embroidered robe + cobra staff),
-picked because it is the most fully realised plate and the cobra staff is his signature prop.
-The alternative is `V01` (black snakes at the shoulders), which is the more literal Shahnameh read.
-**This decides which reference image every future prompt gets.** Flagged `NEEDS-CANONICAL`.
-
 ### Q4 — Confirm canonical for `PRP-010` (diplomatic gift set)
 
 Provisionally `V01`, the stone-slab flat-lay, since it reads as a *set*. `V02` is the staged
-niche version. Flagged `NEEDS-CANONICAL`.
+niche version. Flagged `NEEDS-CANONICAL`. On 2026-09-14, review `rev_mu18hin2vjk9` asked for
+`V02` when the gifts are unwrapped in `SHM-EP001-SC004-SH0010`, which points to `V02`.
 
 ### Q5 — Split the gift set into individual props?
 
@@ -49,6 +43,28 @@ how well reference images are honoured.
 The worker holds any job over **60 credits** and pauses entirely after **200 credits** in a run
 (`perJobCostCeilingCredits` / `costCeilingCredits`). Those are placeholders chosen without
 knowing the plan's credit balance. Set them against the real budget.
+
+### Q10 — Are these uploads new looks of existing entities?
+
+Review uploads created three new numbers that may be the same object as an existing entity. By
+`INDEXING.md`, the same object in a different look should be a new `_V`, not a new number:
+- `SHM-CHR-003-ZAHHAK-OLD-WOOD` is `CHR-001/V02` with the snakes and embroidery recoloured black.
+- `SHM-LOC-018-ZAHHAK-PALACE-OUTSIDE` has the source prompt "monumental austere royal audience
+  platform", the same idea as `SHM-LOC-007-ROYAL-AUDIENCE-PLATFORM`.
+- `SHM-PRP-016-PERISAN-IRANIAN-FLAG` may be the look for the reserved
+  `SHM-PRP-011-BANNER-IRANIAN-ROYAL`. Its slug and family also misspell "Persian".
+
+Numbers are never reused. Folding one in means retiring it and adding its image to the other
+entity as a new look, both from the References page. Proposed rules `L-0002`, `L-0003` and `L-0004` cite
+these IDs.
+
+### Q11 — Should entity rules reach shot prompts?
+
+The worker gives a shot job only the rules that apply to every prompt, because a shot has no entity. So
+the Zahhak, flag, palace and Jamshid rules (`L-0002` to `L-0005`), once approved, would reach the
+context pack but never an EP001 revision. One option: also inject a rule when its entity is among
+the shot's attached references. That needs a change to `applicableLearnings` in
+`10_PANEL/worker/worker.mjs`.
 
 ---
 

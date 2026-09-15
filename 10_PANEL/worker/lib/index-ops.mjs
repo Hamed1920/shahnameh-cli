@@ -55,13 +55,15 @@ async function exists(p) {
 
 /**
  * Run `fn` against in-memory registries. On success both CSVs are written; on
- * any error every recorded file move is reversed and the CSVs restored.
+ * any error every recorded file move is reversed, every rewritten sidecar put
+ * back, and the CSVs restored.
  */
 async function transaction(fn) {
   const [entitiesText, manifestText] = await Promise.all([readText(P.entities), readText(P.manifest)])
   const e = parseCsv(entitiesText)
   const m = parseCsv(manifestText)
   const moves = []
+  const rewrites = []
   const tx = {
     entities: e.rows,
     assets: m.rows,
@@ -69,6 +71,10 @@ async function transaction(fn) {
       if (await exists(dest)) fail(`${rel(dest)} already exists`)
       await moveFile(src, dest)
       moves.push([src, dest])
+    },
+    async rewrite(file, original, next) {
+      await restoreText(file, next)
+      rewrites.push([file, original])
     },
   }
   try {
@@ -81,6 +87,9 @@ async function transaction(fn) {
   } catch (err) {
     for (const [src, dest] of moves.reverse()) {
       await moveFile(dest, src).catch((r) => log(`ROLLBACK move failed ${rel(dest)}: ${r.message}`))
+    }
+    for (const [file, text] of rewrites.reverse()) {
+      await restoreText(file, text).catch((r) => log(`ROLLBACK ${rel(file)} failed: ${r.message}`))
     }
     await restoreText(P.manifest, manifestText).catch((r) => log(`ROLLBACK manifest failed: ${r.message}`))
     await restoreText(P.entities, entitiesText).catch((r) => log(`ROLLBACK entities failed: ${r.message}`))
@@ -124,30 +133,85 @@ function tidyEntity(tx, ent) {
   }
 }
 
+// "P12 SHM-EP001-SC012-SH0010", or the job id when there is no shot label
+const jobName = (x) => (x.label ? `${x.label} ${x.target}` : `${x.jobId} (${x.target})`)
+
 /**
- * Generated results waiting for review, or for their decision to be applied.
- * A decided batch keeps its job.json in _staging but its files have moved on
- * (promoted, rejected or kept as a draft), so only batches with a file left count.
+ * Generated results waiting for review, or for their decision to be applied,
+ * with each reference resolved against the registries as they are now. Call it
+ * before changing anything. A decided batch keeps its job.json in _staging but
+ * its files have moved on, so only batches with a file left count.
  */
-async function waitingForReview() {
+async function waitingForReview(tx) {
   const dirs = await fs.readdir(P.staging, { withFileTypes: true }).catch(() => [])
   const out = []
   for (const d of dirs) {
     if (!d.isDirectory()) continue
+    const file = path.join(P.staging, d.name, 'job.json')
+    let text
     let sidecar
-    try { sidecar = JSON.parse(await fs.readFile(path.join(P.staging, d.name, 'job.json'), 'utf8')) } catch { continue }
+    try { text = await fs.readFile(file, 'utf8'); sidecar = JSON.parse(text) } catch { continue }
+    let waiting = false
     for (const c of sidecar.candidates ?? []) {
-      if (await exists(path.join(P.staging, d.name, c.file))) { out.push(sidecar); break }
+      if (await exists(path.join(P.staging, d.name, c.file))) { waiting = true; break }
     }
+    if (!waiting) continue
+    const refs = []
+    for (const token of sidecar.refs ?? []) {
+      const r = await resolveRef(token, tx.entities, tx.assets)
+      refs.push({ token, path: r.ok ? path.resolve(r.path) : null })
+    }
+    out.push({ file, text, sidecar, refs })
   }
   return out
 }
 
+const escapeRx = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
 /**
- * Refuse to pull a file out from under anything that will still read it: a
- * queued or generating job, a decision the worker has not applied yet, or a
- * video waiting for review (its revision or final reuses the same references).
- * Each would fail later, after the reviewer has moved on.
+ * A video waiting for review keeps the references it was made with, and a redo
+ * or final reuses them. When a look it names is archived or moved, point it at
+ * what that look became, so the reviewer's next click still works.
+ *
+ * `swap(ref, video)` returns undefined to keep a reference, or
+ * `{ to, mention }`: the replacement token (null drops it) and the text that
+ * replaces it where the notes mention it. Returns one line per changed video.
+ */
+async function retargetWaiting(tx, waiting, swap) {
+  const notes = []
+  for (const w of waiting) {
+    const changes = []
+    const refs = []
+    for (const ref of w.refs) {
+      const s = ref.path ? swap(ref, w) : undefined
+      if (!s || s.to === ref.token) { if (!refs.includes(ref.token)) refs.push(ref.token); continue }
+      changes.push({ from: ref.token, ...s })
+      if (s.to && !refs.includes(s.to)) refs.push(s.to)
+    }
+    if (changes.length === 0) continue
+    const inText = (text) => changes.reduce(
+      (acc, c) => acc.replace(new RegExp(`${escapeRx(c.from)}(?![\\w/-])`, 'g'), c.mention),
+      String(text),
+    )
+    const next = {
+      ...w.sidecar,
+      refs,
+      ...(w.sidecar.basePrompt != null && { basePrompt: inText(w.sidecar.basePrompt) }),
+      ...(Array.isArray(w.sidecar.revisionNotes) && { revisionNotes: w.sidecar.revisionNotes.map(inText) }),
+    }
+    await tx.rewrite(w.file, w.text, JSON.stringify(next, null, 2))
+    const what = changes.map((c) => (c.to ? `uses ${c.to} instead of ${c.from}` : `no longer uses ${c.from}`)).join(', and ')
+    notes.push(`${w.sidecar.label ?? w.sidecar.jobId} (waiting for review) ${what}`)
+  }
+  return notes
+}
+
+const withNotes = (summary, notes) => (notes.length ? `${summary}. ${notes.join('; ')}` : summary)
+
+/**
+ * Refuse to pull a file out from under a queued or generating job, or a
+ * decision the worker has not applied yet: either would fail later, after the
+ * reviewer has moved on. (Videos waiting for review are retargeted instead.)
  *
  * `ctx.state` is the worker's live state. Read from disk it could miss a job
  * that finished a moment ago, or count one that is still generating as done.
@@ -158,14 +222,10 @@ async function assertNotInUse(tx, ctx, { files = [], ids = [] }) {
   const pendingJobs = (await readJsonl(P.queue)).filter((j) => !done.has(j.jobId))
   const decided = new Set(state.processedDecisions)
   const pendingDecisions = (await readJsonl(P.reviewLog)).filter((d) => !decided.has(d.id))
-  const staged = await waitingForReview()
-  // "P12 SHM-EP001-SC012-SH0010", or the job id when there is no shot label
-  const name = (x) => (x.label ? `${x.label} ${x.target}` : `${x.jobId} (${x.target})`)
 
   const users = [
-    ...pendingJobs.map((j) => ({ x: j, refs: j.refs, what: `queued job ${name(j)}`, then: 'Wait until it has generated.' })),
+    ...pendingJobs.map((j) => ({ x: j, refs: j.refs, what: `${jobName(j)}, which is queued or generating`, then: 'Try again once it has finished.' })),
     ...pendingDecisions.map((d) => ({ x: d, refs: d.refs, what: 'a decision the worker is still applying', then: 'Try again in a moment.' })),
-    ...staged.map((s) => ({ x: s, refs: s.refs, what: `${name(s)}, which is waiting for review`, then: 'Decide it first (you can swap that reference when you do).' })),
   ]
 
   const watched = new Set(files.map((f) => path.resolve(f)))
@@ -267,6 +327,7 @@ const OPS = {
       const clash = tx.entities.find((e) => e.slug === slug && e.id !== oldId)
       if (clash) fail(`'${slug}' is already used by ${clash.short_id}`)
       await assertNotInUse(tx, ctx, { ids: [oldId] })
+      const waiting = (await waitingForReview(tx)).filter((w) => w.text.includes(oldId))
 
       for (const a of tx.assets.filter((x) => x.entity_id === oldId)) {
         const newName = `${newId}${a.filename.slice(oldId.length)}`
@@ -280,6 +341,12 @@ const OPS = {
       }
       row.id = newId
       row.slug = slug
+      // Results waiting for review store the full target id; promoting one looks it up.
+      for (const w of waiting) {
+        const retarget = (s) => (typeof s === 'string' ? s.split(oldId).join(newId) : s)
+        const next = { ...w.sidecar, target: retarget(w.sidecar.target), refs: (w.sidecar.refs ?? []).map(retarget) }
+        await tx.rewrite(w.file, w.text, JSON.stringify(next, null, 2))
+      }
       if (row.family && !slug.startsWith(row.family)) row.family = slug.split('-')[0]
     }
     row.name = name
@@ -304,6 +371,8 @@ const OPS = {
     }
     if (plan.length === 0) return `nothing to archive: ${already.join(', ')} already archived`
     await assertNotInUse(tx, ctx, { files: plan.map(({ r }) => path.join(ROOT, r.folder, r.filename)) })
+    const waiting = await waitingForReview(tx)
+    const leaving = new Set(plan.map(({ r }) => path.resolve(ROOT, r.folder, r.filename)))
 
     const records = []
     for (const { ent, r } of plan) {
@@ -315,9 +384,25 @@ const OPS = {
       touched.set(ent.id, ent)
     }
     touched.forEach((ent) => tidyEntity(tx, ent))
+
+    // A waiting video that used an archived look falls back to that entity's main look,
+    // or to nothing if another of its references already covers the entity.
+    const entityOfRef = (x) => findEntity(tx.entities, ((x) => x.token.replace(/^@/, '').split('/')[0])(x))
+    const notes = await retargetWaiting(tx, waiting, (ref, w) => {
+      if (!leaving.has(ref.path)) return undefined
+      const ent = entityOfRef(ref)
+      if (!ent) return { to: null, mention: ref.token }
+      const other = w.refs.find((x) => x !== ref && x.path && !leaving.has(x.path) && entityOfRef(x)?.id === ent.id)
+      if (other) return { to: null, mention: other.token }
+      if (tx.assets.some((a) => a.entity_id === ent.id)) return { to: `@${ent.short_id}`, mention: `@${ent.short_id}` }
+      return { to: null, mention: ent.name }
+    })
     return {
-      summary: `archived ${plan.map(({ ent, r }) => `${ent.short_id}/${r.variant}${r.take !== 'T01' ? '/' + r.take : ''}`).join(', ')}`
-        + (already.length ? ` (${already.join(', ')} already archived)` : ''),
+      summary: withNotes(
+        `archived ${plan.map(({ ent, r }) => `${ent.short_id}/${r.variant}${r.take !== 'T01' ? '/' + r.take : ''}`).join(', ')}`
+          + (already.length ? ` (${already.join(', ')} already archived)` : ''),
+        notes,
+      ),
       after: async () => { for (const rec of records) await appendJsonl(ARCHIVE_INDEX(), rec) },
     }
   }),
@@ -359,14 +444,17 @@ const OPS = {
       plan.push({ ent, variant: l.variant, rows: looksOf(tx, ent, l.variant) })
     }
     await assertNotInUse(tx, ctx, { files: plan.flatMap((p) => p.rows.map((r) => path.join(ROOT, r.folder, r.filename))) })
+    const waiting = await waitingForReview(tx)
 
     const moved = []
     const sources = new Map()
+    const movedTo = new Map() // old file -> the look it became
     for (const p of plan) {
       const variant = nextVariant(tx.assets, target.id, await archivedVariants(target.short_id))
       for (const r of p.rows) {
         const { desc, ext } = partsOf(r.filename, p.ent.id)
         const filename = fileName(target.id, variant, r.take, desc, ext)
+        movedTo.set(path.resolve(ROOT, r.folder, r.filename), { base: `@${target.short_id}/${variant}`, take: r.take })
         await tx.move(path.join(ROOT, r.folder, r.filename), path.join(ROOT, target.folder, filename))
         Object.assign(r, { filename, entity_id: target.id, variant, folder: target.folder })
       }
@@ -375,7 +463,21 @@ const OPS = {
     }
     sources.forEach((ent) => tidyEntity(tx, ent))
     syncEntityRow(tx.entities.find((r) => r.id === target.id), tx.assets, target.canonical_variant || 'V01')
-    return `moved ${moved.join(', ')}`
+
+    // A waiting video follows a moved look to its new name. A plain @KIND-NNN means the
+    // entity itself, so it stays unless the entity has nothing left.
+    const notes = await retargetWaiting(tx, waiting, (ref) => {
+      const m = movedTo.get(ref.path)
+      if (!m) return undefined
+      const parts = ref.token.replace(/^@/, '').split('/')
+      if (parts.length === 1) {
+        const ent = findEntity(tx.entities, parts[0])
+        if (ent && tx.assets.some((a) => a.entity_id === ent.id)) return undefined
+      }
+      const to = parts.length > 2 ? `${m.base}/${m.take}` : m.base
+      return { to, mention: to }
+    })
+    return withNotes(`moved ${moved.join(', ')}`, notes)
   }),
 }
 

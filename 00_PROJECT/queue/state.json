@@ -24,7 +24,8 @@
     "J-20260914-FAJ",
     "J-20260914-6CM",
     "J-20260914-SSO",
-    "J-20260914-NV7"
+    "J-20260914-NV7",
+    "J-20260914-NUG"
   ],
   "processedDecisions": [
     "rev_mtljtubxafk9",
@@ -42,16 +43,21 @@
     "rev_mu17wzx5zubr",
     "rev_mu18fgbk3lqi",
     "rev_mu18hin2vjk9",
-    "rev_mu18jgcdp1u4"
+    "rev_mu18jgcdp1u4",
+    "rev_mu19vrjsbra1"
   ],
-  "spentCredits": 1327.5,
-  "updatedAt": "2026-09-14T13:21:37.279Z",
+  "spentCredits": 1462.5,
+  "updatedAt": "2026-09-14T14:05:47.484Z",
   "failedDecisions": {},
   "processedOps": [
     "op_mu18d6axozqm",
     "op_mu18ddv4l87q",
     "op_mu18kn2j1n5p",
     "op_mu18qi1m07ey",
-    "op_mu199sum8rh0"
-  ]
+    "op_mu199sum8rh0",
+    "op_mu19wipnsw4t",
+    "op_mu1bebeluxa2",
+    "op_mu1bes4i09ry"
+  ],
+  "learnWatermark": "rev_mu19vrjsbra1"
 }

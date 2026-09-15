@@ -5,7 +5,7 @@ import { parseCsv } from './csv'
 import type {
   ArchivedLook, AssetRow, AttemptEntry, Candidate, CatalogEntity, Entity, Filing, IndexOp,
   IndexOpResult, Learning, LibraryData, LibraryEntity, QueueItem, ReviewContext, ReviewDecision,
-  StagingSidecar, WorkerStatus,
+  LookUse, StagingSidecar, WorkerStatus,
 } from './types'
 
 /**
@@ -339,7 +339,7 @@ export async function getReviewContexts(candidates: Candidate[]): Promise<Map<st
 
 /** Everything the References page manages, plus what the worker has and has not applied yet. */
 export async function getLibrary(): Promise<LibraryData> {
-  const [entities, assets, ops, results, state, archiveLog, worker] = await Promise.all([
+  const [entities, assets, ops, results, state, archiveLog, worker, candidates] = await Promise.all([
     getEntities(),
     getAssets(),
     readJsonl<IndexOp>(P.indexOps),
@@ -347,7 +347,9 @@ export async function getLibrary(): Promise<LibraryData> {
     getWorkerState(),
     readJsonl<Record<string, unknown>>(path.join(P.archive, 'index.jsonl')),
     getWorkerStatus(),
+    getCandidates(),
   ])
+  const usage = await getLookUsage(entities, state, candidates)
 
   const library: LibraryEntity[] = entities.map((e) => {
     const byVariant = new Map<string, AssetRow[]>()
@@ -362,6 +364,7 @@ export async function getLibrary(): Promise<LibraryData> {
         return {
           variant, takes: rows.length, role: top.role, status: top.status,
           path: `${top.folder}/${top.filename}`, filename: top.filename, source: top.source, added: top.added,
+          usedBy: usage.get(`${e.id}|${variant}`) ?? [],
         }
       })
     return {
@@ -393,6 +396,39 @@ export async function getLibrary(): Promise<LibraryData> {
     results: results.slice(-30).reverse().map((r) => ({ ...r, type: typeOf.get(r.opId) })),
     worker,
   }
+}
+
+/**
+ * Which queued or generating jobs, and which videos waiting for review, use each
+ * look, keyed `<entity id>|<variant>`. Mirrors the worker's in-use check
+ * (worker/lib/index-ops.mjs), so the page can say so before anyone clicks.
+ */
+async function getLookUsage(
+  entities: Entity[],
+  state: Record<string, unknown> | null,
+  candidates: Candidate[],
+): Promise<Map<string, LookUse[]>> {
+  const processed = new Set((state?.processedJobs ?? []) as string[])
+  const [queue, generating] = await Promise.all([readJsonl<QueueJob>(P.queue), getGeneratingJobId(processed)])
+  const out = new Map<string, LookUse[]>()
+  const add = (token: string, use: LookUse) => {
+    const [ref, variantIn] = String(token).replace(/^@/, '').split('/')
+    const ent = entities.find((x) => x.id === ref || x.short_id === ref)
+    const variant = (variantIn || ent?.canonical_variant || '').toUpperCase()
+    if (!ent || !variant) return
+    const key = `${ent.id}|${variant}`
+    const list = out.get(key) ?? []
+    if (!list.some((u) => u.label === use.label)) list.push(use)
+    out.set(key, list)
+  }
+  for (const j of queue) {
+    if (processed.has(j.jobId)) continue
+    for (const t of j.refs ?? []) add(t, { label: j.label ?? j.jobId, state: j.jobId === generating ? 'generating' : 'queued' })
+  }
+  for (const c of candidates) {
+    for (const t of c.sidecar.refs ?? []) add(t, { label: c.sidecar.label ?? c.sidecar.jobId, state: 'review' })
+  }
+  return out
 }
 
 /**

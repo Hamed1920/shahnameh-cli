@@ -79,9 +79,15 @@ the worker is stopped or was started before its code last changed (`getWorkerSta
 
 Every request is validated in full, then applied as one transaction: file moves are recorded and
 both CSVs snapshotted, so a failure part-way puts everything back. Archive, move and rename are
-refused while something still needs the files: a queued or generating job, an unapplied decision,
-or a result waiting for review (its revision or final reuses the same references). A refusal is recorded
-and shown; an I/O error (a locked file) is retried on the next pass.
+refused while a queued or generating job, or an unapplied decision, still needs the files. A result
+waiting for review is not a reason to refuse: its `job.json` is rewritten in the same transaction
+(archive → the entity's main look, or dropped if another ref covers the entity; move → the look's
+new token; rename → the new target id), and the summary names each video that changed. A refusal is
+recorded and shown; an I/O error (a locked file) is retried a few seconds later.
+
+The page gets `usedBy` per look from `getLookUsage` (same rules as the worker), shows it under each
+look, and disables Archive/Move for looks a job is generating or queued with. Results are toasts
+portalled above every dialog; problems stay until dismissed.
 
 ## References on a decision
 

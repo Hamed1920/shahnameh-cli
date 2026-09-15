@@ -202,11 +202,15 @@ pictures ("looks": V01, V02…). The gold star marks the main look.
   or as a brand-new entity.
 
 Changes take a few seconds, even while a video is being made. The worker applies them, and a
-message says **Done** or explains why something wasn't allowed. A picture can't be archived,
-moved or renamed while something still needs it:
-- a video being made with it: wait until that video is finished;
-- a video waiting for your review that used it: decide that video first, and swap the reference
-  when you do if you won't need that picture again.
+message in the top-right corner says **Done** or explains what went wrong. Problem messages stay
+until you close them with **×**.
+
+Under each picture in the large window, **Used by** shows which videos use it:
+- **generating now** or **queued**: that picture can't be archived or moved until the video is
+  finished, so those menu items are greyed out and say *in use*.
+- **waiting for review**: you can still archive or move it. The confirmation says what happens:
+  that video switches to the entity's main look (or follows the picture to its new place), so
+  redoing or finalising it still works. The **Done** message names every video that changed.
 
 The worker must be running for changes to happen. If a red message says the worker isn't running,
 or asks you to restart it, do that (Part 5, then Part 2, Window 2) and the waiting changes apply

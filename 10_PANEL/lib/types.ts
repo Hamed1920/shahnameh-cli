@@ -209,8 +209,18 @@ export interface ReviewItem {
 // ---------------------------------------------------------------- References page
 
 /** One look (variant) of an entity; takes are counted, the highest shown. */
+/** Something that will still read a look's file. */
+export interface LookUse {
+  /** "P12", or the job id when a job has no shot label. */
+  label: string
+  /** generating / queued: the worker refuses to archive or move the look until it is done.
+   *  review: a video waiting for review; archiving or moving retargets its references. */
+  state: 'generating' | 'queued' | 'review'
+}
+
 export interface LibraryLook {
   variant: string
+  usedBy: LookUse[]
   takes: number
   role: string
   status: string

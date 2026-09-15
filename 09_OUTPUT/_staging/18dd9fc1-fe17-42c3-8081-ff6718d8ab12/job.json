@@ -1,0 +1,114 @@
+{
+  "jobId": "J-20260914-NUG",
+  "parentJobId": "J-20260914-NV7",
+  "hfJobId": "18dd9fc1-fe17-42c3-8081-ff6718d8ab12",
+  "attempt": 3,
+  "stage": "final",
+  "label": "P05",
+  "target": "SHM-EP001-SC005-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP001-ZAHHAK-ENTRY/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nThe Royal Serpent Staff remains horizontal on the principal noble’s raised hands. Preserve all kneeling positions and exposed gifts.\n\nSHOT 1 — HELD WEIGHT — 0:00–0:05:\n85mm shallow-focus profile. The principal noble’s forearms begin to tremble almost imperceptibly under the horizontal staff. He does not lower it. Behind him, other bowed figures remain soft. The camera stays close enough to feel effort but avoids theatrical suffering.\n\nSHOT 2 — ZAHHAK’S MEASURE — 0:05–0:10:\n65mm frontal medium close-up. Zahhak’s masked head travels slowly from the lowered Iranian banner across the vessel and insignia, finally stopping on the staff. His old staff remains vertical beside him. Two serpents independently follow different objects; another continues breathing against his back.\n\nSHOT 3 — DECISION WITHOUT SPEECH — 0:10–0:15:\n40mm wide side composition spanning Zahhak on the right and the kneeling delegation across the left. Zahhak shifts his seated weight forward and closes one hand around the throne edge. The principal noble recognizes the movement and bows his head deeper, but nobody celebrates. End exactly as Zahhak begins lifting the old staff from the floor.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nNearly silent room tone, subtle arm strain, cloth tension, serpent scales, Zahhak’s glove tightening on stone and the old staff beginning to scrape.\n\nDESIGN NOTE — no reference image was planned for these, so build them from the description above (but if the reference key at the end names an attached image of one of them, match that image instead) and keep them identical across blocks: PROP_ZAHHAK_OLD_STAFF, PROP_IRANIAN_BANNER, PROP_RITUAL_VESSEL, PROP_POWER_INSIGNIA.\n\nRevision — earlier attempts were rejected for these reasons, oldest first. Fix all of them; where two notes disagree, the later note wins:\n- 1- روی جایی که ضحاک نشسته هیچ چیز دیگه‌ای نباشه. فقط عصای چوبیش.\r\n\r\n2-کسی که عصای جدید رو هدیه میده حتما باید یکی از این @Image2 (REF-001 V02, Civilization Caste Board) شخصیتهای ماسکدار باشه.\r\n\r\nانسان بدون ماسک ندارم.\n- remove all flags from the prompt. forget about flags in this entirely\n\nReference images, in the order they are attached:\n- @Image1: CHR-001 V02, Zahhak\n- @Image2: REF-001 V02, Civilization Caste Board\n- @Image3: LOC-009 V01, Ceremonial Reception Hall\n- @Image4: PRP-001 V01, Staff - Bronze Cobra\n- @Image5: PRP-016 V01, Perisan (Iranian) Flag\nEach attached image is binding. Wherever its subject appears, match the image exactly, even where the text above describes it differently.",
+  "basePrompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nThe Royal Serpent Staff remains horizontal on the principal noble’s raised hands. Preserve all kneeling positions and exposed gifts.\n\nSHOT 1 — HELD WEIGHT — 0:00–0:05:\n85mm shallow-focus profile. The principal noble’s forearms begin to tremble almost imperceptibly under the horizontal staff. He does not lower it. Behind him, other bowed figures remain soft. The camera stays close enough to feel effort but avoids theatrical suffering.\n\nSHOT 2 — ZAHHAK’S MEASURE — 0:05–0:10:\n65mm frontal medium close-up. Zahhak’s masked head travels slowly from the lowered Iranian banner across the vessel and insignia, finally stopping on the staff. His old staff remains vertical beside him. Two serpents independently follow different objects; another continues breathing against his back.\n\nSHOT 3 — DECISION WITHOUT SPEECH — 0:10–0:15:\n40mm wide side composition spanning Zahhak on the right and the kneeling delegation across the left. Zahhak shifts his seated weight forward and closes one hand around the throne edge. The principal noble recognizes the movement and bows his head deeper, but nobody celebrates. End exactly as Zahhak begins lifting the old staff from the floor.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nNearly silent room tone, subtle arm strain, cloth tension, serpent scales, Zahhak’s glove tightening on stone and the old staff beginning to scrape.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: PROP_ZAHHAK_OLD_STAFF, PROP_IRANIAN_BANNER, PROP_RITUAL_VESSEL, PROP_POWER_INSIGNIA.",
+  "revisionNotes": [
+    "1- روی جایی که ضحاک نشسته هیچ چیز دیگه‌ای نباشه. فقط عصای چوبیش.\r\n\r\n2-کسی که عصای جدید رو هدیه میده حتما باید یکی از این @REF-001/V02 شخصیتهای ماسکدار باشه.\r\n\r\nانسان بدون ماسک ندارم.",
+    "remove all flags from the prompt. forget about flags in this entirely"
+  ],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": "false",
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@CHR-001/V02",
+    "@REF-001/V02",
+    "@LOC-009",
+    "@PRP-001",
+    "@PRP-016/V01"
+  ],
+  "createdAt": "2026-09-14T13:30:41.002Z",
+  "costCredits": 135,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260914_132259_18dd9fc1-fe17-42c3-8081-ff6718d8ab12.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-14T13:22:59.965623Z",
+      "display_name": "Seedance 2.5",
+      "id": "18dd9fc1-fe17-42c3-8081-ff6718d8ab12",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": false,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "04fb0495-e176-4d6f-ade0-25f97b9e33bd",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/04fb0495-e176-4d6f-ade0-25f97b9e33bd.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "c3657b52-5d43-4922-8c69-4bdbe2a1fe0f",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/c3657b52-5d43-4922-8c69-4bdbe2a1fe0f.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "6b0603e1-68fa-4ae6-bdd1-4c3e999ff205",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/6b0603e1-68fa-4ae6-bdd1-4c3e999ff205.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "050a319a-5424-4995-8186-428f53f36c96",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/050a319a-5424-4995-8186-428f53f36c96.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "1a80076e-f38e-4f0c-bb45-3e0047a20a1b",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/1a80076e-f38e-4f0c-bb45-3e0047a20a1b.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nThe Royal Serpent Staff remains horizontal on the principal noble’s raised hands. Preserve all kneeling positions and exposed gifts.\n\nSHOT 1 — HELD WEIGHT — 0:00–0:05:\n85mm shallow-focus profile. The principal noble’s forearms begin to tremble almost imperceptibly under the horizontal staff. He does not lower it. Behind him, other bowed figures remain soft. The camera stays close enough to feel effort but avoids theatrical suffering.\n\nSHOT 2 — ZAHHAK’S MEASURE — 0:05–0:10:\n65mm frontal medium close-up. Zahhak’s masked head travels slowly from the lowered Iranian banner across the vessel and insignia, finally stopping on the staff. His old staff remains vertical beside him. Two serpents independently follow different objects; another continues breathing against his back.\n\nSHOT 3 — DECISION WITHOUT SPEECH — 0:10–0:15:\n40mm wide side composition spanning Zahhak on the right and the kneeling delegation across the left. Zahhak shifts his seated weight forward and closes one hand around the throne edge. The principal noble recognizes the movement and bows his head deeper, but nobody celebrates. End exactly as Zahhak begins lifting the old staff from the floor.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nNearly silent room tone, subtle arm strain, cloth tension, serpent scales, Zahhak’s glove tightening on stone and the old staff beginning to scrape.\n\nDESIGN NOTE — no reference image was planned for these, so build them from the description above (but if the reference key at the end names an attached image of one of them, match that image instead) and keep them identical across blocks: PROP_ZAHHAK_OLD_STAFF, PROP_IRANIAN_BANNER, PROP_RITUAL_VESSEL, PROP_POWER_INSIGNIA.\n\nRevision — earlier attempts were rejected for these reasons, oldest first. Fix all of them; where two notes disagree, the later note wins:\n- 1- روی جایی که ضحاک نشسته هیچ چیز دیگه‌ای نباشه. فقط عصای چوبیش.\r\n\r\n2-کسی که عصای جدید رو هدیه میده حتما باید یکی از این @Image2 (REF-001 V02, Civilization Caste Board) شخصیتهای ماسکدار باشه.\r\n\r\nانسان بدون ماسک ندارم.\n- remove all flags from the prompt. forget about flags in this entirely\n\nReference images, in the order they are attached:\n- @Image1: CHR-001 V02, Zahhak\n- @Image2: REF-001 V02, Civilization Caste Board\n- @Image3: LOC-009 V01, Ceremonial Reception Hall\n- @Image4: PRP-001 V01, Staff - Bronze Cobra\n- @Image5: PRP-016 V01, Perisan (Iranian) Flag\nEach attached image is binding. Wherever its subject appears, match the image exactly, even where the text above describes it differently.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260914_132259_18dd9fc1-fe17-42c3-8081-ff6718d8ab12.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260914_132259_18dd9fc1-fe17-42c3-8081-ff6718d8ab12_thumbnail.webp"
+    }
+  ]
+}

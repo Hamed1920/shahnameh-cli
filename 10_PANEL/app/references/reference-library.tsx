@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'motion/react'
 import {
@@ -23,7 +24,7 @@ import { Badge, StickyHeader } from '@/components/ui/text'
 import { assetUrl } from '@/lib/asset'
 import { cn } from '@/lib/cn'
 import { KINDS, MAX_UPLOADS, UPLOAD_ACCEPT, entitySlug, type Kind } from '@/lib/indexing'
-import type { CatalogEntity, LibraryData, LibraryEntity } from '@/lib/types'
+import type { CatalogEntity, LibraryData, LibraryEntity, LookUse } from '@/lib/types'
 
 const ROLES = ['HERO', 'TURNAROUND', 'PLATE', 'DETAIL', 'BOARD', 'RENDER']
 const PLURAL: Record<string, string> = {
@@ -36,6 +37,12 @@ const splitLook = (k: string) => { const [entity, variant] = k.split('|'); retur
 type LookRef = { entity: string; variant: string }
 
 type View = 'ALL' | Kind | 'RETIRED' | 'ARCHIVED'
+
+const USE_STATE: Record<LookUse['state'], string> = { generating: 'generating now', queued: 'queued', review: 'waiting for review' }
+/** "P12 (waiting for review), P05 (generating now)" */
+const usesText = (uses: LookUse[]) => uses.map((u) => `${u.label} (${USE_STATE[u.state]})`).join(', ')
+/** Uses the worker has to wait out: it will not pull a file from under a job that still needs it. */
+const blockingUses = (uses: LookUse[]) => uses.filter((u) => u.state !== 'review')
 type Toast = { id: number; tone: 'good' | 'bad' | 'muted'; text: string }
 let seq = 0
 
@@ -116,11 +123,14 @@ export function ReferenceLibrary({ data, catalog }: { data: LibraryData; catalog
   const [toasts, setToasts] = useState<Toast[]>([])
   const seen = useRef(new Set(data.results.map((r) => r.opId)))
 
+  const dismiss = useCallback((id: number) => setToasts((t) => t.filter((x) => x.id !== id)), [])
+  // A problem stays until it is dismissed: it says what to do next, and a few
+  // seconds is easy to miss while looking at a picture.
   const toast = useCallback((tone: Toast['tone'], text: string, ms = 4500) => {
     const id = ++seq
     setToasts((t) => [...t, { id, tone, text }])
-    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), ms)
-  }, [])
+    if (tone !== 'bad') setTimeout(() => dismiss(id), ms)
+  }, [dismiss])
 
   // While the worker has requests to apply, keep checking; report each outcome once.
   useEffect(() => {
@@ -195,6 +205,29 @@ export function ReferenceLibrary({ data, catalog }: { data: LibraryData; catalog
   ]
   const lookPath = (l: { entity: string; variant: string }) => byId.get(l.entity)?.looks.find((x) => x.variant === l.variant)?.path
 
+  /** Confirm, then archive. Says up front what happens to anything that uses these looks. */
+  const archiveLooks = (looks: LookRef[]) => {
+    const label = (l: LookRef) => `${byId.get(l.entity)?.shortId}/${l.variant}`
+    const lines = ['The pictures move to “Archived looks” and stop being usable as references. Nothing is deleted, and you can restore them.']
+    for (const l of looks) {
+      const e = byId.get(l.entity)
+      const uses = e?.looks.find((x) => x.variant === l.variant)?.usedBy ?? []
+      const blocked = blockingUses(uses)
+      const review = uses.filter((u) => u.state === 'review')
+      if (blocked.length) lines.push(`${label(l)} is used by ${usesText(blocked)}, so the worker will not archive it until that has finished.`)
+      if (review.length) {
+        lines.push(`${review.map((u) => u.label).join(', ')} ${review.length === 1 ? 'is' : 'are'} waiting for review with ${label(l)}. `
+          + `${review.length === 1 ? 'It' : 'They'} will use ${e?.name ?? 'its'}’s main look instead, so a redo or final still works.`)
+      }
+    }
+    setConfirm({
+      title: `Archive ${looks.length === 1 ? label(looks[0]) : `${looks.length} looks`}?`,
+      body: lines.join(' '),
+      label: 'Archive',
+      run: () => send({ type: 'archive', looks }),
+    })
+  }
+
   const kindCount = (k: string) => live.filter((e) => e.kind === k).length
 
   // ------------------------------------------------ right-click menus
@@ -213,12 +246,6 @@ export function ReferenceLibrary({ data, catalog }: { data: LibraryData; catalog
   }
   const viewItemsOf = (e: LibraryEntity): LightboxItem[] =>
     e.looks.map((l) => ({ src: assetUrl(l.path), title: `${e.shortId}/${l.variant}`, subtitle: `${e.name} · ${l.role}` }))
-  const confirmArchive = (e: LibraryEntity, looks: LookRef[]) => setConfirm({
-    title: `Archive ${looks.length === 1 ? `${e.shortId}/${looks[0].variant}` : `${looks.length} looks`}?`,
-    body: 'The pictures move to “Archived looks” and stop being usable as references. Nothing is deleted, and you can restore them.',
-    label: 'Archive',
-    run: () => send({ type: 'archive', looks }),
-  })
   const confirmRetire = (e: LibraryEntity) => setConfirm({
     title: `Retire ${e.shortId}?`,
     body: 'It disappears from pickers and can’t be used in new jobs. Its number and files are kept, and you can restore it from “Retired”.',
@@ -233,8 +260,10 @@ export function ReferenceLibrary({ data, catalog }: { data: LibraryData; catalog
     const token = `@${e.shortId}/${variant}`
     const one = [{ entity: e.id, variant }]
     const retired = e.status === 'RETIRED'
+    const inUse = blockingUses(l.usedBy).length > 0
     return [
       { heading: `${token} · ${e.name}` },
+      ...(l.usedBy.length ? [{ heading: `Used by ${usesText(l.usedBy)}` }] : []),
       { label: 'View full screen', icon: <Maximize2 className="size-3.5" />, onSelect: () => setViewer({ items: viewItemsOf(e), index: e.looks.indexOf(l) }) },
       { label: 'Copy reference', icon: <Copy className="size-3.5" />, hint: token, onSelect: () => copyTokens([token]) },
       { label: 'Show in folder', icon: <FolderOpen className="size-3.5" />, onSelect: () => reveal(l.path) },
@@ -246,10 +275,10 @@ export function ReferenceLibrary({ data, catalog }: { data: LibraryData; catalog
         disabled: variant === e.canonical || retired,
         onSelect: () => send({ type: 'canonical', entity: e.id, variant }),
       },
-      { label: 'Move to another entity…', icon: <MoveRight className="size-3.5" />, disabled: retired, onSelect: () => setMoveLooks(one) },
+      { label: 'Move to another entity…', icon: <MoveRight className="size-3.5" />, disabled: retired || inUse, hint: inUse ? 'in use' : undefined, onSelect: () => setMoveLooks(one) },
       { caption: 'Role', chips: ROLES.map((r) => ({ label: r, active: r === l.role, onSelect: () => send({ type: 'role', looks: one, role: r }) })) },
       { divider: true },
-      { label: 'Archive…', icon: <Archive className="size-3.5" />, tone: 'bad', onSelect: () => confirmArchive(e, one) },
+      { label: 'Archive…', icon: <Archive className="size-3.5" />, tone: 'bad', disabled: inUse, hint: inUse ? 'in use' : undefined, onSelect: () => archiveLooks(one) },
     ]
   }
 
@@ -474,12 +503,7 @@ export function ReferenceLibrary({ data, catalog }: { data: LibraryData; catalog
                       <Star aria-hidden className="size-3.5" /> Set as main
                     </Button>
                   )}
-                  <Button type="button" size="sm" tone="outline" disabled={busy} onClick={() => setConfirm({
-                    title: `Archive ${selL.size === 1 ? `${byId.get(selLooks[0].entity)?.shortId}/${selLooks[0].variant}` : `${selL.size} looks`}?`,
-                    body: 'The pictures move to “Archived looks” and stop being usable as references. Nothing is deleted, and you can restore them.',
-                    label: 'Archive',
-                    run: () => send({ type: 'archive', looks: selLooks }),
-                  })}>
+                  <Button type="button" size="sm" tone="outline" disabled={busy} onClick={() => archiveLooks(selLooks)}>
                     <Archive aria-hidden className="size-3.5" /> Archive
                   </Button>
                   {selL.size === 1 && lookPath(selLooks[0]) && (
@@ -524,6 +548,7 @@ export function ReferenceLibrary({ data, catalog }: { data: LibraryData; catalog
           onEdit={() => setEditing(byId.get(openId)!)}
           onAdd={() => setAdding({ entity: openId })}
           onMove={setMoveLooks}
+          onArchive={archiveLooks}
           onLookMenu={(ev, variant, selection) => openMenu(ev, lookEntries(byId.get(openId)!, variant, selection))}
           onConfirm={setConfirm}
           onView={(items, index) => setViewer({ items, index })}
@@ -560,29 +585,7 @@ export function ReferenceLibrary({ data, catalog }: { data: LibraryData; catalog
 
       <ContextMenu at={menu?.at ?? null} entries={menu?.entries ?? []} onClose={() => setMenu(null)} />
 
-      {/* ------------------------------------------------ toasts */}
-      <div className="pointer-events-none fixed top-5 right-5 z-90 flex w-full max-w-sm flex-col gap-2">
-        <AnimatePresence initial={false}>
-          {toasts.map((t) => (
-            <motion.div
-              key={t.id}
-              layout
-              initial={{ opacity: 0, x: 16 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 16 }}
-              transition={{ duration: 0.2, ease: EASE }}
-              role="status"
-              className={cn(
-                'pointer-events-auto flex items-start gap-2.5 rounded-lg border bg-raise px-4 py-3 text-[13px] text-fg shadow-[0_16px_40px_-12px_rgba(0,0,0,0.85)]',
-                t.tone === 'bad' ? 'border-bad/50' : 'border-edge-strong',
-              )}
-            >
-              {t.tone === 'bad' ? <TriangleAlert aria-hidden className="mt-0.5 size-4 shrink-0 text-bad" /> : t.tone === 'good' ? <Check aria-hidden className="mt-0.5 size-4 shrink-0 text-good" /> : <LoaderCircle aria-hidden className="mt-0.5 size-4 shrink-0 animate-spin text-muted" />}
-              <span className="min-w-0 break-words">{t.text}</span>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
+      <Toasts toasts={toasts} onDismiss={dismiss} />
     </div>
   )
 }
@@ -827,7 +830,7 @@ function AddDialog({ entity, catalog, onClose, send, busy }: {
  * with the actions beside it. The small cards are for finding; this is for work.
  */
 function EntityView({
-  entity: e, pending, busy, send, layered, onClose, onEdit, onAdd, onMove, onLookMenu, onConfirm, onView, onToast,
+  entity: e, pending, busy, send, layered, onClose, onEdit, onAdd, onMove, onArchive, onLookMenu, onConfirm, onView, onToast,
 }: {
   entity: LibraryEntity
   pending: boolean
@@ -839,6 +842,8 @@ function EntityView({
   onEdit: () => void
   onAdd: () => void
   onMove: (looks: { entity: string; variant: string }[]) => void
+  /** Asks for confirmation first. */
+  onArchive: (looks: { entity: string; variant: string }[]) => void
   onLookMenu: (ev: React.MouseEvent, variant: string, selection: { selected: boolean; toggle: () => void }) => void
   onConfirm: (c: { title: string; body: string; label: string; run: () => void }) => void
   onView: (items: LightboxItem[], index: number) => void
@@ -862,12 +867,8 @@ function EntityView({
   const all = looks.length > 0 && chosen.length === looks.length
   const viewItems = looks.map((l) => ({ src: assetUrl(l.path), title: `${e.shortId}/${l.variant}`, subtitle: `${e.name} · ${l.role}` }))
   const copy = async (tokens: string[]) => { await navigator.clipboard.writeText(tokens.join(' ')); onToast('good', `Copied ${tokens.join(' ')}`, 3000) }
-  const archive = (ls: typeof looks) => onConfirm({
-    title: `Archive ${ls.length === 1 ? `${e.shortId}/${ls[0].variant}` : `${ls.length} looks`}?`,
-    body: 'The pictures move to “Archived looks” and stop being usable as references. Nothing is deleted, and you can restore them.',
-    label: 'Archive',
-    run: () => { send({ type: 'archive', looks: asOps(ls) }); setSel(new Set()) },
-  })
+  // Looks that leave drop out of the selection by themselves (the effect above).
+  const archive = (ls: typeof looks) => onArchive(asOps(ls))
 
   return (
     <Modal
@@ -1013,6 +1014,11 @@ function EntityView({
                         Make main
                       </button>
                     )}
+                    {l.usedBy.length > 0 && (
+                      <span className={cn('w-full text-[11.5px]', blockingUses(l.usedBy).length ? 'text-fg' : 'text-muted')}>
+                        Used by {usesText(l.usedBy)}
+                      </span>
+                    )}
                     <span className="w-full truncate font-mono text-[10.5px] text-faint" title={l.filename}>{l.filename}</span>
                   </figcaption>
                 </figure>
@@ -1027,6 +1033,45 @@ function EntityView({
         )}
       </div>
     </Modal>
+  )
+}
+
+/**
+ * Results and problems, portalled above every dialog. Rendered inside the page
+ * they sat under the entity window, so a refusal while working there was
+ * invisible and the click looked like it did nothing.
+ */
+function Toasts({ toasts, onDismiss }: { toasts: Toast[]; onDismiss: (id: number) => void }) {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  if (!mounted) return null
+  return createPortal(
+    <div className="pointer-events-none fixed top-5 right-5 z-130 flex w-full max-w-sm flex-col gap-2">
+      <AnimatePresence initial={false}>
+        {toasts.map((t) => (
+          <motion.div
+            key={t.id}
+            layout
+            initial={{ opacity: 0, x: 16 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 16 }}
+            transition={{ duration: 0.2, ease: EASE }}
+            role={t.tone === 'bad' ? 'alert' : 'status'}
+            className={cn(
+              'pointer-events-auto flex items-start gap-2.5 rounded-lg border bg-raise py-3 pr-2 pl-4 text-[13px] text-fg shadow-[0_16px_40px_-12px_rgba(0,0,0,0.85)]',
+              t.tone === 'bad' ? 'border-bad/50' : 'border-edge-strong',
+            )}
+          >
+            {t.tone === 'bad' ? <TriangleAlert aria-hidden className="mt-0.5 size-4 shrink-0 text-bad" /> : t.tone === 'good' ? <Check aria-hidden className="mt-0.5 size-4 shrink-0 text-good" /> : <LoaderCircle aria-hidden className="mt-0.5 size-4 shrink-0 animate-spin text-muted" />}
+            <span className="min-w-0 flex-1 break-words">{t.text}</span>
+            <button type="button" onClick={() => onDismiss(t.id)} aria-label="Dismiss" className="focus-ring -my-1 grid size-6 shrink-0 cursor-pointer place-items-center rounded-md text-muted hover:bg-white/[0.06] hover:text-fg">
+              <X aria-hidden className="size-3.5" />
+            </button>
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    </div>,
+    document.body,
   )
 }
 
