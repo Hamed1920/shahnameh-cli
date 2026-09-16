@@ -1,0 +1,131 @@
+{
+  "jobId": "J-20260915-RN6",
+  "parentJobId": "J-20260903-8EI",
+  "hfJobId": "eb62f25d-cbab-44dc-b65e-63251b088886",
+  "attempt": 2,
+  "stage": "draft",
+  "label": "P10",
+  "target": "SHM-EP001-SC010-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP001-ZAHHAK-ENTRY/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nJamshid has moved off the hall’s central axis. Zahhak waits outside the main gate with the accepted delegation.\n\nSHOT 1 — DISCARDING THE SIGN — 0:00–0:05:\n65mm close view beside a narrow side entrance. Jamshid pulls one removable royal element from shoulder or neck and lets it fall rather than placing it. It strikes stone without grandeur. He gathers the remaining costume tight and enters the descending passage. His base identity and mask remain unchanged as the visual state transitions from royal to escape version.\n\nSHOT 2 — OPENED FROM WITHIN — 0:05–0:10:\nMatch the fallen object’s horizontal edge to the locking beam of the main Iranian gate lifting from inside. 32mm interior wide shot. Mechanisms and restrained gate workers pull the monumental doors inward. Cold exterior light and dust enter first, revealing Zahhak waiting on foot beyond them. Nothing breaks.\n\nSHOT 3 — FIRST CROSSING — 0:10–0:15:\n50mm low side composition across the threshold. Zahhak waits until the opening is complete, then begins one asymmetrical step into Iran: staff first, strong foot, lame side. Nobles follow several paces back. He never poses or looks upward. End with the new staff planted just inside the gate.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nRegalia hitting stone, quick fabric and breath, wooden or metal locking beam, heavy doors opening inward, wind entering, one staff impact inside Iran.\n\nDESIGN NOTE — no reference image was planned for these, so build them from the description above (but if one of them is called with an attached image in this prompt, match that image instead) and keep them identical across blocks: CHAR_JAMSHID_ESCAPE, PROP_JAMSHID_REGALIA.\n\nRevision — the previous attempt was rejected for these reasons. Fix them:\n- This is Jamshid's crown <<<image_7>>> . As Jamshid flees, his crown falls off, and he runs away without it. The hall that Zahhak enters is the grand hall of this specific building <<<image_5>>> , and this location <<<image_4>>>  is the exact place Jamshid is fleeing from. Match the crown and architecture precisely to these references.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in @REF-001/V02. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V06); match it wherever Zahhak appears.\n<<<image_2>>> is Civilization Caste Board (REF-001 V01); match it wherever Civilization Caste Board appears.\n<<<image_3>>> is Jamshid (CHR-002 V03); match it wherever Jamshid appears.\n<<<image_6>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+  "basePrompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nJamshid has moved off the hall’s central axis. Zahhak waits outside the main gate with the accepted delegation.\n\nSHOT 1 — DISCARDING THE SIGN — 0:00–0:05:\n65mm close view beside a narrow side entrance. Jamshid pulls one removable royal element from shoulder or neck and lets it fall rather than placing it. It strikes stone without grandeur. He gathers the remaining costume tight and enters the descending passage. His base identity and mask remain unchanged as the visual state transitions from royal to escape version.\n\nSHOT 2 — OPENED FROM WITHIN — 0:05–0:10:\nMatch the fallen object’s horizontal edge to the locking beam of the main Iranian gate lifting from inside. 32mm interior wide shot. Mechanisms and restrained gate workers pull the monumental doors inward. Cold exterior light and dust enter first, revealing Zahhak waiting on foot beyond them. Nothing breaks.\n\nSHOT 3 — FIRST CROSSING — 0:10–0:15:\n50mm low side composition across the threshold. Zahhak waits until the opening is complete, then begins one asymmetrical step into Iran: staff first, strong foot, lame side. Nobles follow several paces back. He never poses or looks upward. End with the new staff planted just inside the gate.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nRegalia hitting stone, quick fabric and breath, wooden or metal locking beam, heavy doors opening inward, wind entering, one staff impact inside Iran.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: CHAR_JAMSHID_ESCAPE, PROP_JAMSHID_REGALIA.",
+  "revisionNotes": [
+    "This is Jamshid's crown @PRP-017/V01 . As Jamshid flees, his crown falls off, and he runs away without it. The hall that Zahhak enters is the grand hall of this specific building @LOC-002/V01 , and this location @LOC-011/V01  is the exact place Jamshid is fleeing from. Match the crown and architecture precisely to these references."
+  ],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001",
+    "@REF-001",
+    "@CHR-002/V03",
+    "@LOC-011/V01",
+    "@LOC-002",
+    "@PRP-001",
+    "@PRP-017/V01"
+  ],
+  "createdAt": "2026-09-15T19:47:19.759Z",
+  "costCredits": 37.5,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_194233_eb62f25d-cbab-44dc-b65e-63251b088886.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-15T19:42:33.709844Z",
+      "display_name": "Seedance 2.5",
+      "id": "eb62f25d-cbab-44dc-b65e-63251b088886",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "394fb0d8-1794-4f30-8212-6d896b8092e8",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/394fb0d8-1794-4f30-8212-6d896b8092e8.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "f9429c1f-918e-4bcd-8b6a-6923a5c40558",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/f9429c1f-918e-4bcd-8b6a-6923a5c40558.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a8cf3d1b-523b-422f-a967-06259de70986",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/a8cf3d1b-523b-422f-a967-06259de70986.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a689a490-5450-489b-8738-efa520cd9ad2",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/a689a490-5450-489b-8738-efa520cd9ad2.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "5b1faf20-04a5-4727-b389-6f375b64fffc",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/5b1faf20-04a5-4727-b389-6f375b64fffc.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "93a95889-2bf5-4297-82bd-136cb7c9bd25",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/93a95889-2bf5-4297-82bd-136cb7c9bd25.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "d388794f-346e-4957-ad7f-610d5def64ad",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/d388794f-346e-4957-ad7f-610d5def64ad.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nJamshid has moved off the hall’s central axis. Zahhak waits outside the main gate with the accepted delegation.\n\nSHOT 1 — DISCARDING THE SIGN — 0:00–0:05:\n65mm close view beside a narrow side entrance. Jamshid pulls one removable royal element from shoulder or neck and lets it fall rather than placing it. It strikes stone without grandeur. He gathers the remaining costume tight and enters the descending passage. His base identity and mask remain unchanged as the visual state transitions from royal to escape version.\n\nSHOT 2 — OPENED FROM WITHIN — 0:05–0:10:\nMatch the fallen object’s horizontal edge to the locking beam of the main Iranian gate lifting from inside. 32mm interior wide shot. Mechanisms and restrained gate workers pull the monumental doors inward. Cold exterior light and dust enter first, revealing Zahhak waiting on foot beyond them. Nothing breaks.\n\nSHOT 3 — FIRST CROSSING — 0:10–0:15:\n50mm low side composition across the threshold. Zahhak waits until the opening is complete, then begins one asymmetrical step into Iran: staff first, strong foot, lame side. Nobles follow several paces back. He never poses or looks upward. End with the new staff planted just inside the gate.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nRegalia hitting stone, quick fabric and breath, wooden or metal locking beam, heavy doors opening inward, wind entering, one staff impact inside Iran.\n\nDESIGN NOTE — no reference image was planned for these, so build them from the description above (but if one of them is called with an attached image in this prompt, match that image instead) and keep them identical across blocks: CHAR_JAMSHID_ESCAPE, PROP_JAMSHID_REGALIA.\n\nRevision — the previous attempt was rejected for these reasons. Fix them:\n- This is Jamshid's crown <<<image_7>>> . As Jamshid flees, his crown falls off, and he runs away without it. The hall that Zahhak enters is the grand hall of this specific building <<<image_5>>> , and this location <<<image_4>>>  is the exact place Jamshid is fleeing from. Match the crown and architecture precisely to these references.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in @REF-001/V02. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V06); match it wherever Zahhak appears.\n<<<image_2>>> is Civilization Caste Board (REF-001 V01); match it wherever Civilization Caste Board appears.\n<<<image_3>>> is Jamshid (CHR-002 V03); match it wherever Jamshid appears.\n<<<image_6>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_194233_eb62f25d-cbab-44dc-b65e-63251b088886.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_194233_eb62f25d-cbab-44dc-b65e-63251b088886_thumbnail.webp"
+    }
+  ]
+}

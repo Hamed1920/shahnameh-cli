@@ -8,3 +8,15 @@
 {"id":"op_mu1bes4i09ry","ts":"2026-09-14T14:05:11.784Z","reviewer":"hamed","type":"canonical","entity":"SHM-CHR-001-ZAHHAK","variant":"V03"}
 {"id":"op_mu2flc5igk2n","ts":"2026-09-15T08:50:02.313Z","reviewer":"hamed","type":"canonical","entity":"SHM-CHR-001-ZAHHAK","variant":"V02"}
 {"id":"op_mu2pnx1wfnog","ts":"2026-09-15T13:31:58.874Z","reviewer":"hamed","type":"canonical","entity":"SHM-CHR-001-ZAHHAK","variant":"V06"}
+{"id":"op_mu2xiayxs1om","ts":"2026-09-15T17:11:33.911Z","reviewer":"hamed","type":"canonical","entity":"SHM-PRP-016-PERISAN-IRANIAN-FLAG","variant":"V02"}
+{"id":"op_mu303pwn1py4","ts":"2026-09-15T18:24:12.267Z","reviewer":"hamed","type":"canonical","entity":"SHM-CRT-002-RIDING-BEAST-LONGBEAK-BLACK","variant":"V02"}
+{"id":"op_mu3046zsu0p3","ts":"2026-09-15T18:24:34.410Z","reviewer":"hamed","type":"archive","looks":[{"entity":"SHM-CRT-002-RIDING-BEAST-LONGBEAK-BLACK","variant":"V01"}]}
+{"id":"op_mu304hkami7l","ts":"2026-09-15T18:24:48.109Z","reviewer":"hamed","type":"canonical","entity":"SHM-REF-001-BOARD-CIVILIZATION-CASTE","variant":"V01"}
+{"id":"op_mu304m1emox6","ts":"2026-09-15T18:24:53.908Z","reviewer":"hamed","type":"archive","looks":[{"entity":"SHM-REF-001-BOARD-CIVILIZATION-CASTE","variant":"V02"}]}
+{"id":"op_mu304woo7jpz","ts":"2026-09-15T18:25:07.706Z","reviewer":"hamed","type":"canonical","entity":"SHM-CRT-001-RIDING-BEAST-PALE-BEAKED","variant":"V02"}
+{"id":"op_mu30551o94me","ts":"2026-09-15T18:25:18.542Z","reviewer":"hamed","type":"archive","looks":[{"entity":"SHM-CRT-001-RIDING-BEAST-PALE-BEAKED","variant":"V01"}]}
+{"id":"op_mu305fa7i7og","ts":"2026-09-15T18:25:31.809Z","reviewer":"hamed","type":"archive","looks":[{"entity":"SHM-PRP-016-PERISAN-IRANIAN-FLAG","variant":"V01"}]}
+{"id":"op_mu305n7f7jr2","ts":"2026-09-15T18:25:42.078Z","reviewer":"hamed","type":"archive","looks":[{"entity":"SHM-PRP-016-PERISAN-IRANIAN-FLAG","variant":"V03"}]}
+{"id":"op_mu309c7wnhnm","ts":"2026-09-15T18:28:34.461Z","reviewer":"hamed","type":"archive","looks":[{"entity":"SHM-CHR-001-ZAHHAK","variant":"V03"}]}
+{"id":"op_mu309mt803sn","ts":"2026-09-15T18:28:48.190Z","reviewer":"hamed","type":"archive","looks":[{"entity":"SHM-CHR-001-ZAHHAK","variant":"V02"}]}
+{"id":"op_mu30bdfmxjrb","ts":"2026-09-15T18:30:09.348Z","reviewer":"hamed","type":"add","uploads":[{"id":"u1","file":"09_OUTPUT/_uploads/op_mu30bdfmxjrb/u1.jpg","originalName":"Character_sheet_character_details_20260915212934.jpeg","mode":"variant","role":"PLATE","descriptor":"Jamshid without Crown","entity":"SHM-CHR-002-JAMSHID"}]}

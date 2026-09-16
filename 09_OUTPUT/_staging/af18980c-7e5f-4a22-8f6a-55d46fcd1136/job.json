@@ -1,0 +1,132 @@
+{
+  "jobId": "J-20260915-5JU",
+  "parentJobId": "J-20260915-GEY",
+  "hfJobId": "af18980c-7e5f-4a22-8f6a-55d46fcd1136",
+  "attempt": 3,
+  "stage": "final",
+  "label": "P12",
+  "target": "SHM-EP001-SC012-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP001-ZAHHAK-ENTRY/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nJamshid has reached the mount area. Zahhak continues upward toward the unchanged Hall of Columns and throne.\n\nSHOT 1 — UNCHANGED HALL — 0:00–0:04:\n24mm restrained frontal wide shot in the exact existing Hall of Columns. Zahhak enters at one horizontal edge and advances toward the unchanged throne on the central axis, completing one heavy gait cycle. No followers enter. Cut on the staff striking the first throne step.\n\nSHOT 2 — MOUNT KNEELS — 0:04–0:08:\nMatch the impact to the enormous two-legged flightless mount lowering beside Jamshid. 35mm side view. The 2.5-to-3-meter terrestrial animal is heavy and plausible, with massive legs, weighty beak or muzzle, coarse feathers and areas of skin. It has no usable wings, never flies and never resembles Simurgh, griffin or hippogriff. It bends until the functional saddle reaches Jamshid. He swings on in one practical movement and leans forward; no climb or pose.\n\nSHOT 3 — NEW OCCUPANT — 0:08–0:11:\n50mm centered frontal view of the exact unchanged Jamshid throne. Zahhak lowers himself using the staff to control his lame side, plants it and becomes still. No crown and no victorious head lift. One serpent crosses the throne arm while another turns toward the empty hall.\n\nSHOT 4 — SMALL IN THE LAND — 0:11–0:15:\nExtreme wide static 24mm horizontal desert landscape. Jamshid and the mount run away along descending ground, already small in the lower third. Heavy terrestrial two-legged strides only; no leap, glide or flight. Dry wind softens their track as they become one moving dark point. Cut to black before complete disappearance.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nStaff on throne step, heavy animal joints and harness leather, strained breath, cloth and serpent scales as Zahhak sits, then open desert wind and receding two-legged footfalls. Wind is the last sound; cut to silence.\n\n۵. دستور اجرای مستقیم برای Claude / Higgsfield CLI\nEXECUTION INSTRUCTION FOR CLAUDE / HIGGSFIELD CLI\n\n1. Process PROMPT 01 through PROMPT 12 strictly in order.\n2. Every generation must be horizontal 16:9. Reject any vertical 9:16 composition or vertical crop.\n3. Replace every [MENTION ...] placeholder with the exact matching uploaded asset before submission.\n4. Generate each 15-second block separately and name outputs ZAHHAK_ENTRY_P01 through ZAHHAK_ENTRY_P12.\n5. Keep identities, masks, costumes, body proportions, architecture and props locked across all accepted blocks.\n6. From PROMPT 06 onward, Zahhak uses only PROP_ROYAL_SERPENT_STAFF. Never restore the old staff.\n7. Keep Zahhak exactly 178 cm, permanently lame and visibly staff-dependent.\n8. Keep five to ten natural black serpents alive and independently moving; reject statues, dragons or Medusa forms.\n9. Preserve the exact existing Hall of Columns and Jamshid throne; no redesign.\n10. Reject any military conquest, broken gate, cheering crowd, heroic escape, flying mount or ruined Iranian city.\n11. If one block fails continuity, regenerate only that block without silently changing assets or prompt meaning.\n12. After all accepted generations, assemble the full 180-second master; editorial selection to approximately 90 seconds happens afterward.\n۶. معیار رد و قبول خروجی\nقاب دقیقاً افقی 16:9 است و میزانسن برای عرض تصویر طراحی شده.\nهیئت ایرانی محتاج و جدی است؛ نه ارتش، نه جشن و نه صف قهرمانانه.\nلحظه‌ی مرکزی بلاک ۶ با جایگزینی واقعی دو عصا روشن است.\nلنگیدن ضحاک و حرکت مستقل مارها در تمام نماهای مربوط حفظ شده.\nورود ضحاک پذیرفته‌شدن سیاسی است؛ دروازه شکسته نمی‌شود.\nمسیر ضحاک صعودی و مسیر جمشید نزولی باقی می‌ماند.\nتخت و Hall همان اَسِت‌های قبلی‌اند؛ موجود جمشید کاملاً زمینی است.\n۱۲ بلاک جداگانه، هرکدام حداکثر ۱۵ ثانیه و بدون دیالوگ، نریشن یا موسیقی تحویل شده‌اند.\n\nDESIGN NOTE — no reference image was planned for these, so build them from the description above (but if one of them is called with an attached image in this prompt, match that image instead) and keep them identical across blocks: CHAR_JAMSHID_ESCAPE, LOC_LOWER_GATE_MOUNT, LOC_FINAL_DESERT, PROP_MOUNT_HARNESS.\n\nRevision — earlier attempts were rejected for these reasons, oldest first. Fix all of them; where two notes disagree, the later note wins:\n- ضحاک با مارهای سیاه به سمت تخت پادشاهی جمشید میرود.  \r\nتخت جمشید هست  loc-010@\r\nفرار جمشید بدون تاج هست و در اسطبل زیرزمینی سوار موجود افسانه ای خود میشود\n- The camera pushes in slowly toward Zahhak <<<image_4>>> to showcase his sheer power, dominance, and presence as he approaches the throne to sit down. All of Zahhak's shots must be framed with absolute authority, completely stable, slow, and commanding.\r\n\r\nIn contrast, Jamshid mounts the massive creature <<<image_3>>> here  <<<image_6>>> to flee. His next shot shows him escaping into nature like the provided landscape <<<image_7>>> reference. Jamshid's sequence must feel frantic, high-stress, and action-packed: fast cutting back and forth, dynamic handheld camera movements, chaotic low-angle framing capturing the creature and Jamshid mounting it under severe panic.\r\n\r\nMaintain this stark visual and pacing contrast: stable, stately, slow, powerful shots for Zahhak versus frantic, handheld, rapid, tension-filled coverage for Jamshid.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in @REF-001/V02. Never show a bare human face.\n\n<<<image_1>>> is Takht-e Jamshid - Throne (LOC-010 V01); match it wherever Takht-e Jamshid - Throne appears.\n<<<image_2>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.\n<<<image_5>>> is Jamshid (CHR-002 V03); match it wherever Jamshid appears.",
+  "basePrompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nJamshid has reached the mount area. Zahhak continues upward toward the unchanged Hall of Columns and throne.\n\nSHOT 1 — UNCHANGED HALL — 0:00–0:04:\n24mm restrained frontal wide shot in the exact existing Hall of Columns. Zahhak enters at one horizontal edge and advances toward the unchanged throne on the central axis, completing one heavy gait cycle. No followers enter. Cut on the staff striking the first throne step.\n\nSHOT 2 — MOUNT KNEELS — 0:04–0:08:\nMatch the impact to the enormous two-legged flightless mount lowering beside Jamshid. 35mm side view. The 2.5-to-3-meter terrestrial animal is heavy and plausible, with massive legs, weighty beak or muzzle, coarse feathers and areas of skin. It has no usable wings, never flies and never resembles Simurgh, griffin or hippogriff. It bends until the functional saddle reaches Jamshid. He swings on in one practical movement and leans forward; no climb or pose.\n\nSHOT 3 — NEW OCCUPANT — 0:08–0:11:\n50mm centered frontal view of the exact unchanged Jamshid throne. Zahhak lowers himself using the staff to control his lame side, plants it and becomes still. No crown and no victorious head lift. One serpent crosses the throne arm while another turns toward the empty hall.\n\nSHOT 4 — SMALL IN THE LAND — 0:11–0:15:\nExtreme wide static 24mm horizontal desert landscape. Jamshid and the mount run away along descending ground, already small in the lower third. Heavy terrestrial two-legged strides only; no leap, glide or flight. Dry wind softens their track as they become one moving dark point. Cut to black before complete disappearance.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nStaff on throne step, heavy animal joints and harness leather, strained breath, cloth and serpent scales as Zahhak sits, then open desert wind and receding two-legged footfalls. Wind is the last sound; cut to silence.\n\n۵. دستور اجرای مستقیم برای Claude / Higgsfield CLI\nEXECUTION INSTRUCTION FOR CLAUDE / HIGGSFIELD CLI\n\n1. Process PROMPT 01 through PROMPT 12 strictly in order.\n2. Every generation must be horizontal 16:9. Reject any vertical 9:16 composition or vertical crop.\n3. Replace every [MENTION ...] placeholder with the exact matching uploaded asset before submission.\n4. Generate each 15-second block separately and name outputs ZAHHAK_ENTRY_P01 through ZAHHAK_ENTRY_P12.\n5. Keep identities, masks, costumes, body proportions, architecture and props locked across all accepted blocks.\n6. From PROMPT 06 onward, Zahhak uses only PROP_ROYAL_SERPENT_STAFF. Never restore the old staff.\n7. Keep Zahhak exactly 178 cm, permanently lame and visibly staff-dependent.\n8. Keep five to ten natural black serpents alive and independently moving; reject statues, dragons or Medusa forms.\n9. Preserve the exact existing Hall of Columns and Jamshid throne; no redesign.\n10. Reject any military conquest, broken gate, cheering crowd, heroic escape, flying mount or ruined Iranian city.\n11. If one block fails continuity, regenerate only that block without silently changing assets or prompt meaning.\n12. After all accepted generations, assemble the full 180-second master; editorial selection to approximately 90 seconds happens afterward.\n۶. معیار رد و قبول خروجی\nقاب دقیقاً افقی 16:9 است و میزانسن برای عرض تصویر طراحی شده.\nهیئت ایرانی محتاج و جدی است؛ نه ارتش، نه جشن و نه صف قهرمانانه.\nلحظه‌ی مرکزی بلاک ۶ با جایگزینی واقعی دو عصا روشن است.\nلنگیدن ضحاک و حرکت مستقل مارها در تمام نماهای مربوط حفظ شده.\nورود ضحاک پذیرفته‌شدن سیاسی است؛ دروازه شکسته نمی‌شود.\nمسیر ضحاک صعودی و مسیر جمشید نزولی باقی می‌ماند.\nتخت و Hall همان اَسِت‌های قبلی‌اند؛ موجود جمشید کاملاً زمینی است.\n۱۲ بلاک جداگانه، هرکدام حداکثر ۱۵ ثانیه و بدون دیالوگ، نریشن یا موسیقی تحویل شده‌اند.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: CHAR_JAMSHID_ESCAPE, LOC_LOWER_GATE_MOUNT, LOC_FINAL_DESERT, PROP_MOUNT_HARNESS.",
+  "revisionNotes": [
+    "ضحاک با مارهای سیاه به سمت تخت پادشاهی جمشید میرود.  \r\nتخت جمشید هست  loc-010@\r\nفرار جمشید بدون تاج هست و در اسطبل زیرزمینی سوار موجود افسانه ای خود میشود",
+    "The camera pushes in slowly toward Zahhak @CHR-001/V06 to showcase his sheer power, dominance, and presence as he approaches the throne to sit down. All of Zahhak's shots must be framed with absolute authority, completely stable, slow, and commanding.\r\n\r\nIn contrast, Jamshid mounts the massive creature @CRT-001/V02 here  @LOC-011/V02 to flee. His next shot shows him escaping into nature like the provided landscape @LOC-005/V01 reference. Jamshid's sequence must feel frantic, high-stress, and action-packed: fast cutting back and forth, dynamic handheld camera movements, chaotic low-angle framing capturing the creature and Jamshid mounting it under severe panic.\r\n\r\nMaintain this stark visual and pacing contrast: stable, stately, slow, powerful shots for Zahhak versus frantic, handheld, rapid, tension-filled coverage for Jamshid."
+  ],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@LOC-010",
+    "@PRP-001",
+    "@CRT-001/V02",
+    "@CHR-001",
+    "@CHR-002/V03",
+    "@LOC-011/V02",
+    "@LOC-005/V01"
+  ],
+  "createdAt": "2026-09-15T20:52:14.981Z",
+  "costCredits": 135,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_204533_af18980c-7e5f-4a22-8f6a-55d46fcd1136.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-15T20:45:33.699471Z",
+      "display_name": "Seedance 2.5",
+      "id": "af18980c-7e5f-4a22-8f6a-55d46fcd1136",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "7759d486-e201-4688-8fc3-3124bad7ab33",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/7759d486-e201-4688-8fc3-3124bad7ab33.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "e9636458-8a0d-4182-9f67-de6e3b727367",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/e9636458-8a0d-4182-9f67-de6e3b727367.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "91e8ab4d-4820-48a1-a0a8-d1892521b8c7",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/91e8ab4d-4820-48a1-a0a8-d1892521b8c7.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "7eebc6c2-d4a5-4a31-b6cd-2236c164f014",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/7eebc6c2-d4a5-4a31-b6cd-2236c164f014.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "00796b3c-976c-469f-98fc-18b610a65ad5",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/00796b3c-976c-469f-98fc-18b610a65ad5.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "b6c7c863-a7a9-42d8-aa61-b5f69d9924ab",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/b6c7c863-a7a9-42d8-aa61-b5f69d9924ab.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "07fdfa14-b954-4c32-b6d7-2926576eec0b",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/07fdfa14-b954-4c32-b6d7-2926576eec0b.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nJamshid has reached the mount area. Zahhak continues upward toward the unchanged Hall of Columns and throne.\n\nSHOT 1 — UNCHANGED HALL — 0:00–0:04:\n24mm restrained frontal wide shot in the exact existing Hall of Columns. Zahhak enters at one horizontal edge and advances toward the unchanged throne on the central axis, completing one heavy gait cycle. No followers enter. Cut on the staff striking the first throne step.\n\nSHOT 2 — MOUNT KNEELS — 0:04–0:08:\nMatch the impact to the enormous two-legged flightless mount lowering beside Jamshid. 35mm side view. The 2.5-to-3-meter terrestrial animal is heavy and plausible, with massive legs, weighty beak or muzzle, coarse feathers and areas of skin. It has no usable wings, never flies and never resembles Simurgh, griffin or hippogriff. It bends until the functional saddle reaches Jamshid. He swings on in one practical movement and leans forward; no climb or pose.\n\nSHOT 3 — NEW OCCUPANT — 0:08–0:11:\n50mm centered frontal view of the exact unchanged Jamshid throne. Zahhak lowers himself using the staff to control his lame side, plants it and becomes still. No crown and no victorious head lift. One serpent crosses the throne arm while another turns toward the empty hall.\n\nSHOT 4 — SMALL IN THE LAND — 0:11–0:15:\nExtreme wide static 24mm horizontal desert landscape. Jamshid and the mount run away along descending ground, already small in the lower third. Heavy terrestrial two-legged strides only; no leap, glide or flight. Dry wind softens their track as they become one moving dark point. Cut to black before complete disappearance.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nStaff on throne step, heavy animal joints and harness leather, strained breath, cloth and serpent scales as Zahhak sits, then open desert wind and receding two-legged footfalls. Wind is the last sound; cut to silence.\n\n۵. دستور اجرای مستقیم برای Claude / Higgsfield CLI\nEXECUTION INSTRUCTION FOR CLAUDE / HIGGSFIELD CLI\n\n1. Process PROMPT 01 through PROMPT 12 strictly in order.\n2. Every generation must be horizontal 16:9. Reject any vertical 9:16 composition or vertical crop.\n3. Replace every [MENTION ...] placeholder with the exact matching uploaded asset before submission.\n4. Generate each 15-second block separately and name outputs ZAHHAK_ENTRY_P01 through ZAHHAK_ENTRY_P12.\n5. Keep identities, masks, costumes, body proportions, architecture and props locked across all accepted blocks.\n6. From PROMPT 06 onward, Zahhak uses only PROP_ROYAL_SERPENT_STAFF. Never restore the old staff.\n7. Keep Zahhak exactly 178 cm, permanently lame and visibly staff-dependent.\n8. Keep five to ten natural black serpents alive and independently moving; reject statues, dragons or Medusa forms.\n9. Preserve the exact existing Hall of Columns and Jamshid throne; no redesign.\n10. Reject any military conquest, broken gate, cheering crowd, heroic escape, flying mount or ruined Iranian city.\n11. If one block fails continuity, regenerate only that block without silently changing assets or prompt meaning.\n12. After all accepted generations, assemble the full 180-second master; editorial selection to approximately 90 seconds happens afterward.\n۶. معیار رد و قبول خروجی\nقاب دقیقاً افقی 16:9 است و میزانسن برای عرض تصویر طراحی شده.\nهیئت ایرانی محتاج و جدی است؛ نه ارتش، نه جشن و نه صف قهرمانانه.\nلحظه‌ی مرکزی بلاک ۶ با جایگزینی واقعی دو عصا روشن است.\nلنگیدن ضحاک و حرکت مستقل مارها در تمام نماهای مربوط حفظ شده.\nورود ضحاک پذیرفته‌شدن سیاسی است؛ دروازه شکسته نمی‌شود.\nمسیر ضحاک صعودی و مسیر جمشید نزولی باقی می‌ماند.\nتخت و Hall همان اَسِت‌های قبلی‌اند؛ موجود جمشید کاملاً زمینی است.\n۱۲ بلاک جداگانه، هرکدام حداکثر ۱۵ ثانیه و بدون دیالوگ، نریشن یا موسیقی تحویل شده‌اند.\n\nDESIGN NOTE — no reference image was planned for these, so build them from the description above (but if one of them is called with an attached image in this prompt, match that image instead) and keep them identical across blocks: CHAR_JAMSHID_ESCAPE, LOC_LOWER_GATE_MOUNT, LOC_FINAL_DESERT, PROP_MOUNT_HARNESS.\n\nRevision — earlier attempts were rejected for these reasons, oldest first. Fix all of them; where two notes disagree, the later note wins:\n- ضحاک با مارهای سیاه به سمت تخت پادشاهی جمشید میرود.  \r\nتخت جمشید هست  loc-010@\r\nفرار جمشید بدون تاج هست و در اسطبل زیرزمینی سوار موجود افسانه ای خود میشود\n- The camera pushes in slowly toward Zahhak <<<image_4>>> to showcase his sheer power, dominance, and presence as he approaches the throne to sit down. All of Zahhak's shots must be framed with absolute authority, completely stable, slow, and commanding.\r\n\r\nIn contrast, Jamshid mounts the massive creature <<<image_3>>> here  <<<image_6>>> to flee. His next shot shows him escaping into nature like the provided landscape <<<image_7>>> reference. Jamshid's sequence must feel frantic, high-stress, and action-packed: fast cutting back and forth, dynamic handheld camera movements, chaotic low-angle framing capturing the creature and Jamshid mounting it under severe panic.\r\n\r\nMaintain this stark visual and pacing contrast: stable, stately, slow, powerful shots for Zahhak versus frantic, handheld, rapid, tension-filled coverage for Jamshid.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in @REF-001/V02. Never show a bare human face.\n\n<<<image_1>>> is Takht-e Jamshid - Throne (LOC-010 V01); match it wherever Takht-e Jamshid - Throne appears.\n<<<image_2>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.\n<<<image_5>>> is Jamshid (CHR-002 V03); match it wherever Jamshid appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_204533_af18980c-7e5f-4a22-8f6a-55d46fcd1136.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_204533_af18980c-7e5f-4a22-8f6a-55d46fcd1136_thumbnail.webp"
+    }
+  ]
+}

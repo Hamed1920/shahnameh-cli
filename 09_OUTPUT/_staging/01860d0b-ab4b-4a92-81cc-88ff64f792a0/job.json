@@ -1,0 +1,123 @@
+{
+  "jobId": "J-20260915-OII",
+  "parentJobId": "J-20260915-UJU",
+  "hfJobId": "01860d0b-ab4b-4a92-81cc-88ff64f792a0",
+  "attempt": 3,
+  "stage": "final",
+  "label": "P07",
+  "target": "SHM-EP001-SC007-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP001-ZAHHAK-ENTRY/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\r\n\r\nCONTINUITY FROM PREVIOUS BLOCK:\r\nThe old staff remains abandoned beside the seat and must never appear again. Zahhak now uses only the Royal Serpent Staff.\r\n\r\nSHOT 1 — FIRST STEP AS CHOSEN KING — 0:00–0:05:\r\n50mm lateral tracking view. Zahhak completes one full asymmetrical gait cycle away from the seat: new staff first, stronger foot, lame side dragged forward. He turns by moving the staff before shoulder and head. The nearest nobles remain low and shift backward on their knees to clear his path.\r\n\r\nSHOT 2 — THE HUMAN CORRIDOR — 0:05–0:10:\r\n28mm wide frontal retreat through the audience hall. Zahhak advances slowly down the center while the nobles stand at different moments and separate toward both horizontal edges, forming a corridor. No one cheers or raises arms. Serpents adjust independently with every uneven step.\r\n\r\nSHOT 3 — OUTER COURT — 0:10–0:15:\r\n35mm exterior side view. Zahhak crosses into cold daylight and stops beside waiting riders. The principal noble lifts the Iranian banner, now carrying it behind rather than before him. Horses react to the serpents with one restrained sidestep, controlled by riders. End as Zahhak plants the staff toward the rising road.\r\n\r\nGLOBAL EXECUTION RULES:\r\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\r\n\r\nSOUND:\r\nStaff-foot gait rhythm, knees and clothing shifting, hall reverb opening into exterior wind, horse leather and one nervous hoof adjustment.\r\n\r\nDESIGN NOTE — no reference image was planned for these, so build them from the description above (but if one of them is called with an attached image in this prompt, match that image instead) and keep them identical across blocks: LOC_ZAHHAK_OUTER_COURT, PROP_IRANIAN_BANNER.\n\nRevision — earlier attempts were rejected for these reasons, oldest first. Fix all of them; where two notes disagree, the later note wins:\n- In this revised version, integrate the specific flag <<<image_5>>> being raised high into the scene. Direct Zahhak <<<image_1>>>  to walk toward his own personal mount/beast <<<image_6>>> , which stands waiting for him riderless. While the surrounding Persian riders <<<image_2>>>  are mounted on standard horses, Zahhak’s mount must be distinct—an ominous, beastly steed uniquely his own. Ensure the staging clearly shows Zahhak approaching this creature to mount it amidst the mounted Persian warriors.\n- Extend the ending shot of the mounted warriors as he reaches them, lingering longer on this scene. All riders must be wearing masks, strictly matching the provided visual reference.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in <<<image_2>>>. Never show a bare human face.\n\n<<<image_3>>> is Ceremonial Reception Hall (LOC-009 V01); match it wherever Ceremonial Reception Hall appears.\n<<<image_4>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+  "basePrompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\r\n\r\nCONTINUITY FROM PREVIOUS BLOCK:\r\nThe old staff remains abandoned beside the seat and must never appear again. Zahhak now uses only the Royal Serpent Staff.\r\n\r\nSHOT 1 — FIRST STEP AS CHOSEN KING — 0:00–0:05:\r\n50mm lateral tracking view. Zahhak completes one full asymmetrical gait cycle away from the seat: new staff first, stronger foot, lame side dragged forward. He turns by moving the staff before shoulder and head. The nearest nobles remain low and shift backward on their knees to clear his path.\r\n\r\nSHOT 2 — THE HUMAN CORRIDOR — 0:05–0:10:\r\n28mm wide frontal retreat through the audience hall. Zahhak advances slowly down the center while the nobles stand at different moments and separate toward both horizontal edges, forming a corridor. No one cheers or raises arms. Serpents adjust independently with every uneven step.\r\n\r\nSHOT 3 — OUTER COURT — 0:10–0:15:\r\n35mm exterior side view. Zahhak crosses into cold daylight and stops beside waiting riders. The principal noble lifts the Iranian banner, now carrying it behind rather than before him. Horses react to the serpents with one restrained sidestep, controlled by riders. End as Zahhak plants the staff toward the rising road.\r\n\r\nGLOBAL EXECUTION RULES:\r\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\r\n\r\nSOUND:\r\nStaff-foot gait rhythm, knees and clothing shifting, hall reverb opening into exterior wind, horse leather and one nervous hoof adjustment.\r\n\r\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: LOC_ZAHHAK_OUTER_COURT, PROP_IRANIAN_BANNER.",
+  "revisionNotes": [
+    "In this revised version, integrate the specific flag @PRP-016/V02 being raised high into the scene. Direct Zahhak @CHR-001/V06  to walk toward his own personal mount/beast @CRT-002/V02 , which stands waiting for him riderless. While the surrounding Persian riders @REF-001/V02  are mounted on standard horses, Zahhak’s mount must be distinct—an ominous, beastly steed uniquely his own. Ensure the staging clearly shows Zahhak approaching this creature to mount it amidst the mounted Persian warriors.",
+    "Extend the ending shot of the mounted warriors as he reaches them, lingering longer on this scene. All riders must be wearing masks, strictly matching the provided visual reference."
+  ],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@CHR-001/V06",
+    "@REF-001/V02",
+    "@LOC-009",
+    "@PRP-001",
+    "@PRP-016/V02",
+    "@CRT-002/V02"
+  ],
+  "createdAt": "2026-09-15T18:12:11.689Z",
+  "costCredits": 135,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_180616_01860d0b-ab4b-4a92-81cc-88ff64f792a0.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-15T18:06:16.870881Z",
+      "display_name": "Seedance 2.5",
+      "id": "01860d0b-ab4b-4a92-81cc-88ff64f792a0",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "b8bc07f2-5658-4097-90e4-ef36c4daf3db",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/b8bc07f2-5658-4097-90e4-ef36c4daf3db.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "43006d8f-c354-4ebb-93f6-0d8a1fc8c557",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/43006d8f-c354-4ebb-93f6-0d8a1fc8c557.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "13307447-6d75-42ed-9962-11a461481d89",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/13307447-6d75-42ed-9962-11a461481d89.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "836a93e0-d9bc-49d6-adac-17c4b43767f4",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/836a93e0-d9bc-49d6-adac-17c4b43767f4.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "37e5bf97-6871-4bb2-9f3a-d46009e259e8",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/37e5bf97-6871-4bb2-9f3a-d46009e259e8.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "ff156571-7f9e-4863-aba9-abca4d020e08",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/ff156571-7f9e-4863-aba9-abca4d020e08.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\r\n\r\nCONTINUITY FROM PREVIOUS BLOCK:\r\nThe old staff remains abandoned beside the seat and must never appear again. Zahhak now uses only the Royal Serpent Staff.\r\n\r\nSHOT 1 — FIRST STEP AS CHOSEN KING — 0:00–0:05:\r\n50mm lateral tracking view. Zahhak completes one full asymmetrical gait cycle away from the seat: new staff first, stronger foot, lame side dragged forward. He turns by moving the staff before shoulder and head. The nearest nobles remain low and shift backward on their knees to clear his path.\r\n\r\nSHOT 2 — THE HUMAN CORRIDOR — 0:05–0:10:\r\n28mm wide frontal retreat through the audience hall. Zahhak advances slowly down the center while the nobles stand at different moments and separate toward both horizontal edges, forming a corridor. No one cheers or raises arms. Serpents adjust independently with every uneven step.\r\n\r\nSHOT 3 — OUTER COURT — 0:10–0:15:\r\n35mm exterior side view. Zahhak crosses into cold daylight and stops beside waiting riders. The principal noble lifts the Iranian banner, now carrying it behind rather than before him. Horses react to the serpents with one restrained sidestep, controlled by riders. End as Zahhak plants the staff toward the rising road.\r\n\r\nGLOBAL EXECUTION RULES:\r\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\r\n\r\nSOUND:\r\nStaff-foot gait rhythm, knees and clothing shifting, hall reverb opening into exterior wind, horse leather and one nervous hoof adjustment.\r\n\r\nDESIGN NOTE — no reference image was planned for these, so build them from the description above (but if one of them is called with an attached image in this prompt, match that image instead) and keep them identical across blocks: LOC_ZAHHAK_OUTER_COURT, PROP_IRANIAN_BANNER.\n\nRevision — earlier attempts were rejected for these reasons, oldest first. Fix all of them; where two notes disagree, the later note wins:\n- In this revised version, integrate the specific flag <<<image_5>>> being raised high into the scene. Direct Zahhak <<<image_1>>>  to walk toward his own personal mount/beast <<<image_6>>> , which stands waiting for him riderless. While the surrounding Persian riders <<<image_2>>>  are mounted on standard horses, Zahhak’s mount must be distinct—an ominous, beastly steed uniquely his own. Ensure the staging clearly shows Zahhak approaching this creature to mount it amidst the mounted Persian warriors.\n- Extend the ending shot of the mounted warriors as he reaches them, lingering longer on this scene. All riders must be wearing masks, strictly matching the provided visual reference.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in <<<image_2>>>. Never show a bare human face.\n\n<<<image_3>>> is Ceremonial Reception Hall (LOC-009 V01); match it wherever Ceremonial Reception Hall appears.\n<<<image_4>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_180616_01860d0b-ab4b-4a92-81cc-88ff64f792a0.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_180616_01860d0b-ab4b-4a92-81cc-88ff64f792a0_thumbnail.webp"
+    }
+  ]
+}

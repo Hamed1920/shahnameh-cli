@@ -1,0 +1,122 @@
+{
+  "jobId": "J-20260915-X80",
+  "parentJobId": "J-20260903-4AC",
+  "hfJobId": "ac1ac52b-3db6-4b51-aa50-e3f5566fe945",
+  "attempt": 2,
+  "stage": "draft",
+  "label": "P11",
+  "target": "SHM-EP001-SC011-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP001-ZAHHAK-ENTRY/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nZahhak has just crossed the main threshold. Jamshid is already descending in the escape version of his unchanged identity.\n\nSHOT 1 — ASCENDING CAUSEWAY — 0:00–0:05:\n35mm controlled low three-quarter tracking shot. Zahhak advances two heavy phases up the royal ramp, staff first. Nobles follow lower in frame and spread across the width without crowding him. Serpents move independently with gait and weak wind. The camera retreats upward at his exact pace.\n\nSHOT 2 — DESCENDING STAIR — 0:05–0:10:\nMatch Zahhak’s staff landing to Jamshid’s hand striking a rough stone rail. 28mm close handheld camera retreats below him down narrow stairs. Jamshid takes several quick downward steps, one sideways to recover balance. His hand drags along the wall; shoulders pitch forward; the camera briefly loses part of him behind a foreground corner.\n\nSHOT 3 — TWO DIRECTIONS — 0:10–0:15:\nIntercut two short physically matched fragments: 2.5 seconds of Zahhak’s staff and lame gait rising across broad palace steps, then 2.5 seconds of Jamshid’s feet dropping down the last service ramp toward the lower gate. Preserve opposing screen direction and elevation. End on Jamshid seeing the huge kneeling area and flightless mount ahead, but do not mount yet.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nSlow staff-foot rhythm and distant followers, hard cut to quick breath and scraping hand, then alternating step impacts with no score or artificial transition sound.\n\nDESIGN NOTE — no reference image was planned for these, so build them from the description above (but if one of them is called with an attached image in this prompt, match that image instead) and keep them identical across blocks: CHAR_JAMSHID_ESCAPE, LOC_ROYAL_CAUSEWAY, LOC_LOWER_GATE_MOUNT.\n\nRevision — the previous attempt was rejected for these reasons. Fix them:\n- This is Zahhak: <<<image_1>>> in this location <<<image_5>>> , he is ascending the stairs. Frame his shots to emphasize sheer grandeur, dominance, and majesty as he rises to claim this throne. Conversely, this is Jamshid: <<<image_6>>>  in this location <<<image_3>>> , he is descending the stairs, and the framing and camera direction must starkly convey his complete fall and decline. In terms of directorial tone and rhythm, Zahhak’s shots must be very slow, steady, and composed with dignified power, while Jamshid’s shots must be filled with frantic tension, chaos, and panic.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in @REF-001/V02. Never show a bare human face.\n\n<<<image_2>>> is Civilization Caste Board (REF-001 V01); match it wherever Civilization Caste Board appears.\n<<<image_4>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+  "basePrompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nZahhak has just crossed the main threshold. Jamshid is already descending in the escape version of his unchanged identity.\n\nSHOT 1 — ASCENDING CAUSEWAY — 0:00–0:05:\n35mm controlled low three-quarter tracking shot. Zahhak advances two heavy phases up the royal ramp, staff first. Nobles follow lower in frame and spread across the width without crowding him. Serpents move independently with gait and weak wind. The camera retreats upward at his exact pace.\n\nSHOT 2 — DESCENDING STAIR — 0:05–0:10:\nMatch Zahhak’s staff landing to Jamshid’s hand striking a rough stone rail. 28mm close handheld camera retreats below him down narrow stairs. Jamshid takes several quick downward steps, one sideways to recover balance. His hand drags along the wall; shoulders pitch forward; the camera briefly loses part of him behind a foreground corner.\n\nSHOT 3 — TWO DIRECTIONS — 0:10–0:15:\nIntercut two short physically matched fragments: 2.5 seconds of Zahhak’s staff and lame gait rising across broad palace steps, then 2.5 seconds of Jamshid’s feet dropping down the last service ramp toward the lower gate. Preserve opposing screen direction and elevation. End on Jamshid seeing the huge kneeling area and flightless mount ahead, but do not mount yet.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nSlow staff-foot rhythm and distant followers, hard cut to quick breath and scraping hand, then alternating step impacts with no score or artificial transition sound.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: CHAR_JAMSHID_ESCAPE, LOC_ROYAL_CAUSEWAY, LOC_LOWER_GATE_MOUNT.",
+  "revisionNotes": [
+    "This is Zahhak: @CHR-001/V06 in this location @LOC-019/V01 , he is ascending the stairs. Frame his shots to emphasize sheer grandeur, dominance, and majesty as he rises to claim this throne. Conversely, this is Jamshid: @CHR-002/V03  in this location @LOC-011/V01 , he is descending the stairs, and the framing and camera direction must starkly convey his complete fall and decline. In terms of directorial tone and rhythm, Zahhak’s shots must be very slow, steady, and composed with dignified power, while Jamshid’s shots must be filled with frantic tension, chaos, and panic."
+  ],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001",
+    "@REF-001",
+    "@LOC-011/V01",
+    "@PRP-001",
+    "@LOC-019/V01",
+    "@CHR-002/V03"
+  ],
+  "createdAt": "2026-09-15T20:02:09.758Z",
+  "costCredits": 37.5,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_195357_ac1ac52b-3db6-4b51-aa50-e3f5566fe945.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-15T19:53:57.019748Z",
+      "display_name": "Seedance 2.5",
+      "id": "ac1ac52b-3db6-4b51-aa50-e3f5566fe945",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "25af57a7-2c0e-4f4f-946e-0a7709e7bfa9",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/25af57a7-2c0e-4f4f-946e-0a7709e7bfa9.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "f425309b-d039-41c4-b49d-0722ec7107f4",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/f425309b-d039-41c4-b49d-0722ec7107f4.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "dbd9e0e9-1ebe-4e89-9ca8-e2600ce64487",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/dbd9e0e9-1ebe-4e89-9ca8-e2600ce64487.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "c11f2583-8bd7-4bc5-a7e0-b54edf19510b",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/c11f2583-8bd7-4bc5-a7e0-b54edf19510b.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "2dfd1b46-7a17-4b7d-a7d2-9894e5700f5c",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/2dfd1b46-7a17-4b7d-a7d2-9894e5700f5c.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "367d1c17-2fd1-4931-b96f-7d234267760f",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/367d1c17-2fd1-4931-b96f-7d234267760f.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nZahhak has just crossed the main threshold. Jamshid is already descending in the escape version of his unchanged identity.\n\nSHOT 1 — ASCENDING CAUSEWAY — 0:00–0:05:\n35mm controlled low three-quarter tracking shot. Zahhak advances two heavy phases up the royal ramp, staff first. Nobles follow lower in frame and spread across the width without crowding him. Serpents move independently with gait and weak wind. The camera retreats upward at his exact pace.\n\nSHOT 2 — DESCENDING STAIR — 0:05–0:10:\nMatch Zahhak’s staff landing to Jamshid’s hand striking a rough stone rail. 28mm close handheld camera retreats below him down narrow stairs. Jamshid takes several quick downward steps, one sideways to recover balance. His hand drags along the wall; shoulders pitch forward; the camera briefly loses part of him behind a foreground corner.\n\nSHOT 3 — TWO DIRECTIONS — 0:10–0:15:\nIntercut two short physically matched fragments: 2.5 seconds of Zahhak’s staff and lame gait rising across broad palace steps, then 2.5 seconds of Jamshid’s feet dropping down the last service ramp toward the lower gate. Preserve opposing screen direction and elevation. End on Jamshid seeing the huge kneeling area and flightless mount ahead, but do not mount yet.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nSlow staff-foot rhythm and distant followers, hard cut to quick breath and scraping hand, then alternating step impacts with no score or artificial transition sound.\n\nDESIGN NOTE — no reference image was planned for these, so build them from the description above (but if one of them is called with an attached image in this prompt, match that image instead) and keep them identical across blocks: CHAR_JAMSHID_ESCAPE, LOC_ROYAL_CAUSEWAY, LOC_LOWER_GATE_MOUNT.\n\nRevision — the previous attempt was rejected for these reasons. Fix them:\n- This is Zahhak: <<<image_1>>> in this location <<<image_5>>> , he is ascending the stairs. Frame his shots to emphasize sheer grandeur, dominance, and majesty as he rises to claim this throne. Conversely, this is Jamshid: <<<image_6>>>  in this location <<<image_3>>> , he is descending the stairs, and the framing and camera direction must starkly convey his complete fall and decline. In terms of directorial tone and rhythm, Zahhak’s shots must be very slow, steady, and composed with dignified power, while Jamshid’s shots must be filled with frantic tension, chaos, and panic.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in @REF-001/V02. Never show a bare human face.\n\n<<<image_2>>> is Civilization Caste Board (REF-001 V01); match it wherever Civilization Caste Board appears.\n<<<image_4>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_195357_ac1ac52b-3db6-4b51-aa50-e3f5566fe945.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_195357_ac1ac52b-3db6-4b51-aa50-e3f5566fe945_thumbnail.webp"
+    }
+  ]
+}

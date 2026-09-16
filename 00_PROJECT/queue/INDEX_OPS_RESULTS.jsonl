@@ -8,3 +8,15 @@
 {"opId":"op_mu1bes4i09ry","ok":true,"summary":"CHR-001 main look -> V03","ts":"2026-09-14T14:05:11.965Z"}
 {"opId":"op_mu2flc5igk2n","ok":true,"summary":"CHR-001 main look -> V02","ts":"2026-09-15T13:09:47.219Z"}
 {"opId":"op_mu2pnx1wfnog","ok":true,"summary":"CHR-001 main look -> V06","ts":"2026-09-15T13:32:01.713Z"}
+{"opId":"op_mu2xiayxs1om","ok":true,"summary":"PRP-016 main look -> V02","ts":"2026-09-15T17:11:34.843Z"}
+{"opId":"op_mu303pwn1py4","ok":true,"summary":"CRT-002 main look -> V02","ts":"2026-09-15T18:24:12.935Z"}
+{"opId":"op_mu3046zsu0p3","ok":true,"summary":"archived CRT-002/V01","ts":"2026-09-15T18:24:35.188Z"}
+{"opId":"op_mu304hkami7l","ok":true,"summary":"REF-001 main look -> V01","ts":"2026-09-15T18:24:48.957Z"}
+{"opId":"op_mu304m1emox6","ok":true,"summary":"archived REF-001/V02. P09 (waiting for review) uses @REF-001 instead of @REF-001/V02; P11 (waiting for review) uses @REF-001 instead of @REF-001/V02; P08 (waiting for review) uses @REF-001 instead of @REF-001/V02; P10 (waiting for review) uses @REF-001 instead of @REF-001/V02","ts":"2026-09-15T18:24:55.001Z"}
+{"opId":"op_mu304woo7jpz","ok":true,"summary":"CRT-001 main look -> V02","ts":"2026-09-15T18:25:10.015Z"}
+{"opId":"op_mu30551o94me","ok":true,"summary":"archived CRT-001/V01","ts":"2026-09-15T18:25:19.055Z"}
+{"opId":"op_mu305fa7i7og","ok":true,"summary":"archived PRP-016/V01","ts":"2026-09-15T18:25:34.085Z"}
+{"opId":"op_mu305n7f7jr2","ok":true,"summary":"archived PRP-016/V03","ts":"2026-09-15T18:25:43.118Z"}
+{"opId":"op_mu309c7wnhnm","ok":true,"summary":"archived CHR-001/V03. P09 (waiting for review) uses @CHR-001 instead of @CHR-001/V03; P11 (waiting for review) uses @CHR-001 instead of @CHR-001/V03; P10 (waiting for review) uses @CHR-001 instead of @CHR-001/V03","ts":"2026-09-15T18:28:35.526Z"}
+{"opId":"op_mu309mt803sn","ok":true,"summary":"archived CHR-001/V02","ts":"2026-09-15T18:28:49.258Z"}
+{"opId":"op_mu30bdfmxjrb","ok":true,"summary":"added @CHR-002/V03","ts":"2026-09-15T18:30:10.307Z"}

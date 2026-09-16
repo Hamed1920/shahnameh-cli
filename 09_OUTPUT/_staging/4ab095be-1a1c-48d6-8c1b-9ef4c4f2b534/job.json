@@ -1,0 +1,123 @@
+{
+  "jobId": "J-20260915-UNJ",
+  "parentJobId": "J-20260914-SSO",
+  "hfJobId": "4ab095be-1a1c-48d6-8c1b-9ef4c4f2b534",
+  "attempt": 3,
+  "stage": "final",
+  "label": "P04",
+  "target": "SHM-EP001-SC004-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP001-ZAHHAK-ENTRY/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nAll nobles remain kneeling or bowed. Zahhak stays seated with the old staff. Preserve the same hall, light and group positions.\n\nSHOT 1 — THE CLOTH OPENS — 0:00–0:05:\n65mm low side close-up across the stone floor. Two nobles unfold one dark cloth laterally from center toward both sides, revealing a simple stone-or-metal vessel and one restrained metal insignia. Their hands move carefully because the objects are heavy, not sacred. No jewels, coins or decorative glow.\n\nSHOT 2 — THE BANNER LOWERED — 0:05–0:10:\n50mm diagonal composition using the horizontal frame. Another noble lowers the official Iranian banner from upright to a near-horizontal resting position before Zahhak. The cloth spreads across the middle ground like a surrendered line. Zahhak watches from the far right, still elevated but not heroic.\n\nSHOT 3 — THE IMPORTANT OBJECT — 0:10–0:15:\n85mm close detail as the principal bearer unwraps the Royal Serpent Staff last and raises it horizontally on both open hands. Its design is long, dark and minimal, with one abstract serpent motif; no dragon head, jewels, light or magic. The camera performs a restrained rack focus from tense fingers to the serpent motif. End before Zahhak reaches.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nHeavy cloth across stone, vessel and insignia making quiet dry contact, banner fabric unfolding, restrained breathing and the slight creak of the staff’s weight.\n\nDESIGN NOTE — no reference image was planned for these, so build them from the description above (but if one of them is called with an attached image in this prompt, match that image instead) and keep them identical across blocks: PROP_IRANIAN_BANNER, PROP_RITUAL_VESSEL, PROP_POWER_INSIGNIA.\n\nRevision — earlier attempts were rejected for these reasons, oldest first. Fix all of them; where two notes disagree, the later note wins:\n- پرچمی که استفاده میکنی به عنوان پرچم ایران از این PRP-016 V01, Perisan (Iranian) Flag پرچم استفاده کن\n- when they unwrap the gifts <<<image_5>>> use this.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in <<<image_1>>>. Never show a bare human face.\n\n<<<image_2>>> is Ceremonial Reception Hall (LOC-009 V01); match it wherever Ceremonial Reception Hall appears.\n<<<image_3>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.\n<<<image_4>>> is Perisan (Iranian) Flag (PRP-016 V03); match it wherever Perisan (Iranian) Flag appears.\n<<<image_6>>> is Zahhak (CHR-001 V07); match it wherever Zahhak appears.",
+  "basePrompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nAll nobles remain kneeling or bowed. Zahhak stays seated with the old staff. Preserve the same hall, light and group positions.\n\nSHOT 1 — THE CLOTH OPENS — 0:00–0:05:\n65mm low side close-up across the stone floor. Two nobles unfold one dark cloth laterally from center toward both sides, revealing a simple stone-or-metal vessel and one restrained metal insignia. Their hands move carefully because the objects are heavy, not sacred. No jewels, coins or decorative glow.\n\nSHOT 2 — THE BANNER LOWERED — 0:05–0:10:\n50mm diagonal composition using the horizontal frame. Another noble lowers the official Iranian banner from upright to a near-horizontal resting position before Zahhak. The cloth spreads across the middle ground like a surrendered line. Zahhak watches from the far right, still elevated but not heroic.\n\nSHOT 3 — THE IMPORTANT OBJECT — 0:10–0:15:\n85mm close detail as the principal bearer unwraps the Royal Serpent Staff last and raises it horizontally on both open hands. Its design is long, dark and minimal, with one abstract serpent motif; no dragon head, jewels, light or magic. The camera performs a restrained rack focus from tense fingers to the serpent motif. End before Zahhak reaches.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nHeavy cloth across stone, vessel and insignia making quiet dry contact, banner fabric unfolding, restrained breathing and the slight creak of the staff’s weight.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: PROP_IRANIAN_BANNER, PROP_RITUAL_VESSEL, PROP_POWER_INSIGNIA.",
+  "revisionNotes": [
+    "پرچمی که استفاده میکنی به عنوان پرچم ایران از این @PRP-016/V01 پرچم استفاده کن",
+    "when they unwrap the gifts @PRP-010/V02 use this."
+  ],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@REF-001/V02",
+    "@LOC-009",
+    "@PRP-001",
+    "@PRP-016/V03",
+    "@PRP-010/V02",
+    "@CHR-001/V07"
+  ],
+  "createdAt": "2026-09-15T16:42:03.084Z",
+  "costCredits": 135,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_163357_4ab095be-1a1c-48d6-8c1b-9ef4c4f2b534.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-15T16:33:57.276357Z",
+      "display_name": "Seedance 2.5",
+      "id": "4ab095be-1a1c-48d6-8c1b-9ef4c4f2b534",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "0c02b574-bac7-457c-bf53-f2bce86a3b3b",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/0c02b574-bac7-457c-bf53-f2bce86a3b3b.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "3b52627a-7aa7-4bfb-92a4-6d6f51cdc407",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/3b52627a-7aa7-4bfb-92a4-6d6f51cdc407.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "03148b15-7470-4fc3-b913-386469807ed4",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/03148b15-7470-4fc3-b913-386469807ed4.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "0919f2cd-ae67-4711-be35-cb05085ef733",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/0919f2cd-ae67-4711-be35-cb05085ef733.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "7697a15f-5d5f-44f9-b12c-3fa5cb7f1dc9",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/7697a15f-5d5f-44f9-b12c-3fa5cb7f1dc9.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "44b6e2fd-ca83-45ce-a4d8-aac8ece0da0e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/44b6e2fd-ca83-45ce-a4d8-aac8ece0da0e.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nAll nobles remain kneeling or bowed. Zahhak stays seated with the old staff. Preserve the same hall, light and group positions.\n\nSHOT 1 — THE CLOTH OPENS — 0:00–0:05:\n65mm low side close-up across the stone floor. Two nobles unfold one dark cloth laterally from center toward both sides, revealing a simple stone-or-metal vessel and one restrained metal insignia. Their hands move carefully because the objects are heavy, not sacred. No jewels, coins or decorative glow.\n\nSHOT 2 — THE BANNER LOWERED — 0:05–0:10:\n50mm diagonal composition using the horizontal frame. Another noble lowers the official Iranian banner from upright to a near-horizontal resting position before Zahhak. The cloth spreads across the middle ground like a surrendered line. Zahhak watches from the far right, still elevated but not heroic.\n\nSHOT 3 — THE IMPORTANT OBJECT — 0:10–0:15:\n85mm close detail as the principal bearer unwraps the Royal Serpent Staff last and raises it horizontally on both open hands. Its design is long, dark and minimal, with one abstract serpent motif; no dragon head, jewels, light or magic. The camera performs a restrained rack focus from tense fingers to the serpent motif. End before Zahhak reaches.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nHeavy cloth across stone, vessel and insignia making quiet dry contact, banner fabric unfolding, restrained breathing and the slight creak of the staff’s weight.\n\nDESIGN NOTE — no reference image was planned for these, so build them from the description above (but if one of them is called with an attached image in this prompt, match that image instead) and keep them identical across blocks: PROP_IRANIAN_BANNER, PROP_RITUAL_VESSEL, PROP_POWER_INSIGNIA.\n\nRevision — earlier attempts were rejected for these reasons, oldest first. Fix all of them; where two notes disagree, the later note wins:\n- پرچمی که استفاده میکنی به عنوان پرچم ایران از این PRP-016 V01, Perisan (Iranian) Flag پرچم استفاده کن\n- when they unwrap the gifts <<<image_5>>> use this.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in <<<image_1>>>. Never show a bare human face.\n\n<<<image_2>>> is Ceremonial Reception Hall (LOC-009 V01); match it wherever Ceremonial Reception Hall appears.\n<<<image_3>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.\n<<<image_4>>> is Perisan (Iranian) Flag (PRP-016 V03); match it wherever Perisan (Iranian) Flag appears.\n<<<image_6>>> is Zahhak (CHR-001 V07); match it wherever Zahhak appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_163357_4ab095be-1a1c-48d6-8c1b-9ef4c4f2b534.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_163357_4ab095be-1a1c-48d6-8c1b-9ef4c4f2b534_thumbnail.webp"
+    }
+  ]
+}

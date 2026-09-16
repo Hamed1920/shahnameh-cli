@@ -1,0 +1,122 @@
+{
+  "jobId": "J-20260915-8ND",
+  "parentJobId": "J-20260915-GGC",
+  "hfJobId": "dd8c111d-c14f-4796-afbf-b7981d31f25d",
+  "attempt": 2,
+  "stage": "final",
+  "label": "P09",
+  "target": "SHM-EP001-SC009-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP001-ZAHHAK-ENTRY/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nZahhak’s group has just revealed the distant Iranian wall. Preserve their direction of travel and the same weather.\n\nSHOT 1 — DUST APPROACHES — 0:00–0:05:\n85mm telephoto landscape. Zahhak’s delegation crosses laterally below the distant Iranian wall, compressed by heatless haze and dust. The riders remain behind the walking figure. No charge. The staff flashes only as dark material, never magical.\n\nSHOT 2 — JAMSHID SEES — 0:05–0:10:\nMatch the horizontal dust line to the edge of a high opening inside the unchanged Hall of Columns. 85mm view from behind a foreground column. Jamshid stands in royal dress and sees the distant moving line. His head snaps toward it; one hand clamps the stone edge; breath stops for one beat. The mask never changes.\n\nSHOT 3 — POSTS EMPTY — 0:10–0:15:\n40mm slightly high wide view across the hall. Exactly two attendants quietly abandon separate posts and disappear through opposite side passages. Jamshid turns his torso before his feet catch up, noticing the new empty width around him. The camera drifts backward and a column cuts him toward the edge of frame. End as he steps away from the central axis.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nDistant hooves and wind, then interior air, fingers gripping stone, attendants’ receding cloth and footsteps, Jamshid’s shortened breath.\n\nDESIGN NOTE — no reference image was planned for these, so build them from the description above (but if one of them is called with an attached image in this prompt, match that image instead) and keep them identical across blocks: LOC_IRAN_OUTSKIRTS, PROP_JAMSHID_REGALIA.\n\nRevision — the previous attempt was rejected for these reasons. Fix them:\n- In the distant wide shot showing Zahhak <<<image_1>>>  with the riders <<<image_2>>> , Zahhak is exclusively mounted on his creature <<<image_6>>> . There is only one single creature of this kind in existence, and Zahhak is riding it. He is not walking beside it; he is seated atop it, actively steering and driving it forward. Following behind him at a distance is a massive army with a large number of people—consisting of Persian riders  <<<image_2>>> mounted on horses as well as warriors marching on foot. Ensure this hierarchy is strictly maintained. Also add: these include the commanders and royal guards <<<image_4>>> who were formerly around Jamshid.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in @REF-001/V02. Never show a bare human face.\n\n<<<image_3>>> is Jamshid (CHR-002 V01); match it wherever Jamshid appears.\n<<<image_5>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+  "basePrompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nZahhak’s group has just revealed the distant Iranian wall. Preserve their direction of travel and the same weather.\n\nSHOT 1 — DUST APPROACHES — 0:00–0:05:\n85mm telephoto landscape. Zahhak’s delegation crosses laterally below the distant Iranian wall, compressed by heatless haze and dust. The riders remain behind the walking figure. No charge. The staff flashes only as dark material, never magical.\n\nSHOT 2 — JAMSHID SEES — 0:05–0:10:\nMatch the horizontal dust line to the edge of a high opening inside the unchanged Hall of Columns. 85mm view from behind a foreground column. Jamshid stands in royal dress and sees the distant moving line. His head snaps toward it; one hand clamps the stone edge; breath stops for one beat. The mask never changes.\n\nSHOT 3 — POSTS EMPTY — 0:10–0:15:\n40mm slightly high wide view across the hall. Exactly two attendants quietly abandon separate posts and disappear through opposite side passages. Jamshid turns his torso before his feet catch up, noticing the new empty width around him. The camera drifts backward and a column cuts him toward the edge of frame. End as he steps away from the central axis.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nDistant hooves and wind, then interior air, fingers gripping stone, attendants’ receding cloth and footsteps, Jamshid’s shortened breath.\n\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: LOC_IRAN_OUTSKIRTS, PROP_JAMSHID_REGALIA.",
+  "revisionNotes": [
+    "In the distant wide shot showing Zahhak @CHR-001/V06  with the riders @REF-001/V01 , Zahhak is exclusively mounted on his creature @CRT-002/V02 . There is only one single creature of this kind in existence, and Zahhak is riding it. He is not walking beside it; he is seated atop it, actively steering and driving it forward. Following behind him at a distance is a massive army with a large number of people—consisting of Persian riders  @REF-001/V01 mounted on horses as well as warriors marching on foot. Ensure this hierarchy is strictly maintained. Also add: these include the commanders and royal guards @GRP-004/V01 who were formerly around Jamshid."
+  ],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@CHR-001",
+    "@REF-001",
+    "@CHR-002/V01",
+    "@GRP-004/V01",
+    "@PRP-001",
+    "@CRT-002/V02"
+  ],
+  "createdAt": "2026-09-15T20:26:54.227Z",
+  "costCredits": 135,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_202116_dd8c111d-c14f-4796-afbf-b7981d31f25d.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-15T20:21:16.46969Z",
+      "display_name": "Seedance 2.5",
+      "id": "dd8c111d-c14f-4796-afbf-b7981d31f25d",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "e40dfcf0-60cb-43fc-88fa-a89a1851eaaa",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/e40dfcf0-60cb-43fc-88fa-a89a1851eaaa.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "df4bd1b7-65f3-4acf-9b90-8388577d3914",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/df4bd1b7-65f3-4acf-9b90-8388577d3914.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "00ce1966-382e-4188-b2d5-7bf7261b7d12",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/00ce1966-382e-4188-b2d5-7bf7261b7d12.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "945c97bd-48f2-4a80-ba1a-e7429b2176de",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/945c97bd-48f2-4a80-ba1a-e7429b2176de.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "c595557c-8b73-4c1d-a88a-335dd8e985c5",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/c595557c-8b73-4c1d-a88a-335dd8e985c5.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a8f5646a-8c35-4bf8-9787-45c9caeaa599",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/a8f5646a-8c35-4bf8-9787-45c9caeaa599.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\n\nCONTINUITY FROM PREVIOUS BLOCK:\nZahhak’s group has just revealed the distant Iranian wall. Preserve their direction of travel and the same weather.\n\nSHOT 1 — DUST APPROACHES — 0:00–0:05:\n85mm telephoto landscape. Zahhak’s delegation crosses laterally below the distant Iranian wall, compressed by heatless haze and dust. The riders remain behind the walking figure. No charge. The staff flashes only as dark material, never magical.\n\nSHOT 2 — JAMSHID SEES — 0:05–0:10:\nMatch the horizontal dust line to the edge of a high opening inside the unchanged Hall of Columns. 85mm view from behind a foreground column. Jamshid stands in royal dress and sees the distant moving line. His head snaps toward it; one hand clamps the stone edge; breath stops for one beat. The mask never changes.\n\nSHOT 3 — POSTS EMPTY — 0:10–0:15:\n40mm slightly high wide view across the hall. Exactly two attendants quietly abandon separate posts and disappear through opposite side passages. Jamshid turns his torso before his feet catch up, noticing the new empty width around him. The camera drifts backward and a column cuts him toward the edge of frame. End as he steps away from the central axis.\n\nGLOBAL EXECUTION RULES:\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\n\nSOUND:\nDistant hooves and wind, then interior air, fingers gripping stone, attendants’ receding cloth and footsteps, Jamshid’s shortened breath.\n\nDESIGN NOTE — no reference image was planned for these, so build them from the description above (but if one of them is called with an attached image in this prompt, match that image instead) and keep them identical across blocks: LOC_IRAN_OUTSKIRTS, PROP_JAMSHID_REGALIA.\n\nRevision — the previous attempt was rejected for these reasons. Fix them:\n- In the distant wide shot showing Zahhak <<<image_1>>>  with the riders <<<image_2>>> , Zahhak is exclusively mounted on his creature <<<image_6>>> . There is only one single creature of this kind in existence, and Zahhak is riding it. He is not walking beside it; he is seated atop it, actively steering and driving it forward. Following behind him at a distance is a massive army with a large number of people—consisting of Persian riders  <<<image_2>>> mounted on horses as well as warriors marching on foot. Ensure this hierarchy is strictly maintained. Also add: these include the commanders and royal guards <<<image_4>>> who were formerly around Jamshid.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in @REF-001/V02. Never show a bare human face.\n\n<<<image_3>>> is Jamshid (CHR-002 V01); match it wherever Jamshid appears.\n<<<image_5>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_202116_dd8c111d-c14f-4796-afbf-b7981d31f25d.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260915_202116_dd8c111d-c14f-4796-afbf-b7981d31f25d_thumbnail.webp"
+    }
+  ]
+}

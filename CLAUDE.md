@@ -109,8 +109,17 @@ every render.
   set `SHM_WORKER=off` in `10_PANEL/.env.local` before running the panel. Pull before starting
   the panel; commit and push after stopping the worker (`queue/worker.stop`). The panel can run anywhere, since JSONL is
   append-only and union-merged.
-- **Author is Hamed alone.** No `Co-Authored-By` trailers, no "Generated with" lines, no Claude
-  attribution of any kind.
+- **Author is Hamed alone.** Every commit is authored by Hamed, with exactly one trailer:
+
+  ```
+  Co-Authored-By: Parsa Xavier <parsaxavier@gmail.com>
+  ```
+
+  **No AI co-author, ever.** No `Co-Authored-By: Claude`, no "Generated with Claude Code" line,
+  no Claude or Anthropic attribution of any kind, in the commit message or the PR body.
+- **"commit" is an instruction, not a question.** When Hamed says "commit" in a Claude chat,
+  stage and commit the working tree right then, with the trailer above. Don't ask first, don't
+  push unless he says push.
 - Verify before pushing: `git add -A --dry-run` lists nothing from `node_modules`, `.next` or
   `.env`, and after staging `git lfs ls-files` lists every media file.
 

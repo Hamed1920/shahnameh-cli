@@ -16,13 +16,23 @@ function resolveEntry() {
   if (ENTRY !== null) return ENTRY
   const candidates = []
   if (process.env.SHM_HIGGSFIELD_JS) candidates.push(process.env.SHM_HIGGSFIELD_JS)
-  try {
-    const root = execFileSync(process.execPath, [
-      path.join(path.dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js'),
-      'root', '-g',
-    ], { encoding: 'utf8' }).trim()
-    candidates.push(path.join(root, '@higgsfield', 'cli', 'bin', 'higgsfield.js'))
-  } catch { /* fall through */ }
+  // npm sits beside node.exe on Windows, but under ../lib/node_modules on macOS and
+  // Linux (nvm included). Asking only the Windows layout leaves ENTRY false on a Mac,
+  // and every hf() call then fails as "not authenticated" without running. Try both.
+  const nodeDir = path.dirname(process.execPath)
+  for (const cli of [
+    path.join(nodeDir, 'node_modules', 'npm', 'bin', 'npm-cli.js'),
+    path.join(nodeDir, '..', 'lib', 'node_modules', 'npm', 'bin', 'npm-cli.js'),
+  ]) {
+    try {
+      if (!fs.existsSync(cli)) continue
+      const root = execFileSync(process.execPath, [cli, 'root', '-g'], { encoding: 'utf8' }).trim()
+      candidates.push(path.join(root, '@higgsfield', 'cli', 'bin', 'higgsfield.js'))
+      break
+    } catch { /* try the next layout */ }
+  }
+  // Last resort if npm itself cannot be run: the POSIX global root, derived directly.
+  candidates.push(path.join(nodeDir, '..', 'lib', 'node_modules', '@higgsfield', 'cli', 'bin', 'higgsfield.js'))
   if (process.platform === 'win32' && process.env.APPDATA) {
     candidates.push(path.join(process.env.APPDATA, 'npm', 'node_modules', '@higgsfield', 'cli', 'bin', 'higgsfield.js'))
   }

@@ -11,7 +11,7 @@
   "concurrency": 1,
   "maxJobsPerRun": 12,
   "perJobCostCeilingCredits": 250,
-  "costCeilingCredits": 1500,
+  "costCeilingCredits": 3000,
   "costWindowHours": 24,
   "waitTimeout": "25m",
   "waitInterval": "5s",
