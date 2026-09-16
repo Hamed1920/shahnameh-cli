@@ -118,8 +118,10 @@ every render.
   **No AI co-author, ever.** No `Co-Authored-By: Claude`, no "Generated with Claude Code" line,
   no Claude or Anthropic attribution of any kind, in the commit message or the PR body.
 - **"commit" is an instruction, not a question.** When Hamed says "commit" in a Claude chat,
-  stage and commit the working tree right then, with the trailer above. Don't ask first, don't
-  push unless he says push.
+  stage and commit the working tree right then, with the trailer above. Don't ask first.
+- **Always sync, never just commit.** A commit that only sits on this machine isn't done. After
+  committing, pull (`git pull --rebase`) and push, so the other machine can clone the work.
+  Media pushes through LFS, so give the upload time to finish and confirm it did.
 - Verify before pushing: `git add -A --dry-run` lists nothing from `node_modules`, `.next` or
   `.env`, and after staging `git lfs ls-files` lists every media file.
 
