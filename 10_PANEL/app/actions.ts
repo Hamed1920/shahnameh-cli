@@ -181,6 +181,8 @@ export async function decide(
     return { ok: false, error: `Could not save the decision: ${(e as Error).message}` }
   }
 
+  // Review loses the candidate, the Gallery may gain an accepted take.
+  revalidatePath('/review')
   revalidatePath('/')
   revalidatePath('/queue')
   revalidatePath('/decided')

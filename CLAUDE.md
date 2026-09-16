@@ -25,7 +25,9 @@ Run `/project-log` at the start of a session, or read directly:
   This is the only reason collisions are impossible. Never allocate one by hand either — let
   `Ingest-Jobs.ps1` do it, or the worker: when it files a reviewer upload proposed as a new
   entity, or when it approves a Prompts-page batch with a `NEW/KIND/SLUG` row (same max+1 rule,
-  `nextEntityNumber` in `worker/lib/promote.mjs`).
+  `nextEntityNumber` in `worker/lib/promote.mjs`). Scene numbers work the same way: a Prompts-page
+  row targeting `NEXT/EPnnn` gets the next free `SCnnn-SH0010` at approval, past every scene in
+  `QUEUE.jsonl` or on disk (`assignScenes` in `worker/lib/scenes.mjs`).
 - **Numbers are never reused**, including after `RETIRED`.
 - **Never move or rename an asset** without updating `registry/ASSET_MANIFEST.csv`.
 - **Never auto-create a missing target entity** to make a job succeed. Reject and ask.

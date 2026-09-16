@@ -1,15 +1,9 @@
 import type { ReactNode } from 'react'
+import { CONTROL } from '@/components/ui/control'
 import { cn } from '@/lib/cn'
 
-/** One recipe for every text control in the panel. Flat: a hairline that brightens on focus. */
-const CONTROL = cn(
-  'w-full rounded-md border border-edge-strong bg-white/[0.02] px-3 py-2 text-sm text-fg',
-  'placeholder:text-faint',
-  'transition-[background-color,border-color] duration-150',
-  'hover:border-[#505050]',
-  'focus:border-fg/45 focus:bg-transparent focus:outline-none',
-  'disabled:cursor-not-allowed disabled:opacity-50',
-)
+/** The panel's own dropdown; same children and value/onChange as a native select. */
+export { Select, type SelectChange } from '@/components/ui/select'
 
 /** Label + optional hint wrapper. Renders a real <label>, so the text is clickable. */
 export function Field({
@@ -34,10 +28,6 @@ export function Field({
 
 export function Input({ className, ...props }: React.ComponentProps<'input'>) {
   return <input className={cn(CONTROL, 'h-9', className)} {...props} />
-}
-
-export function Select({ className, ...props }: React.ComponentProps<'select'>) {
-  return <select className={cn(CONTROL, 'select-chevron h-9 cursor-pointer pr-9', className)} {...props} />
 }
 
 export function Textarea({ className, ...props }: React.ComponentProps<'textarea'>) {

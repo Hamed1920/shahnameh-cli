@@ -27,7 +27,14 @@ const fade = {
  * Lives in the root layout, which persists across client navigations, so the
  * rail never remounts or replays its animation when you change page.
  */
-export function Sidebar({ defaultCollapsed }: { defaultCollapsed: boolean }) {
+export function Sidebar({
+  defaultCollapsed,
+  counts = {},
+}: {
+  defaultCollapsed: boolean
+  /** Badge per nav href, e.g. jobs waiting on the Queue. Zero shows nothing. */
+  counts?: Partial<Record<string, number>>
+}) {
   const [collapsed, setCollapsed] = useState(defaultCollapsed)
   const [hovered, setHovered] = useState<string | null>(null)
   const pathname = usePathname()
@@ -69,6 +76,8 @@ export function Sidebar({ defaultCollapsed }: { defaultCollapsed: boolean }) {
         <ul className="space-y-px">
           {NAV.map(({ href, label, icon: Icon }) => {
             const active = href === '/' ? pathname === '/' : pathname.startsWith(href)
+            const count = counts[href] ?? 0
+            const countText = count > 99 ? '99+' : String(count)
             return (
               <li key={href} className="relative mx-2">
                 <Link
@@ -100,6 +109,24 @@ export function Sidebar({ defaultCollapsed }: { defaultCollapsed: boolean }) {
                       </motion.span>
                     )}
                   </AnimatePresence>
+                  {count > 0 && (
+                    <>
+                      <span className="sr-only">, {count} waiting</span>
+                      {/* Expanded: a pill at the row's end. Collapsed: pinned to the icon's corner. */}
+                      <span
+                        aria-hidden
+                        className={cn(
+                          'absolute grid place-items-center rounded-full bg-accent font-mono leading-none font-medium text-ink tabular-nums',
+                          'transition-[top,right,height,min-width,font-size] duration-200',
+                          collapsed
+                            ? 'top-[5px] right-[5px] h-3.5 min-w-3.5 px-[3px] text-[9px] ring-2 ring-ink'
+                            : 'top-1/2 right-3 h-[18px] min-w-[18px] -translate-y-1/2 px-1.5 text-[10.5px]',
+                        )}
+                      >
+                        {countText}
+                      </span>
+                    </>
+                  )}
                 </Link>
 
                 <AnimatePresence>
@@ -117,6 +144,7 @@ export function Sidebar({ defaultCollapsed }: { defaultCollapsed: boolean }) {
                       )}
                     >
                       {label}
+                      {count > 0 && <span className="ml-1.5 font-mono text-muted">{countText}</span>}
                     </motion.span>
                   )}
                 </AnimatePresence>

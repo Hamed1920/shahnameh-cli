@@ -106,6 +106,16 @@ export async function getDecidedEntries(): Promise<DecidedEntry[]> {
   const verdictByJob = new Map<string, ReviewDecision>()
   for (const d of decisions) if (!failed[d.id]) verdictByJob.set(d.jobId, d)
 
+  /**
+   * Decisions whose take could not be named, to be paired up after the pass.
+   *
+   * Shots are not in ASSET_MANIFEST -- only entity assets are -- so a shot is
+   * identified from the worker's PROMOTED lines. queue/worker.log is gitignored
+   * and per-machine, so a take filed on another machine has no move recorded
+   * here, and two takes of one shot then look alike.
+   */
+  const claims = new Map<string, { folder: string; stem: string; ext: string }>()
+
   // Shot files already on disk, for the rare decision with no move logged.
   const shotFiles = new Map<string, string[]>()
   async function filesIn(folder: string) {
@@ -142,7 +152,10 @@ export async function getDecidedEntries(): Promise<DecidedEntry[]> {
           const stem = `${d.target}_${d.variant || 'V01'}`
           const hits = (await filesIn(folder)).filter((n) => n === stem + path.extname(base) || n.startsWith(stem + '_T'))
           if (hits.length === 1) file = `${folder}/${hits[0]}`
-          else missing = hits.length ? 'Several takes of this shot are filed; the worker log does not say which one this is.' : null
+          else if (hits.length) {
+            missing = 'Several takes of this shot are filed; the worker log does not say which one this is.'
+            claims.set(d.id, { folder, stem, ext: path.extname(base) })
+          } else missing = null
         }
       }
       if (file && !(await exists(file))) {
@@ -212,5 +225,59 @@ export async function getDecidedEntries(): Promise<DecidedEntry[]> {
       }
     }),
   )
+  pairUnidentifiedTakes(entries, claims, shotFiles)
   return entries.sort((a, b) => b.decision.ts.localeCompare(a.decision.ts))
+}
+
+/** `SHM-...-SH0010_V01.mp4` is take 1, `_T02` take 2, and so on. */
+function takeNumber(name: string, stem: string): number {
+  const m = name.slice(stem.length).match(/^_T(\d+)/)
+  return m ? parseInt(m[1], 10) : 1
+}
+
+/**
+ * Give each decision that could not name its take one of the files left over in
+ * its folder: oldest decision to earliest take.
+ *
+ * The worker files a second take of a shot as `_T02` and a third as `_T03`, in
+ * the order they are decided, so the Nth unclaimed decision is the Nth
+ * unclaimed take. Anything the worker log or the manifest already pinned down
+ * keeps that answer and is taken out of the pool first, so this only ever
+ * decides between takes nothing else could tell apart -- and a decision left
+ * without a file still says so rather than borrowing another take's.
+ */
+function pairUnidentifiedTakes(
+  entries: DecidedEntry[],
+  claims: Map<string, { folder: string; stem: string; ext: string }>,
+  shotFiles: Map<string, string[]>,
+): void {
+  if (!claims.size) return
+  const claimed = new Set(entries.map((e) => e.file).filter((f): f is string => !!f))
+
+  const groups = new Map<string, DecidedEntry[]>()
+  for (const e of entries) {
+    const c = claims.get(e.decision.id)
+    if (!c) continue
+    const key = `${c.folder} ${c.stem} ${c.ext}`
+    const list = groups.get(key)
+    if (list) list.push(e)
+    else groups.set(key, [e])
+  }
+
+  for (const [key, list] of groups) {
+    const [folder, stem, ext] = key.split(' ')
+    const free = (shotFiles.get(folder) ?? [])
+      .filter((n) => n === stem + ext || n.startsWith(stem + '_T'))
+      .filter((n) => !claimed.has(`${folder}/${n}`))
+      .sort((a, b) => takeNumber(a, stem) - takeNumber(b, stem))
+
+    ;[...list]
+      .sort((a, b) => a.decision.ts.localeCompare(b.decision.ts))
+      .forEach((e, i) => {
+        const name = free[i]
+        if (!name) return
+        e.file = `${folder}/${name}`
+        e.missing = null
+      })
+  }
 }

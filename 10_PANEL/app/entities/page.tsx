@@ -1,3 +1,4 @@
+import { PdfDownload } from '@/components/pdf-download'
 import { getAssets, getEntities } from '@/lib/store'
 import { Reveal } from '@/components/ui/reveal'
 import { Table, Td, Th, Thead, Tr } from '@/components/ui/table'
@@ -31,6 +32,18 @@ export default async function EntitiesPage() {
         Every entity in <code className="font-mono text-[13px] text-fg">ENTITIES.csv</code>, grouped by
         kind, with the looks registered against it. The main look is filled.
       </PageHeader>
+
+      <section className="flex flex-wrap items-start gap-x-4 gap-y-3 rounded-xl border border-edge bg-panel p-5">
+        <div className="mr-auto max-w-xl space-y-1">
+          <div className="text-[14px] text-fg">Brief an AI that writes prompts</div>
+          <p className="text-[13px] leading-relaxed text-muted">
+            Attach the PDF to ChatGPT, Gemini or Claude before asking for prompts. It is built from the registries
+            when you click, with a picture of every look, so the tokens it writes match the index.
+          </p>
+        </div>
+        <PdfDownload href="/api/index-pdf?part=index" label="Index only" />
+        <PdfDownload href="/api/index-pdf?part=full" label="Download PDF" tone="accent" />
+      </section>
 
       {kinds.map((kind, ki) => (
         <Reveal key={kind} index={ki}>

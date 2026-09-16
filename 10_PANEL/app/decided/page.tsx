@@ -6,7 +6,7 @@ import { Reveal } from '@/components/ui/reveal'
 import { Badge, PageHeader, SectionHeading } from '@/components/ui/text'
 import { assetUrl, isVideo } from '@/lib/asset'
 import { getDecidedEntries, type DecidedEntry, type FollowUp } from '@/lib/decided'
-import { getCatalog, getWorkerConfig } from '@/lib/store'
+import { getCatalog, getPriceTable, getWorkerConfig } from '@/lib/store'
 import type { RegenerateConfig } from '@/components/regenerate-button'
 
 export const dynamic = 'force-dynamic'
@@ -103,12 +103,18 @@ function Location({ entry }: { entry: DecidedEntry }) {
 }
 
 export default async function DecidedPage() {
-  const [entries, catalog, cfg] = await Promise.all([getDecidedEntries(), getCatalog(), getWorkerConfig()])
+  const [entries, catalog, cfg, priceTable] = await Promise.all([
+    getDecidedEntries(), getCatalog(), getWorkerConfig(), getPriceTable(),
+  ])
   const regenCfg: RegenerateConfig = {
     models: (cfg.models as RegenerateConfig['models']) ?? { image: [], video: [] },
     aspectRatios: (cfg.aspectRatios as string[]) ?? ['16:9', '9:16', '1:1'],
     videoDurations: (cfg.videoDurations as number[]) ?? [5, 10, 15],
+    videoDraftResolution: String(cfg.videoDraftResolution ?? '480p'),
+    videoFinalResolution: String(cfg.videoFinalResolution ?? '1080p'),
   }
+  // Plain object: a Map does not survive the server -> client boundary.
+  const prices = Object.fromEntries(priceTable)
   const accepted = entries.filter((e) => e.decision.verdict === 'accepted')
   const denied = entries.filter((e) => e.decision.verdict === 'denied')
 
@@ -148,6 +154,7 @@ export default async function DecidedPage() {
                       catalog={catalog}
                       cfg={regenCfg}
                       regenerations={e.regenerations}
+                      prices={prices}
                     />
                   )}
                 </Card>

@@ -4,7 +4,9 @@
  * Three formats are recognised:
  *   - batch JSON, the array enqueue-batch.mjs has always taken
  *   - SHM-JOB blocks, as Claude Chat / Cowork write them (SYNC_PROTOCOL.md §4)
- *   - free text, split into blocks by headings or blank lines
+ *   - free text: one prompt, unless it has P01 / PROMPT 2 / BLOCK 3 headings.
+ *     SHOT headings, numbered items and blank lines are only offered as splits
+ *     (`splitOptions`); a 15-second block written as SHOT 1..5 is one prompt.
  *
  * Pure: no Node, no `@/` imports, so it runs in the browser on paste and in
  * unit tests alike. Prompts are never reworded: a block's text is kept as
@@ -13,6 +15,10 @@
  */
 
 export type ParsedFormat = 'batch-json' | 'shm-job' | 'text'
+
+/** How a free-text document was cut. `auto` means `block` when it has prompt headings, else `none`. */
+export type SplitMode = 'none' | 'block' | 'shot' | 'numbered' | 'blank'
+export interface SplitOption { mode: SplitMode; count: number }
 
 export interface ParsedRow {
   key: string
@@ -36,6 +42,10 @@ export interface ParseResult {
   /** Text before the first heading of a free-text document: usually rules that apply to every prompt. */
   preamble: string | null
   warnings: string[]
+  /** The split used for free text; null for SHM-JOB and batch JSON, which are always one row per item. */
+  split: SplitMode | null
+  /** Every split this document allows, `none` first. Empty for SHM-JOB and batch JSON. */
+  splitOptions: SplitOption[]
 }
 
 const META_KEYS = ['target', 'variant', 'model', 'refs', 'params', 'label', 'stage', 'notes'] as const
@@ -45,7 +55,7 @@ const MENTION_RX = /@((?:CHR|GRP|LOC|PRP|CRT|COS|VEH|FX|REF)-\d{3}(?:\/V\d{2}(?:
 /** Block-level markers: P01, PROMPT 3, BLOCK 2, پرامپت ۱, بلاک ۲, with an optional markdown # prefix. */
 // `\b` is ASCII-only, so the "not followed by another digit or letter" check is spelled out.
 const BLOCK_HEADING_RX = /^\s*(?:#{1,6}\s*)?(?:P|PROMPT|BLOCK|پرامپت|بلاک)\s*[-–:.]?\s*[\d۰-۹]{1,3}(?![\d۰-۹A-Za-z])/i
-/** Shot-level markers, tried only when a document has no block markers: an EP001 block has SHOT 1..3 inside it. */
+/** Shot-level markers. Never a split by default: an EP001 block has SHOT 1..3 inside it. */
 const SHOT_HEADING_RX = /^\s*(?:#{1,6}\s*)?(?:SHOT|SCENE|شات|صحنه)\s*[-–:.]?\s*[\d۰-۹]{1,3}(?![\d۰-۹A-Za-z])/i
 /** Numbered list items: "1." "2)" "۳." at the start of a line. */
 const NUMBERED_RX = /^\s*[\d۰-۹]{1,3}[.)]\s+\S/
@@ -66,13 +76,16 @@ export function detectFormat(text: string): ParsedFormat {
   return 'text'
 }
 
-export function parsePromptDocument(text: string, opts: { file?: string | null } = {}): ParseResult {
+export function parsePromptDocument(
+  text: string,
+  opts: { file?: string | null; split?: SplitMode | 'auto' } = {},
+): ParseResult {
   const format = detectFormat(text)
   const file = opts.file ?? null
   const result =
     format === 'batch-json' ? parseBatchJson(text, file)
     : format === 'shm-job' ? parseShmJobs(text, file)
-    : splitTextBlocks(text, file)
+    : splitTextBlocks(text, file, opts.split ?? 'auto')
   return { ...result, rows: result.rows.map((r, i) => ({ ...r, key: r.key || `r${i + 1}` })) }
 }
 
@@ -118,9 +131,9 @@ function stageOf(v: unknown): 'draft' | 'final' | null {
 export function parseBatchJson(text: string, file: string | null = null): ParseResult {
   let arr: unknown
   try { arr = JSON.parse(normalizeText(text)) } catch (e) {
-    return { format: 'batch-json', rows: [], preamble: null, warnings: [`Not valid JSON: ${(e as Error).message}`] }
+    return { format: 'batch-json', rows: [], preamble: null, warnings: [`Not valid JSON: ${(e as Error).message}`], split: null, splitOptions: [] }
   }
-  if (!Array.isArray(arr)) return { format: 'batch-json', rows: [], preamble: null, warnings: ['The JSON is not an array.'] }
+  if (!Array.isArray(arr)) return { format: 'batch-json', rows: [], preamble: null, warnings: ['The JSON is not an array.'], split: null, splitOptions: [] }
   const rows: ParsedRow[] = []
   const warnings: string[] = []
   arr.forEach((item, i) => {
@@ -142,7 +155,7 @@ export function parseBatchJson(text: string, file: string | null = null): ParseR
     if (item && typeof item !== 'object') warnings.push(`item ${i + 1} is not an object`)
     rows.push(row)
   })
-  return { format: 'batch-json', rows, preamble: null, warnings }
+  return { format: 'batch-json', rows, preamble: null, warnings, split: null, splitOptions: [] }
 }
 
 // ---------------------------------------------------------------- SHM-JOB blocks
@@ -189,7 +202,7 @@ export function parseShmJobs(text: string, file: string | null = null): ParseRes
     rows.push(row)
   }
   if (rows.length === 0 && warnings.length === 0) warnings.push('No SHM-JOB blocks found.')
-  return { format: 'shm-job', rows, preamble: null, warnings }
+  return { format: 'shm-job', rows, preamble: null, warnings, split: null, splitOptions: [] }
 }
 
 // ---------------------------------------------------------------- free text
@@ -255,23 +268,29 @@ function splitNumbered(lines: string[]): { blocks: Block[]; preamble: string } |
   return { blocks, preamble }
 }
 
-export function splitTextBlocks(text: string, file: string | null = null): ParseResult {
+export function splitTextBlocks(text: string, file: string | null = null, split: SplitMode | 'auto' = 'auto'): ParseResult {
   const src = normalizeText(text)
   const lines = src.split('\n')
   const warnings: string[] = []
-  let preamble = ''
-  let blocks: Block[]
 
-  const byBlock = splitByHeading(lines, BLOCK_HEADING_RX)
-  const byShot = byBlock ? null : splitByHeading(lines, SHOT_HEADING_RX)
-  const byNumber = byBlock || byShot ? null : splitNumbered(lines)
-  if (byBlock) ({ blocks, preamble } = byBlock)
-  else if (byShot) ({ blocks, preamble } = byShot)
-  else if (byNumber) ({ blocks, preamble } = byNumber)
-  else {
-    blocks = splitByBlankLines(lines, 2) ?? splitByBlankLines(lines, 1) ?? []
-    if (blocks.length === 0 && src.trim()) blocks = [{ label: null, body: src, line: 1 }]
+  // Only prompt headings cut a document on their own. The rest are offered, never assumed:
+  // SHOT 1..5 inside one 15-second block, or blank lines between its sections, are not five prompts.
+  const byBlank = splitByBlankLines(lines, 2)
+  const cuts: Record<Exclude<SplitMode, 'none'>, { blocks: Block[]; preamble: string } | null> = {
+    block: splitByHeading(lines, BLOCK_HEADING_RX),
+    shot: splitByHeading(lines, SHOT_HEADING_RX),
+    numbered: splitNumbered(lines),
+    blank: byBlank && { blocks: byBlank, preamble: '' },
   }
+  const whole: Block[] = src.trim() ? [{ label: null, body: src, line: 1 }] : []
+  const splitOptions: SplitOption[] = [{ mode: 'none', count: whole.length }]
+  for (const [mode, cut] of Object.entries(cuts) as [Exclude<SplitMode, 'none'>, typeof cuts.block][]) {
+    if (cut) splitOptions.push({ mode, count: cut.blocks.length })
+  }
+  const wanted = split === 'auto' ? (cuts.block ? 'block' : 'none') : split
+  const cut = wanted === 'none' ? null : cuts[wanted]
+  const used: SplitMode = cut ? wanted : 'none'
+  const { blocks, preamble } = cut ?? { blocks: whole, preamble: '' }
 
   const rows: ParsedRow[] = blocks.map((b) => {
     const row = emptyRow(file, b.line)
@@ -306,5 +325,5 @@ export function splitTextBlocks(text: string, file: string | null = null): Parse
   }).filter((r) => r.prompt || r.warnings.length === 0)
 
   if (rows.length === 0) warnings.push('Nothing to parse.')
-  return { format: 'text', rows, preamble: preamble || null, warnings }
+  return { format: 'text', rows, preamble: preamble || null, warnings, split: used, splitOptions }
 }

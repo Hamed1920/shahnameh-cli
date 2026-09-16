@@ -23,7 +23,7 @@ export type RegenerateConfig = GenerationConfig
  * on the button while the settings that decide it are unchanged.
  */
 export function RegenerateButton({
-  jobId, decisionId, credits, source, catalog, cfg, regenerations,
+  jobId, decisionId, credits, source, catalog, cfg, regenerations, prices,
 }: {
   jobId: string
   decisionId: string
@@ -32,6 +32,8 @@ export function RegenerateButton({
   catalog: CatalogEntity[]
   cfg: RegenerateConfig
   regenerations: RegenerationView[]
+  /** Last real price per priceKey, so the quality toggle can price both sides. */
+  prices?: Record<string, number>
 }) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
@@ -146,6 +148,7 @@ export function RegenerateButton({
               cfg={cfg}
               picker={picker}
               onPicker={setPicker}
+              prices={prices}
             />
             {error && <p className="rounded-md border border-bad/35 bg-bad/8 px-3 py-2 text-xs leading-relaxed text-bad" dir="auto">{error}</p>}
           </div>

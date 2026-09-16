@@ -11,6 +11,11 @@ export function assetUrl(rel: string) {
   return `/api/asset?path=${encodeURIComponent(rel)}`
 }
 
+/** A small JPEG of a project image, for chips and lists (the original can be several MB). */
+export function thumbUrl(rel: string, width = 96) {
+  return `/api/thumb?path=${encodeURIComponent(rel)}&w=${width}`
+}
+
 export function isVideo(p: string) {
   return /\.(mp4|mov|webm)$/i.test(p)
 }

@@ -48,6 +48,7 @@ test('free text split on P01/P02 headings, SHOT lines stay inside a block', () =
   const r = parsePromptDocument(doc)
   assert.equal(r.format, 'text')
   assert.equal(r.preamble, 'GLOBAL RULES\nNo masks that look like skulls.')
+  assert.equal(r.split, 'block')
   assert.equal(r.rows.length, 2)
   assert.equal(r.rows[0].label, 'P01')
   assert.equal(r.rows[0].target, 'SHM-EP001-SC001-SH0010')
@@ -57,11 +58,42 @@ test('free text split on P01/P02 headings, SHOT lines stay inside a block', () =
   assert.match(r.rows[1].warnings[0], /mentions/)
 })
 
-test('free text without headings splits on double blank lines first', () => {
+test('free text without prompt headings stays one prompt; blank lines are only offered', () => {
   const doc = 'first prompt\nsecond line\n\n\nsecond prompt\n\nstill second prompt\n\n\nthird'
   const r = parsePromptDocument(doc)
-  assert.equal(r.rows.length, 3)
-  assert.equal(r.rows[1].prompt, 'second prompt\n\nstill second prompt')
+  assert.equal(r.split, 'none')
+  assert.equal(r.rows.length, 1)
+  assert.equal(r.rows[0].prompt, doc)
+  assert.deepEqual(r.splitOptions, [{ mode: 'none', count: 1 }, { mode: 'blank', count: 3 }])
+  const cut = parsePromptDocument(doc, { split: 'blank' })
+  assert.equal(cut.split, 'blank')
+  assert.equal(cut.rows.length, 3)
+  assert.equal(cut.rows[1].prompt, 'second prompt\n\nstill second prompt')
+})
+
+test('one 15-second block written as SHOT 1..N is one prompt, with a SHOT split offered', () => {
+  const doc = [
+    'Create one 15-second horizontal 16:9 video block of exactly three handheld shots.', '', 'No dialogue.', '', '',
+    'SHOT 1 — RUNNING — 0:00–0:05:', '', 'He runs.', '', '',
+    'SHOT 2 — SEES IT — 0:05–0:10:', '', 'He slows.', '', '',
+    'SHOT 3 — DEPARTURE — 0:10–0:15:', '', 'They leave.', '', '',
+    'CAMERA LANGUAGE:', '', 'No gimbal.', '', '', 'SOUND:', '', 'No music.',
+  ].join('\n')
+  const r = parsePromptDocument(doc)
+  assert.equal(r.rows.length, 1)
+  assert.equal(r.preamble, null)
+  assert.equal(r.rows[0].prompt, doc)
+  assert.deepEqual(r.splitOptions.map((o) => o.mode), ['none', 'shot', 'blank'])
+  assert.equal(r.splitOptions.find((o) => o.mode === 'shot')?.count, 3)
+  const shots = parsePromptDocument(doc, { split: 'shot' })
+  assert.equal(shots.rows.length, 3)
+  assert.match(shots.preamble ?? '', /^Create one 15-second/)
+})
+
+test('a split the document does not allow falls back to one prompt', () => {
+  const r = parsePromptDocument('just one prompt\nwith two lines', { split: 'shot' })
+  assert.equal(r.split, 'none')
+  assert.equal(r.rows.length, 1)
 })
 
 test('Persian numbered headings and digits', () => {
@@ -71,11 +103,13 @@ test('Persian numbered headings and digits', () => {
   assert.equal(r.rows[0].label, 'پرامپت 1')
   assert.equal(r.rows[0].prompt, PERSIAN)
   assert.equal(r.rows[1].label, 'پرامپت 2')
+  assert.equal(parsePromptDocument(doc, { split: 'none' }).rows.length, 1)
 })
 
-test('numbered list items separated by blank lines', () => {
+test('numbered list items separated by blank lines split only when chosen', () => {
   const doc = '1. first one\n\n2) second one\nmore\n\n۳. سومی'
-  const r = parsePromptDocument(doc)
+  assert.equal(parsePromptDocument(doc).rows.length, 1)
+  const r = parsePromptDocument(doc, { split: 'numbered' })
   assert.equal(r.rows.length, 3)
   assert.equal(r.rows[1].prompt, 'second one\nmore')
   assert.equal(r.rows[2].label, '#3')

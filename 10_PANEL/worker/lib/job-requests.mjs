@@ -4,6 +4,7 @@ import {
 import { parseCsv } from './csv.mjs'
 import { checkBatch, isVideoModel, makeJob, newJobId } from './batch.mjs'
 import { reserveEntity } from './promote.mjs'
+import { NEXT_SCENE_RX, assignScenes, usedShotIds } from './scenes.mjs'
 import { planJob } from './plan.mjs'
 import { estimateCost, isAuthenticated } from './hf.mjs'
 
@@ -17,7 +18,8 @@ import { estimateCost, isAuthenticated } from './hf.mjs'
  * and nothing spends until Hamed approves it: pricing calls `generate cost`,
  * which is free, and only an approve appends to QUEUE.jsonl.
  *
- * Entity numbers for NEW/KIND/SLUG proposals are reserved at approval, never
+ * Entity numbers for NEW/KIND/SLUG proposals, and scene numbers for NEXT/EPnnn
+ * rows, are reserved at approval, never
  * at validation, so a batch discarded after a typo burns no number. Numbers
  * are never reused (INDEXING.md), which is why that order matters.
  */
@@ -135,14 +137,30 @@ const HANDLERS = {
       }
       if (assigned.length) await writeCsv(P.entities, eRows, header)
 
-      const present = new Set((await readJsonl(P.queue)).map((q) => q.jobId))
+      const present = new Map((await readJsonl(P.queue)).map((q) => [q.jobId, q]))
+
+      // NEXT/EPnnn rows take the next free scenes, in row order, past every scene
+      // already queued or on disk and every explicit shot in this batch. A row that
+      // an interrupted approve already queued keeps the scene it got then.
+      const isNext = (r) => NEXT_SCENE_RX.test(r.targetId)
+      const sceneFor = assignScenes(
+        ok.filter((r) => isNext(r) && !present.has(jobIdFor.get(r.key))),
+        [...(await usedShotIds()), ...ok.filter((r) => !isNext(r)).map((r) => r.targetId)],
+      )
+      for (const r of ok.filter(isNext)) {
+        const id = present.get(jobIdFor.get(r.key))?.target ?? sceneFor.get(r.key)
+        sceneFor.set(r.key, id)
+        assigned.push({ key: r.key, proposal: r.targetId, id, shortId: id.replace(/^SHM-/, '') })
+      }
+
       const jobIds = {}
       let queued = 0
       for (const r of ok) {
         const jobId = jobIdFor.get(r.key)
         jobIds[r.key] = jobId
         if (present.has(jobId)) continue // a crash between the append and the state write: already queued
-        await appendJsonl(P.queue, makeJob(r, { jobId, enqueuedBy: 'panel:batch', batchId: req.batchId, targetId: idFor.get(r.targetId) ?? r.targetId }))
+        const targetId = sceneFor.get(r.key) ?? idFor.get(r.targetId) ?? r.targetId
+        await appendJsonl(P.queue, makeJob(r, { jobId, enqueuedBy: 'panel:batch', batchId: req.batchId, targetId }))
         queued++
       }
       const total = st.priced?.total ?? null

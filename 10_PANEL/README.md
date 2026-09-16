@@ -67,12 +67,22 @@ skipped on read, which is enough for a localhost panel with one reviewer.
 `.txt`, `.md`, `.json`, `.docx` or `.pdf` files (docx is unzipped and de-tagged on the server;
 pdf goes through pdf.js and its text order is unreliable for Persian, so the extracted text is
 shown before parsing and `.docx` is recommended). `lib/prompt-parser.ts` splits a document into
-prompt blocks on `P01` / `PROMPT 2` / `پرامپت ۳` headings, then `SHOT n`, then numbered items,
-then blank lines, and keeps each block's text as written. Text before the first heading (a
+prompt blocks only on `P01` / `PROMPT 2` / `پرامپت ۳` headings; without them the whole document
+is one prompt, because a 15-second block is often written as `SHOT 1..5` with shared camera and
+sound sections. The document's line on the page offers the other cuts it found (`SHOT n`
+headings, numbered items, double blank lines) in a dropdown, and choosing one rebuilds that
+document's rows. Each block's text is kept as written. Text before the first heading (a
 document's rules) can be prepended to every prompt with one checkbox.
 
-Each row gets a target — an entity from the index, a shot id, or a **new entity** — plus look,
-model, first render (draft/final), references (from the same picker as Review) and the prompt.
+Each row says where an accepted result is **filed** — a shot, an entity from the index, or a
+**new entity** — plus look, model, first render (draft/final), references and the prompt. The
+target is not who is in the frame; that is the references. `lib/batch-rules.ts` `initialTarget`
+picks it: a target the document gives, else a shot the file name or label names (`sc013`), else
+for a video the **next free scene** (`NEXT/EP001`, numbered by the worker at approval,
+`worker/lib/scenes.mjs`), else for an image the one entity its references or words point at.
+`lib/ref-suggest.ts` offers references as chips, nothing attached until clicked: entity names and
+slug words only one entity has, pick-one groups for shared words ("staff", "creature"), and the
+references of the latest queued jobs, each with the look a recent job used.
 Batch settings cover model, aspect ratio, duration and **Sound** (on by default). A row with a
 problem blocks Submit until it is fixed or removed; nothing is silently skipped.
 
@@ -94,6 +104,26 @@ changed; anything left alone is kept. The worker checks the references, re-queue
 next attempt (moving the resolution with a draft/final change), and the result comes to Review
 like any other take; accepting it files the next `_T`. The click is the approval, as with a
 deny-and-regenerate; the ledger price is shown while the settings that decide it are unchanged.
+
+## Reference pack PDF
+
+The Index page has **Download PDF** (the full pack) and **Index only**, for attaching to ChatGPT,
+Gemini or Claude before asking for prompts. `/api/index-pdf?part=full|index` builds it on every
+click from the registries (`lib/index-pack.ts`, laid out by `lib/pdf-writer.ts` on `pdf-lib`):
+how to write reference tokens and a Prompts-page document, the scenes queued so far with their
+references, then every entity with a thumbnail of each look and the exact `@KIND-NNN/Vnn` token
+under it. Upload bookkeeping in registry notes is left out. The guide restates what the parser,
+`initialTarget` and `worker/lib/prompt.mjs` do, so update it when they change. Thumbnails come
+from `lib/thumbs.ts` (`sharp`, cached in memory), also served at `/api/thumb` for the reference
+tiles and hover previews on the Prompts page. The buttons (`components/pdf-download.tsx`) fetch
+`&format=json` (the PDF base64-encoded) and save it from a blob made in the page. A plain link,
+or a fetch of the PDF itself, is grabbed by Internet Download Manager: the page gets an empty
+204 and IDM saves `index-pdf.txt`. IDM leaves JSON and blob URLs alone. A failure shows the
+server's message and an "open it in a tab" button.
+
+Dropdowns everywhere are the panel's own (`components/ui/select.tsx`): same `<option>` children
+and `value`/`onChange` as a native select, drawn in the panel's type, keyboard-operable, and
+portalled so a card or dialog never clips the list.
 
 ## Sound
 

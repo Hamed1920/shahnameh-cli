@@ -1,6 +1,7 @@
 import { P, findEntity, isShotId, log, readJsonl, resolveRef } from './project.mjs'
 import { NEW_TARGET_RX, isVideoModel } from './batch.mjs'
 import { buildPrompt } from './prompt.mjs'
+import { NEXT_SCENE_RX } from './scenes.mjs'
 
 /**
  * What a queued job needs before it can be priced or generated: its target,
@@ -28,14 +29,14 @@ export async function applicableLearnings(entity) {
 }
 
 /**
- * `{ skip }` when the job cannot run. With `priceOnly`, a NEW/KIND/SLUG target
- * (not reserved until the batch is approved) is accepted: the price depends on
+ * `{ skip }` when the job cannot run. With `priceOnly`, a NEW/KIND/SLUG or NEXT/EPnnn
+ * target (not numbered until the batch is approved) is accepted: the price depends on
  * the model and parameters, not on the target.
  */
 export async function planJob(job, entities, assets, { cfg, dry = false, priceOnly = false } = {}) {
   // A shot target is valid but is not an entity; it renders into the episode.
   const shot = isShotId(job.target) ? job.target : null
-  const isNew = priceOnly && NEW_TARGET_RX.test(String(job.target ?? ''))
+  const isNew = priceOnly && (NEW_TARGET_RX.test(String(job.target ?? '')) || NEXT_SCENE_RX.test(String(job.target ?? '')))
   const entity = shot || isNew ? null : findEntity(entities, job.target)
   if (!shot && !isNew && !entity) return { skip: `unknown target ${job.target}` }
   const targetId = shot ?? entity?.id ?? job.target

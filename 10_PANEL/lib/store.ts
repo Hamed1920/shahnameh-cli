@@ -2,6 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { P } from './paths'
 import { parseCsv } from './csv'
+import { priceKey } from './batch-rules'
 import type {
   ArchivedLook, AssetRow, AttemptEntry, BatchStatus, BatchView, Candidate, CatalogEntity, Entity, Filing, IndexOp,
   IndexOpResult, JobRequest, JobRequestEvent, Learning, LibraryData, LibraryEntity, PromptLibraryItem, QueueItem, RegenerationView,
@@ -222,6 +223,13 @@ export async function getWorkerState(): Promise<Record<string, unknown> | null> 
   try { return JSON.parse(t) } catch { return null }
 }
 
+/** Queued jobs the worker has not finished. Its processedJobs is the truth, not what sits in _staging. */
+export async function getWaitingJobs(): Promise<QueueItem[]> {
+  const [queue, state] = await Promise.all([getQueue(), getWorkerState()])
+  const processed = new Set((state?.processedJobs ?? []) as string[])
+  return queue.filter((q) => !processed.has(q.jobId))
+}
+
 // ---------------------------------------------------------------- review context
 
 interface QueueJob {
@@ -271,13 +279,8 @@ export async function getWorkerConfig(): Promise<Record<string, unknown>> {
   try { return JSON.parse(await readText(path.join(process.cwd(), 'worker', 'config.json'))) } catch { return {} }
 }
 
-/**
- * What one job costs, by everything the price depends on: model, resolution,
- * duration and whether audio is generated. Sound is part of the key so a silent
- * take's price is never shown for a job with sound.
- */
-export const priceKey = (model: unknown, p: Record<string, unknown> | undefined) =>
-  `${model}|${p?.resolution ?? ''}|${p?.duration ?? ''}|${p?.generate_audio === undefined ? '' : String(p.generate_audio)}`
+/** Defined in batch-rules so the browser can price a quality without reading the disk. */
+export { priceKey }
 
 /** Last real price per priceKey, from the ledger's generated jobs. */
 export async function getPriceTable(): Promise<Map<string, number>> {
@@ -351,9 +354,23 @@ export async function getReviewContexts(candidates: Candidate[]): Promise<Map<st
 // ---------------------------------------------------------------- prompts page
 
 /** Distinct shot ids that have been generation targets, for the Shot picker's suggestions. */
+/** Every shot id in use: queued targets and shot files on disk, the two things the worker counts when it numbers a scene. */
 export async function getKnownShots(): Promise<string[]> {
   const queue = await readJsonl<QueueItem>(P.queue)
-  return [...new Set(queue.map((q) => q.target).filter((t) => /^SHM-EP\d{3}/.test(t)))].sort()
+  const ids = queue.map((q) => q.target)
+  const root = path.join(P.root, '07_EPISODES')
+  const eps = await fs.readdir(root, { withFileTypes: true }).catch(() => [])
+  for (const ep of eps.filter((e) => e.isDirectory())) {
+    const files = await fs.readdir(path.join(root, ep.name, 'shots')).catch(() => [] as string[])
+    ids.push(...files.map((f) => f.match(/^SHM-EP\d{3}-SC\d{3}-SH\d{4}/)?.[0] ?? ''))
+  }
+  return [...new Set(ids.filter((t) => /^SHM-EP\d{3}/.test(t)))].sort()
+}
+
+/** Reference tokens of the latest queued jobs, newest first. The Prompts page offers them as "recent". */
+export async function getRecentRefs(jobs = 12): Promise<string[]> {
+  const queue = await readJsonl<QueueItem>(P.queue)
+  return queue.slice(-jobs).reverse().flatMap((q) => q.refs ?? [])
 }
 
 /**
@@ -380,6 +397,8 @@ export async function getBatches(): Promise<BatchView[]> {
     const prices = new Map<string, number | null>()
     const verdicts = new Map<string, { ok: boolean; reason?: string; target: string; jobId: string }>()
     const assigned = new Map<string, string>()
+    // Per row as well: every NEXT/EP001 row of a batch shares the proposal but gets its own scene.
+    const assignedByKey = new Map<string, string>()
     let validatedNew: { key: string; kind: string; slug: string }[] = []
 
     for (const e of mine) {
@@ -398,7 +417,10 @@ export async function getBatches(): Promise<BatchView[]> {
           break
         case 'queued':
           status = 'queued'; total = e.total ?? total; ceilingNote = e.ceilingNote ?? null
-          for (const a of e.assigned) assigned.set(a.proposal, a.id)
+          for (const a of e.assigned) {
+            assigned.set(a.proposal, a.id)
+            if (a.key) assignedByKey.set(a.key, a.id)
+          }
           break
         case 'discarded': status = 'discarded'; break
         case 'rejected':
@@ -432,7 +454,7 @@ export async function getBatches(): Promise<BatchView[]> {
           key: j.key,
           label: j.label,
           target: j.target,
-          assignedId: assigned.get(j.target) ?? null,
+          assignedId: assignedByKey.get(j.key) ?? assigned.get(j.target) ?? null,
           jobId: v?.jobId || null,
           model,
           stage: j.stage ?? (/^(seedance|kling|veo|wan|hailuo|grok_video)/.test(model) ? req.defaults?.stage ?? 'draft' : null),

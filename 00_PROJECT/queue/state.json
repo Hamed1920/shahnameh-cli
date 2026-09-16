@@ -46,7 +46,11 @@
     "J-20260915-PU8",
     "J-20260915-WSQ",
     "J-20260915-0PI",
-    "J-20260915-OED"
+    "J-20260915-OED",
+    "J-20260916-OHQ",
+    "J-20260916-ZW6",
+    "J-20260916-DNF",
+    "J-20260916-1VA"
   ],
   "processedDecisions": [
     "rev_mtljtubxafk9",
@@ -93,10 +97,15 @@
     "rev_mu34uxkcqzkz",
     "rev_mu35kvhhi8r3",
     "rev_mu360x870dle",
-    "rev_mu361dobagq7"
+    "rev_mu361dobagq7",
+    "rev_mu3tbm6hecyz",
+    "rev_mu459yykdxe8",
+    "rev_mu45kl41207e",
+    "rev_mu46kownu6yl",
+    "rev_mu46v9i995bh"
   ],
-  "spentCredits": 3390,
-  "updatedAt": "2026-09-16T06:23:11.249Z",
+  "spentCredits": 3750,
+  "updatedAt": "2026-09-16T14:21:25.321Z",
   "failedDecisions": {},
   "processedOps": [
     "op_mu18d6axozqm",
@@ -125,7 +134,9 @@
   "learnWatermark": "rev_mu19vrjsbra1",
   "processedRequests": [
     "jr_mu2zfjwxl48x",
-    "jr_mu350iqqrlgc"
+    "jr_mu350iqqrlgc",
+    "jr_mu46c1wi21bu",
+    "jr_mu46dc3jye0m"
   ],
   "held": {}
 }

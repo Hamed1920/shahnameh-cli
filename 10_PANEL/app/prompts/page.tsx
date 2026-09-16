@@ -1,7 +1,7 @@
 import { WorkerControls } from '@/components/worker-controls'
 import { PageHeader } from '@/components/ui/text'
 import {
-  getBatches, getCatalog, getGeneratingJobId, getKnownShots, getPromptLibrary, getWorkerConfig, getWorkerState, getWorkerStatus,
+  getBatches, getCatalog, getGeneratingJobId, getKnownShots, getPromptLibrary, getRecentRefs, getWorkerConfig, getWorkerState, getWorkerStatus,
 } from '@/lib/store'
 import type { BatchDefaults } from '@/lib/types'
 import { Batches } from './batches'
@@ -16,8 +16,8 @@ export const dynamic = 'force-dynamic'
  * Below the batches, every prompt already queued, ready to start again.
  */
 export default async function PromptsPage() {
-  const [catalog, batches, worker, cfg, knownShots, state, library] = await Promise.all([
-    getCatalog(), getBatches(), getWorkerStatus(), getWorkerConfig(), getKnownShots(), getWorkerState(), getPromptLibrary(),
+  const [catalog, batches, worker, cfg, knownShots, state, library, recentRefs] = await Promise.all([
+    getCatalog(), getBatches(), getWorkerStatus(), getWorkerConfig(), getKnownShots(), getWorkerState(), getPromptLibrary(), getRecentRefs(),
   ])
   const generating = await getGeneratingJobId(new Set((state?.processedJobs ?? []) as string[]))
 
@@ -33,18 +33,20 @@ export default async function PromptsPage() {
     models,
     aspectRatios: (cfg.aspectRatios as string[]) ?? ['16:9', '9:16', '1:1'],
     videoDurations: (cfg.videoDurations as number[]) ?? [5, 10, 15],
+    videoDraftResolution: String(cfg.videoDraftResolution ?? '480p'),
+    videoFinalResolution: String(cfg.videoFinalResolution ?? '1080p'),
     defaults,
   }
 
   return (
     <div className="space-y-16">
       <PageHeader title="Prompts" eyebrow="Generation" meta={<WorkerControls status={worker} generating={generating} compact />}>
-        Paste prompts or drop a document, say what each one is for, and send the batch. The worker checks every
-        row and prices it; you approve the total before anything generates. New entities get their number when
-        you approve.
+        Paste prompts or drop a document, check where each result is filed and what it references, and send the
+        batch. The worker checks every row and prices it; you approve the total before anything generates. New
+        scenes and new entities get their number when you approve.
       </PageHeader>
 
-      <PromptIntake catalog={catalog} cfg={intakeCfg} knownShots={knownShots} />
+      <PromptIntake catalog={catalog} cfg={intakeCfg} knownShots={knownShots} recentRefs={recentRefs} />
       <Batches batches={batches} worker={worker} />
       <PromptLibrary items={library} catalog={catalog} cfg={intakeCfg} batches={batches} />
     </div>

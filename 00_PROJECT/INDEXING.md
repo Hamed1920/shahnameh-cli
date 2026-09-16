@@ -223,7 +223,9 @@ SHM-EP001-SC014                Scene 14        (scenes number per episode)
 SHM-EP001-SC014-SH0030         Shot 30         (shots number per scene)
 ```
 
-- **Scenes**: 3 digits, per episode, in order.
+- **Scenes**: 3 digits, per episode, in order. A Prompts-page video row that names no scene is
+  sent as `NEXT/EP001`; the worker gives it the next free scene when the batch is approved. A
+  scene counts as used once any queued job has targeted it, so its number is never reused.
 - **Shots**: 4 digits, counted **in tens** (`0010, 0020, 0030`) so you can insert `0015` later
   without renumbering anything.
 

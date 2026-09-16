@@ -1,5 +1,6 @@
 import { findEntity, isShotId, resolveRef } from './project.mjs'
 import { FOLDER_FOR, entitySlug } from './promote.mjs'
+import { NEXT_SCENE_RX } from './scenes.mjs'
 
 /**
  * Turning rows of { target, prompt, ... } into queue jobs. Shared by the
@@ -94,6 +95,10 @@ export async function checkBatch(rows, { entities, assets, cfg, allowNew = false
       claimedSlugs.add(slug)
       targetId = `NEW/${kind}/${slug}`
       newEntities.push({ key: row.key ?? at, kind, slug, name: row.newEntity?.name, description: row.newEntity?.description })
+    } else if (NEXT_SCENE_RX.test(row.target)) {
+      // The next free scene of an episode, numbered at approval (scenes.mjs).
+      if (!allowNew) { bad.push([at, 'NEXT/ scenes are numbered by the worker at approval - use the Prompts page', raw?.key ?? null]); continue }
+      targetId = row.target
     } else if (isShotId(row.target)) {
       targetId = row.target
     } else {
@@ -115,7 +120,8 @@ export async function checkBatch(rows, { entities, assets, cfg, allowNew = false
 
     // Deduplicate within the batch: the same target+variant+prompt twice is
     // almost always a copy-paste artefact in a long document, not an intentional pair.
-    const dupKey = `${targetId}|${variant}|${row.prompt}`
+    // Two NEXT/ rows are two scenes, so only the prompt can make them duplicates.
+    const dupKey = `${NEXT_SCENE_RX.test(targetId) ? 'NEXT' : targetId}|${variant}|${row.prompt}`
     if (seen.has(dupKey)) { bad.push([at, 'duplicate of an earlier row in this batch', raw?.key ?? null]); continue }
     seen.add(dupKey)
 

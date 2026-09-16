@@ -6,6 +6,7 @@ import { MotionProvider } from '@/components/motion-provider'
 import { SIDEBAR_COOKIE } from '@/components/nav-items'
 import { Sidebar } from '@/components/sidebar'
 import { getProjectVersion } from '@/lib/live'
+import { getWaitingJobs } from '@/lib/store'
 import { cn } from '@/lib/cn'
 import './globals.css'
 
@@ -26,7 +27,8 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const collapsed = (await cookies()).get(SIDEBAR_COOKIE)?.value === '1'
   // Taken with the render, so a change between render and mount is not missed.
-  const version = await getProjectVersion()
+  // queue.jsonl and state.json are both in the version, so the badge moves with every live refresh.
+  const [version, waiting] = await Promise.all([getProjectVersion(), getWaitingJobs()])
 
   return (
     <html lang="en" className={cn(geist.variable, geistMono.variable, instrument.variable, vazir.variable)}>
@@ -42,7 +44,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="relative isolate flex h-dvh overflow-hidden antialiased">
         <MotionProvider>
           <LiveRefresh initialVersion={version}>
-            <Sidebar defaultCollapsed={collapsed} />
+            <Sidebar defaultCollapsed={collapsed} counts={{ '/queue': waiting.length }} />
             <main className="scroll-pane flex-1">
               <div className="mx-auto max-w-[1600px] px-6 pt-10 pb-24 lg:px-12">{children}</div>
             </main>

@@ -55,6 +55,42 @@ Open decisions live in [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md) — 8 outstanding.
 
 ## Log
 
+### 2026-09-16 — Queue count in the sidebar; a document no longer splits on SHOT headings
+
+- **Queue badge.** The sidebar's Queue item shows how many jobs are waiting (queued and not in
+  `state.json` `processedJobs`, the same count as the Queue page). Pill at the row's end when
+  expanded, on the icon's corner when collapsed. Read in the root layout via `getWaitingJobs()`
+  (`lib/store.ts`), so it moves with the live refresh.
+- **Prompts page split rule (Hamed's call).** A single 15-second block written as `SHOT 1..5`
+  was cut into five prompts, the opening rules became a preamble, and the closing PERFORMANCE /
+  CAMERA / LIGHT / SOUND sections were attached to shot 5 alone. Now only `P01` / `PROMPT n` /
+  `BLOCK n` headings (and SHM-JOB, batch JSON) split on their own; anything else is one prompt.
+  The other cuts (SHOT headings, numbered items, double blank lines) are offered per document in
+  a dropdown and rebuild only that document's rows. Settings are never read from the prose; only
+  `params:` lines and batch settings set duration or aspect ratio. `99_INBOX/20260916-1622-prompts.txt`
+  now parses as 1 prompt (offers SHOT ×5, blank lines ×11). Parser tests: 11 cases.
+- **Filing and references on the Prompts page (Hamed's calls).** A row defaulted to "An entity",
+  so the SC014 Jamshid block was aimed at CHR-001 Zahhak with only Zahhak attached. The target
+  control is now "File the result under": a video with no scene in the document goes to the
+  **next free scene** (`NEXT/EP001`), which the worker numbers at approval past every queued or
+  filed scene (`worker/lib/scenes.mjs`, wired into `checkBatch`, `planJob` and `batch.approve`;
+  per-row `assigned` events). A scene named in the file name or label (`sc013`) or a full shot id
+  wins. An image goes to the entity its references point at when exactly one fits, else the row
+  offers the candidates. References are suggested, never attached: names, telling slug words,
+  pick-one groups ("staff", "creature"), and the latest queued jobs' refs. Checked against the 13
+  queued EP001 scenes: 50 of 53 refs offered. Tests: 29 (scenes 3, suggestions 5).
+- **The running worker still has the old code** until it is stopped and started from the Queue
+  page. An old worker refuses `NEXT/EP001` rows as unknown targets (rejected, nothing spent).
+- **Reference pack PDF on the Index page.** "Download PDF" (guide for AI prompt writers in the
+  Prompts-page format, scenes so far, index with a thumbnail per look) and "Index only". Built
+  live from the registries; 16 pages / 190 KB today, 35 looks. Replaces the stale
+  `sync/CONTEXT_PACK.md` (2026-09-03) as the way to brief ChatGPT / Gemini; `/sync-out` still
+  exists for SHM-JOB work. New deps: `pdf-lib`, and `sharp` (already installed by Next) pinned.
+- **Panel UI.** Every dropdown is now a custom `Select` in the panel's style. Prompts rows
+  regrouped: filing and render settings share one label column with segmented controls;
+  references span the card as large tiles; suggestions sit in their own panel and show a large
+  preview of the look on hover.
+
 ### 2026-09-15 — Sound on videos, Regenerate, the Prompts page, worker control from the panel
 
 **Agent:** Claude Fable 5.1 · **Chat:** Hamed asked for sound on every video with a checkbox to turn

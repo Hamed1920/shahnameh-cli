@@ -34,6 +34,12 @@ export const P = {
   archive: path.join(ROOT, '09_OUTPUT', '_archive'),
   /** Prompts page and Regenerate requests (panel appends) and their outcomes (worker appends). */
   jobRequests: path.join(ROOT, '00_PROJECT', 'review', 'JOB_REQUESTS.jsonl'),
+  /**
+   * Gallery likes, tags and manual order. The panel is the only reader and the
+   * only writer: it is how Hamed arranges accepted takes, and says nothing about
+   * where a file lives, so the worker never looks at it.
+   */
+  gallery: path.join(ROOT, '00_PROJECT', 'review', 'GALLERY.jsonl'),
   jobRequestResults: path.join(ROOT, '00_PROJECT', 'queue', 'JOB_REQUEST_RESULTS.jsonl'),
   /** Written by the panel to ask the running worker to stop after its current job. */
   stopFlag: path.join(ROOT, '00_PROJECT', 'queue', 'worker.stop'),
