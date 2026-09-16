@@ -204,8 +204,35 @@ export async function readState() {
 // generation is running, and two writes to the same temp file would collide.
 let stateWrites = Promise.resolve()
 
+/** Key-order-independent form of a state, so two states that say the same compare equal. */
+function canonical(v) {
+  if (Array.isArray(v)) return `[${v.map(canonical).join(',')}]`
+  if (v && typeof v === 'object') {
+    return `{${Object.keys(v).sort().map((k) => `${JSON.stringify(k)}:${canonical(v[k])}`).join(',')}}`
+  }
+  return JSON.stringify(v) ?? 'null'
+}
+
+/** What is on disk now, minus the stamp. null when the file is missing or unreadable. */
+async function stateOnDisk() {
+  try {
+    const { updatedAt: _stamp, ...rest } = JSON.parse(await readText(P.state))
+    return canonical(rest)
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Save the state -- but only when something in it actually moved. `pass()` saves
+ * every tick whether or not it did any work, so a fresh `updatedAt` on an idle
+ * worker left state.json permanently modified in git: it blocked a pull and put
+ * a meaningless timestamp in every commit. Nothing reads the stamp.
+ */
 export function writeState(state) {
   const run = stateWrites.then(async () => {
+    const { updatedAt: _stamp, ...rest } = state
+    if (canonical(rest) === await stateOnDisk()) return
     await fs.mkdir(path.dirname(P.state), { recursive: true })
     const tmp = P.state + '.tmp'
     await fs.writeFile(tmp, JSON.stringify({ ...state, updatedAt: new Date().toISOString() }, null, 2))

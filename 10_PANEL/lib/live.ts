@@ -38,7 +38,7 @@ async function stamp(file: string): Promise<string> {
   }
 }
 
-/** state.json is rewritten every worker pass with a new `updatedAt`; only the rest counts. */
+/** Compared by content, not mtime: `updatedAt` moves on its own and means nothing here. */
 async function workerState(): Promise<string> {
   try {
     const { updatedAt: _, ...rest } = JSON.parse(await fs.readFile(P.workerState, 'utf8'))
