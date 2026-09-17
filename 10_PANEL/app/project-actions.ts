@@ -17,6 +17,7 @@ export async function newProject(formData: FormData): Promise<{ ok: false; error
       slug: String(formData.get('slug') ?? ''),
       code: String(formData.get('code') ?? ''),
       description: String(formData.get('description') ?? ''),
+      mark: String(formData.get('mark') ?? ''),
     })
     slug = made.slug
   } catch (e) {

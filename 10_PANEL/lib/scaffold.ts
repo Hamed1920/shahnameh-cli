@@ -21,6 +21,8 @@ export interface NewProject {
   slug: string
   code: string
   description: string
+  /** One or two characters for the badge. Empty means "derive it from the name". */
+  mark: string
 }
 
 /** A problem the person can fix, shown on the form. */
@@ -76,7 +78,10 @@ export async function checkNew(input: Partial<NewProject>): Promise<NewProject> 
   const clash = existing.find((p) => p.code === code)
   if (clash) throw new ProjectInvalid(`${clash.name} already uses the code ${code}. Every project needs its own, so IDs never collide.`)
 
-  return { name, slug, code, description: String(input.description ?? '').trim().slice(0, 500) }
+  // Two graphemes, not two code units: a Persian letter must survive intact.
+  const mark = Array.from(String(input.mark ?? '').trim()).slice(0, 2).join('')
+
+  return { name, slug, code, description: String(input.description ?? '').trim().slice(0, 500), mark }
 }
 
 /**
@@ -92,7 +97,11 @@ export async function createProject(input: Partial<NewProject>): Promise<Project
 
   try {
     await copyTree(templateDir(), staging, v, created)
-    const project = { schema: 1, name: v.name, slug: v.slug, code: v.code, description: v.description, created }
+    // mark is left out unless it was chosen: projects.ts derives it from the name otherwise.
+    const project = {
+      schema: 1, name: v.name, slug: v.slug, code: v.code, description: v.description,
+      ...(v.mark ? { mark: v.mark } : {}), created,
+    }
     await fs.writeFile(path.join(staging, 'project.json'), JSON.stringify(project, null, 2) + '\n', 'utf8')
     await rename(staging, path.join(dir, v.slug))
     await allowInGit(dir, v.slug)

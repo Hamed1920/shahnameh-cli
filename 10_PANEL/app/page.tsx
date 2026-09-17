@@ -1,84 +1,194 @@
 import Link from 'next/link'
 import { Logo } from '@/components/logo'
-import { listProjects } from '@/lib/projects'
-import { getWaitingJobs } from '@/lib/store'
-import { NewProjectForm } from './new-project-form'
+import { Reveal } from '@/components/ui/reveal'
+import { cn } from '@/lib/cn'
+import { getPickerData, type AccountSpend, type FilmRow } from '@/lib/picker'
+import { FilmStrip } from './film-strip'
+import { NewFilm } from './new-film'
 
 export const dynamic = 'force-dynamic'
 
 /**
  * The project picker: which film do you want to work on?
  *
- * Everything below this page belongs to one project. The system is the same for
- * all of them -- same folders, same ID rules, same review loop -- so starting
- * another one is filling in a name, not setting anything up.
+ * A film is not a name in a list -- it is a strip of its own plates and the
+ * handful of numbers that say whether it can work right now. With one or two
+ * projects on this machine, a grid of cards reads as an accident; a band at
+ * poster scale reads as deliberate. Everything below this page belongs to one
+ * project, and the system is identical for all of them, so starting another is
+ * typing a name.
  */
+
+const n = (x: number) => Math.round(x).toLocaleString('en-US')
+
 export default async function ProjectsPage() {
-  const projects = await listProjects()
-  const waiting = await Promise.all(
-    projects.map(async (p) => {
-      try { return (await getWaitingJobs(p)).length } catch { return 0 }
-    }),
-  )
-  const taken = { slugs: projects.map((p) => p.slug), codes: projects.map((p) => p.code) }
+  const { films, spend, taken } = await getPickerData()
 
   return (
     <main className="scroll-pane flex-1">
-      <div className="mx-auto max-w-3xl px-6 pt-20 pb-24">
-        <header className="flex items-center gap-4">
-          <Logo className="size-11 text-fg" />
-          <div>
-            <h1 className="font-display text-[34px] leading-none text-fg">Film Making for Dummies</h1>
-            <p className="mt-2 text-[13px] text-muted">
-              Every film is its own project: its own cast, places and props, its own prompts and renders.
-              Pick one to carry on, or start another.
-            </p>
-          </div>
-        </header>
+      <div className="mx-auto max-w-[1500px] px-6 pb-24 lg:px-14">
+        <Masthead spend={spend} count={films.length} />
 
-        <section className="mt-12">
-          <h2 className="eyebrow mb-4 text-muted">Your projects</h2>
-          {projects.length === 0 ? (
-            <p className="rounded-xl border border-dashed border-edge-strong p-6 text-[13px] text-muted">
-              No projects yet. Start the first one below.
-            </p>
-          ) : (
-            <ul className="space-y-3">
-              {projects.map((p, i) => (
-                <li key={p.slug}>
-                  <Link
-                    href={`/${p.slug}`}
-                    className="focus-ring group flex items-center gap-4 rounded-xl border border-edge bg-panel p-5 transition-colors duration-150 hover:border-edge-strong"
-                  >
-                    <span
-                      aria-hidden
-                      className="grid size-10 shrink-0 place-items-center rounded-lg bg-fg font-sans text-[19px] leading-none text-ink"
-                    >
-                      {p.mark}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="flex flex-wrap items-baseline gap-x-2.5">
-                        <span className="font-display text-[22px] leading-none text-fg">{p.name}</span>
-                        <span className="font-mono text-[11px] text-faint">{p.code}</span>
-                      </span>
-                      {p.description && (
-                        <span className="mt-1.5 block max-w-xl truncate text-[13px] text-muted">{p.description}</span>
-                      )}
-                    </span>
-                    {waiting[i] > 0 && (
-                      <span className="shrink-0 rounded-full bg-accent px-2 py-0.5 font-mono text-[11px] leading-5 text-ink tabular-nums">
-                        {waiting[i]} queued
-                      </span>
-                    )}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
+        {films.map((film, i) => (
+          <Reveal key={film.slug} index={i}>
+            <Band film={film} />
+          </Reveal>
+        ))}
 
-        <NewProjectForm taken={taken} />
+        <NewFilm taken={taken} alone={films.length === 0} />
       </div>
     </main>
   )
 }
+
+/**
+ * The system, and the one number that governs it. The ceiling is a rolling
+ * window across every project's ledger -- they all spend from one Higgsfield
+ * account -- so it belongs here once, not on each band where it would read as
+ * belonging to that film.
+ */
+function Masthead({ spend, count }: { spend: AccountSpend; count: number }) {
+  const pct = spend.ceiling > 0 ? Math.min(spend.spent / spend.ceiling, 1) : 0
+
+  return (
+    <header className="flex flex-wrap items-end justify-between gap-6 border-b border-edge py-10">
+      <div className="flex items-center gap-3.5">
+        <Logo className="size-8 text-fg" title="Film Making for Dummies" />
+        <div>
+          <h1 className="font-display text-[26px] leading-none text-fg">Film Making for Dummies</h1>
+          <p className="eyebrow mt-2 text-faint">
+            {count === 0 ? 'No films yet' : `${count} film${count === 1 ? '' : 's'}`}
+          </p>
+        </div>
+      </div>
+
+      {spend.ceiling > 0 && (
+        <div className="w-full max-w-[280px]">
+          <p className="flex items-baseline justify-between font-mono text-[11px] tabular-nums">
+            <span className={spend.over ? 'text-bad' : 'text-muted'}>
+              {n(spend.spent)} / {n(spend.ceiling)} credits
+            </span>
+            <span className="text-faint">{spend.hours}h window</span>
+          </p>
+          <div
+            role="meter"
+            aria-valuenow={Math.round(spend.spent)}
+            aria-valuemin={0}
+            aria-valuemax={Math.round(spend.ceiling)}
+            aria-label="Credits spent in the current window"
+            className="mt-2.5 h-0.75 w-full overflow-hidden rounded-full bg-edge"
+          >
+            <div
+              className={cn('h-full rounded-full transition-[width] duration-500', spend.over ? 'bg-bad' : 'bg-fg')}
+              style={{ width: `${Math.max(pct * 100, pct > 0 ? 2 : 0)}%` }}
+            />
+          </div>
+          {spend.over && <p className="mt-2 font-mono text-[11px] text-bad">Over the ceiling — new jobs will hold.</p>}
+        </div>
+      )}
+    </header>
+  )
+}
+
+function Band({ film }: { film: FilmRow }) {
+  return (
+    <Link
+      href={`/${film.slug}`}
+      className="focus-ring group relative block overflow-hidden border-b border-edge py-12 lg:py-14"
+    >
+      {/*
+        The film's own mark, as a watermark. Sized to sit inside the band rather
+        than bleed out of it: a cropped round glyph still reads as a watermark,
+        but a cropped Latin cap just reads as a grey slab.
+      */}
+      <span
+        aria-hidden
+        className={cn(
+          'pointer-events-none absolute top-1/2 left-[-0.06em] -z-10 -translate-y-1/2 select-none',
+          'font-sans text-[clamp(110px,12vw,200px)] leading-none text-white/3',
+        )}
+      >
+        {film.mark}
+      </span>
+
+      <div className="grid gap-x-12 gap-y-9 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center">
+        <div className="min-w-0">
+          <p className="eyebrow text-faint">
+            {film.code}
+            {film.since && ` · since ${film.since}`}
+          </p>
+
+          <h2 className="mt-4 font-display text-[clamp(38px,5vw,64px)] leading-[0.95] tracking-[-0.01em] text-fg">
+            {film.name}
+          </h2>
+
+          {film.description && (
+            <p className="mt-4 max-w-[46ch] text-[13.5px] leading-relaxed text-muted">{film.description}</p>
+          )}
+
+          <Vitals film={film} />
+
+          <p className="eyebrow mt-7 flex items-center gap-2 text-faint transition-colors duration-150 group-hover:text-fg">
+            Open
+            <span aria-hidden className="transition-transform duration-150 group-hover:translate-x-0.5">
+              &rarr;
+            </span>
+          </p>
+        </div>
+
+        <FilmStrip frames={film.frames} emptyNote="no plates yet" />
+      </div>
+    </Link>
+  )
+}
+
+/** What this film is made of, and whether it can work right now. */
+function Vitals({ film }: { film: FilmRow }) {
+  const dot = film.held > 0 ? 'bg-bad' : film.running ? 'bg-good' : 'bg-faint'
+  const worker = film.running ? 'running' : film.workerOff ? 'worker off' : 'stopped'
+
+  return (
+    <p className="mt-6 flex flex-wrap items-center gap-x-2.5 gap-y-2 font-mono text-[11px] tabular-nums text-faint">
+      <Stat value={film.entities} unit="entities" />
+      <Sep />
+      <Stat value={film.looks} unit="looks" />
+      {film.credits > 0 && (
+        <>
+          <Sep />
+          <Stat value={film.credits} unit="credits" />
+        </>
+      )}
+      {film.queued > 0 && (
+        <>
+          <Sep />
+          <span className="text-fg">
+            {n(film.queued)} queued
+          </span>
+        </>
+      )}
+      {film.held > 0 && (
+        <>
+          <Sep />
+          <span className="text-bad">{n(film.held)} held</span>
+        </>
+      )}
+      <Sep />
+      <span className="flex items-center gap-1.5">
+        <span aria-hidden className={cn('size-1.5 rounded-full', dot)} />
+        {worker}
+      </span>
+    </p>
+  )
+}
+
+const Sep = () => (
+  <span aria-hidden className="text-edge-strong">
+    ·
+  </span>
+)
+
+const Stat = ({ value, unit }: { value: number; unit: string }) => (
+  <span>
+    {n(value)} {unit}
+  </span>
+)
