@@ -2,11 +2,13 @@
 
 import { useState, useTransition } from 'react'
 import { FolderOpen } from 'lucide-react'
-import { revealInFolder } from '@/app/reveal-action'
+import { revealInFolder } from '@/app/[project]/reveal-action'
+import { useProject } from '@/components/project-context'
 import { Button } from '@/components/ui/button'
 
 /** Opens File Explorer with the file selected. */
 export function ShowInFolder({ path }: { path: string }) {
+  const { slug } = useProject()
   const [pending, start] = useTransition()
   const [error, setError] = useState<string | null>(null)
 
@@ -20,7 +22,7 @@ export function ShowInFolder({ path }: { path: string }) {
         pendingLabel="Opening"
         onClick={() =>
           start(async () => {
-            const r = await revealInFolder(path)
+            const r = await revealInFolder(slug, path)
             setError(r.ok ? null : (r.error ?? 'Could not open the folder.'))
           })
         }

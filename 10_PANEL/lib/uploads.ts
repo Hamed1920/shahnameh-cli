@@ -2,7 +2,8 @@ import path from 'node:path'
 import {
   KINDS, MAX_UPLOAD_BYTES, MAX_UPLOADS, UPLOAD_EXT, UPLOAD_ROLES, entitySlug, isAscii,
 } from '@/lib/indexing'
-import { P, toRelative } from '@/lib/paths'
+import { toRelative } from '@/lib/paths'
+import type { Project } from '@/lib/projects'
 import { getEntities } from '@/lib/store'
 import type { ReviewUpload } from '@/lib/types'
 
@@ -49,12 +50,12 @@ export interface PendingUpload {
 }
 
 /** Validate every upload against the index. Nothing is written until all pass. */
-export async function readUploads(formData: FormData, decisionId: string): Promise<PendingUpload[]> {
+export async function readUploads(pr: Project, formData: FormData, decisionId: string): Promise<PendingUpload[]> {
   const raw = parseJsonArray(formData, 'uploads') ?? []
   if (raw.length > MAX_UPLOADS) throw new Invalid(`At most ${MAX_UPLOADS} uploads per decision.`)
   if (raw.length === 0) return []
 
-  const entities = await getEntities()
+  const entities = await getEntities(pr)
   const slugs = new Set<string>()
   const ids = new Set<string>()
   const out: PendingUpload[] = []
@@ -93,7 +94,7 @@ export async function readUploads(formData: FormData, decisionId: string): Promi
 
     const meta: ReviewUpload = {
       id,
-      file: toRelative(path.join(P.uploads, decisionId, `${id}${sniffed}`)),
+      file: toRelative(pr.root, path.join(pr.P.uploads, decisionId, `${id}${sniffed}`)),
       originalName: file.name.slice(0, 200),
       mode: u.mode === 'new' ? 'new' : 'variant',
       role,

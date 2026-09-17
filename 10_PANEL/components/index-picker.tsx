@@ -7,8 +7,8 @@ import { ImageOff, Search, Upload, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/field'
 import { EASE } from '@/components/ui/motion-tokens'
-import { assetUrl } from '@/lib/asset'
 import { cn } from '@/lib/cn'
+import { useAssetUrls } from '@/components/project-context'
 import { KIND_LABEL, type Kind } from '@/lib/indexing'
 import type { CatalogEntity } from '@/lib/types'
 
@@ -43,6 +43,7 @@ export function IndexPicker({
   /** Offered in ref mode, so "replace with..." can also mean "replace with a new image". */
   onUpload?: () => void
 }) {
+  const { assetUrl } = useAssetUrls()
   const [mounted, setMounted] = useState(false)
   const [query, setQuery] = useState('')
   const [kind, setKind] = useState<string | null>(null)
@@ -206,6 +207,7 @@ function EntityTile({
   onClick: () => void
   onPickVariant: (variant: string, path: string) => void
 }) {
+  const { assetUrl } = useAssetUrls()
   const canonical = e.variants.find((v) => v.variant === e.canonical) ?? e.variants[0]
   const [hover, setHover] = useState<string | null>(null)
   const preview = e.variants.find((v) => v.variant === hover) ?? canonical

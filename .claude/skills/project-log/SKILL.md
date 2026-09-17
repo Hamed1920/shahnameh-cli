@@ -1,31 +1,33 @@
 ---
 name: project-log
-description: Read and update the Shahnameh project log and registries. Invoke at the START of any work session to load project state, and at the END to record what changed. Also use when asked to "log this", "update the log", "what's the state of the project", "catch me up", or when adding/renaming/retiring any asset, entity, episode, scene or shot.
+description: Read and update a project's log and registries (Film Making for Dummies - e.g. Shahnameh). Invoke at the START of any work session to load project state, and at the END to record what changed. Also use when asked to "log this", "update the log", "what's the state of the project", "catch me up", or when adding/renaming/retiring any asset, entity, episode, scene or shot.
 ---
 
 # Project Log
 
-Keeps `00_PROJECT/PROJECT_LOG.md`, `00_PROJECT/OPEN_QUESTIONS.md` and the registries accurate so
-any chat, agent or machine can pick this project up cold.
+Keeps `<project>/00_PROJECT/PROJECT_LOG.md`, `<project>/00_PROJECT/OPEN_QUESTIONS.md` and that
+project's registries accurate so any chat, agent or machine can pick the project up cold.
 
-All paths are relative to the project root: `D:\Digianzu\Shahnameh MODERN\Shahnameh CLI`.
+**Pick the project first:** use the one the user names (by name, folder slug or code); if only one
+folder in the repo has a `project.json`, use that; otherwise ask. Never guess. `<project>` below is
+that folder, e.g. `shahnameh-cli`, and `<slug>` its name.
 
 ---
 
 ## Mode A — Catch up (start of session, or "what's the state of things?")
 
-1. Read `00_PROJECT/PROJECT_LOG.md`.
-2. Read `00_PROJECT/OPEN_QUESTIONS.md`.
-3. Read `00_PROJECT/INDEXING.md` — naming is already defined there, do not invent any.
-4. If prompts from Claude Chat or Cowork are involved, read `00_PROJECT/SYNC_PROTOCOL.md`.
+1. Read `<project>/00_PROJECT/PROJECT_LOG.md`.
+2. Read `<project>/00_PROJECT/OPEN_QUESTIONS.md`.
+3. Read `docs/INDEXING.md` — naming is already defined there, do not invent any.
+4. If prompts from Claude Chat or Cowork are involved, read `docs/SYNC_PROTOCOL.md`.
 5. Run the validator so your picture of the project is real, not remembered:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "00_PROJECT\tools\Validate-Project.ps1"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "tools\Validate-Project.ps1" -Project <slug>
 ```
 
-Report back concisely: phase, counts, open questions, next up, and whether the index is clean.
-Do not dump the files at the user.
+Report back concisely: project, phase, counts, open questions, next up, and whether the index is
+clean. Do not dump the files at the user.
 
 If they only asked for status, stop here.
 
@@ -36,18 +38,21 @@ If they only asked for status, stop here.
 Never log from memory. The validator is the source of truth for counts and integrity:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "00_PROJECT\tools\Validate-Project.ps1"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "tools\Validate-Project.ps1" -Project <slug>
 ```
 
 If it fails, fix the errors before logging. Logging over a broken index buries the problem.
 
 ### 2. Update the registries
 
-- New entity → append to `registry/ENTITIES.csv`. Take the **next free number the validator
-  printed**; never reuse a number, even a retired one. Slug leads with the family word.
-- New file → append to `registry/ASSET_MANIFEST.csv`, including `original_filename` so the
-  rename stays reversible.
-- New episode / scene / shot → `registry/EPISODES.csv` and the episode's `SHOTLIST.csv`.
+All under `<project>/00_PROJECT/registry/`:
+
+- New entity → append to `ENTITIES.csv`. Take the **next free number the validator printed** for
+  this project; never reuse a number, even a retired one. Slug leads with the family word, and the
+  ID starts with this project's code.
+- New file → append to `ASSET_MANIFEST.csv`, including `original_filename` so the rename stays
+  reversible.
+- New episode / scene / shot → `EPISODES.csv` and the episode's `SHOTLIST.csv`.
 - Changed status → edit the row in place.
 - Entity promoted out of `RESERVED` → give it a real description, a `canonical_variant` and a
   correct `variant_count`.
@@ -96,10 +101,13 @@ session — otherwise Claude Chat and Cowork are working from a stale index.
 
 ## Rules
 
+- **One project per log.** A session that touched two projects logs in each of them; never write
+  one project's changes into another's log.
 - **Newest log entries on top**, immediately under `## Log`. Never rewrite history — if an
   earlier entry was wrong, correct it in the new entry and say so.
 - **The log is prose, the registries are data, the questions are decisions.** Do not put asset
   inventories in the log, narrative in the CSVs, or your own choices in the questions.
-- **Never leave an asset unindexed.** Anything unclassifiable goes in `99_INBOX/` and is named in
-  the log as unresolved.
-- **Never hand-edit `sync/CONTEXT_PACK.md`** — it is generated. Edit the sources and rebuild.
+- **Never leave an asset unindexed.** Anything unclassifiable goes in the project's `99_INBOX/`
+  and is named in the log as unresolved.
+- **Never hand-edit `00_PROJECT/sync/CONTEXT_PACK.md`** — it is generated. Edit the sources and
+  rebuild.

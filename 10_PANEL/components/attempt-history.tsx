@@ -3,7 +3,7 @@
 import { Columns2, History } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/text'
-import { assetUrl } from '@/lib/asset'
+import { useAssetUrls } from '@/components/project-context'
 import { cn } from '@/lib/cn'
 import type { AttemptEntry } from '@/lib/types'
 
@@ -24,6 +24,7 @@ export function AttemptHistory({
   comparing: string | null
   onCompare: (entry: AttemptEntry | null) => void
 }) {
+  const { assetUrl } = useAssetUrls()
   if (history.length === 0) return null
 
   return (

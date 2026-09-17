@@ -1,7 +1,9 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { P } from './paths'
+import { idRx } from '../worker/lib/ids.mjs'
+import { listProjects, type Project } from './projects'
 import { parseCsv } from './csv'
+import { autostartBlockedReason } from './worker-guard'
 import { priceKey } from './batch-rules'
 import type {
   ArchivedLook, AssetRow, AttemptEntry, BatchStatus, BatchView, Candidate, CatalogEntity, Entity, Filing, IndexOp,
@@ -17,6 +19,8 @@ import type {
  * The panel NEVER writes CSVs or moves asset files. It appends JSONL and drops
  * raw uploads into 09_OUTPUT/_uploads (see actions.ts). The worker is the single
  * writer for everything else, including filing those uploads.
+ *
+ * Every read is of one project (lib/projects.ts), passed in as `pr`.
  */
 
 async function readText(file: string): Promise<string> {
@@ -39,28 +43,28 @@ async function readJsonl<T>(file: string): Promise<T[]> {
   return out
 }
 
-export async function getEntities(): Promise<Entity[]> {
-  return parseCsv(await readText(P.entities)) as unknown as Entity[]
+export async function getEntities(pr: Project): Promise<Entity[]> {
+  return parseCsv(await readText(pr.P.entities)) as unknown as Entity[]
 }
 
-export async function getAssets(): Promise<AssetRow[]> {
-  return parseCsv(await readText(P.manifest)) as unknown as AssetRow[]
+export async function getAssets(pr: Project): Promise<AssetRow[]> {
+  return parseCsv(await readText(pr.P.manifest)) as unknown as AssetRow[]
 }
 
-export async function getDecisions(): Promise<ReviewDecision[]> {
-  return readJsonl<ReviewDecision>(P.reviewLog)
+export async function getDecisions(pr: Project): Promise<ReviewDecision[]> {
+  return readJsonl<ReviewDecision>(pr.P.reviewLog)
 }
 
-export async function getFilings(): Promise<Filing[]> {
-  return readJsonl<Filing>(P.filings)
+export async function getFilings(pr: Project): Promise<Filing[]> {
+  return readJsonl<Filing>(pr.P.filings)
 }
 
 /**
  * Every live entity with the files behind each of its variants, for the
  * reference picker. Highest take wins per variant, as in resolveRefToken.
  */
-export async function getCatalog(): Promise<CatalogEntity[]> {
-  const [entities, assets] = await Promise.all([getEntities(), getAssets()])
+export async function getCatalog(pr: Project): Promise<CatalogEntity[]> {
+  const [entities, assets] = await Promise.all([getEntities(pr), getAssets(pr)])
   return entities
     .filter((e) => e.status !== 'RETIRED')
     .map((e) => {
@@ -85,13 +89,13 @@ export async function getCatalog(): Promise<CatalogEntity[]> {
     .sort((a, b) => a.id.localeCompare(b.id))
 }
 
-export async function getQueue(): Promise<QueueItem[]> {
-  return readJsonl<QueueItem>(P.queue)
+export async function getQueue(pr: Project): Promise<QueueItem[]> {
+  return readJsonl<QueueItem>(pr.P.queue)
 }
 
 /** Last write wins: a learning can be re-decided, so fold by id. */
-export async function getLearnings(): Promise<Learning[]> {
-  const all = await readJsonl<Learning>(P.learnings)
+export async function getLearnings(pr: Project): Promise<Learning[]> {
+  const all = await readJsonl<Learning>(pr.P.learnings)
   const byId = new Map<string, Learning>()
   for (const l of all) byId.set(l.id, l)
   return [...byId.values()].sort((a, b) => a.id.localeCompare(b.id))
@@ -102,8 +106,8 @@ export async function getLearnings(): Promise<Learning[]> {
  * A batch without a sidecar is skipped rather than guessed at — an unlabelled
  * image has no target entity and cannot be promoted safely.
  */
-export async function getCandidates(): Promise<Candidate[]> {
-  const [decisions, state] = await Promise.all([getDecisions(), getWorkerState()])
+export async function getCandidates(pr: Project): Promise<Candidate[]> {
+  const [decisions, state] = await Promise.all([getDecisions(pr), getWorkerState(pr)])
   // A decision the worker could not apply (a bad upload, say) hands the
   // candidate back for review rather than stranding it in _staging.
   const failed = (state?.failedDecisions ?? {}) as Record<string, string>
@@ -121,14 +125,14 @@ export async function getCandidates(): Promise<Candidate[]> {
 
   let batches: string[]
   try {
-    batches = (await fs.readdir(P.staging, { withFileTypes: true }))
+    batches = (await fs.readdir(pr.P.staging, { withFileTypes: true }))
       .filter((e) => e.isDirectory())
       .map((e) => e.name)
   } catch { return [] }
 
   const out: Candidate[] = []
   for (const batch of batches) {
-    const dir = path.join(P.staging, batch)
+    const dir = path.join(pr.P.staging, batch)
     let sidecar: StagingSidecar
     try {
       sidecar = JSON.parse(await fs.readFile(path.join(dir, 'job.json'), 'utf8'))
@@ -152,19 +156,19 @@ export async function getCandidates(): Promise<Candidate[]> {
   return out
 }
 
-export async function getPending(): Promise<Candidate[]> {
-  return (await getCandidates()).filter((c) => !c.decided)
+export async function getPending(pr: Project): Promise<Candidate[]> {
+  return (await getCandidates(pr)).filter((c) => !c.decided)
 }
 
 /**
  * Resolve an @-token to a project-relative path. Mirrors resolveRef in the
  * worker and Resolve-ShmRef in PowerShell.
  */
-export async function resolveRefToken(token: string): Promise<string | null> {
+export async function resolveRefToken(pr: Project, token: string): Promise<string | null> {
   const t = String(token ?? '').trim().replace(/^@/, '')
   if (!t) return null
   const [ref, variantIn, takeIn] = t.split('/')
-  const [entities, assets] = await Promise.all([getEntities(), getAssets()])
+  const [entities, assets] = await Promise.all([getEntities(pr), getAssets(pr)])
   const ent = entities.find((e) => e.id === ref || e.short_id === ref)
   if (!ent) return null
   const variant = (variantIn || ent.canonical_variant || '').toUpperCase()
@@ -184,11 +188,12 @@ export async function resolveRefToken(token: string): Promise<string | null> {
  * which is what the reviewer actually needs to check continuity against.
  */
 export async function getReferenceFor(
+  pr: Project,
   entityId: string,
   variant?: string,
   fallbackRefs?: string[],
 ): Promise<string | null> {
-  const [entities, assets] = await Promise.all([getEntities(), getAssets()])
+  const [entities, assets] = await Promise.all([getEntities(pr), getAssets(pr)])
   const ent = entities.find((e) => e.id === entityId || e.short_id === entityId)
   if (ent) {
     const want = variant || ent.canonical_variant
@@ -197,7 +202,7 @@ export async function getReferenceFor(
     if (hit) return `${hit.folder}/${hit.filename}`
   }
   for (const token of fallbackRefs ?? []) {
-    const p = await resolveRefToken(token)
+    const p = await resolveRefToken(pr, token)
     if (p) return p
   }
   return null
@@ -207,8 +212,8 @@ export async function getReferenceFor(
  * The job the worker is generating right now, if any: the most recent GENERATE
  * line in worker.log for a job the worker has not yet recorded as processed.
  */
-export async function getGeneratingJobId(processed: Set<string>): Promise<string | null> {
-  const lines = (await readText(P.workerLog)).trimEnd().split('\n').slice(-200)
+export async function getGeneratingJobId(pr: Project, processed: Set<string>): Promise<string | null> {
+  const lines = (await readText(pr.P.workerLog)).trimEnd().split('\n').slice(-200)
   for (let i = lines.length - 1; i >= 0; i--) {
     const m = lines[i].match(/\sGENERATE (\S+)/)
     if (m) return processed.has(m[1]) ? null : m[1]
@@ -217,15 +222,15 @@ export async function getGeneratingJobId(processed: Set<string>): Promise<string
   return null
 }
 
-export async function getWorkerState(): Promise<Record<string, unknown> | null> {
-  const t = await readText(P.workerState)
+export async function getWorkerState(pr: Project): Promise<Record<string, unknown> | null> {
+  const t = await readText(pr.P.workerState)
   if (!t.trim()) return null
   try { return JSON.parse(t) } catch { return null }
 }
 
 /** Queued jobs the worker has not finished. Its processedJobs is the truth, not what sits in _staging. */
-export async function getWaitingJobs(): Promise<QueueItem[]> {
-  const [queue, state] = await Promise.all([getQueue(), getWorkerState()])
+export async function getWaitingJobs(pr: Project): Promise<QueueItem[]> {
+  const [queue, state] = await Promise.all([getQueue(pr), getWorkerState(pr)])
   const processed = new Set((state?.processedJobs ?? []) as string[])
   return queue.filter((q) => !processed.has(q.jobId))
 }
@@ -243,12 +248,12 @@ interface QueueJob {
   refs?: string[]
 }
 
-async function exists(rel: string): Promise<boolean> {
-  try { await fs.access(path.join(P.root, rel)); return true } catch { return false }
+async function exists(pr: Project, rel: string): Promise<boolean> {
+  try { await fs.access(path.join(pr.P.root, rel)); return true } catch { return false }
 }
 
 /** Where the worker put a decided candidate's file. */
-async function locateDecided(d: ReviewDecision, stage: string | null | undefined): Promise<string | null> {
+async function locateDecided(pr: Project, d: ReviewDecision, stage: string | null | undefined): Promise<string | null> {
   const base = path.basename(d.candidate)
   const guesses =
     d.verdict === 'denied'
@@ -256,7 +261,7 @@ async function locateDecided(d: ReviewDecision, stage: string | null | undefined
       : stage === 'draft'
         ? [`09_OUTPUT/_drafts/${d.hfJobId}/${base}`]
         : []
-  for (const g of [...guesses, d.candidate]) if (await exists(g)) return g
+  for (const g of [...guesses, d.candidate]) if (await exists(pr, g)) return g
   return null
 }
 
@@ -282,24 +287,35 @@ export async function getWorkerConfig(): Promise<Record<string, unknown>> {
 /** Defined in batch-rules so the browser can price a quality without reading the disk. */
 export { priceKey }
 
-/** Last real price per priceKey, from the ledger's generated jobs. */
+/**
+ * Last real price per priceKey, from the generated jobs in every project's
+ * ledger. Prices belong to the Higgsfield account, not to a project, so a new
+ * project shows estimates from its first batch.
+ */
 export async function getPriceTable(): Promise<Map<string, number>> {
-  const [queue, ledgerText] = await Promise.all([readJsonl<QueueJob>(P.queue), readText(P.ledger)])
-  const jobs = new Map(queue.map((j) => [j.jobId, j]))
   const prices = new Map<string, number>()
-  for (const row of parseCsv(ledgerText) as unknown as Record<string, string>[]) {
-    const cost = parseFloat(row.cost)
-    const job = jobs.get(row.job_id)
-    if (row.state === 'GENERATED' && Number.isFinite(cost) && job) prices.set(priceKey(job.model, job.params), cost)
+  const rows: { at: string; key: string; cost: number }[] = []
+  for (const project of await listProjects()) {
+    const [queue, ledgerText] = await Promise.all([readJsonl<QueueJob>(project.P.queue), readText(project.P.ledger)])
+    const jobs = new Map(queue.map((j) => [j.jobId, j]))
+    for (const row of parseCsv(ledgerText) as unknown as Record<string, string>[]) {
+      const cost = parseFloat(row.cost)
+      const job = jobs.get(row.job_id)
+      if (row.state === 'GENERATED' && Number.isFinite(cost) && job) {
+        rows.push({ at: String(row.ingested ?? ''), key: priceKey(job.model, job.params), cost })
+      }
+    }
   }
+  // Oldest first, so the latest price for a key wins whichever project paid it.
+  for (const r of rows.sort((a, b) => a.at.localeCompare(b.at))) prices.set(r.key, r.cost)
   return prices
 }
 
-export async function getReviewContexts(candidates: Candidate[]): Promise<Map<string, ReviewContext>> {
+export async function getReviewContexts(pr: Project, candidates: Candidate[]): Promise<Map<string, ReviewContext>> {
   const [queue, decisions, state, prices, cfg] = await Promise.all([
-    readJsonl<QueueJob>(P.queue),
-    getDecisions(),
-    getWorkerState(),
+    readJsonl<QueueJob>(pr.P.queue),
+    getDecisions(pr),
+    getWorkerState(pr),
     getPriceTable(),
     getWorkerConfig(),
   ])
@@ -326,13 +342,13 @@ export async function getReviewContexts(candidates: Candidate[]): Promise<Map<st
         notes: d ? (d.notesEn || d.notes || '') : '',
         tags: d?.tags ?? [],
         decidedAt: d?.ts ?? null,
-        video: d ? await locateDecided(d, job?.stage) : null,
+        video: d ? await locateDecided(pr, d, job?.stage) : null,
         refs: job?.refs ?? [],
       })
       parent = job?.parentJobId ?? null
     }
 
-    const m = s.target.match(/^SHM-(EP\d{3})(?:-(SC\d{3}))?(?:-(SH\d{4}))?/)
+    const m = s.target.match(idRx(pr.code).shotParts)
     const finalParams = { ...s.params, resolution: cfg.videoFinalResolution }
     out.set(c.path, {
       label,
@@ -355,21 +371,22 @@ export async function getReviewContexts(candidates: Candidate[]): Promise<Map<st
 
 /** Distinct shot ids that have been generation targets, for the Shot picker's suggestions. */
 /** Every shot id in use: queued targets and shot files on disk, the two things the worker counts when it numbers a scene. */
-export async function getKnownShots(): Promise<string[]> {
-  const queue = await readJsonl<QueueItem>(P.queue)
+export async function getKnownShots(pr: Project): Promise<string[]> {
+  const rx = idRx(pr.code)
+  const queue = await readJsonl<QueueItem>(pr.P.queue)
   const ids = queue.map((q) => q.target)
-  const root = path.join(P.root, '07_EPISODES')
+  const root = path.join(pr.P.root, '07_EPISODES')
   const eps = await fs.readdir(root, { withFileTypes: true }).catch(() => [])
   for (const ep of eps.filter((e) => e.isDirectory())) {
     const files = await fs.readdir(path.join(root, ep.name, 'shots')).catch(() => [] as string[])
-    ids.push(...files.map((f) => f.match(/^SHM-EP\d{3}-SC\d{3}-SH\d{4}/)?.[0] ?? ''))
+    ids.push(...files.map((f) => f.match(rx.shotFileStart)?.[0] ?? ''))
   }
-  return [...new Set(ids.filter((t) => /^SHM-EP\d{3}/.test(t)))].sort()
+  return [...new Set(ids.filter((t) => rx.episodePrefix.test(t)))].sort()
 }
 
 /** Reference tokens of the latest queued jobs, newest first. The Prompts page offers them as "recent". */
-export async function getRecentRefs(jobs = 12): Promise<string[]> {
-  const queue = await readJsonl<QueueItem>(P.queue)
+export async function getRecentRefs(pr: Project, jobs = 12): Promise<string[]> {
+  const queue = await readJsonl<QueueItem>(pr.P.queue)
   return queue.slice(-jobs).reverse().flatMap((q) => q.refs ?? [])
 }
 
@@ -377,11 +394,11 @@ export async function getRecentRefs(jobs = 12): Promise<string[]> {
  * Every submitted batch as the Prompts page shows it: requests folded with the
  * worker's events, newest first. Mirrors foldBatch in worker/lib/job-requests.mjs.
  */
-export async function getBatches(): Promise<BatchView[]> {
+export async function getBatches(pr: Project): Promise<BatchView[]> {
   const [requests, events, state] = await Promise.all([
-    readJsonl<JobRequest>(P.jobRequests),
-    readJsonl<JobRequestEvent>(P.jobRequestResults),
-    getWorkerState(),
+    readJsonl<JobRequest>(pr.P.jobRequests),
+    readJsonl<JobRequestEvent>(pr.P.jobRequestResults),
+    getWorkerState(pr),
   ])
   const processed = new Set((state?.processedRequests ?? []) as string[])
   const out: BatchView[] = []
@@ -470,11 +487,11 @@ export async function getBatches(): Promise<BatchView[]> {
 }
 
 /** Regenerate requests and what became of them, keyed by the accepted job they re-run. */
-export async function getRegenerations(): Promise<Map<string, RegenerationView[]>> {
+export async function getRegenerations(pr: Project): Promise<Map<string, RegenerationView[]>> {
   const [requests, events, state] = await Promise.all([
-    readJsonl<JobRequest>(P.jobRequests),
-    readJsonl<JobRequestEvent>(P.jobRequestResults),
-    getWorkerState(),
+    readJsonl<JobRequest>(pr.P.jobRequests),
+    readJsonl<JobRequestEvent>(pr.P.jobRequestResults),
+    getWorkerState(pr),
   ])
   const processed = new Set((state?.processedRequests ?? []) as string[])
   const out = new Map<string, RegenerationView[]>()
@@ -503,16 +520,16 @@ export async function getRegenerations(): Promise<Map<string, RegenerationView[]
  * everything queued after it via parentJobId) is one entry, shown as its
  * latest attempt. Newest first.
  */
-export async function getPromptLibrary(): Promise<PromptLibraryItem[]> {
+export async function getPromptLibrary(pr: Project): Promise<PromptLibraryItem[]> {
   type Row = QueueItem & {
     basePrompt?: string; stage?: 'draft' | 'final' | null; label?: string | null; revisionNotes?: string[]
   }
   const [queue, decisions, state, ledgerText] = await Promise.all([
-    readJsonl<Row>(P.queue), getDecisions(), getWorkerState(), readText(P.ledger),
+    readJsonl<Row>(pr.P.queue), getDecisions(pr), getWorkerState(pr), readText(pr.P.ledger),
   ])
   const processed = new Set((state?.processedJobs ?? []) as string[])
   const failedDecisions = (state?.failedDecisions ?? {}) as Record<string, string>
-  const generating = await getGeneratingJobId(processed)
+  const generating = await getGeneratingJobId(pr, processed)
   const ledger = new Map<string, string>()
   for (const row of parseCsv(ledgerText) as unknown as Record<string, string>[]) ledger.set(row.job_id, row.state)
   const verdict = new Map<string, ReviewDecision['verdict']>()
@@ -561,18 +578,18 @@ export async function getPromptLibrary(): Promise<PromptLibraryItem[]> {
 // ---------------------------------------------------------------- references library
 
 /** Everything the References page manages, plus what the worker has and has not applied yet. */
-export async function getLibrary(): Promise<LibraryData> {
+export async function getLibrary(pr: Project): Promise<LibraryData> {
   const [entities, assets, ops, results, state, archiveLog, worker, candidates] = await Promise.all([
-    getEntities(),
-    getAssets(),
-    readJsonl<IndexOp>(P.indexOps),
-    readJsonl<IndexOpResult>(P.indexOpResults),
-    getWorkerState(),
-    readJsonl<Record<string, unknown>>(path.join(P.archive, 'index.jsonl')),
-    getWorkerStatus(),
-    getCandidates(),
+    getEntities(pr),
+    getAssets(pr),
+    readJsonl<IndexOp>(pr.P.indexOps),
+    readJsonl<IndexOpResult>(pr.P.indexOpResults),
+    getWorkerState(pr),
+    readJsonl<Record<string, unknown>>(path.join(pr.P.archive, 'index.jsonl')),
+    getWorkerStatus(pr),
+    getCandidates(pr),
   ])
-  const usage = await getLookUsage(entities, state, candidates)
+  const usage = await getLookUsage(pr, entities, state, candidates)
 
   const library: LibraryEntity[] = entities.map((e) => {
     const byVariant = new Map<string, AssetRow[]>()
@@ -602,7 +619,7 @@ export async function getLibrary(): Promise<LibraryData> {
   for (const x of archiveLog) {
     if (x.restored || restored.has(String(x.archiveId))) continue
     const row = (x.row ?? {}) as Record<string, string>
-    try { await fs.access(path.join(P.root, String(x.file))) } catch { continue }
+    try { await fs.access(path.join(pr.P.root, String(x.file))) } catch { continue }
     archived.push({
       archiveId: String(x.archiveId), shortId: String(x.short_id), entityId: String(x.entity_id),
       variant: row.variant ?? '', take: row.take ?? '', role: row.role ?? '', file: String(x.file),
@@ -627,12 +644,13 @@ export async function getLibrary(): Promise<LibraryData> {
  * (worker/lib/index-ops.mjs), so the page can say so before anyone clicks.
  */
 async function getLookUsage(
+  pr: Project,
   entities: Entity[],
   state: Record<string, unknown> | null,
   candidates: Candidate[],
 ): Promise<Map<string, LookUse[]>> {
   const processed = new Set((state?.processedJobs ?? []) as string[])
-  const [queue, generating] = await Promise.all([readJsonl<QueueJob>(P.queue), getGeneratingJobId(processed)])
+  const [queue, generating] = await Promise.all([readJsonl<QueueJob>(pr.P.queue), getGeneratingJobId(pr, processed)])
   const out = new Map<string, LookUse[]>()
   const add = (token: string, use: LookUse) => {
     const [ref, variantIn] = String(token).replace(/^@/, '').split('/')
@@ -662,14 +680,12 @@ async function getLookUsage(
  * Its lock file holds the pid and was written as it started, so compare that
  * time with the newest file in worker/.
  */
-export async function getWorkerStatus(): Promise<WorkerStatus> {
-  const autostartOff = String(process.env.SHM_WORKER ?? '').toLowerCase() === 'off'
-    ? 'SHM_WORKER=off on this machine'
-    : process.env.SHM_ROOT && !process.env.SHM_HIGGSFIELD_JS ? 'sandbox SHM_ROOT without the stub CLI' : null
+export async function getWorkerStatus(pr: Project): Promise<WorkerStatus> {
+  const autostartOff = autostartBlockedReason()
   let pid: number
   let startedMs: number
   try {
-    const [text, stat] = await Promise.all([fs.readFile(P.workerLock, 'utf8'), fs.stat(P.workerLock)])
+    const [text, stat] = await Promise.all([fs.readFile(pr.P.workerLock, 'utf8'), fs.stat(pr.P.workerLock)])
     pid = parseInt(text.trim(), 10)
     startedMs = stat.mtimeMs
   } catch {

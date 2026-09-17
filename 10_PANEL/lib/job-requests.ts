@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { P } from './paths'
+import type { Project } from './projects'
 import type { JobRequest } from './types'
 
 /**
@@ -25,7 +25,7 @@ export function newBatchId(): string {
 // of kilobytes, and two tabs submitting at once must not interleave.
 let tail: Promise<void> = Promise.resolve()
 
-export function appendJobRequest(record: JobRequest): Promise<void> {
+export function appendJobRequest({ P }: Project, record: JobRequest): Promise<void> {
   const run = tail.then(async () => {
     await fs.mkdir(path.dirname(P.jobRequests), { recursive: true })
     await fs.appendFile(P.jobRequests, JSON.stringify(record) + '\n', 'utf8')

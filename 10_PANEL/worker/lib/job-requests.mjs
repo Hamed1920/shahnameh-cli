@@ -1,10 +1,12 @@
 import {
-  P, appendJsonl, loadEntities, log, readCsv, readJsonl, readText, resolveRef, restoreText, spentWithin, writeCsv,
+  CODE, P, appendJsonl, loadEntities, log, readCsv, readJsonl, readText, resolveRef, restoreText, spentWithin,
+  usedShotIds, writeCsv,
 } from './project.mjs'
 import { parseCsv } from './csv.mjs'
 import { checkBatch, isVideoModel, makeJob, newJobId } from './batch.mjs'
 import { reserveEntity } from './promote.mjs'
-import { NEXT_SCENE_RX, assignScenes, usedShotIds } from './scenes.mjs'
+import { NEXT_SCENE_RX, assignScenes } from './scenes.mjs'
+import { stripCode } from './ids.mjs'
 import { planJob } from './plan.mjs'
 import { estimateCost, isAuthenticated } from './hf.mjs'
 
@@ -146,11 +148,12 @@ const HANDLERS = {
       const sceneFor = assignScenes(
         ok.filter((r) => isNext(r) && !present.has(jobIdFor.get(r.key))),
         [...(await usedShotIds()), ...ok.filter((r) => !isNext(r)).map((r) => r.targetId)],
+        CODE,
       )
       for (const r of ok.filter(isNext)) {
         const id = present.get(jobIdFor.get(r.key))?.target ?? sceneFor.get(r.key)
         sceneFor.set(r.key, id)
-        assigned.push({ key: r.key, proposal: r.targetId, id, shortId: id.replace(/^SHM-/, '') })
+        assigned.push({ key: r.key, proposal: r.targetId, id, shortId: stripCode(CODE, id) })
       }
 
       const jobIds = {}

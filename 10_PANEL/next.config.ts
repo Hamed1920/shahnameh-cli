@@ -11,8 +11,17 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '60mb',
     },
   },
+  // Bookmarks from when the panel ran one project: send them to the picker
+  // rather than 404, since /review now reads as a project called "review".
+  async redirects() {
+    return ['review', 'decided', 'references', 'entities', 'learnings', 'prompts', 'queue'].map((page) => ({
+      source: `/${page}`,
+      destination: '/',
+      permanent: false,
+    }))
+  },
   logging: {
-    // Every open tab polls /api/live every 2s (components/live-refresh.tsx).
+    // Every open tab polls /<project>/api/live every 2s (components/live-refresh.tsx).
     incomingRequests: { ignore: [/\/api\/live/] },
   },
 };

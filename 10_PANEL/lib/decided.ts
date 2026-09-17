@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { P } from './paths'
+import { idRx } from '../worker/lib/ids.mjs'
+import type { Project } from './projects'
 import {
   getAssets, getDecisions, getFilings, getGeneratingJobId, getPriceTable, getQueue, getRegenerations, getWorkerState, priceKey,
 } from './store'
@@ -52,8 +53,8 @@ export interface DecidedEntry {
   source: RegenerateSource | null
 }
 
-async function exists(rel: string): Promise<boolean> {
-  try { await fs.access(path.join(P.root, rel)); return true } catch { return false }
+async function exists(pr: Project, rel: string): Promise<boolean> {
+  try { await fs.access(path.join(pr.P.root, rel)); return true } catch { return false }
 }
 
 async function readText(file: string): Promise<string> {
@@ -61,35 +62,35 @@ async function readText(file: string): Promise<string> {
 }
 
 /** candidate -> destination, from the worker's PROMOTED / DRAFT APPROVED / REJECTED lines. */
-async function movesFromLog(): Promise<Map<string, string>> {
+async function movesFromLog(pr: Project): Promise<Map<string, string>> {
   const moves = new Map<string, string>()
-  for (const line of (await readText(P.workerLog)).split('\n')) {
+  for (const line of (await readText(pr.P.workerLog)).split('\n')) {
     const m = line.match(/\s(?:PROMOTED|DRAFT APPROVED|REJECTED) (\S+) -> (.+?)\s*$/)
     if (m) moves.set(m[1], m[2].split(path.sep).join('/'))
   }
   return moves
 }
 
-async function sidecars(): Promise<Map<string, StagingSidecar>> {
+async function sidecars(pr: Project): Promise<Map<string, StagingSidecar>> {
   const out = new Map<string, StagingSidecar>()
   let dirs: string[] = []
-  try { dirs = await fs.readdir(P.staging) } catch { return out }
+  try { dirs = await fs.readdir(pr.P.staging) } catch { return out }
   await Promise.all(
     dirs.map(async (d) => {
-      try { out.set(d, JSON.parse(await fs.readFile(path.join(P.staging, d, 'job.json'), 'utf8'))) } catch { /* not a batch */ }
+      try { out.set(d, JSON.parse(await fs.readFile(path.join(pr.P.staging, d, 'job.json'), 'utf8'))) } catch { /* not a batch */ }
     }),
   )
   return out
 }
 
-export async function getDecidedEntries(): Promise<DecidedEntry[]> {
+export async function getDecidedEntries(pr: Project): Promise<DecidedEntry[]> {
   const [decisions, filings, state, queue, assets, moves, byBatch, regenerations, prices] = await Promise.all([
-    getDecisions(), getFilings(), getWorkerState(), getQueue(), getAssets(), movesFromLog(), sidecars(), getRegenerations(), getPriceTable(),
+    getDecisions(pr), getFilings(pr), getWorkerState(pr), getQueue(pr), getAssets(pr), movesFromLog(pr), sidecars(pr), getRegenerations(pr), getPriceTable(),
   ])
   const failed = (state?.failedDecisions ?? {}) as Record<string, string>
   const processedDecisions = new Set((state?.processedDecisions ?? []) as string[])
   const processedJobs = new Set((state?.processedJobs ?? []) as string[])
-  const generating = await getGeneratingJobId(processedJobs)
+  const generating = await getGeneratingJobId(pr, processedJobs)
 
   const sidecarByJob = new Map([...byBatch.values()].map((s) => [s.jobId, s]))
   const queueById = new Map((queue as (QueueItem & { label?: string | null })[]).map((q) => [q.jobId, q]))
@@ -120,7 +121,7 @@ export async function getDecidedEntries(): Promise<DecidedEntry[]> {
   const shotFiles = new Map<string, string[]>()
   async function filesIn(folder: string) {
     if (!shotFiles.has(folder)) {
-      shotFiles.set(folder, await fs.readdir(path.join(P.root, folder)).catch(() => []))
+      shotFiles.set(folder, await fs.readdir(path.join(pr.P.root, folder)).catch(() => []))
     }
     return shotFiles.get(folder)!
   }
@@ -158,7 +159,7 @@ export async function getDecidedEntries(): Promise<DecidedEntry[]> {
           } else missing = null
         }
       }
-      if (file && !(await exists(file))) {
+      if (file && !(await exists(pr, file))) {
         missing = status === 'waiting' ? 'Not on disk.' : `Not found at ${file}.`
         file = null
       }
@@ -203,7 +204,7 @@ export async function getDecidedEntries(): Promise<DecidedEntry[]> {
           }
         : null
 
-      const m = d.target.match(/^SHM-(EP\d{3})(?:-(SC\d{3}))?(?:-(SH\d{4}))?/)
+      const m = d.target.match(idRx(pr.code).shotParts)
       const where = m ? [m[1], m[2], m[3]].filter(Boolean).join(' · ') : d.target
       return {
         decision: d,
@@ -229,7 +230,7 @@ export async function getDecidedEntries(): Promise<DecidedEntry[]> {
   return entries.sort((a, b) => b.decision.ts.localeCompare(a.decision.ts))
 }
 
-/** `SHM-...-SH0010_V01.mp4` is take 1, `_T02` take 2, and so on. */
+/** `CODE-...-SH0010_V01.mp4` is take 1, `_T02` take 2, and so on. */
 function takeNumber(name: string, stem: string): number {
   const m = name.slice(stem.length).match(/^_T(\d+)/)
   return m ? parseInt(m[1], 10) : 1

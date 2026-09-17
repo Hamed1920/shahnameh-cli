@@ -1,10 +1,11 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import {
-  P, ROOT, appendJsonl, archivedVariants, findEntity, log, readJsonl, readState, readText, resolveRef,
+  CODE, P, ROOT, appendJsonl, archivedVariants, findEntity, log, readJsonl, readState, readText, resolveRef,
   restoreText, writeCsv,
 } from './project.mjs'
 import { parseCsv } from './csv.mjs'
+import { entityId as fullEntityId } from './ids.mjs'
 import {
   FilingError, checkUploads, entitySlug, fileUpload, nextVariant, syncEntityRow,
 } from './promote.mjs'
@@ -133,7 +134,7 @@ function tidyEntity(tx, ent) {
   }
 }
 
-// "P12 SHM-EP001-SC012-SH0010", or the job id when there is no shot label
+// "P12 SHM-EP001-SC012-SH0010" (any project code), or the job id when there is no shot label
 const jobName = (x) => (x.label ? `${x.label} ${x.target}` : `${x.jobId} (${x.target})`)
 
 /**
@@ -321,7 +322,7 @@ const OPS = {
     const slug = op.slug === undefined ? row.slug : entitySlug(op.slug)
     if (!slug) fail('the ID wording needs at least one English letter or digit')
     const oldId = row.id
-    const newId = `SHM-${row.kind}-${row.number}-${slug}`
+    const newId = fullEntityId(CODE, row.kind, row.number, slug)
 
     if (newId !== oldId) {
       const clash = tx.entities.find((e) => e.slug === slug && e.id !== oldId)

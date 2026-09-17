@@ -2,9 +2,10 @@
 /**
  * Add a generation job to the queue.
  *
- *   node worker/enqueue.mjs --target PRP-002 --prompt "..." [options]
+ *   node worker/enqueue.mjs --project <slug> --target PRP-002 --prompt "..." [options]
  *
  * Options:
+ *   --project  <slug>     the project's folder name under projects/            [required]
  *   --target   <id>       entity, short (PRP-002) or full (SHM-PRP-002-...)   [required]
  *   --prompt   <text>     the prompt                                          [required]
  *   --variant  <V01>      defaults to the entity's canonical variant

@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "name": "Shahnameh",
+  "slug": "shahnameh-cli",
+  "code": "SHM",
+  "description": "A modern adaptation of the Shahnameh, Ferdowsi's Persian Book of Kings. Episode 1 follows Zahhak.",
+  "mark": "\u0634",
+  "created": "2026-09-03"
+}

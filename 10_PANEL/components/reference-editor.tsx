@@ -13,7 +13,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Field, Input, Select } from '@/components/ui/field'
 import { EASE } from '@/components/ui/motion-tokens'
 import { Badge } from '@/components/ui/text'
-import { assetUrl } from '@/lib/asset'
+import { useAssetUrls } from '@/components/project-context'
 import { cn } from '@/lib/cn'
 import {
   KINDS, KIND_LABEL, MAX_UPLOADS, MAX_UPLOAD_BYTES, UPLOAD_ACCEPT, UPLOAD_ROLES,
@@ -221,6 +221,7 @@ export function ReferenceEditor({
   /** A likeness plate to judge against that the job was not given. Shown, never sent. */
   plate?: ResolvedReference | null
 }) {
+  const { assetUrl } = useAssetUrls()
   const [viewing, setViewing] = useState<number | null>(null)
   const [picker, setPicker] = useState<{ mode: PickerMode; replaceKey: string | null; uploadId?: string } | null>(null)
   const [dragging, setDragging] = useState(false)
@@ -479,6 +480,7 @@ function RefTile({
   onRestore: () => void
   onReplace: () => void
 }) {
+  const { assetUrl } = useAssetUrls()
   const src = item.origin === 'upload' ? item.path : item.path ? assetUrl(item.path) : null
   const name = item.token ? catalog.find((e) => e.shortId === shortOf(item.token))?.name : undefined
   const label =

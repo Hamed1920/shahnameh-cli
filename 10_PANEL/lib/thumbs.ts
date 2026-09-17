@@ -17,8 +17,8 @@ const cache = new Map<string, Buffer>()
 const MAX_CACHED = 400
 
 /** Project-relative image path -> JPEG bytes at most `width` px wide. Null when the path is not a readable image. */
-export async function thumbnail(relative: string, width: number): Promise<Buffer | null> {
-  const abs = safeResolve(relative)
+export async function thumbnail(root: string, relative: string, width: number): Promise<Buffer | null> {
+  const abs = safeResolve(root, relative)
   if (!abs || !IMAGE_EXT.has(path.extname(abs).toLowerCase())) return null
   let stat
   try { stat = await fs.stat(abs) } catch { return null }

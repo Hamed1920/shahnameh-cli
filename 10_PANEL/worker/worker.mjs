@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Shahnameh generation worker.
+ * Film Making for Dummies generation worker. One per project.
  *
  * Single writer for asset files and the CSV registries. Does six things:
  *   1. drains QUEUE.jsonl  -> higgsfield generate -> download to _staging
@@ -11,10 +11,10 @@
  *      Regenerate requests from JOB_REQUESTS.jsonl, every few seconds
  *   6. records everything in JOB_LEDGER.csv and queue/state.json
  *
- * Usage:
- *   node worker/worker.mjs            watch loop
- *   node worker/worker.mjs --once     one pass, then exit
- *   node worker/worker.mjs --dry-run  plan and price only, generate nothing
+ * Usage (the panel starts one per project with SHM_ROOT set; by hand, name the project):
+ *   node worker/worker.mjs --project <slug>            watch loop
+ *   node worker/worker.mjs --project <slug> --once     one pass, then exit
+ *   node worker/worker.mjs --project <slug> --dry-run  plan and price only, generate nothing
  *
  * The panel can ask a running worker to stop by creating queue/worker.stop;
  * the worker finishes the job in hand, then exits and releases its lock.
@@ -23,9 +23,10 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
-  P, ROOT, appendJsonl, loadEntities, log, readCsv, readJsonl, rel,
-  readState, resolveRef, shotFolder, spentWithin, writeCsv, writeState,
+  GENERATE_LOCK, P, PROJECT, ROOT, appendJsonl, loadEntities, log, readCsv, readJsonl, rel,
+  readState, resolveRef, shotFolder, spentWithin, stateStartProblem, writeCsv, writeState,
 } from './lib/project.mjs'
+import { acquireFileLock, releaseFileLock } from './lib/locks.mjs'
 import { estimateCost, extractJobId, extractResultUrls, hfJson, isAuthenticated, paramsToArgs } from './lib/hf.mjs'
 import { FilingError, checkUploads, fileUpload, promote, reject } from './lib/promote.mjs'
 import { runIndexOps } from './lib/index-ops.mjs'
@@ -48,35 +49,11 @@ const LEDGER_HEADER = [
 
 // ---------------------------------------------------------------- helpers
 
-function pidAlive(pid) {
-  if (!Number.isFinite(pid) || pid <= 0) return false
-  try { process.kill(pid, 0); return true } catch (e) { return e.code === 'EPERM' }
-}
-
-/**
- * Lock, with stale reclaim. A killed worker leaves its lock behind; without the
- * liveness check that permanently blocks every future run and the only fix is
- * deleting a file by hand.
- */
-async function acquireLock() {
-  await fs.mkdir(path.dirname(P.lock), { recursive: true })
-  for (let attempt = 0; attempt < 2; attempt++) {
-    try {
-      const fh = await fs.open(P.lock, 'wx')
-      await fh.write(String(process.pid))
-      await fh.close()
-      return true
-    } catch (e) {
-      if (e.code !== 'EEXIST') throw e
-      const held = parseInt((await fs.readFile(P.lock, 'utf8').catch(() => '')).trim(), 10)
-      if (pidAlive(held)) return false
-      await log(`reclaiming stale lock from pid ${held || 'unknown'}`)
-      await fs.rm(P.lock, { force: true })
-    }
-  }
-  return false
-}
-async function releaseLock() { await fs.rm(P.lock, { force: true }) }
+/** This project's worker lock. The panel reads the pid in it to show the worker as running. */
+const acquireLock = () => acquireFileLock(P.lock, {
+  onReclaim: (held) => log(`reclaiming stale lock from pid ${held || 'unknown'}`),
+})
+const releaseLock = () => releaseFileLock(P.lock)
 
 /** The panel asked this worker to stop. Checked between jobs, never mid-generation. */
 async function stopRequested() {
@@ -86,6 +63,7 @@ async function stopNow(where) {
   await fs.rm(P.stopFlag, { force: true })
   await log(`worker stopping: panel request (${where})`)
   if (state) await writeState(state)
+  await releaseGenerateLock()
   await releaseLock()
   process.exit(0)
 }
@@ -143,7 +121,25 @@ function unhold(state, jobId) {
   state.held = rest
 }
 
+/**
+ * The machine-wide generation lock (GENERATE_LOCK in project.mjs), held by this
+ * worker from the spend ceiling check until the ledger records the spend, so two
+ * projects' workers can never both spend the same remaining room. Taken per job
+ * and released between jobs, so the other projects get their turn.
+ */
+let holdingGenerateLock = false
+let waitingForGenerateLock = false
+async function releaseGenerateLock() {
+  if (!holdingGenerateLock) return
+  holdingGenerateLock = false
+  await releaseFileLock(GENERATE_LOCK)
+}
+
 async function runQueue(state) {
+  try { return await drainQueue(state) } finally { await releaseGenerateLock() }
+}
+
+async function drainQueue(state) {
   const queue = await readJsonl(P.queue)
   const done = new Set(state.processedJobs)
   // Holds for jobs that are no longer pending (processed, or gone) are stale.
@@ -159,6 +155,7 @@ async function runQueue(state) {
   let count = 0
 
   for (const job of pending) {
+    await releaseGenerateLock()
     if (await stopRequested()) await stopNow('before ' + job.jobId)
     if (!DRY && (heldUntil.get(job.jobId) ?? 0) > Date.now()) continue
 
@@ -183,9 +180,20 @@ async function runQueue(state) {
       await hold(state, job.jobId, `${credits} credits is more than perJobCostCeilingCredits ${cfg.perJobCostCeilingCredits}`, credits)
       continue
     }
+    // Busy means another project is generating right now: stop here and try
+    // again next pass. Decisions and index requests carry on meanwhile.
+    if (!DRY) {
+      if (!(await acquireFileLock(GENERATE_LOCK, { note: PROJECT.slug }))) {
+        if (!waitingForGenerateLock) await log(`WAIT another project is generating (lock ${GENERATE_LOCK}); ${job.jobId} goes next`)
+        waitingForGenerateLock = true
+        break
+      }
+      holdingGenerateLock = true
+      waitingForGenerateLock = false
+    }
     const recent = await spentWithin(COST_WINDOW_HOURS)
     if (credits != null && recent + credits > cfg.costCeilingCredits) {
-      await hold(state, job.jobId, `${credits} credits would pass costCeilingCredits ${cfg.costCeilingCredits} for the last ${COST_WINDOW_HOURS} h (${recent} spent); it runs once older spend leaves the window`, credits)
+      await hold(state, job.jobId, `${credits} credits would pass costCeilingCredits ${cfg.costCeilingCredits} for the last ${COST_WINDOW_HOURS} h (${recent} spent across all projects); it runs once older spend leaves the window`, credits)
       continue
     }
     unhold(state, job.jobId)
@@ -589,18 +597,30 @@ async function pass() {
 }
 
 async function main() {
+  // A sandbox points SHM_HIGGSFIELD_JS at the stub CLI. If that path is wrong,
+  // quietly finding the real CLI instead would spend real credits on test data.
+  const stub = process.env.SHM_HIGGSFIELD_JS
+  if (stub && !(await fs.access(stub).then(() => true, () => false))) {
+    console.error(`SHM_HIGGSFIELD_JS is set to ${stub}, which does not exist. Refusing to start rather than fall back to the real Higgsfield CLI.`)
+    process.exit(1)
+  }
+  const replay = await stateStartProblem()
+  if (replay) {
+    console.error(`Refusing to start ${PROJECT.slug}: ${replay}`)
+    process.exit(1)
+  }
   if (!(await acquireLock())) {
     console.error(`A worker is already running (lock: ${P.lock}). Delete it if that is stale.`)
     process.exit(1)
   }
-  const cleanup = async () => { await releaseLock(); process.exit(0) }
+  const cleanup = async () => { await releaseGenerateLock(); await releaseLock(); process.exit(0) }
   process.on('SIGINT', cleanup)
   process.on('SIGTERM', cleanup)
 
   try {
     // A stop flag left by a crash must not stop this worker before it starts.
     await fs.rm(P.stopFlag, { force: true })
-    await log(`worker started (once=${ONCE} dryRun=${DRY} root=${ROOT})`)
+    await log(`worker started (project=${PROJECT.slug} code=${PROJECT.code} once=${ONCE} dryRun=${DRY} root=${ROOT})`)
     state = await readState()
 
     if (ONCE) { await pass(); return }
@@ -620,6 +640,7 @@ async function main() {
 
 main().catch(async (e) => {
   await log(`FATAL: ${e.stack ?? e.message}`)
+  await releaseGenerateLock()
   await releaseLock()
   process.exit(1)
 })

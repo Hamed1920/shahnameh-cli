@@ -5,7 +5,9 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion } from 'motion/react'
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
-import { NAV, SIDEBAR_COOKIE, SIDEBAR_RAIL, SIDEBAR_WIDTH } from '@/components/nav-items'
+import { ArrowLeftRight } from 'lucide-react'
+import { NAV, SIDEBAR_COOKIE, SIDEBAR_RAIL, SIDEBAR_WIDTH, navHref } from '@/components/nav-items'
+import { useProject } from '@/components/project-context'
 import { EASE, SPRING } from '@/components/ui/motion-tokens'
 import { cn } from '@/lib/cn'
 
@@ -24,20 +26,23 @@ const fade = {
  * 60px rail. The 24px mark is inset 18px for the same centre. That is why
  * nothing drifts sideways as the rail collapses; only the labels move.
  *
- * Lives in the root layout, which persists across client navigations, so the
- * rail never remounts or replays its animation when you change page.
+ * Lives in the project layout, which persists across client navigations within
+ * a project, so the rail never remounts or replays its animation when you
+ * change page. The mark and name at the top say which film you are in.
  */
 export function Sidebar({
   defaultCollapsed,
   counts = {},
 }: {
   defaultCollapsed: boolean
-  /** Badge per nav href, e.g. jobs waiting on the Queue. Zero shows nothing. */
+  /** Badge per nav path, e.g. jobs waiting on the Queue. Zero shows nothing. */
   counts?: Partial<Record<string, number>>
 }) {
   const [collapsed, setCollapsed] = useState(defaultCollapsed)
   const [hovered, setHovered] = useState<string | null>(null)
   const pathname = usePathname()
+  const project = useProject()
+  const home = navHref(project.slug, '')
 
   function toggle() {
     const next = !collapsed
@@ -56,17 +61,17 @@ export function Sidebar({
       animate={{ width: collapsed ? SIDEBAR_RAIL : SIDEBAR_WIDTH }}
       transition={SPRING}
     >
-      <div className="flex h-18 shrink-0 items-center gap-3 overflow-hidden pl-[18px]">
+<div className="flex h-18 shrink-0 items-center gap-3 overflow-hidden pl-[18px]">
         <span
           aria-hidden
           className="grid size-6 shrink-0 place-items-center rounded-md bg-fg font-sans text-[15px] leading-none text-ink"
         >
-          ش
+          {project.mark}
         </span>
         <AnimatePresence initial={false}>
           {!collapsed && (
-            <motion.span {...fade} className="font-display text-[22px] leading-none whitespace-nowrap text-fg">
-              Shahnameh
+            <motion.span {...fade} className="min-w-0 truncate font-display text-[22px] leading-none whitespace-nowrap text-fg">
+              {project.name}
             </motion.span>
           )}
         </AnimatePresence>
@@ -74,9 +79,10 @@ export function Sidebar({
 
       <nav aria-label="Sections" className="pt-2">
         <ul className="space-y-px">
-          {NAV.map(({ href, label, icon: Icon }) => {
-            const active = href === '/' ? pathname === '/' : pathname.startsWith(href)
-            const count = counts[href] ?? 0
+          {NAV.map(({ path, label, icon: Icon }) => {
+            const href = navHref(project.slug, path)
+            const active = path === '' ? pathname === home : pathname.startsWith(href)
+            const count = counts[path] ?? 0
             const countText = count > 99 ? '99+' : String(count)
             return (
               <li key={href} className="relative mx-2">
@@ -155,6 +161,45 @@ export function Sidebar({
       </nav>
 
       <div className="mt-auto p-2 pb-3">
+        {/* Back to the list of films. The panel runs them all; this one is just the open one. */}
+        <Link
+          href="/"
+          onMouseEnter={() => setHovered('switch')}
+          onMouseLeave={() => setHovered(null)}
+          onFocus={() => setHovered('switch')}
+          onBlur={() => setHovered(null)}
+          className={cn(
+            'focus-ring relative flex h-9 items-center gap-3 overflow-hidden rounded-md px-3',
+            'text-faint transition-colors duration-150 hover:bg-white/[0.03] hover:text-fg',
+          )}
+        >
+          <ArrowLeftRight aria-hidden strokeWidth={1.75} className="size-5 shrink-0" />
+          <AnimatePresence initial={false}>
+            {!collapsed && (
+              <motion.span {...fade} className="text-[13px] whitespace-nowrap">
+                Switch project
+              </motion.span>
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {collapsed && hovered === 'switch' && (
+              <motion.span
+                role="tooltip"
+                initial={{ opacity: 0, x: -4, y: '-50%' }}
+                animate={{ opacity: 1, x: 0, y: '-50%' }}
+                exit={{ opacity: 0, x: -4, y: '-50%' }}
+                transition={{ duration: 0.14, ease: EASE }}
+                className={cn(
+                  'pointer-events-none absolute top-1/2 left-full z-50 ml-3',
+                  'rounded-md border border-edge-strong bg-raise px-2.5 py-1.5',
+                  'text-xs whitespace-nowrap text-fg',
+                )}
+              >
+                Switch project
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </Link>
         <button
           type="button"
           onClick={toggle}

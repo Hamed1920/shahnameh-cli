@@ -1,12 +1,64 @@
 import fs from 'node:fs/promises'
+import fsSync from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parseCsv, toCsv } from './csv.mjs'
+import { codeProblem, idRx, slugProblem } from './ids.mjs'
+import { spentInWindow } from './spend.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
-export const ROOT = process.env.SHM_ROOT
-  ? path.resolve(process.env.SHM_ROOT)
-  : path.resolve(HERE, '..', '..', '..')
+
+function argValue(flag) {
+  const i = process.argv.indexOf(flag)
+  return i >= 0 ? process.argv[i + 1] ?? null : null
+}
+
+/**
+ * The folder the projects sit in: the repo root. SHM_PROJECTS overrides it (a
+ * sandbox); with only SHM_ROOT set it is that project's parent folder.
+ */
+export const PROJECTS_DIR = process.env.SHM_PROJECTS
+  ? path.resolve(process.env.SHM_PROJECTS)
+  : process.env.SHM_ROOT
+    ? path.dirname(path.resolve(process.env.SHM_ROOT))
+    : path.resolve(HERE, '..', '..', '..')
+
+/**
+ * This worker's project: SHM_ROOT (the panel's supervisor sets it for every
+ * worker it starts), or --project <folder name> under PROJECTS_DIR. There is no
+ * default -- a worker guessing its project could file one film's renders into another.
+ */
+function resolveRoot() {
+  if (process.env.SHM_ROOT) return path.resolve(process.env.SHM_ROOT)
+  const slug = argValue('--project')
+  if (!slug) {
+    throw new Error('No project given. Pass --project <project folder name>, or set SHM_ROOT to a project folder.')
+  }
+  const why = slugProblem(slug)
+  if (why) throw new Error(`--project ${slug}: ${why}`)
+  return path.join(PROJECTS_DIR, slug)
+}
+
+export const ROOT = resolveRoot()
+
+function readProject() {
+  const file = path.join(ROOT, 'project.json')
+  let json
+  try {
+    json = JSON.parse(fsSync.readFileSync(file, 'utf8'))
+  } catch (e) {
+    throw new Error(`${file} is missing or unreadable (${e.code ?? e.message}). Is ${ROOT} a project folder?`)
+  }
+  const why = codeProblem(json.code)
+  if (why) throw new Error(`${file}: code ${json.code}: ${why}`)
+  return json
+}
+
+/** project.json: { schema, name, slug, code, description, mark?, created }. */
+export const PROJECT = readProject()
+/** The ID prefix of this project, e.g. SHM. */
+export const CODE = PROJECT.code
+const RX = idRx(CODE)
 
 export const P = {
   root: ROOT,
@@ -104,20 +156,20 @@ export async function loadEntities() {
 }
 
 /**
- * SHM-EP001-SC010-SH0010 and friends. A shot is a valid generation target but is
+ * CODE-EP001-SC010-SH0010 and friends. A shot is a valid generation target but is
  * not an entity - it belongs to an episode, so its output lands in the episode
- * folder rather than an entity folder. See INDEXING.md section 7.
+ * folder rather than an entity folder. See docs/INDEXING.md section 7.
  */
-export const SHOT_RX = /^SHM-EP\d{3}(-SQ\d{2})?(-SC\d{3})?(-SH\d{4})?$/
+export const SHOT_RX = RX.shot
 export const isShotId = (ref) => SHOT_RX.test(String(ref).trim())
 
 /**
  * Project-relative output folder for a shot: 07_EPISODES/<episode dir>/shots.
- * The episode directory is matched by its SHM-EPnnn prefix, so the readable
+ * The episode directory is matched by its CODE-EPnnn prefix, so the readable
  * suffix (...-ZAHHAK-ENTRY) can change without breaking anything.
  */
 export async function shotFolder(ref) {
-  const ep = String(ref).match(/^SHM-EP\d{3}/)[0]
+  const ep = String(ref).match(RX.episodePrefix)[0]
   const root = path.join(ROOT, '07_EPISODES')
   let dirName = ep
   try {
@@ -166,22 +218,76 @@ export async function log(line) {
 }
 
 /**
- * Credits spent on generations in the last `hours`, from the ledger. The spend
- * ceiling is a rolling window over this, not state.spentCredits: that is a
- * lifetime total, and with a worker that never stops it only ever grows, so a
- * ceiling on it eventually holds every job for good.
+ * Every project's JOB_LEDGER.csv: this one's, plus each folder under
+ * PROJECTS_DIR that has a project.json. Deduplicated, since this project is
+ * normally one of those folders.
+ */
+export function ledgerFiles() {
+  const files = new Set([path.resolve(P.ledger)])
+  let dirs = []
+  try { dirs = fsSync.readdirSync(PROJECTS_DIR, { withFileTypes: true }) } catch { /* no projects folder */ }
+  for (const d of dirs) {
+    if (!d.isDirectory() || d.name.startsWith('.')) continue
+    const root = path.join(PROJECTS_DIR, d.name)
+    if (fsSync.existsSync(path.join(root, 'project.json'))) {
+      files.add(path.resolve(root, '00_PROJECT', 'sync', 'JOB_LEDGER.csv'))
+    }
+  }
+  return [...files]
+}
+
+/**
+ * Credits spent on generations in the last `hours`, across EVERY project: they
+ * all spend from one Higgsfield account, so the ceiling is the account's. See
+ * spend.mjs for why this is a rolling window.
  */
 export async function spentWithin(hours) {
-  const { rows } = await readCsv(P.ledger)
-  const since = Date.now() - hours * 3600_000
-  let total = 0
-  for (const r of rows) {
-    if (r.state !== 'GENERATED') continue
-    const cost = parseFloat(r.cost)
-    const at = Date.parse(r.ingested)
-    if (Number.isFinite(cost) && Number.isFinite(at) && at >= since) total += cost
+  const rows = []
+  for (const file of ledgerFiles()) rows.push(...(await readCsv(file)).rows)
+  return spentInWindow(rows, hours)
+}
+
+/**
+ * The machine-wide generation lock: one generation at a time across every
+ * project's worker, so two workers cannot both pass the spend ceiling check
+ * with the same remaining room. Held from that check until the ledger records
+ * the spend.
+ */
+export const GENERATE_LOCK = path.join(PROJECTS_DIR, '.generate.lock')
+
+/** Every shot id in use in this project: queued targets plus shot files on disk. */
+export async function usedShotIds() {
+  const ids = (await readJsonl(P.queue)).map((q) => String(q.target ?? ''))
+  const root = path.join(ROOT, '07_EPISODES')
+  let eps = []
+  try { eps = await fs.readdir(root, { withFileTypes: true }) } catch { /* no episodes yet */ }
+  for (const ep of eps.filter((e) => e.isDirectory())) {
+    try { ids.push(...(await fs.readdir(path.join(root, ep.name, 'shots')))) } catch { /* no shots folder */ }
   }
-  return total
+  return ids
+}
+
+/**
+ * Whether state.json can be trusted. readState() treats a missing or corrupt
+ * file as a fresh project, which is right for a new project and a disaster for
+ * one with history: every past decision and job would run again and spend
+ * credits. Returns null when it is safe to start, else the reason not to.
+ */
+export async function stateStartProblem() {
+  const t = await readText(P.state)
+  let problem = null
+  if (!t.trim()) problem = 'state.json is missing or empty'
+  else {
+    try { JSON.parse(t) } catch { problem = 'state.json is not valid JSON' }
+  }
+  if (!problem) return null
+  const history = [P.queue, P.reviewLog, P.jobRequests, P.indexOps]
+  for (const file of history) {
+    if ((await readText(file)).trim()) {
+      return `${problem}, but ${rel(file)} has history. Starting would replay it and spend credits again. Restore state.json from git (git checkout -- ${rel(P.state)}) before starting.`
+    }
+  }
+  return null
 }
 
 export async function readState() {

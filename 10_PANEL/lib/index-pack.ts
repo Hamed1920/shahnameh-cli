@@ -1,3 +1,5 @@
+import { idRx, stripCode } from '../worker/lib/ids.mjs'
+import type { Project } from './projects'
 import { getAssets, getEntities, getKnownShots, getQueue } from './store'
 import { KIND_LABEL, KINDS, type Kind } from './indexing'
 import { latestEpisode, previewScenes } from './scenes'
@@ -41,23 +43,23 @@ const short = (s: string, n: number) => (s.length > n ? `${s.slice(0, n - 1).tri
 /** Registry notes minus filing bookkeeping ("Uploaded by hamed on rev_mu158x3cd98h."), which tells a writer nothing. */
 const meaningful = (s: string | undefined) => String(s ?? '').replace(/Uploaded by \S+ on \S+?\.?(?=\s|$)/gi, '').replace(/\s+/g, ' ').trim()
 
-export async function buildIndexPack(part: PackPart): Promise<Uint8Array> {
-  const [all, assets, queue, knownShots] = await Promise.all([getEntities(), getAssets(), getQueue(), getKnownShots()])
+export async function buildIndexPack(pr: Project, part: PackPart): Promise<Uint8Array> {
+  const [all, assets, queue, knownShots] = await Promise.all([getEntities(pr), getAssets(pr), getQueue(pr), getKnownShots(pr)])
   const entities = all
     .filter((e) => e.status !== 'RETIRED')
     .sort((a, b) => (KINDS.indexOf(a.kind as Kind) - KINDS.indexOf(b.kind as Kind)) || a.number.localeCompare(b.number))
-  const episode = latestEpisode(knownShots)
-  const nextScene = previewScenes([{ key: 'next', auto: true, episode, shot: '' }], knownShots).get('next')!.replace(/^SHM-/, '')
+  const episode = latestEpisode(knownShots, pr.code)
+  const nextScene = stripCode(pr.code, previewScenes([{ key: 'next', auto: true, episode, shot: '' }], knownShots, pr.code).get('next')!)
   const date = new Date().toISOString().slice(0, 10)
   const looks = entities.reduce((n, e) => n + looksOf(e, assets).length, 0)
 
-  const doc = await PdfWriter.create(part === 'full' ? 'Shahnameh reference pack' : 'Shahnameh index')
+  const doc = await PdfWriter.create(`${pr.name} ${part === 'full' ? 'reference pack' : 'index'}`)
   doc.title(
-    part === 'full' ? 'Shahnameh - Reference Pack' : 'Shahnameh - Index',
+    part === 'full' ? `${pr.name} - Reference Pack` : `${pr.name} - Index`,
     `Generated ${date} from the project registries. ${entities.length} entities, ${looks} looks. Next free scene: ${nextScene}.`,
   )
 
-  if (part === 'full') guide(doc, nextScene)
+  if (part === 'full') guide(doc, pr, nextScene)
   else {
     doc.text('How to reference: write the token shown under each picture.', { face: 'bold', size: 10, after: 3 })
     doc.bullets([
@@ -67,7 +69,7 @@ export async function buildIndexPack(part: PackPart): Promise<Uint8Array> {
     ])
   }
 
-  if (part === 'full') scenes(doc, queue, nextScene)
+  if (part === 'full') scenes(doc, pr, queue, nextScene)
 
   doc.heading('The index')
   doc.text('Grouped by kind. Each picture is the image the token sends to the model.', { color: MUTED, after: 8 })
@@ -75,13 +77,13 @@ export async function buildIndexPack(part: PackPart): Promise<Uint8Array> {
     const group = entities.filter((e) => e.kind === kind)
     if (group.length === 0) continue
     doc.heading(`${KIND_LABEL[kind]} (${kind})`, 2)
-    for (const e of group) await entityBlock(doc, e, looksOf(e, assets))
+    for (const e of group) await entityBlock(doc, pr, e, looksOf(e, assets))
   }
 
-  return doc.finish(`Shahnameh ${part === 'full' ? 'reference pack' : 'index'} - ${date}`)
+  return doc.finish(`${pr.name} ${part === 'full' ? 'reference pack' : 'index'} - ${date}`)
 }
 
-async function entityBlock(doc: PdfWriter, e: Entity, looks: Look[]) {
+async function entityBlock(doc: PdfWriter, pr: Project, e: Entity, looks: Look[]) {
   doc.ensure(looks.length ? 190 : 70)
   doc.space(4)
   doc.text(`${e.short_id}   ${e.name}`, { face: 'bold', size: 11, lead: 1.3, after: 1 })
@@ -93,7 +95,7 @@ async function entityBlock(doc: PdfWriter, e: Entity, looks: Look[]) {
   ].filter(Boolean).join('   ')
   doc.text(facts, { face: 'mono', size: 7.5, color: MUTED, after: 3 })
   if (meaningful(e.description)) doc.text(meaningful(e.description), { size: 9, after: 3 })
-  if (e.related) doc.text(`Related: ${e.related.split(';').map((r) => r.trim().replace(/^SHM-/, '').split('-').slice(0, 2).join('-')).join(', ')}`, { size: 8, color: MUTED, after: 3 })
+  if (e.related) doc.text(`Related: ${e.related.split(';').map((r) => stripCode(pr.code, r.trim()).split('-').slice(0, 2).join('-')).join(', ')}`, { size: 8, color: MUTED, after: 3 })
 
   if (looks.length === 0) {
     doc.text('No look yet. Describe it in words; do not write an @ token for it.', { size: 8.5, color: FAINT, after: 8 })
@@ -102,7 +104,7 @@ async function entityBlock(doc: PdfWriter, e: Entity, looks: Look[]) {
   }
   doc.space(4)
   const cells: Cell[] = await Promise.all(looks.map(async (l) => ({
-    jpg: await thumbnail(`${l.row.folder}/${l.row.filename}`, 240),
+    jpg: await thumbnail(pr.root, `${l.row.folder}/${l.row.filename}`, 240),
     caption: [
       `@${e.short_id}/${l.variant}${l.variant === e.canonical_variant ? '  main' : ''}`,
       [l.row.role, l.takes > 1 ? `${l.takes} takes` : ''].filter(Boolean).join(' - '),
@@ -113,15 +115,15 @@ async function entityBlock(doc: PdfWriter, e: Entity, looks: Look[]) {
   doc.rule(8)
 }
 
-function guide(doc: PdfWriter, nextScene: string) {
+function guide(doc: PdfWriter, pr: Project, nextScene: string) {
   doc.heading('Read this first')
   doc.text(
-    'You are writing prompts for a modern adaptation of the Shahnameh. They are pasted into a production panel that sends ' +
+    `You are writing prompts for ${pr.name}.${pr.description ? ` ${pr.description}` : ''} They are pasted into a production panel that sends ` +
     'each prompt to a video or image model, attaches reference pictures from the index at the end of this document, and ' +
     'files every result under an ID. The index is the only source of truth for what exists and what it looks like.',
   )
   doc.bullets([
-    'Refer to every character, place, prop and creature by its index ID, never by a loose description. There are several staffs, several gates and three riding beasts; only the ID says which.',
+    'Refer to every character, place, prop and creature by its index ID, never by a loose description. Two props can look alike in words; only the ID says which one.',
     'Only reference what is in the index. Never invent an ID, a number or a look.',
     `Do not number scenes. Leave the target out of a new video prompt and the panel gives it the next free scene (today ${nextScene}).`,
     'An entity marked "no look yet" has no picture. Describe it in words and do not write an @ token for it.',
@@ -129,9 +131,9 @@ function guide(doc: PdfWriter, nextScene: string) {
 
   doc.heading('Reference tokens', 2)
   doc.code([
-    '@CHR-002/V03       that exact look of Jamshid       (preferred)',
-    '@CHR-002           Jamshid\'s main look',
-    '@CHR-002/V03/T02   one specific take of that look   (rarely needed)',
+    '@CHR-002/V03       that exact look of character 002   (preferred)',
+    '@CHR-002           that character\'s main look',
+    '@CHR-002/V03/T02   one specific take of that look     (rarely needed)',
   ])
   doc.bullets([
     'Every token in a prompt\'s refs: line is attached as a picture, in that order.',
@@ -142,9 +144,9 @@ function guide(doc: PdfWriter, nextScene: string) {
 
   doc.heading('The naming law', 2)
   doc.bullets([
-    'IDs are SHM-KIND-NNN-SLUG; the short form KIND-NNN is what you write. Kinds: CHR character, GRP group or caste, LOC location, PRP prop, CRT creature, COS costume, VEH vehicle, FX effect, REF reference board.',
+    `IDs are ${pr.code}-KIND-NNN-SLUG; the short form KIND-NNN is what you write.` + ' Kinds: CHR character, GRP group or caste, LOC location, PRP prop, CRT creature, COS costume, VEH vehicle, FX effect, REF reference board.',
     'A different physical object has a different number. The same object with a different look is the same number with a new look (V01, V02 ...). The same look generated again is a new take (T01, T02 ...).',
-    'Footage is filed under shot IDs: SHM-EP001-SC014-SH0010 is episode 1, scene 14, shot 10. One 15-second prompt is one scene.',
+    `Footage is filed under shot IDs: ${pr.code}-EP001-SC014-SH0010 is episode 1, scene 14, shot 10. One 15-second prompt is one scene.`,
   ])
 
   doc.heading('How to write a prompt document', 2)
@@ -155,15 +157,15 @@ function guide(doc: PdfWriter, nextScene: string) {
     'After one blank line, write the prompt exactly as it should be sent. Nothing is reworded.',
   ])
   doc.code([
-    'P14 - Jamshid escapes on the riding beast',
+    'P14 - the escape',
     'refs: @CHR-002/V03; @CRT-001/V02; @LOC-011/V01',
     'params: ar=16:9; duration=15',
     '',
     'Create one 15-second horizontal 16:9 cinematic video block.',
-    '@CHR-002/V03 runs into the underground holding chamber of @LOC-011/V01.',
+    '@CHR-002/V03 runs into the underground chamber of @LOC-011/V01.',
     '@CRT-001/V02 turns its heavy head toward him ...',
     '',
-    'P15 - The chamber empties',
+    'P15 - the chamber empties',
     'refs: @LOC-011/V01',
     '',
     '...',
@@ -172,7 +174,7 @@ function guide(doc: PdfWriter, nextScene: string) {
   doc.heading('Where a result is filed (target)', 2)
   doc.bullets([
     `New footage: leave target out. It becomes the next free scene (today ${nextScene}); the panel numbers it on approval.`,
-    'Another take of a scene that already exists: target: SHM-EP001-SC013-SH0010.',
+    `Another take of a scene that already exists: target: ${pr.code}-EP001-SC013-SH0010.`,
     'A design image, such as a new look or a sheet of something in the index: target: CHR-002 and variant: the next unused look after those listed for it.',
     'Something that is not in the index yet: target: NEW/PRP/IRANIAN-WAR-BANNER (kind, then an English slug). The panel gives it a number on approval. Do not reference it with @ until it has one.',
   ])
@@ -186,11 +188,11 @@ function guide(doc: PdfWriter, nextScene: string) {
   ])
 }
 
-function scenes(doc: PdfWriter, queue: Awaited<ReturnType<typeof getQueue>>, nextScene: string) {
+function scenes(doc: PdfWriter, pr: Project, queue: Awaited<ReturnType<typeof getQueue>>, nextScene: string) {
   type Job = (typeof queue)[number] & { label?: string | null; basePrompt?: string }
   const byScene = new Map<string, Job[]>()
   for (const j of queue as Job[]) {
-    if (!/^SHM-EP\d{3}-SC\d{3}/.test(j.target)) continue
+    if (!idRx(pr.code).sceneAtStart.test(j.target)) continue
     byScene.set(j.target, [...(byScene.get(j.target) ?? []), j])
   }
   if (byScene.size === 0) return
@@ -205,7 +207,7 @@ function scenes(doc: PdfWriter, queue: Awaited<ReturnType<typeof getQueue>>, nex
     const label = [...jobs].reverse().find((j) => j.label)?.label ?? ''
     const opening = (last.basePrompt ?? last.prompt ?? '').replace(/\s+/g, ' ').trim()
     doc.ensure(60)
-    doc.text(`${target.replace(/^SHM-/, '')}${label ? `   ${label}` : ''}`, { face: 'bold', size: 9.5, lead: 1.3, after: 1 })
+    doc.text(`${stripCode(pr.code, target)}${label ? `   ${label}` : ''}`, { face: 'bold', size: 9.5, lead: 1.3, after: 1 })
     doc.text(`refs: ${(last.refs ?? []).join('; ') || 'none'}   (${jobs.length} version${jobs.length === 1 ? '' : 's'})`, { face: 'mono', size: 7.5, color: MUTED, after: 1 })
     if (opening) doc.text(short(opening, 260), { size: 8, color: MUTED, after: 7 })
   }

@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { P } from './paths'
+import type { Project } from './projects'
 import { foldGallery, type GalleryEvent, type GalleryState } from './gallery'
 
 /**
@@ -23,7 +23,7 @@ export const REVIEWER = process.env.SHM_REVIEWER || 'hamed'
 // One append at a time within this process, so two tabs cannot interleave.
 let tail: Promise<void> = Promise.resolve()
 
-export function appendGalleryEvent(record: GalleryEvent): Promise<void> {
+export function appendGalleryEvent({ P }: Project, record: GalleryEvent): Promise<void> {
   const run = tail.then(async () => {
     await fs.mkdir(path.dirname(P.gallery), { recursive: true })
     await fs.appendFile(P.gallery, JSON.stringify(record) + '\n', 'utf8')
@@ -32,7 +32,7 @@ export function appendGalleryEvent(record: GalleryEvent): Promise<void> {
   return run
 }
 
-export async function getGalleryState(): Promise<GalleryState> {
+export async function getGalleryState({ P }: Project): Promise<GalleryState> {
   let text: string
   try {
     text = await fs.readFile(P.gallery, 'utf8')

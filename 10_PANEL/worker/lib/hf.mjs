@@ -14,8 +14,13 @@ import path from 'node:path'
 let ENTRY = null
 function resolveEntry() {
   if (ENTRY !== null) return ENTRY
+  // An explicit CLI (the sandbox stub) is the only candidate. Falling back to the
+  // real CLI when that path is wrong would spend real credits on test data.
+  if (process.env.SHM_HIGGSFIELD_JS) {
+    ENTRY = fs.existsSync(process.env.SHM_HIGGSFIELD_JS) ? process.env.SHM_HIGGSFIELD_JS : false
+    return ENTRY
+  }
   const candidates = []
-  if (process.env.SHM_HIGGSFIELD_JS) candidates.push(process.env.SHM_HIGGSFIELD_JS)
   // npm sits beside node.exe on Windows, but under ../lib/node_modules on macOS and
   // Linux (nvm included). Asking only the Windows layout leaves ENTRY false on a Mac,
   // and every hf() call then fails as "not authenticated" without running. Try both.
@@ -46,7 +51,7 @@ function resolveEntry() {
 /**
  * Thin wrapper over the Higgsfield CLI.
  *
- * Surface captured in 00_PROJECT/reference/HIGGSFIELD-CLI.md. Two things matter:
+ * Surface captured in docs/reference/HIGGSFIELD-CLI.md. Two things matter:
  *  - media flags accept LOCAL FILE PATHS and auto-upload, so no upload step
  *  - there is no --output flag; completed jobs expose a result URL we download
  */

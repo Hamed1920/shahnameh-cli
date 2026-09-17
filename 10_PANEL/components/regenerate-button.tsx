@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Coins, RotateCcw } from 'lucide-react'
-import { requestRegenerate } from '@/app/decided/actions'
+import { requestRegenerate } from '@/app/[project]/decided/actions'
+import { useProject } from '@/components/project-context'
 import { GenerationSettings, settingsFrom, type GenerationConfig, type GenerationSettingsValue } from '@/components/generation-settings'
 import { Button } from '@/components/ui/button'
 import { Field, Textarea } from '@/components/ui/field'
@@ -35,6 +36,7 @@ export function RegenerateButton({
   /** Last real price per priceKey, so the quality toggle can price both sides. */
   prices?: Record<string, number>
 }) {
+  const project = useProject()
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [picker, setPicker] = useState(false)
@@ -62,6 +64,7 @@ export function RegenerateButton({
     setBusy(true)
     setError(null)
     const fd = new FormData()
+    fd.set('project', project.slug)
     fd.set('jobId', jobId)
     fd.set('decisionId', decisionId)
     fd.set('prompt', prompt)

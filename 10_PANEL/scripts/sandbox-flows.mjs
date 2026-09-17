@@ -3,6 +3,9 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 const ROOT = process.argv[2]
+if (!ROOT) { console.error('Usage: node scripts/sandbox-flows.mjs <project folder>'); process.exit(2) }
+// The project's own ID prefix: these flows run against whichever project they are pointed at.
+const CODE = JSON.parse(fs.readFileSync(path.join(ROOT, 'project.json'), 'utf8')).code
 const P = {
   req: path.join(ROOT, '00_PROJECT/review/JOB_REQUESTS.jsonl'),
   res: path.join(ROOT, '00_PROJECT/queue/JOB_REQUEST_RESULTS.jsonl'),
@@ -14,6 +17,21 @@ const P = {
   stop: path.join(ROOT, '00_PROJECT/queue/worker.stop'),
   log: path.join(ROOT, '00_PROJECT/queue/worker.log'),
 }
+/**
+ * The look these flows reference. Read from the registry rather than written in:
+ * looks get archived over time, and a hard-coded V02 turns a working system into
+ * a failing test.
+ */
+const LOOK = (() => {
+  const rows = fs.readFileSync(P.entities, 'utf8').trim().split(/\r?\n/)
+  const head = rows[0].split(',')
+  const row = rows.slice(1).map((r) => r.split(',')).find((r) => r[head.indexOf('short_id')] === 'CHR-001')
+  const canonical = row?.[head.indexOf('canonical_variant')]
+  if (!canonical) { console.error('FAIL: CHR-001 has no look in this project; these flows need one'); process.exit(1) }
+  return canonical
+})()
+const REF = '@CHR-001/' + LOOK
+
 const jsonl = (f) => (fs.existsSync(f) ? fs.readFileSync(f, 'utf8').trim().split('\n').filter(Boolean).map((l) => JSON.parse(l)) : [])
 const append = (f, o) => fs.appendFileSync(f, JSON.stringify(o) + '\n')
 const state = () => JSON.parse(fs.readFileSync(P.state, 'utf8'))
@@ -37,8 +55,8 @@ append(P.req, {
   id: id(), ts: new Date().toISOString(), reviewer: 'test', type: 'batch.submit', batchId: B1, name: 'flow one',
   source: { kind: 'paste', files: [] }, defaults: { model: 'seedance_2_5', aspect_ratio: '16:9', duration: 15, stage: 'draft', generate_audio: true },
   jobs: [
-    { key: 'r1', label: 'P01', target: 'CHR-001', variant: null, model: 'nano_banana_pro', refs: ['@CHR-001/V02'], params: { aspect_ratio: '16:9' }, prompt: 'Zahhak turnaround of @CHR-001/V02, museum lighting' },
-    { key: 'r2', label: 'P02', target: 'SHM-EP001-SC099-SH0010', variant: null, model: 'seedance_2_5', stage: 'draft', refs: ['@CHR-001/V02', '@LOC-009'], params: { aspect_ratio: '16:9', duration: 15, generate_audio: true }, prompt: PROMPT_FA },
+    { key: 'r1', label: 'P01', target: 'CHR-001', variant: null, model: 'nano_banana_pro', refs: [REF], params: { aspect_ratio: '16:9' }, prompt: 'Zahhak turnaround of ' + REF + ', museum lighting' },
+    { key: 'r2', label: 'P02', target: CODE + '-EP001-SC099-SH0010', variant: null, model: 'seedance_2_5', stage: 'draft', refs: [REF, '@LOC-009'], params: { aspect_ratio: '16:9', duration: 15, generate_audio: true }, prompt: PROMPT_FA },
     { key: 'r3', label: 'P03', target: 'NEW/PRP/TEST-STAFF-' + RUN, newEntity: { kind: 'PRP', slug: 'TEST-STAFF-' + RUN, name: 'Test Staff', description: 'A staff for the test' }, variant: null, model: 'nano_banana_pro', refs: [], params: { aspect_ratio: '1:1' }, prompt: 'iron capped staff' },
     { key: 'r4', label: 'P04', target: 'CHR-999', variant: null, model: 'nano_banana_pro', refs: [], params: {}, prompt: 'unknown target row' },
   ],
@@ -57,7 +75,7 @@ ok(jsonl(P.queue).length === queueBefore, 'nothing queued before approval')
 // ------------------------------------------------ 2. approve
 append(P.req, { id: id(), ts: new Date().toISOString(), reviewer: 'test', type: 'batch.approve', batchId: B1, expectedTotal: priced.total })
 const queued = await until(() => events(B1).find((e) => e.event === 'queued'), 'queued')
-ok(queued.assigned.length === 1 && new RegExp('^SHM-PRP-\\d{3}-TEST-STAFF-' + RUN + '$').test(queued.assigned[0].id), `reserved ${queued.assigned[0].id} at approval`)
+ok(queued.assigned.length === 1 && new RegExp('^' + CODE + '-PRP-\\d{3}-TEST-STAFF-' + RUN + '$').test(queued.assigned[0].id), `reserved ${queued.assigned[0].id} at approval`)
 const ents = fs.readFileSync(P.entities, 'utf8')
 ok(ents.includes(`${queued.assigned[0].id},${queued.assigned[0].shortId},PRP,`) && ents.includes('RESERVED') && ents.includes('NO-ASSET'), 'ENTITIES.csv has the RESERVED row')
 const q = jsonl(P.queue)
@@ -105,7 +123,10 @@ ok(true, 'discard recorded')
 const SRC = 'J-20260914-NV7'
 const src = jsonl(P.queue).find((j) => j.jobId === SRC)
 const R = id()
-append(P.req, { id: R, ts: new Date().toISOString(), reviewer: 'test', type: 'regenerate', jobId: SRC, decisionId: 'rev_mu19vrjsbra1', note: 'more wind', sound: false })
+// The references are given, not inherited: this source job was queued long ago
+// and one of the looks it used has been archived since, which the worker rightly
+// refuses. Regenerating with a look that still exists is what a reviewer does.
+append(P.req, { id: R, ts: new Date().toISOString(), reviewer: 'test', type: 'regenerate', jobId: SRC, decisionId: 'rev_mu19vrjsbra1', note: 'more wind', sound: false, refs: [REF] })
 const rq = await until(() => jsonl(P.res).find((e) => e.reqId === R && e.event === 'queued'), 'regenerate queued')
 const child = jsonl(P.queue).find((j) => j.jobId === rq.jobIds[SRC])
 ok(child && child.parentJobId === SRC && child.attempt === (src.attempt ?? 1) + 1 && child.stage === src.stage && child.enqueuedBy === 'panel:regenerate', 'child job links to the accepted take')
@@ -117,12 +138,12 @@ ok(rcalls.at(-1).args[rcalls.at(-1).args.indexOf('--generate-audio') + 1] === 'f
 // ------------------------------------------------ 5b. regenerate with everything changed
 const R3 = id()
 append(P.req, { id: R3, ts: new Date().toISOString(), reviewer: 'test', type: 'regenerate', jobId: SRC, decisionId: 'rev_mu19vrjsbra1',
-  prompt: 'A completely rewritten prompt.', refs: ['@CHR-001/V02'], model: 'seedance_2_5', stage: 'draft', variant: 'V02',
+  prompt: 'A completely rewritten prompt.', refs: [REF], model: 'seedance_2_5', stage: 'draft', variant: 'V02',
   params: { aspect_ratio: '9:16', duration: 5 }, sound: true, note: '' })
 const rq3 = await until(() => jsonl(P.res).find((e) => e.reqId === R3 && e.event === 'queued'), 'override regenerate queued')
 const child3 = jsonl(P.queue).find((j) => j.jobId === rq3.jobIds[SRC])
 ok(child3.basePrompt === 'A completely rewritten prompt.' && child3.prompt === child3.basePrompt, 'override: prompt replaced')
-ok(JSON.stringify(child3.refs) === JSON.stringify(['@CHR-001/V02']) && child3.variant === 'V02', 'override: refs and look replaced')
+ok(JSON.stringify(child3.refs) === JSON.stringify([REF]) && child3.variant === 'V02', 'override: refs and look replaced')
 ok(child3.stage === 'draft' && child3.params.resolution === '480p' && child3.params.aspect_ratio === '9:16' && child3.params.duration === 5 && child3.params.generate_audio === true, 'override: draft resolution follows the stage, aspect, duration, sound applied')
 const R4 = id()
 append(P.req, { id: R4, ts: new Date().toISOString(), reviewer: 'test', type: 'regenerate', jobId: SRC, decisionId: 'rev_mu19vrjsbra1', refs: ['@CHR-001/V09'] })

@@ -2,7 +2,7 @@
 /**
  * Queue many generation jobs at once from a JSON file.
  *
- *   node worker/enqueue-batch.mjs <batch.json> [--dry-run]
+ *   node worker/enqueue-batch.mjs --project <slug> <batch.json> [--dry-run]
  *
  * The batch file is a JSON array. Only `target` and `prompt` are required:
  *
@@ -33,10 +33,11 @@ const cfg = JSON.parse(await fs.readFile(path.join(HERE, 'config.json'), 'utf8')
 
 const args = process.argv.slice(2)
 const DRY = args.includes('--dry-run')
-const file = args.find((a) => !a.startsWith('--'))
+// The value after --project is the project's folder name, not the batch file.
+const file = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--project')
 
 if (!file) {
-  console.error('Usage: node worker/enqueue-batch.mjs <batch.json> [--dry-run]')
+  console.error('Usage: node worker/enqueue-batch.mjs --project <slug> <batch.json> [--dry-run]')
   process.exit(2)
 }
 

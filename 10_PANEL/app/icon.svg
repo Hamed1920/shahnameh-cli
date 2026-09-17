@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="Film Making for Dummies">
+  <!-- A frame of film: sprockets down both edges, and the picture cut out of it
+       as a play triangle. Black and white only, so it reads at 16px in a tab
+       and prints the same. -->
+  <rect width="32" height="32" rx="7" fill="#000"/>
+  <g fill="#fff">
+    <!-- Sprocket holes, four a side. -->
+    <rect x="5" y="6.5" width="3" height="3" rx="1"/>
+    <rect x="5" y="12" width="3" height="3" rx="1"/>
+    <rect x="5" y="17.5" width="3" height="3" rx="1"/>
+    <rect x="5" y="23" width="3" height="3" rx="1"/>
+    <rect x="24" y="6.5" width="3" height="3" rx="1"/>
+    <rect x="24" y="12" width="3" height="3" rx="1"/>
+    <rect x="24" y="17.5" width="3" height="3" rx="1"/>
+    <rect x="24" y="23" width="3" height="3" rx="1"/>
+    <!-- The frame, with the play triangle knocked out of it. -->
+    <path fill-rule="evenodd" d="M10.5 6.5h11a1 1 0 0 1 1 1v17a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1v-17a1 1 0 0 1 1-1Zm2.9 4.7v9.6a.8.8 0 0 0 1.22.68l7.1-4.8a.8.8 0 0 0 0-1.36l-7.1-4.8a.8.8 0 0 0-1.22.68Z"/>
+  </g>
+</svg>

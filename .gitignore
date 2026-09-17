@@ -1,41 +1,42 @@
 # =====================================================================
 #  ALLOWLIST. Everything in the root is ignored unless re-included below.
 #
-#  The repo carries the WHOLE project - code, metadata AND assets - so any
-#  machine can clone it and pick the work up. Media is stored through Git
-#  LFS (see .gitattributes); never commit an image or video as a plain blob.
+#  The repo carries the system AND every project - code, metadata and assets -
+#  so any machine can clone it and pick the work up. Media is stored through
+#  Git LFS (see .gitattributes); never commit an image or video as a plain blob.
 #
 #  It stays an allowlist so a stray file or folder dropped in the root stays
 #  out until someone deliberately opts it in. Do not convert it to a denylist.
-#  A new top-level folder has to be added here.
+#  A new top-level folder has to be added here -- including a new project,
+#  which the panel adds to the "projects" list below when it creates one.
 # =====================================================================
 
 /*
 
-# --- re-included: code and metadata -----------------------------------
+# --- re-included: the system ------------------------------------------
 !/.gitignore
 !/.gitattributes
 !/CLAUDE.md
 !/README.md
 !/startup.md
-!/00_PROJECT/
 !/10_PANEL/
 !/.claude/
+!/tools/
+!/docs/
+!/templates/
 
-# --- re-included: assets, working space included ----------------------
-# 09_OUTPUT/_staging, _drafts, _rejected, _uploads and _archive travel too:
+# --- re-included: the projects ----------------------------------------
+# One line per film. Each folder holds its own project.json, 00_PROJECT,
+# 01_CHARACTERS..09_OUTPUT and 99_INBOX, assets and working space included:
+# 09_OUTPUT/_staging, _drafts, _rejected, _uploads and _archive travel too, so
 # another machine's panel reviews from _staging, shows attempt history from
 # _drafts and _rejected, and restores from _archive.
-!/01_CHARACTERS/
-!/02_GROUPS/
-!/03_LOCATIONS/
-!/04_PROPS/
-!/05_CREATURES/
-!/06_COSTUMES/
-!/07_EPISODES/
-!/08_REFERENCE/
-!/09_OUTPUT/
-!/99_INBOX/
+!/shahnameh-cli/
+
+# The half-built folder of a project being created, and the machine-wide
+# generation lock. Never travel.
+/.new-*
+/.generate.lock
 
 # --- vendored third-party skills: reinstall, do not commit -------------
 #   npx skills add higgsfield-ai/skills
@@ -59,22 +60,22 @@ next-env.d.ts
 !.env.example
 
 # --- runtime state, not source ----------------------------------------
-00_PROJECT/sync/inbox/*
-!00_PROJECT/sync/inbox/.gitkeep
-00_PROJECT/sync/processed/*
-!00_PROJECT/sync/processed/.gitkeep
-00_PROJECT/sync/receipts/*
-!00_PROJECT/sync/receipts/.gitkeep
-00_PROJECT/sync/PLAN-*.json
+*/00_PROJECT/sync/inbox/*
+!*/00_PROJECT/sync/inbox/.gitkeep
+*/00_PROJECT/sync/processed/*
+!*/00_PROJECT/sync/processed/.gitkeep
+*/00_PROJECT/sync/receipts/*
+!*/00_PROJECT/sync/receipts/.gitkeep
+*/00_PROJECT/sync/PLAN-*.json
 # The queue and worker state DO travel (QUEUE.jsonl, state.json, FILINGS.jsonl,
 # INDEX_OPS_RESULTS.jsonl). They tell a worker on a fresh clone which jobs and
 # decisions are already done - without state.json it would replay every past
 # decision and spend credits again. Only the per-machine lock and log, and
 # half-written temp files, stay out.
-00_PROJECT/queue/worker.lock
-00_PROJECT/queue/worker.stop
-00_PROJECT/queue/*.log
-00_PROJECT/registry/*.bak
+*/00_PROJECT/queue/worker.lock
+*/00_PROJECT/queue/worker.stop
+*/00_PROJECT/queue/*.log
+*/00_PROJECT/registry/*.bak
 *.tmp
 
 # --- os / editor ------------------------------------------------------

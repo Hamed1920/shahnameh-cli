@@ -1,3 +1,4 @@
+import { idRx } from '../worker/lib/ids.mjs'
 import { KINDS, entitySlug, isAscii } from './indexing'
 import { targetCandidates } from './ref-suggest'
 import { EPISODE_RX, NEXT_SCENE_RX, latestEpisode, nextSceneTarget, sceneFromDocument } from './scenes'
@@ -10,7 +11,8 @@ import type { BatchDefaults, BatchJobInput, CatalogEntity } from './types'
  * and checks everything a third time when it validates the batch.
  */
 
-export const SHOT_RX = /^SHM-EP\d{3}(-SQ\d{2})?(-SC\d{3})?(-SH\d{4})?$/
+/** CODE-EP001-SC004-SH0010 for one project. */
+export const shotRx = (code: string) => idRx(code).shot
 export const isVideoModel = (m: string | null | undefined) => /^(seedance|kling|veo|wan|hailuo|grok_video)/.test(String(m ?? ''))
 
 /**
@@ -55,20 +57,22 @@ export interface DraftRow {
 }
 
 export interface RowConfig {
+  /** The project's ID prefix, e.g. SHM. */
+  code: string
   models: { image: string[]; video: string[] }
 }
 
 export type RowTarget = Pick<DraftRow, 'targetMode' | 'target' | 'sceneAuto' | 'episode' | 'newKind' | 'newName'>
 
 /** Classify a target as the document wrote it. */
-export function targetModeOf(target: string | null, catalog: CatalogEntity[], episode = 'EP001'): RowTarget {
+export function targetModeOf(target: string | null, catalog: CatalogEntity[], code: string, episode = 'EP001'): RowTarget {
   const t = String(target ?? '').trim()
   const base = { target: '', sceneAuto: false, episode, newKind: '', newName: '' }
   const m = t.match(/^NEW\/([A-Z]{2,3})\/([A-Z0-9][A-Z0-9-]*)$/i)
   if (m) return { ...base, targetMode: 'new', newKind: m[1].toUpperCase(), newName: m[2].replace(/-/g, ' ') }
   const next = t.toUpperCase().match(NEXT_SCENE_RX)
   if (next) return { ...base, targetMode: 'shot', sceneAuto: true, episode: next[1] }
-  if (SHOT_RX.test(t)) return { ...base, targetMode: 'shot', target: t }
+  if (shotRx(code).test(t)) return { ...base, targetMode: 'shot', target: t }
   const ent = catalog.find((e) => e.id === t || e.shortId === t || e.id === t.replace(/^@/, '') || e.shortId === t.replace(/^@/, ''))
   return { ...base, targetMode: 'entity', target: ent?.id ?? t }
 }
@@ -76,18 +80,19 @@ export function targetModeOf(target: string | null, catalog: CatalogEntity[], ep
 /**
  * Where a freshly parsed prompt is filed, before Hamed touches it:
  *   1. a target the document gives (a `target:` line, an SHM-JOB header)
+ *      -- SHM-JOB is the block keyword in every project, whatever its code
  *   2. a shot the document names (SC013 in the file name or label, a full shot id)
  *   3. a video: the next free scene of the latest episode, numbered at approval
  *   4. an image: the one entity its references (or its words) point at, else nothing yet
  */
 export function initialTarget(
   parsed: { target: string | null; label: string | null; prompt: string; refs: string[]; model: string | null },
-  ctx: { file: string | null; catalog: CatalogEntity[]; defaultModel: string; knownShots: string[] },
+  ctx: { file: string | null; catalog: CatalogEntity[]; defaultModel: string; knownShots: string[]; code: string },
 ): RowTarget {
-  const episode = latestEpisode(ctx.knownShots)
-  if (parsed.target) return targetModeOf(parsed.target, ctx.catalog, episode)
-  const shot = sceneFromDocument({ file: ctx.file, label: parsed.label, prompt: parsed.prompt }, episode)
-  if (shot) return targetModeOf(shot, ctx.catalog, episode)
+  const episode = latestEpisode(ctx.knownShots, ctx.code)
+  if (parsed.target) return targetModeOf(parsed.target, ctx.catalog, ctx.code, episode)
+  const shot = sceneFromDocument({ file: ctx.file, label: parsed.label, prompt: parsed.prompt }, episode, ctx.code)
+  if (shot) return targetModeOf(shot, ctx.catalog, ctx.code, episode)
   const base = { target: '', sceneAuto: false, episode, newKind: '', newName: '' }
   if (isVideoModel(parsed.model || ctx.defaultModel)) return { ...base, targetMode: 'shot', sceneAuto: true }
   const candidates = targetCandidates(parsed.prompt, parsed.refs, ctx.catalog)
@@ -122,7 +127,7 @@ export function checkRow(row: DraftRow, catalog: CatalogEntity[], batch: DraftRo
   } else if (row.targetMode === 'shot') {
     const t = row.target.trim()
     if (!t) problems.push('Type the shot id.')
-    else if (!SHOT_RX.test(t)) problems.push('A shot id looks like SHM-EP001-SC004-SH0010.')
+    else if (!shotRx(cfg.code).test(t)) problems.push(`A shot id looks like ${cfg.code}-EP001-SC004-SH0010.`)
   } else {
     if (!(KINDS as readonly string[]).includes(row.newKind)) problems.push('Choose a kind for the new entity.')
     const slug = entitySlug(row.newName)

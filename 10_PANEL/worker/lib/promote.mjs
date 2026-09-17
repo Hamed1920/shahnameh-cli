@@ -1,10 +1,11 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import {
-  P, ROOT, appendJsonl, archivedVariants, findEntity, isShotId, loadEntities, log, readCsv, readText, rel,
+  CODE, P, ROOT, appendJsonl, archivedVariants, findEntity, isShotId, loadEntities, log, readCsv, readText, rel,
   restoreText, shotFolder, writeCsv,
 } from './project.mjs'
 import { parseCsv } from './csv.mjs'
+import { FOLDER_FOR, entityId as fullEntityId } from './ids.mjs'
 
 /**
  * Acting on a review verdict. The worker is the ONLY process that moves asset
@@ -134,11 +135,7 @@ export function syncEntityRow(row, assets, variant) {
 
 // ---------------------------------------------------------------- uploads
 
-/** Mirrors $FOLDER_FOR in Ingest-Jobs.ps1. */
-export const FOLDER_FOR = {
-  CHR: '01_CHARACTERS', GRP: '02_GROUPS', LOC: '03_LOCATIONS', PRP: '04_PROPS',
-  CRT: '05_CREATURES', COS: '06_COSTUMES', VEH: '04_PROPS', FX: '08_REFERENCE', REF: '08_REFERENCE',
-}
+export { FOLDER_FOR }
 const UPLOAD_ROLES = ['HERO', 'TURNAROUND', 'PLATE', 'DETAIL', 'BOARD']
 const UPLOAD_EXT = ['.png', '.jpg', '.jpeg', '.webp']
 const ASCII = /^[\x20-\x7E]*$/
@@ -233,7 +230,7 @@ export function nextEntityNumber(rows, kind) {
 export function reserveEntity(rows, { kind, slug, name, description, by }) {
   const nnn = nextEntityNumber(rows, kind)
   const row = {
-    id: `SHM-${kind}-${nnn}-${slug}`,
+    id: fullEntityId(CODE, kind, nnn, slug),
     short_id: `${kind}-${nnn}`,
     kind,
     number: nnn,
@@ -281,7 +278,7 @@ export async function fileUpload(upload, decision) {
     if (clash) throw new FilingError(`${upload.id}: slug '${slug}' already exists as ${clash.id}`)
     const nnn = nextEntityNumber(eRows, kind)
     ent = {
-      id: `SHM-${kind}-${nnn}-${slug}`,
+      id: fullEntityId(CODE, kind, nnn, slug),
       short_id: `${kind}-${nnn}`,
       kind,
       number: nnn,

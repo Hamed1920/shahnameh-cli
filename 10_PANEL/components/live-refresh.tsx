@@ -20,9 +20,10 @@ const LiveContext = createContext<LiveControl | null>(null)
  * within a couple of seconds. router.refresh() keeps client state -- typed
  * notes, picked uploads, the open candidate -- so this is safe mid-review.
  *
- * Lives in the root layout: one poller per tab, whatever the page.
+ * Lives in the project layout: one poller per tab, for the project that tab has
+ * open. Two tabs on two projects poll their own.
  */
-export function LiveRefresh({ initialVersion, children }: { initialVersion: string; children: React.ReactNode }) {
+export function LiveRefresh({ project, initialVersion, children }: { project: string; initialVersion: string; children: React.ReactNode }) {
   const router = useRouter()
   const routerRef = useRef(router)
   routerRef.current = router
@@ -58,7 +59,7 @@ export function LiveRefresh({ initialVersion, children }: { initialVersion: stri
       if (busy || document.visibilityState !== 'visible') return
       busy = true
       try {
-        const res = await fetch('/api/live', { cache: 'no-store' })
+        const res = await fetch(`/${project}/api/live`, { cache: 'no-store' })
         if (!res.ok) return
         const { version: v } = (await res.json()) as { version: string }
         if (v !== version.current) {
@@ -81,7 +82,7 @@ export function LiveRefresh({ initialVersion, children }: { initialVersion: stri
       clearInterval(timer)
       document.removeEventListener('visibilitychange', onVisible)
     }
-  }, [flush])
+  }, [flush, project])
 
   return <LiveContext.Provider value={control}>{children}</LiveContext.Provider>
 }

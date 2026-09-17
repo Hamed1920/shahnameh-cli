@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { P } from './paths'
+import type { Project } from './projects'
 
 /**
  * A fingerprint of everything the worker (or a PowerShell tool) writes that a
@@ -12,7 +12,7 @@ import { P } from './paths'
  * Cheap on purpose: stats, one directory listing, and state.json.
  */
 
-const FILES = [
+const files = ({ P }: Project) => [
   P.reviewLog, P.queue, P.workerLog, P.filings, P.ledger, P.entities, P.manifest,
   P.learnings, P.indexOps, P.indexOpResults, P.jobRequests, P.jobRequestResults,
   // Likes, tags and the Gallery's order, so a second tab follows along.
@@ -41,7 +41,7 @@ async function stamp(file: string): Promise<string> {
 }
 
 /** Compared by content, not mtime: `updatedAt` moves on its own and means nothing here. */
-async function workerState(): Promise<string> {
+async function workerState({ P }: Project): Promise<string> {
   try {
     const { updatedAt: _, ...rest } = JSON.parse(await fs.readFile(P.workerState, 'utf8'))
     const v = JSON.stringify(rest)
@@ -57,7 +57,7 @@ async function workerState(): Promise<string> {
  * Batch folders come and go, job.json lands last (after the download), and a
  * decided candidate's file leaves its folder -- which moves the folder's mtime.
  */
-async function staging(): Promise<string[]> {
+async function staging({ P }: Project): Promise<string[]> {
   let dirs: string[]
   try {
     dirs = (await fs.readdir(P.staging, { withFileTypes: true }))
@@ -75,7 +75,8 @@ async function staging(): Promise<string[]> {
   )
 }
 
-export async function getProjectVersion(): Promise<string> {
-  const parts = await Promise.all([...FILES.map(stamp), workerState(), staging().then((s) => s.join(','))])
+/** One project's fingerprint. Each tab polls the project it has open. */
+export async function getProjectVersion(pr: Project): Promise<string> {
+  const parts = await Promise.all([...files(pr).map(stamp), workerState(pr), staging(pr).then((s) => s.join(','))])
   return createHash('sha1').update(parts.join('\n')).digest('hex').slice(0, 16)
 }
