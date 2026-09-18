@@ -6,8 +6,11 @@ import { Coins, RotateCcw } from 'lucide-react'
 import { requestRegenerate } from '@/app/[project]/decided/actions'
 import { useProject } from '@/components/project-context'
 import { GenerationSettings, settingsFrom, type GenerationConfig, type GenerationSettingsValue } from '@/components/generation-settings'
+import { MentionTextarea } from '@/components/mention-textarea'
+import { ReferenceEditor, useMentionOptions, sameRefFor, useReferenceEdits } from '@/components/reference-editor'
 import { Button } from '@/components/ui/button'
-import { Field, Textarea } from '@/components/ui/field'
+import { Disclosure } from '@/components/ui/disclosure'
+import { Field } from '@/components/ui/field'
 import { Modal } from '@/components/ui/modal'
 import { Badge } from '@/components/ui/text'
 import { isVideoModel } from '@/lib/batch-rules'
@@ -17,11 +20,16 @@ const when = (iso: string) => new Date(iso).toLocaleString('en-GB', { day: 'nume
 
 export type RegenerateConfig = GenerationConfig
 
+/** Settings as the source job carries them; the references live in the editor, not here. */
+const startSettings = (source: RegenerateSource | null, cfg: RegenerateConfig) =>
+  settingsFrom(source && { ...source, refs: source.refs.map((r) => r.token) }, cfg)
+
 /**
- * Run an accepted take's job again, with anything changed: the prompt, the
- * references (same picker as Review), model, first render, look, aspect
- * ratio, duration, sound, and a note. One click is the approval; the price is
- * on the button while the settings that decide it are unchanged.
+ * Run an accepted take's job again, with anything changed. Laid out like the
+ * Review panel: the references as numbered thumbnails (replace, remove,
+ * add from the index, upload), prompt and note with @ pointing at them, and
+ * the full prompt the take was sent with. One click is the approval; the
+ * price is on the button while the settings that decide it are unchanged.
  */
 export function RegenerateButton({
   jobId, decisionId, credits, source, catalog, cfg, regenerations, prices,
@@ -39,25 +47,31 @@ export function RegenerateButton({
   const project = useProject()
   const router = useRouter()
   const [open, setOpen] = useState(false)
-  const [picker, setPicker] = useState(false)
+  const [overlay, setOverlay] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const [prompt, setPrompt] = useState(source?.prompt ?? '')
-  const [settings, setSettings] = useState<GenerationSettingsValue>(() => settingsFrom(source, cfg))
+  const [settings, setSettings] = useState<GenerationSettingsValue>(() => startSettings(source, cfg))
   const [note, setNote] = useState('')
+  const edits = useReferenceEdits(source?.refs ?? [])
   const { model, stage, duration, sound } = settings
 
+  const mentionOptions = useMentionOptions(edits, catalog)
+  const sameRef = sameRefFor(catalog)
+
   const video = isVideoModel(model)
+  const wasSilent = String(source?.params.generate_audio) === 'false'
   const priceStillValid = source
     && model === source.model
-    && (!video || (stage === (source.stage ?? 'draft') && String(duration) === String(source.params.duration ?? '') && sound === (String(source.params.generate_audio) !== 'false')))
+    && (!video || (stage === (source.stage ?? 'draft') && String(duration) === String(source.params.duration ?? '') && sound === !wasSilent))
 
   function reset() {
     setPrompt(source?.prompt ?? '')
-    setSettings(settingsFrom(source, cfg))
+    setSettings(startSettings(source, cfg))
     setNote('')
     setError(null)
+    edits.reset()
   }
 
   async function send() {
@@ -68,7 +82,9 @@ export function RegenerateButton({
     fd.set('jobId', jobId)
     fd.set('decisionId', decisionId)
     fd.set('prompt', prompt)
-    fd.set('refs', JSON.stringify(settings.refs))
+    edits.serialize(fd, true)
+    // The whole list, always: the worker replaces the job's references with it.
+    fd.set('refs', JSON.stringify(edits.refs))
     fd.set('model', model)
     fd.set('variant', settings.variant)
     fd.set('aspect_ratio', settings.aspect)
@@ -108,10 +124,11 @@ export function RegenerateButton({
 
       <Modal
         open={open}
-        size="lg"
+        size="xl"
         title="Regenerate this take"
         onClose={() => setOpen(false)}
-        onKeyGuard={() => !picker}
+        onKeyGuard={() => !overlay}
+        clip={false}
         footer={
           <>
             <span className="mr-auto flex items-center gap-1.5 self-center text-xs text-faint">
@@ -119,43 +136,98 @@ export function RegenerateButton({
               {priceStillValid && credits != null ? `≈ ${credits} credits` : 'priced by the worker before it runs'}
             </span>
             <Button type="button" tone="ghost" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button type="button" tone="accent" pending={busy} pendingLabel="Sending" disabled={!prompt.trim()} onClick={send}>
+            <Button
+              type="button"
+              tone="accent"
+              pending={busy}
+              pendingLabel="Sending"
+              disabled={!prompt.trim() || edits.stale.length > 0}
+              title={edits.stale.length > 0 ? 'Fix the references that no longer resolve first' : undefined}
+              onClick={send}
+            >
               <RotateCcw aria-hidden className="size-3.5" /> Regenerate
             </Button>
           </>
         }
       >
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_18rem]">
-          <div className="space-y-4">
-            <Field label="Prompt (sent as written)">
-              <Textarea dir="auto" value={prompt} onChange={(e) => setPrompt(e.target.value)} rows={12} className="min-h-56 max-h-[50vh] text-[13px]" />
-            </Field>
-            {source && source.revisionNotes.length > 0 && (
-              <div className="space-y-1.5 text-xs text-muted">
-                <span className="block text-[12.5px]">Notes from earlier attempts, still applied</span>
-                <ul className="space-y-1 border-l border-edge pl-3">
-                  {source.revisionNotes.map((n, i) => <li key={i} dir="auto">{n}</li>)}
-                </ul>
+        {source && (
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem]">
+            <div className="min-w-0 space-y-6">
+              <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
+                {source.stage && (
+                  <Badge tone={source.stage === 'draft' ? 'accent' : 'good'}>{source.stage === 'draft' ? 'draft' : 'final'}</Badge>
+                )}
+                {source.attempt > 1 && <Badge>attempt {source.attempt}</Badge>}
+                {isVideoModel(source.model) && wasSilent && <Badge tone="muted">silent</Badge>}
+                <span className="ml-1 font-mono text-muted">{source.model}</span>
+                <span className="text-faint">·</span>
+                <span className="font-mono text-faint">{source.jobId}</span>
               </div>
-            )}
-            <Field label="Anything else to change? (optional, Farsi or English)">
-              <Textarea dir="auto" rows={3} value={note} onChange={(e) => setNote(e.target.value)} className="min-h-20 text-[13px]" placeholder="Added to the prompt as a revision note." />
-            </Field>
-          </div>
 
-          <div className="space-y-4">
-            <GenerationSettings
-              value={settings}
-              onChange={(patch) => setSettings((s) => ({ ...s, ...patch }))}
-              catalog={catalog}
-              cfg={cfg}
-              picker={picker}
-              onPicker={setPicker}
-              prices={prices}
-            />
-            {error && <p className="rounded-md border border-bad/35 bg-bad/8 px-3 py-2 text-xs leading-relaxed text-bad" dir="auto">{error}</p>}
+              <ReferenceEditor
+                edits={edits}
+                catalog={catalog}
+                refsEditable
+                lockedReason=""
+                onOverlayChange={setOverlay}
+              />
+
+              <Field label="Prompt (sent as written; type @ to point at a reference)">
+                <MentionTextarea
+                  dir="auto"
+                  rows={12}
+                  value={prompt}
+                  onChange={setPrompt}
+                  options={mentionOptions}
+                  sameRef={sameRef}
+                  className="min-h-56 max-h-[50vh] text-start text-[13px]"
+                />
+              </Field>
+
+              {source.revisionNotes.length > 0 && (
+                <div className="space-y-1.5 text-xs text-muted">
+                  <span className="block text-[12.5px]">Notes from earlier attempts, still applied</span>
+                  <ul className="space-y-1 border-l border-edge pl-3">
+                    {source.revisionNotes.map((n, i) => <li key={i} dir="auto">{n}</li>)}
+                  </ul>
+                </div>
+              )}
+
+              <Field label="Anything else to change? (optional, Farsi or English)">
+                <MentionTextarea
+                  dir="auto"
+                  rows={3}
+                  value={note}
+                  onChange={setNote}
+                  options={mentionOptions}
+                  sameRef={sameRef}
+                  className="min-h-20 text-start text-[13px]"
+                  placeholder="Added to the prompt as a revision note. Type @ to point at a reference."
+                />
+              </Field>
+
+              <Disclosure summary="Full prompt this take was sent with">
+                <pre className="scroll-pane max-h-80 rounded-xl border border-edge bg-sunken p-5 font-mono text-xs leading-[1.7] whitespace-pre-wrap text-fg/80">
+                  {source.sentPrompt}
+                </pre>
+              </Disclosure>
+            </div>
+
+            <div className="space-y-4">
+              <GenerationSettings
+                value={settings}
+                onChange={(patch) => setSettings((s) => ({ ...s, ...patch }))}
+                catalog={catalog}
+                cfg={cfg}
+                picker={false}
+                onPicker={() => {}}
+                prices={prices}
+                showRefs={false}
+              />
+              {error && <p className="rounded-md border border-bad/35 bg-bad/8 px-3 py-2 text-xs leading-relaxed text-bad" dir="auto">{error}</p>}
+            </div>
           </div>
-        </div>
+        )}
       </Modal>
     </div>
   )

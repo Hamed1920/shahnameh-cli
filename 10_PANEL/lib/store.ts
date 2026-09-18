@@ -8,7 +8,7 @@ import { priceKey } from './batch-rules'
 import type {
   ArchivedLook, AssetRow, AttemptEntry, BatchStatus, BatchView, Candidate, CatalogEntity, Entity, Filing, IndexOp,
   IndexOpResult, JobRequest, JobRequestEvent, Learning, LibraryData, LibraryEntity, PromptLibraryItem, QueueItem, RegenerationView,
-  ReviewContext, ReviewDecision, LookUse, StagingSidecar, WorkerStatus,
+  ResolvedReference, ReviewContext, ReviewDecision, LookUse, StagingSidecar, WorkerStatus,
 } from './types'
 
 /**
@@ -178,6 +178,47 @@ export async function resolveRefToken(pr: Project, token: string): Promise<strin
   if (rows.length === 0) return null
   const row = [...rows].sort((a, b) => b.take.localeCompare(a.take))[0]
   return `${row.folder}/${row.filename}`
+}
+
+/**
+ * Resolve many tokens against one read of the registries, the way the worker
+ * will when it runs them: the file has to be on disk, not just in the manifest.
+ * A token that fails says why, and when its entity still has a current look
+ * that one is offered, so a reference to an archived look can be put right in
+ * one click instead of silently refusing the whole request.
+ */
+export async function referenceResolver(pr: Project): Promise<(token: string) => Promise<ResolvedReference>> {
+  const [entities, assets] = await Promise.all([getEntities(pr), getAssets(pr)])
+  const onDisk = async (rel: string) => {
+    try { await fs.access(path.join(pr.P.root, rel)); return true } catch { return false }
+  }
+  const lookup = (ent: Entity, variant: string, take?: string) => {
+    let rows = assets.filter((a) => a.entity_id === ent.id && a.variant === variant)
+    if (take) rows = rows.filter((a) => a.take === take)
+    const row = [...rows].sort((a, b) => b.take.localeCompare(a.take))[0]
+    return row ? `${row.folder}/${row.filename}` : null
+  }
+  return async (raw: string) => {
+    const token = String(raw ?? '').trim()
+    const [ref, variantIn, takeIn] = token.replace(/^@/, '').split('/')
+    const ent = entities.find((e) => e.id === ref || e.short_id === ref)
+    if (!ent) return { token, path: null, stale: 'not in the index' }
+    const variant = (variantIn || ent.canonical_variant || '').toUpperCase()
+    const found = variant ? lookup(ent, variant, takeIn?.toUpperCase()) : null
+    if (found && (await onDisk(found))) return { token, path: found }
+
+    const stale = !variant
+      ? `${ent.short_id} has no current look`
+      : found
+        ? 'the file is missing on disk'
+        : `${ent.short_id} ${variant}${takeIn ? `/${takeIn.toUpperCase()}` : ''} is no longer in the index (archived or moved)`
+    const canon = (ent.canonical_variant || '').toUpperCase()
+    const canonPath = canon ? lookup(ent, canon) : null
+    const suggest = canonPath && canon !== variant && ent.status !== 'RETIRED' && (await onDisk(canonPath))
+      ? { token: `@${ent.short_id}/${canon}`, path: canonPath }
+      : undefined
+    return { token, path: null, stale, ...(suggest && { suggest }) }
+  }
 }
 
 /**

@@ -129,6 +129,36 @@ worker attaches images with `--image-references` and writes `<<<image_N>>>` toke
 (`worker/lib/prompt.mjs`). It never writes `@Image1` prose or a list of images at the end: the
 panel does not do that, and a job re-used from the panel would show it as stray text.
 
+### Saved Elements: what a named reference is (captured from `generate list --video --size 100 --json`, 2026-09-17)
+
+Why Reuse shows `@Zahhak-Y-snake` for some jobs and `@Image 2` for ours: only an Element carries a
+name. The 2026-08-26 web-panel jobs ("Nothing Stays Dead", `seedance_2_0`) store each one in
+`params.reference_elements` as a full object and write its id into the prompt:
+
+```json
+{ "id": "6032ed41-04ef-481c-96bc-4c132216cfbf", "name": "Zahhak-Y-snake", "category": "character",
+  "description": null, "ip_detected": false, "video_medias": [],
+  "medias": [{ "id": "3f76ec4f-...", "type": "media_input", "url": "https://d2ol7oe51mr4n9.cloudfront.net/...jpg",
+               "width": 1376, "height": 768 }] }
+```
+
+```
+Zahhak <<<6032ed41-04ef-481c-96bc-4c132216cfbf>>> is held in the monumental chair ...
+Guard A <<<2625d0fd-9bcc-4132-99ab-53b6fa7b1219>>> holds the forked restraint staff
+```
+
+A job can mix both forms (`<<<uuid>>>` for Elements, `<<<image_N>>>` for plain attachments in
+`params.medias`). Every worker-made job lists `reference_elements: []` and `medias` entries of type
+`media_input`, the same type web-panel attachments use, so the list output alone does not explain
+the warning marks Reuse shows on our thumbnails.
+
+The CLI cannot create or attach Elements (`reference_elements` is rejected as an unknown param). Its
+bundled SDK does call `GET/POST /developer/v2alpha/reference-elements` on
+`https://fnf-api-gw.higgsfield.ai/fnf`, undocumented. That endpoint has **not** been probed yet: it
+needs the login token from `higgsfield auth token` and Hamed's go-ahead. Named references from the
+worker would mean creating one Element per look through that API and submitting generations
+through the API instead of the CLI.
+
 ## Account / cost control
 
 ```

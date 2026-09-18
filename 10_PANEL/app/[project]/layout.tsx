@@ -7,7 +7,7 @@ import { ProjectProvider } from '@/components/project-context'
 import { Sidebar } from '@/components/sidebar'
 import { getProjectVersion } from '@/lib/live'
 import { getProject, publicInfo } from '@/lib/projects'
-import { getWaitingJobs } from '@/lib/store'
+import { getPending, getWaitingJobs } from '@/lib/store'
 
 export async function generateMetadata({ params }: LayoutProps<'/[project]'>): Promise<Metadata> {
   const pr = await getProject((await params).project)
@@ -27,13 +27,14 @@ export default async function ProjectLayout({ children, params }: LayoutProps<'/
 
   const collapsed = (await cookies()).get(SIDEBAR_COOKIE)?.value === '1'
   // Taken with the render, so a change between render and mount is not missed.
-  // queue.jsonl and state.json are both in the version, so the badge moves with every live refresh.
-  const [version, waiting] = await Promise.all([getProjectVersion(pr), getWaitingJobs(pr)])
+  // queue.jsonl, state.json, the review log and every staging job.json are in the version,
+  // so both badges move with every live refresh.
+  const [version, waiting, pending] = await Promise.all([getProjectVersion(pr), getWaitingJobs(pr), getPending(pr)])
 
   return (
     <ProjectProvider project={publicInfo(pr)}>
       <LiveRefresh project={pr.slug} initialVersion={version}>
-        <Sidebar defaultCollapsed={collapsed} counts={{ '/queue': waiting.length }} />
+        <Sidebar defaultCollapsed={collapsed} counts={{ '/review': pending.length, '/queue': waiting.length }} />
         <main className="scroll-pane flex-1">
           <div className="mx-auto max-w-[1600px] px-6 pt-10 pb-24 lg:px-12">{children}</div>
         </main>

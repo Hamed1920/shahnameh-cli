@@ -1,16 +1,20 @@
 'use server'
 
+import fs from 'node:fs/promises'
+import path from 'node:path'
 import { isVideoModel } from '@/lib/batch-rules'
 import { REVIEWER, appendJobRequest, newRequestId } from '@/lib/job-requests'
 import { requireProject } from '@/lib/projects'
 import { revalidateProject } from '@/lib/revalidate'
-import { getDecisions, getWorkerConfig, getWorkerState, resolveRefToken } from '@/lib/store'
-import { Invalid, parseJsonArray } from '@/lib/uploads'
+import { getDecisions, getWorkerConfig, getWorkerState, referenceResolver } from '@/lib/store'
+import { Invalid, parseJsonArray, readUploads, type PendingUpload } from '@/lib/uploads'
 import type { JobRequest } from '@/lib/types'
 
 /**
- * Regenerate an accepted take: one append to JOB_REQUESTS.jsonl. The dialog
- * may change the prompt, references, model, first render, look, aspect
+ * Regenerate an accepted take: one append to JOB_REQUESTS.jsonl, plus any
+ * images added in the dialog dropped raw into 09_OUTPUT/_uploads/<request id>/
+ * for the worker to file (the same exception Review and References use). The
+ * dialog may change the prompt, references, model, first render, look, aspect
  * ratio, duration and sound; the worker re-queues the job with those
  * overrides as a new attempt, and the result comes back to Review like any
  * other take. Everything is checked here so a mistake shows in the dialog;
@@ -32,6 +36,7 @@ export async function requestRegenerate(formData: FormData): Promise<{ ok: boole
   const req: Extract<JobRequest, { type: 'regenerate' }> = {
     id: newRequestId(), ts: new Date().toISOString(), reviewer: REVIEWER, type: 'regenerate', jobId, decisionId,
   }
+  let uploads: PendingUpload[] = []
   try {
     const note = String(formData.get('note') ?? '').trim().slice(0, 2000)
     if (note) req.note = note
@@ -40,12 +45,28 @@ export async function requestRegenerate(formData: FormData): Promise<{ ok: boole
     if (!prompt) throw new Invalid('The prompt cannot be empty.')
     req.prompt = prompt
 
+    uploads = await readUploads(pr, formData, req.id)
+    const uploadIds = new Set(uploads.map((u) => u.meta.id))
+    if (uploads.length) req.uploads = uploads.map((u) => u.meta)
+
     const refs = (parseJsonArray(formData, 'refs') ?? []).map((r) => String(r ?? '').trim()).filter(Boolean)
     if (refs.length > 12) throw new Invalid('At most 12 references.')
+    const resolve = await referenceResolver(pr)
     for (const token of refs) {
-      if (!token.startsWith('@') || !(await resolveRefToken(pr, token))) throw new Invalid(`Reference ${token} does not resolve to a file in the index.`)
+      if (token.startsWith('upload:')) {
+        if (!uploadIds.has(token.slice(7))) throw new Invalid(`Reference ${token} has no matching upload.`)
+        continue
+      }
+      if (!token.startsWith('@')) throw new Invalid(`Reference ${token} is not an @-token.`)
+      const r = await resolve(token)
+      if (!r.path) throw new Invalid(`Reference ${token}: ${r.stale ?? 'does not resolve to a file in the index'}.`)
     }
     req.refs = [...new Set(refs)]
+
+    // "@upload:u2" in the prompt or note has to be an image this request carries.
+    for (const m of `${prompt}\n${note}`.matchAll(/@upload:(u\d{1,3})(?![\w/-])/g)) {
+      if (!uploadIds.has(m[1])) throw new Invalid(`${m[0]} is not one of the images added here.`)
+    }
 
     const models = (cfg.models as { image?: string[]; video?: string[] } | undefined) ?? {}
     const known = [...(models.image ?? []), ...(models.video ?? [])]
@@ -78,7 +99,18 @@ export async function requestRegenerate(formData: FormData): Promise<{ ok: boole
     throw e
   }
 
-  await appendJobRequest(pr, req)
+  // Files first, request second: the worker must never see a request whose upload is not on disk.
+  const dir = path.join(pr.P.uploads, req.id)
+  try {
+    if (uploads.length) {
+      await fs.mkdir(dir, { recursive: true })
+      for (const u of uploads) await fs.writeFile(path.join(pr.root, u.meta.file), u.bytes)
+    }
+    await appendJobRequest(pr, req)
+  } catch (e) {
+    await fs.rm(dir, { recursive: true, force: true })
+    return { ok: false, error: `Could not save the request: ${(e as Error).message}` }
+  }
   revalidateProject(pr.slug)
   return { ok: true }
 }

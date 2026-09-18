@@ -59,7 +59,8 @@ Run `/project-log` at the start of a session, or read directly:
   the repo root.
 - **The worker is the only process that moves asset files or edits the CSV registries.** The
   panel appends to JSONL, plus two exceptions. First, it drops raw reviewer uploads into
-  `09_OUTPUT/_uploads/<decision-id>/`, which the worker then names, files and registers. The
+  `09_OUTPUT/_uploads/<id>/` — a Review decision, a References add, or a Regenerate request —
+  which the worker then names, files and registers. The
   References page works the same way: it appends requests (rename, retire, archive, move, role,
   main look, add) to `00_PROJECT/review/INDEX_OPS.jsonl` and the worker applies them
   (`worker/lib/index-ops.mjs`). The Prompts page and Regenerate append to

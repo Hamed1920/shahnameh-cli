@@ -114,7 +114,10 @@ export interface ReviewUpload {
 
 /** One line of FILINGS.jsonl. */
 export interface Filing {
-  decisionId: string
+  /** The Review decision that carried the upload. Absent on a Regenerate upload. */
+  decisionId?: string
+  /** The Regenerate request (JOB_REQUESTS.jsonl) that carried the upload. */
+  requestId?: string
   uploadId?: string
   ok: boolean
   token?: string
@@ -168,6 +171,10 @@ export interface ResolvedReference {
   token: string
   /** Project-relative, forward-slashed. Null when nothing on disk matches. */
   path: string | null
+  /** Why a token no longer resolves (a look archived, a file gone), when that is known. */
+  stale?: string
+  /** A token for the same entity that does resolve today, offered as a one-click fix. */
+  suggest?: { token: string; path: string }
 }
 
 /** One earlier attempt at the same shot, for the review history. */
@@ -351,11 +358,14 @@ export type JobRequest =
       sound?: boolean
       /** Overrides. Anything absent is kept from the accepted job. */
       prompt?: string
+      /** `upload:<id>` entries are placeholders the worker swaps for the filed upload's token. */
       refs?: string[]
       model?: string
       stage?: 'draft' | 'final'
       variant?: string
       params?: Record<string, string | number | boolean>
+      /** Images added in the dialog. The worker files them before it queues anything. */
+      uploads?: ReviewUpload[]
     })
 
 export type JobRequestType = JobRequest['type']
@@ -407,12 +417,22 @@ export interface BatchView {
 /** The accepted job as the Regenerate dialog starts from it. */
 export interface RegenerateSource {
   prompt: string
-  refs: string[]
+  /**
+   * The references to start from: what the take was made with, plus whatever
+   * the accept decision changed (which only its follow-up final received).
+   * Each is resolved against the index as it is now.
+   */
+  refs: ResolvedReference[]
   model: string
   stage: 'draft' | 'final' | null
   variant: string
   params: Record<string, string | number | boolean>
   revisionNotes: string[]
+  /** The job that made the take. */
+  jobId: string
+  attempt: number
+  /** The full prompt the take was actually sent with: notes and learnings included. */
+  sentPrompt: string
 }
 
 /** One prompt in the Prompts page library: a job and every attempt queued after it, shown as its latest attempt. */

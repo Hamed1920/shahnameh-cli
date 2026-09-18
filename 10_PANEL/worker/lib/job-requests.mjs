@@ -1,10 +1,12 @@
+import fs from 'node:fs/promises'
+import path from 'node:path'
 import {
   CODE, P, appendJsonl, loadEntities, log, readCsv, readJsonl, readText, resolveRef, restoreText, spentWithin,
   usedShotIds, writeCsv,
 } from './project.mjs'
 import { parseCsv } from './csv.mjs'
 import { checkBatch, isVideoModel, makeJob, newJobId } from './batch.mjs'
-import { reserveEntity } from './promote.mjs'
+import { FilingError, checkUploads, fileUpload, reserveEntity } from './promote.mjs'
 import { NEXT_SCENE_RX, assignScenes } from './scenes.mjs'
 import { stripCode } from './ids.mjs'
 import { planJob } from './plan.mjs'
@@ -75,6 +77,39 @@ async function checkSubmit(req, { entities, assets }) {
   if (rows.length === 0) fail('the batch has no rows')
   if (rows.length > 200) fail('at most 200 rows in one batch')
   return checkBatch(rows, { entities, assets, cfg, allowNew: true })
+}
+
+/**
+ * File the images a Regenerate request carries, the way a Review decision's
+ * uploads are filed (worker.mjs fileDecisionUploads). Keyed by request id in
+ * FILINGS.jsonl, so a retry after a crash reuses what was filed. A bad upload
+ * refuses the request before any of them is filed.
+ * Returns { uploadId: '@KIND-NNN/Vnn' }.
+ */
+async function fileRequestUploads(req, uploads) {
+  const tokens = {}
+  if (uploads.length === 0) return tokens
+  for (const f of await readJsonl(P.filings)) {
+    if (f.requestId === req.id && f.ok && f.uploadId) tokens[f.uploadId] = f.token
+  }
+  try {
+    await checkUploads(uploads, new Set(Object.keys(tokens)))
+    for (const u of uploads) {
+      if (tokens[u.id]) continue
+      const filed = await fileUpload(u, { id: req.id, reviewer: req.reviewer })
+      tokens[u.id] = filed.token
+      await appendJsonl(P.filings, {
+        requestId: req.id, uploadId: u.id, ok: true, token: filed.token,
+        entity: filed.entity, filename: filed.filename, ts: new Date().toISOString(),
+      })
+    }
+  } catch (e) {
+    if (e instanceof FilingError) fail(e.message)
+    throw e
+  }
+  // Every file has moved into the index; drop the emptied working folder.
+  await fs.rmdir(path.join(P.uploads, req.id)).catch(() => {})
+  return tokens
 }
 
 const HANDLERS = {
@@ -204,10 +239,16 @@ const HANDLERS = {
     const stage = req.stage === 'draft' || req.stage === 'final' ? req.stage : (src.stage ?? null)
     const variant = String(req.variant || src.variant || 'V01').toUpperCase()
     if (!/^V\d{2}$/.test(variant)) fail(`look '${variant}' is not V01, V02, ...`)
-    const basePrompt = String(req.prompt ?? '').trim() || (src.basePrompt ?? src.prompt)
-    const refs = Array.isArray(req.refs) ? [...new Set(req.refs.map((r) => String(r).trim()).filter(Boolean))] : (src.refs ?? [])
+    let basePrompt = String(req.prompt ?? '').trim() || (src.basePrompt ?? src.prompt)
+    const asked = Array.isArray(req.refs) ? [...new Set(req.refs.map((r) => String(r).trim()).filter(Boolean))] : (src.refs ?? [])
+    const uploads = Array.isArray(req.uploads) ? req.uploads : []
+    const uploadIds = new Set(uploads.map((u) => u.id))
     const { entities, assets } = await registries()
-    for (const token of refs) {
+    for (const token of asked) {
+      if (token.startsWith('upload:')) {
+        if (!uploadIds.has(token.slice(7))) fail(`reference ${token} has no matching upload`)
+        continue
+      }
       const r = await resolveRef(token, entities, assets)
       if (!r.ok) fail(`reference ${token}: ${r.reason}`)
     }
@@ -224,10 +265,39 @@ const HANDLERS = {
     } else {
       delete params.generate_audio; delete params.duration; delete params.resolution
     }
-    if (dry) { await log(`DRY-RUN would regenerate ${req.jobId}`); return }
+    if (dry) {
+      try {
+        for (const line of await checkUploads(uploads)) await log(`DRY-RUN would file ${line}`)
+      } catch (e) {
+        if (!(e instanceof FilingError)) throw e
+        await log(`DRY-RUN filing would FAIL for ${req.id}: ${e.message}`)
+      }
+      await log(`DRY-RUN would regenerate ${req.jobId}`)
+      return
+    }
+
+    // Images added in the dialog are filed into the index first, exactly as a
+    // Review upload is, and only then is anything queued. Filed before (a retry
+    // after a crash) means reused, never filed twice.
+    const filedAs = await fileRequestUploads(req, uploads)
+    const refs = []
+    for (const raw of asked) {
+      const token = raw.startsWith('upload:') ? filedAs[raw.slice(7)] : raw
+      if (!token) fail(`reference ${raw} points at an upload that was not filed`)
+      if (!refs.includes(token)) refs.push(token)
+    }
+    if (uploads.length) {
+      const now = await registries()
+      for (const token of refs) {
+        const r = await resolveRef(token, now.entities, now.assets)
+        if (!r.ok) fail(`reference ${token}: ${r.reason}`)
+      }
+    }
+    const withFiled = (text) => String(text).replace(/@upload:(u\d{1,3})(?![\w/-])/g, (m, id) => filedAs[id] ?? m)
+    basePrompt = withFiled(basePrompt)
 
     const jobId = newJobId()
-    const note = String(req.note ?? '').trim()
+    const note = withFiled(String(req.note ?? '').trim())
     const changed = []
     if (basePrompt !== (src.basePrompt ?? src.prompt)) changed.push('prompt')
     if (JSON.stringify(refs) !== JSON.stringify(src.refs ?? [])) changed.push('refs')

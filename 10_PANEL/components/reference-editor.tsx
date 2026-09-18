@@ -15,10 +15,12 @@ import { EASE } from '@/components/ui/motion-tokens'
 import { Badge } from '@/components/ui/text'
 import { useAssetUrls } from '@/components/project-context'
 import { cn } from '@/lib/cn'
+import type { MentionOption } from '@/components/mention-textarea'
 import {
   KINDS, KIND_LABEL, MAX_UPLOADS, MAX_UPLOAD_BYTES, UPLOAD_ACCEPT, UPLOAD_ROLES,
-  entitySlug, isAscii,
+  entitySlug, isAscii, type Kind,
 } from '@/lib/indexing'
+import { refKey } from '@/lib/mentions'
 import type { CatalogEntity, ResolvedReference } from '@/lib/types'
 
 // ---------------------------------------------------------------- state
@@ -32,6 +34,9 @@ interface RefItem {
   uploadId?: string
   /** Only originals are soft-removed, so they can be restored in place. */
   removed?: boolean
+  /** Why an original no longer resolves, and what it could use instead. */
+  stale?: string
+  suggest?: { token: string; path: string }
 }
 
 export interface UploadDraft {
@@ -49,7 +54,10 @@ export interface UploadDraft {
 }
 
 const initialItems = (original: ResolvedReference[]): RefItem[] =>
-  original.map((r, i) => ({ key: `job-${i}`, token: r.token, path: r.path, origin: 'job' }))
+  original.map((r, i) => ({
+    key: `job-${i}`, token: r.token, path: r.path, origin: 'job',
+    ...(r.stale && { stale: r.stale }), ...(r.suggest && { suggest: r.suggest }),
+  }))
 
 /**
  * Everything the reviewer changed about a candidate's references. Lives in the
@@ -68,6 +76,8 @@ export function useReferenceEdits(original: ResolvedReference[]) {
   }, [])
 
   const refs = items.filter((i) => !i.removed).map((i) => (i.uploadId ? `upload:${i.uploadId}` : i.token))
+  /** References still in the list that the worker would refuse. */
+  const stale = items.filter((i) => !i.removed && i.origin === 'job' && !i.path)
   const originalTokens = original.map((r) => r.token)
   const changed =
     refs.length !== originalTokens.length || refs.some((t, i) => t !== originalTokens[i])
@@ -195,12 +205,44 @@ export function useReferenceEdits(original: ResolvedReference[]) {
   )
 
   return {
-    items, uploads, changed, reset, addToken, addFiles, remove, restore,
+    items, uploads, refs, stale, changed, reset, addToken, addFiles, remove, restore,
     updateUpload, dropUpload, toggleUploadRef, serialize,
   }
 }
 
 export type ReferenceEdits = ReturnType<typeof useReferenceEdits>
+
+/** What "@" offers in a note or prompt: exactly the references in use, in the order the model gets them. */
+export function useMentionOptions(edits: ReferenceEdits, catalog: CatalogEntity[]): MentionOption[] {
+  const { assetUrl } = useAssetUrls()
+  return edits.items
+    .filter((i) => !i.removed)
+    .map((i, n) => {
+      if (i.uploadId) {
+        const u = edits.uploads.findIndex((x) => x.id === i.uploadId)
+        const file = edits.uploads[u]?.file.name ?? ''
+        return { token: `@upload:${i.uploadId}`, position: n + 1, title: `Upload ${u + 1}`, subtitle: file || 'new upload', thumb: i.path, keywords: `upload new ${file}` }
+      }
+      const key = refKey(i.token, catalog)
+      const ent = key ? catalog.find((e) => e.shortId === key.split('/')[0]) : undefined
+      return {
+        token: key ? `@${key}` : i.token,
+        position: n + 1,
+        title: ent?.name ?? i.token,
+        subtitle: ent ? `${KIND_LABEL[ent.kind as Kind] ?? ent.kind} ${key!.split('/')[1]}` : 'reference',
+        thumb: i.path ? assetUrl(i.path) : null,
+        keywords: ent ? `${ent.id} ${ent.kind}` : '',
+      }
+    })
+}
+
+/** True when a mention written in the text points at this option. */
+export function sameRefFor(catalog: CatalogEntity[]) {
+  return (mention: string, o: MentionOption) =>
+    mention.startsWith('@upload:')
+      ? mention === o.token
+      : refKey(mention, catalog) !== null && refKey(mention, catalog) === refKey(o.token, catalog)
+}
 
 // ---------------------------------------------------------------- view
 
@@ -212,6 +254,7 @@ export function ReferenceEditor({
   refsEditable,
   lockedReason,
   plate,
+  onOverlayChange,
 }: {
   edits: ReferenceEdits
   catalog: CatalogEntity[]
@@ -220,10 +263,14 @@ export function ReferenceEditor({
   lockedReason: string
   /** A likeness plate to judge against that the job was not given. Shown, never sent. */
   plate?: ResolvedReference | null
+  /** Told when the picker or lightbox opens and closes, so a dialog around this can leave Escape to them. */
+  onOverlayChange?: (open: boolean) => void
 }) {
   const { assetUrl } = useAssetUrls()
   const [viewing, setViewing] = useState<number | null>(null)
   const [picker, setPicker] = useState<{ mode: PickerMode; replaceKey: string | null; uploadId?: string } | null>(null)
+  const overlayOpen = viewing !== null || picker !== null
+  useEffect(() => { onOverlayChange?.(overlayOpen) }, [overlayOpen, onOverlayChange])
   const [dragging, setDragging] = useState(false)
   const [notice, setNotice] = useState<string | null>(null)
   const fileInput = useRef<HTMLInputElement>(null)
@@ -331,6 +378,14 @@ export function ReferenceEditor({
         <p className="mb-5 max-w-2xl text-[13px] leading-relaxed text-muted">{lockedReason}</p>
       )}
 
+      {refsEditable && edits.stale.length > 0 && (
+        <p className="mb-5 max-w-2xl rounded-md border border-bad/35 bg-bad/8 px-3.5 py-2.5 text-[13px] leading-relaxed text-bad">
+          {edits.stale.length === 1 ? 'One reference no longer resolves' : `${edits.stale.length} references no longer resolve`}
+          {' '}({edits.stale.map((i) => i.token).join(', ')}). Use the current look, replace or remove{' '}
+          {edits.stale.length === 1 ? 'it' : 'them'}: the worker refuses a job with a reference it cannot find.
+        </p>
+      )}
+
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
           {plate?.path && (
             <button
@@ -366,6 +421,7 @@ export function ReferenceEditor({
                   onRemove={() => edits.remove(item.key)}
                   onRestore={() => edits.restore(item.key)}
                   onReplace={() => setPicker({ mode: 'ref', replaceKey: item.key })}
+                  onUseSuggested={() => item.suggest && edits.addToken(item.suggest.token, item.suggest.path, item.key)}
                 />
               </motion.div>
             ))}
@@ -468,6 +524,7 @@ function RefTile({
   onRemove,
   onRestore,
   onReplace,
+  onUseSuggested,
 }: {
   item: RefItem
   /** 1-based order the model receives it in; null when removed. */
@@ -479,8 +536,10 @@ function RefTile({
   onRemove: () => void
   onRestore: () => void
   onReplace: () => void
+  onUseSuggested: () => void
 }) {
   const { assetUrl } = useAssetUrls()
+  const broken = item.origin === 'job' && !item.path && !item.removed
   const src = item.origin === 'upload' ? item.path : item.path ? assetUrl(item.path) : null
   const name = item.token ? catalog.find((e) => e.shortId === shortOf(item.token))?.name : undefined
   const label =
@@ -492,10 +551,20 @@ function RefTile({
     <div
       className={cn(
         'group relative overflow-hidden rounded-lg border bg-sunken transition-colors duration-200',
-        item.origin === 'job' ? 'border-edge hover:border-edge-strong' : 'border-fg/40',
+        broken ? 'border-bad/50' : item.origin === 'job' ? 'border-edge hover:border-edge-strong' : 'border-fg/40',
       )}
     >
-      {src ? (
+      {broken ? (
+        <div className="checker grid aspect-4/3 w-full place-items-center gap-2 p-3 text-center">
+          <ImageOff aria-hidden className="size-5 text-bad/80" />
+          {editable && item.suggest && (
+            <Button type="button" size="sm" tone="outline" onClick={onUseSuggested} className="bg-ink" title={`Use ${item.suggest.token} instead`}>
+              <RefreshCw aria-hidden className="size-3.5" />
+              Use {item.suggest.token.replace(/^@/, '')}
+            </Button>
+          )}
+        </div>
+      ) : src ? (
         <button
           type="button"
           onClick={onOpen}
@@ -523,8 +592,12 @@ function RefTile({
         <div className={cn('truncate font-mono text-[11px] text-fg/90', item.removed && 'line-through opacity-50')}>
           {label}
         </div>
-        <div className="mt-0.5 truncate text-[11px] text-muted">
-          {item.removed ? 'removed' : (name ?? (item.origin === 'upload' ? 'new upload' : 'reference'))}
+        <div className={cn('mt-0.5 text-[11px]', broken ? 'text-bad' : 'truncate text-muted')} title={broken ? item.stale : undefined}>
+          {item.removed
+            ? 'removed'
+            : broken
+              ? `${name ? `${name}: ` : ''}${item.stale ?? 'no longer in the index'}`
+              : (name ?? (item.origin === 'upload' ? 'new upload' : 'reference'))}
         </div>
       </div>
 

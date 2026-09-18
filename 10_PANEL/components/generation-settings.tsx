@@ -116,7 +116,7 @@ function QualityToggle({
  * the picker's open state so its dialog can ignore Escape while it is up.
  */
 export function GenerationSettings({
-  value, onChange, catalog, cfg, picker, onPicker, prices,
+  value, onChange, catalog, cfg, picker, onPicker, prices, showRefs = true,
 }: {
   value: GenerationSettingsValue
   onChange: (patch: Partial<GenerationSettingsValue>) => void
@@ -126,6 +126,8 @@ export function GenerationSettings({
   onPicker: (open: boolean) => void
   /** Last real price per priceKey, from the ledger. Absent while unknown. */
   prices?: Record<string, number>
+  /** False where the dialog shows references itself, as thumbnails (Regenerate). */
+  showRefs?: boolean
 }) {
   const { refs, model, variant, aspect, stage, duration, sound } = value
   const refName = (token: string) => {
@@ -136,6 +138,7 @@ export function GenerationSettings({
 
   return (
     <div className="space-y-4">
+      {showRefs && (<>
       <div className="space-y-2">
         <span className="block text-[12.5px] text-muted">References, in the order the model gets them</span>
         <div className="flex flex-wrap items-center gap-1.5">
@@ -152,6 +155,15 @@ export function GenerationSettings({
           </Button>
         </div>
       </div>
+      <IndexPicker
+        open={picker}
+        mode="ref"
+        title="Add a reference"
+        catalog={catalog}
+        onClose={() => onPicker(false)}
+        onPickRef={(token) => { if (!refs.includes(token)) onChange({ refs: [...refs, token] }); onPicker(false) }}
+      />
+      </>)}
 
       <Field label="Model">
         <Select value={model} onChange={(e) => onChange({ model: e.target.value })}>
@@ -191,15 +203,6 @@ export function GenerationSettings({
           <Checkbox checked={sound} onChange={(e) => onChange({ sound: e.target.checked })} label="Sound" />
         </>
       )}
-
-      <IndexPicker
-        open={picker}
-        mode="ref"
-        title="Add a reference"
-        catalog={catalog}
-        onClose={() => onPicker(false)}
-        onPickRef={(token) => { if (!refs.includes(token)) onChange({ refs: [...refs, token] }); onPicker(false) }}
-      />
     </div>
   )
 }

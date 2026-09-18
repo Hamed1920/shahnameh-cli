@@ -20,6 +20,7 @@ export function Modal({
   wide = false,
   size,
   onKeyGuard,
+  clip = true,
 }: {
   open: boolean
   title: React.ReactNode
@@ -31,6 +32,8 @@ export function Modal({
   size?: 'md' | 'lg' | 'xl'
   /** Return false to ignore Escape (e.g. while a dialog opened from this one is up). */
   onKeyGuard?: () => boolean
+  /** False lets a popup near the bottom (an @-mention list) hang past the dialog's edge. */
+  clip?: boolean
 }) {
   const width = size ?? (wide ? 'lg' : 'md')
   const [mounted, setMounted] = useState(false)
@@ -39,7 +42,8 @@ export function Modal({
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && (onKeyGuard?.() ?? true)) onClose()
+      // A popup inside the dialog (an @-mention list) that handled Escape itself marks it handled.
+      if (e.key === 'Escape' && !e.defaultPrevented && (onKeyGuard?.() ?? true)) onClose()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -66,7 +70,8 @@ export function Modal({
               transition={{ duration: 0.2, ease: EASE }}
               onClick={(e) => e.stopPropagation()}
               className={cn(
-                'w-full overflow-hidden rounded-2xl border border-edge-strong bg-panel shadow-[0_24px_80px_-24px_rgba(0,0,0,0.9)]',
+                clip && 'overflow-hidden',
+                'w-full rounded-2xl border border-edge-strong bg-panel shadow-[0_24px_80px_-24px_rgba(0,0,0,0.9)]',
                 width === 'xl' ? 'max-w-7xl' : width === 'lg' ? 'max-w-4xl' : 'max-w-lg',
               )}
             >

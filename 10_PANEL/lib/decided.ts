@@ -4,6 +4,7 @@ import { idRx } from '../worker/lib/ids.mjs'
 import type { Project } from './projects'
 import {
   getAssets, getDecisions, getFilings, getGeneratingJobId, getPriceTable, getQueue, getRegenerations, getWorkerState, priceKey,
+  referenceResolver,
 } from './store'
 import type { Filing, QueueItem, RegenerateSource, RegenerationView, ReviewDecision, StagingSidecar } from './types'
 
@@ -84,8 +85,9 @@ async function sidecars(pr: Project): Promise<Map<string, StagingSidecar>> {
 }
 
 export async function getDecidedEntries(pr: Project): Promise<DecidedEntry[]> {
-  const [decisions, filings, state, queue, assets, moves, byBatch, regenerations, prices] = await Promise.all([
+  const [decisions, filings, state, queue, assets, moves, byBatch, regenerations, prices, resolve] = await Promise.all([
     getDecisions(pr), getFilings(pr), getWorkerState(pr), getQueue(pr), getAssets(pr), movesFromLog(pr), sidecars(pr), getRegenerations(pr), getPriceTable(),
+    referenceResolver(pr),
   ])
   const failed = (state?.failedDecisions ?? {}) as Record<string, string>
   const processedDecisions = new Set((state?.processedDecisions ?? []) as string[])
@@ -192,15 +194,31 @@ export async function getDecidedEntries(pr: Project): Promise<DecidedEntry[]> {
       // The queue record is what a regeneration re-runs; its params give the price key.
       const q = queueById.get(d.jobId) as (QueueItem & { basePrompt?: string; stage?: 'draft' | 'final' | null; revisionNotes?: string[] }) | undefined
       const regenerateCredits = s?.costCredits ?? (q ? prices.get(priceKey(q.model, q.params)) ?? null : null)
+      // References to start from. The queue record alone loses two things: what
+      // the accept decision changed (the worker gives that only to the follow-up
+      // final) and nothing about looks archived since. So: the decision's list,
+      // with its uploads as they were filed; else the take's sidecar; else the
+      // queue. Every token is then resolved as the worker would resolve it now.
+      const startRefs = Array.isArray(d.refs)
+        ? d.refs.flatMap((r) => {
+            const m = String(r).match(/^upload:(u\d{1,3})$/)
+            if (!m) return [String(r)]
+            const token = mine.find((f) => f.ok && f.uploadId === m[1])?.token
+            return token ? [token] : []
+          })
+        : (s?.refs ?? q?.refs ?? [])
       const source: RegenerateSource | null = q
         ? {
             prompt: q.basePrompt ?? q.prompt,
-            refs: q.refs ?? [],
+            refs: await Promise.all([...new Set(startRefs)].map(resolve)),
             model: q.model,
             stage: q.stage ?? null,
             variant: q.variant || 'V01',
             params: (q.params ?? {}) as RegenerateSource['params'],
             revisionNotes: q.revisionNotes ?? [],
+            jobId: q.jobId,
+            attempt: q.attempt ?? s?.attempt ?? 1,
+            sentPrompt: s?.prompt ?? q.prompt,
           }
         : null
 

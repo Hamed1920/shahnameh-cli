@@ -21,7 +21,7 @@ export default async function QueuePage({ params }: PageProps<'/[project]/queue'
     getWorkerStatus(pr),
   ])
   const failedIds = Object.keys((state?.failedDecisions ?? {}) as Record<string, string>)
-  const failures = filings.filter((f) => !f.ok && failedIds.includes(f.decisionId)).reverse()
+  const failures = filings.filter((f) => !f.ok && !!f.decisionId && failedIds.includes(f.decisionId)).reverse()
 
   // The worker's own record is the truth. "Has a file in _staging" is not: a
   // candidate leaves _staging once it is decided, which made finished jobs

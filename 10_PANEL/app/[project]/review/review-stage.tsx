@@ -5,8 +5,8 @@ import { AnimatePresence, motion } from 'motion/react'
 import { Coins, Pause, Play, RotateCcw, X } from 'lucide-react'
 import { decide, type ActionResult } from '../actions'
 import { AttemptHistory } from '@/components/attempt-history'
-import { MentionTextarea, type MentionOption } from '@/components/mention-textarea'
-import { ReferenceEditor, useReferenceEdits } from '@/components/reference-editor'
+import { MentionTextarea } from '@/components/mention-textarea'
+import { ReferenceEditor, useMentionOptions, sameRefFor, useReferenceEdits } from '@/components/reference-editor'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -17,8 +17,6 @@ import { Badge } from '@/components/ui/text'
 import { isVideo } from '@/lib/asset'
 import { useAssetUrls, useProject } from '@/components/project-context'
 import { cn } from '@/lib/cn'
-import { KIND_LABEL, type Kind } from '@/lib/indexing'
-import { refKey } from '@/lib/mentions'
 import type { AttemptEntry, CatalogEntity, ReviewItem, Verdict } from '@/lib/types'
 
 export interface QueuedDecision {
@@ -112,29 +110,8 @@ export function ReviewStage({
       : 'This is a final render, so nothing else is generated. An uploaded image is filed for later.'
 
   // What "@" offers: exactly the references in use, in the order the model gets them.
-  const mentionOptions: MentionOption[] = edits.items
-    .filter((i) => !i.removed)
-    .map((i, n) => {
-      if (i.uploadId) {
-        const u = edits.uploads.findIndex((x) => x.id === i.uploadId)
-        const file = edits.uploads[u]?.file.name ?? ''
-        return { token: `@upload:${i.uploadId}`, position: n + 1, title: `Upload ${u + 1}`, subtitle: file || 'new upload', thumb: i.path, keywords: `upload new ${file}` }
-      }
-      const key = refKey(i.token, catalog)
-      const ent = key ? catalog.find((e) => e.shortId === key.split('/')[0]) : undefined
-      return {
-        token: key ? `@${key}` : i.token,
-        position: n + 1,
-        title: ent?.name ?? i.token,
-        subtitle: ent ? `${KIND_LABEL[ent.kind as Kind] ?? ent.kind} ${key!.split('/')[1]}` : 'reference',
-        thumb: i.path ? assetUrl(i.path) : null,
-        keywords: ent ? `${ent.id} ${ent.kind}` : '',
-      }
-    })
-  const sameRef = (mention: string, o: MentionOption) =>
-    mention.startsWith('@upload:')
-      ? mention === o.token
-      : refKey(mention, catalog) !== null && refKey(mention, catalog) === refKey(o.token, catalog)
+  const mentionOptions = useMentionOptions(edits, catalog)
+  const sameRef = sameRefFor(catalog)
 
   const choose = useCallback((v: Verdict) => {
     setVerdict(v)

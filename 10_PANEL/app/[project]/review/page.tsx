@@ -1,5 +1,5 @@
 import { requireProject } from '@/lib/projects'
-import { getCatalog, getPending, getReferenceFor, getReviewContexts, resolveRefToken } from '@/lib/store'
+import { getCatalog, getPending, getReferenceFor, getReviewContexts, referenceResolver } from '@/lib/store'
 import type { ReviewItem } from '@/lib/types'
 import { ReviewWorkspace } from './review-workspace'
 
@@ -11,15 +11,14 @@ export const dynamic = 'force-dynamic'
  */
 export default async function ReviewPage({ params }: PageProps<'/[project]/review'>) {
   const pr = await requireProject((await params).project)
-  const [pending, catalog] = await Promise.all([getPending(pr), getCatalog(pr)])
+  const [pending, catalog, resolve] = await Promise.all([getPending(pr), getCatalog(pr), referenceResolver(pr)])
   const contexts = await getReviewContexts(pr, pending)
 
   const items: ReviewItem[] = await Promise.all(
     pending.map(async (candidate) => {
       const tokens = candidate.sidecar.refs ?? []
-      const editable = await Promise.all(
-        tokens.map(async (token) => ({ token, path: await resolveRefToken(pr, token) })),
-      )
+      // Resolved as the worker will resolve them, so a reference to an archived look shows as one.
+      const editable = await Promise.all(tokens.map(resolve))
       // An entity target's canonical plate is the thing to judge likeness
       // against, and is not necessarily one of the refs the job was given.
       const canonical = await getReferenceFor(pr, candidate.sidecar.target, candidate.sidecar.variant, tokens)
