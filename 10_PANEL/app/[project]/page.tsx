@@ -41,7 +41,7 @@ export default async function GalleryPage({ params }: PageProps<'/[project]'>) {
       title: e.title,
       where: e.where,
       episode: e.episode,
-      target: e.decision.target,
+      target: e.target,
       ts: e.decision.ts,
       stage: e.stage,
       attempt: e.attempt,

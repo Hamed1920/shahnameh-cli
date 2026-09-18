@@ -58,7 +58,8 @@ function readProject() {
 export const PROJECT = readProject()
 /** The ID prefix of this project, e.g. SHM. */
 export const CODE = PROJECT.code
-const RX = idRx(CODE)
+/** Every ID pattern for this project, built once from its code. */
+export const RX = idRx(CODE)
 
 export const P = {
   root: ROOT,
@@ -76,6 +77,8 @@ export const P = {
   drafts: path.join(ROOT, '09_OUTPUT', '_drafts'),
   uploads: path.join(ROOT, '09_OUTPUT', '_uploads'),
   filings: path.join(ROOT, '00_PROJECT', 'queue', 'FILINGS.jsonl'),
+  /** Footage that changed episode: old shot id -> new, and every file it took with it. */
+  shotMoves: path.join(ROOT, '00_PROJECT', 'queue', 'SHOT_MOVES.jsonl'),
   // References page: requests written by the panel, results by the worker.
   indexOps: path.join(ROOT, '00_PROJECT', 'review', 'INDEX_OPS.jsonl'),
   indexOpResults: path.join(ROOT, '00_PROJECT', 'queue', 'INDEX_OPS_RESULTS.jsonl'),
@@ -254,6 +257,22 @@ export async function spentWithin(hours) {
  * the spend.
  */
 export const GENERATE_LOCK = path.join(PROJECTS_DIR, '.generate.lock')
+
+/**
+ * Where a shot is now, following every episode move it has been through
+ * (SHOT_MOVES.jsonl). A regeneration or a final queued from an old record must
+ * land where the footage lives, not where it was first filed.
+ */
+export async function currentShotId(id) {
+  const moves = await readJsonl(P.shotMoves)
+  let at = String(id ?? '')
+  for (let guard = 0; guard < 50; guard++) {
+    const hop = moves.find((m) => m?.from === at)
+    if (!hop?.to) break
+    at = hop.to
+  }
+  return at
+}
 
 /** Every shot id in use in this project: queued targets plus shot files on disk. */
 export async function usedShotIds() {

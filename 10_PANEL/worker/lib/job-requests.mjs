@@ -1,8 +1,8 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import {
-  CODE, P, appendJsonl, loadEntities, log, readCsv, readJsonl, readText, resolveRef, restoreText, spentWithin,
-  usedShotIds, writeCsv,
+  CODE, P, appendJsonl, currentShotId, loadEntities, log, readCsv, readJsonl, readText, resolveRef, restoreText,
+  spentWithin, usedShotIds, writeCsv,
 } from './project.mjs'
 import { parseCsv } from './csv.mjs'
 import { checkBatch, isVideoModel, makeJob, newJobId } from './batch.mjs'
@@ -309,7 +309,7 @@ const HANDLERS = {
       parentJobId: src.jobId,
       attempt: (src.attempt ?? 1) + 1,
       stage,
-      target: src.target,
+      target: await currentShotId(src.target),
       variant,
       model,
       prompt: basePrompt,

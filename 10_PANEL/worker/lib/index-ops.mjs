@@ -1,8 +1,8 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import {
-  CODE, P, ROOT, appendJsonl, archivedVariants, findEntity, log, readJsonl, readState, readText, resolveRef,
-  restoreText, writeCsv,
+  CODE, P, ROOT, RX, appendJsonl, archivedVariants, findEntity, log, readJsonl, readState, readText, resolveRef,
+  restoreText, shotFolder, usedShotIds, writeCsv,
 } from './project.mjs'
 import { parseCsv } from './csv.mjs'
 import { entityId as fullEntityId } from './ids.mjs'
@@ -479,6 +479,80 @@ const OPS = {
       return { to, mention: to }
     })
     return withNotes(`moved ${moved.join(', ')}`, notes)
+  }),
+
+  /**
+   * Move footage to another episode.
+   *
+   * A shot takes its whole stack of takes with it and lands on the next free
+   * scene of the episode it moves to. The number it leaves behind is burned for
+   * good, like every other number here (docs/INDEXING.md section 9) -- a gap in
+   * EP001 is the correct record of a scene that used to be there.
+   *
+   * Nothing that already names the old id is rewritten: QUEUE.jsonl and
+   * REVIEW_LOG.jsonl are append-only history, and rewriting them is how two
+   * machines end up disagreeing. The move is recorded in SHOT_MOVES.jsonl
+   * instead, and the panel reads an old id forward through it.
+   */
+  'move-shot': (op, ctx) => transaction(async (tx) => {
+    const episode = String(op.episode ?? '').trim().toUpperCase()
+    if (!/^EP\d{3}$/.test(episode)) fail(`'${op.episode}' is not an episode; it looks like EP002`)
+
+    const shots = [...new Set((op.shots ?? []).map((s) => String(s).trim().toUpperCase()))]
+    if (shots.length === 0) fail('no footage was chosen')
+
+    // Everything is checked before anything moves, so a batch of ten either all
+    // lands or none of it does and the reviewer is told why.
+    const waiting = await waitingForReview(tx)
+    const plan = []
+    for (const shot of shots) {
+      const parts = shot.match(RX.shotParts)
+      if (!parts || !parts[2] || !parts[3]) fail(`'${shot}' is not a shot id; it looks like ${CODE}-EP001-SC004-SH0010`)
+      if (parts[1] === episode) fail(`${shot} is already in ${episode}`)
+
+      const folder = await shotFolder(shot)
+      const names = (await fs.readdir(path.join(ROOT, folder)).catch(() => []))
+        .filter((f) => f.startsWith(`${shot}_`))
+      if (names.length === 0) fail(`${shot} has no footage filed, so there is nothing to move`)
+
+      const undecided = waiting.find((w) => String(w.sidecar.target ?? '').toUpperCase() === shot)
+      if (undecided) fail(`${shot} has a take waiting for review. Decide it first, then move the shot.`)
+      await assertNotInUse(tx, ctx, { ids: [shot] })
+
+      plan.push({ shot, tail: parts[3], folder, names })
+    }
+
+    // Past every scene the target episode has ever used: queued targets and
+    // files on disk, the same two sources that number a new scene.
+    const used = await usedShotIds()
+    let last = 0
+    for (const id of used) {
+      const m = String(id).match(RX.sceneAnywhere)
+      if (m && m[1] === episode) last = Math.max(last, Number(m[2]))
+    }
+
+    const moved = []
+    const records = []
+    for (const p of plan) {
+      const scene = `SC${String(++last).padStart(3, '0')}`
+      const to = `${CODE}-${episode}-${scene}-${p.tail}`
+      const destFolder = await shotFolder(to)
+      const files = []
+      for (const name of p.names) {
+        const next = `${to}${name.slice(p.shot.length)}`
+        await tx.move(path.join(ROOT, p.folder, name), path.join(ROOT, destFolder, next))
+        files.push({ from: `${p.folder}/${name}`, to: `${destFolder}/${next}` })
+      }
+      moved.push(`${p.shot} -> ${to} (${files.length} take${files.length === 1 ? '' : 's'})`)
+      records.push({ opId: op.id, from: p.shot, to, files, ts: new Date().toISOString() })
+    }
+
+    return {
+      summary: `moved ${moved.join(', ')}`,
+      // Only once the move has committed: a record of a move that was rolled
+      // back would send the panel looking for a file that never left.
+      after: async () => { for (const r of records) await appendJsonl(P.shotMoves, r) },
+    }
   }),
 }
 

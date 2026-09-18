@@ -9,7 +9,7 @@ import { episodeOf, nextEpisodeId, parseEpisodeDir, type EpisodeInfo } from './e
 import type {
   ArchivedLook, AssetRow, AttemptEntry, BatchStatus, BatchView, Candidate, CatalogEntity, Entity, Filing, IndexOp,
   IndexOpResult, JobRequest, JobRequestEvent, Learning, LibraryData, LibraryEntity, PromptLibraryItem, QueueItem, RegenerationView,
-  ResolvedReference, ReviewContext, ReviewDecision, LookUse, StagingSidecar, WorkerStatus,
+  ResolvedReference, ReviewContext, ReviewDecision, LookUse, ShotMove, ShotMoves, StagingSidecar, WorkerStatus,
 } from './types'
 
 /**
@@ -424,6 +424,39 @@ export async function getKnownShots(pr: Project): Promise<string[]> {
     ids.push(...files.map((f) => f.match(rx.shotFileStart)?.[0] ?? ''))
   }
   return [...new Set(ids.filter((t) => rx.episodePrefix.test(t)))].sort()
+}
+
+/**
+ * Footage that changed episode, folded into lookups.
+ *
+ * QUEUE.jsonl and REVIEW_LOG.jsonl are append-only history and keep the shot id
+ * a job was made under, which is right -- that is what happened. This is how a
+ * page reads that id forward to where the take is now. A shot moved twice is
+ * chased to the end, so the oldest id still resolves.
+ */
+export async function getShotMoves(pr: Project): Promise<ShotMoves> {
+  const records = await readJsonl<ShotMove>(pr.P.shotMoves)
+  const shot: Record<string, string> = {}
+  const file: Record<string, string> = {}
+  const folder: Record<string, string> = {}
+  /** Point `from` at `to`, and bring anything already pointing at `from` along with it. */
+  const follow = (map: Record<string, string>, from: string, to: string) => {
+    for (const [k, v] of Object.entries(map)) if (v === from) map[k] = to
+    map[from] = to
+  }
+  const dirOf = new Map<string, string>()
+  for (const r of records) {
+    if (!r?.from || !r?.to) continue
+    follow(shot, r.from, r.to)
+    for (const f of r.files ?? []) if (f?.from && f?.to) follow(file, f.from, f.to)
+    const landed = r.files?.[0]?.to
+    if (landed?.includes('/')) dirOf.set(r.to, landed.slice(0, landed.lastIndexOf('/')))
+  }
+  for (const [from, to] of Object.entries(shot)) {
+    const dir = dirOf.get(to)
+    if (dir) folder[from] = dir
+  }
+  return { shot, file, folder }
 }
 
 /**

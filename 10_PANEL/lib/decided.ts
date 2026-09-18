@@ -3,8 +3,8 @@ import path from 'node:path'
 import { idRx } from '../worker/lib/ids.mjs'
 import type { Project } from './projects'
 import {
-  getAssets, getDecisions, getFilings, getGeneratingJobId, getPriceTable, getQueue, getRegenerations, getWorkerState, priceKey,
-  referenceResolver,
+  getAssets, getDecisions, getFilings, getGeneratingJobId, getPriceTable, getQueue, getRegenerations, getShotMoves,
+  getWorkerState, priceKey, referenceResolver,
 } from './store'
 import type { Filing, QueueItem, RegenerateSource, RegenerationView, ReviewDecision, StagingSidecar } from './types'
 
@@ -31,6 +31,11 @@ export interface DecidedEntry {
   title: string
   /** "EP001 · SC004 · SH0010", or the target for an entity. */
   where: string
+  /**
+   * Where this take belongs NOW: the decision's own target, read forward
+   * through any episode it has been moved to since (SHOT_MOVES.jsonl).
+   */
+  target: string
   /** EP001, when this is footage. Null for a design image filed under an entity. */
   episode: string | null
   stage: 'draft' | 'final' | null
@@ -87,10 +92,13 @@ async function sidecars(pr: Project): Promise<Map<string, StagingSidecar>> {
 }
 
 export async function getDecidedEntries(pr: Project): Promise<DecidedEntry[]> {
-  const [decisions, filings, state, queue, assets, moves, byBatch, regenerations, prices, resolve] = await Promise.all([
+  const [decisions, filings, state, queue, assets, moves, byBatch, regenerations, prices, resolve, shotMoves] = await Promise.all([
     getDecisions(pr), getFilings(pr), getWorkerState(pr), getQueue(pr), getAssets(pr), movesFromLog(pr), sidecars(pr), getRegenerations(pr), getPriceTable(),
-    referenceResolver(pr),
+    referenceResolver(pr), getShotMoves(pr),
   ])
+  /** A shot id, and a file, as they are now: footage can have changed episode since. */
+  const nowShot = (id: string) => shotMoves.shot[id] ?? id
+  const nowFile = (rel: string) => shotMoves.file[rel] ?? rel
   const failed = (state?.failedDecisions ?? {}) as Record<string, string>
   const processedDecisions = new Set((state?.processedDecisions ?? []) as string[])
   const processedJobs = new Set((state?.processedJobs ?? []) as string[])
@@ -144,7 +152,7 @@ export async function getDecidedEntries(pr: Project): Promise<DecidedEntry[]> {
         // Not moved (yet, or ever): the take is still where it was reviewed.
         file = d.candidate
       } else if (moves.has(d.candidate)) {
-        file = moves.get(d.candidate)!
+        file = nowFile(moves.get(d.candidate)!)
       } else if (d.verdict === 'denied') {
         file = `09_OUTPUT/_rejected/${d.hfJobId}/${base}`
       } else if (stage === 'draft') {
@@ -153,8 +161,8 @@ export async function getDecidedEntries(pr: Project): Promise<DecidedEntry[]> {
         const row = assets.find((a) => a.original_filename === `${d.hfJobId}/${base}`)
         if (row) file = `${row.folder}/${row.filename}`
         else if (s && (s as StagingSidecar & { outputFolder?: string }).outputFolder) {
-          const folder = (s as StagingSidecar & { outputFolder?: string }).outputFolder!
-          const stem = `${d.target}_${d.variant || 'V01'}`
+          const folder = shotMoves.folder[d.target] ?? (s as StagingSidecar & { outputFolder?: string }).outputFolder!
+          const stem = `${nowShot(d.target)}_${d.variant || 'V01'}`
           const hits = (await filesIn(folder)).filter((n) => n === stem + path.extname(base) || n.startsWith(stem + '_T'))
           if (hits.length === 1) file = `${folder}/${hits[0]}`
           else if (hits.length) {
@@ -224,12 +232,14 @@ export async function getDecidedEntries(pr: Project): Promise<DecidedEntry[]> {
           }
         : null
 
-      const m = d.target.match(idRx(pr.code).shotParts)
-      const where = m ? [m[1], m[2], m[3]].filter(Boolean).join(' · ') : d.target
+      const target = nowShot(d.target)
+      const m = target.match(idRx(pr.code).shotParts)
+      const where = m ? [m[1], m[2], m[3]].filter(Boolean).join(' · ') : target
       return {
         decision: d,
-        title: labelFor(d.jobId) ?? m?.[2] ?? d.target,
+        title: labelFor(d.jobId) ?? m?.[2] ?? target,
         where,
+        target,
         episode: m?.[1] ?? null,
         stage,
         attempt: s?.attempt ?? 1,

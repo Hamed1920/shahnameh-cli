@@ -345,9 +345,24 @@ Done from the panel's References page and applied by the worker. None of them fr
   (e.g. an episode's `ASSET_MAP.md`) are not rewritten.
 - **Move looks:** a look re-files under another entity as that entity's next `_V`, keeping its
   takes and descriptor.
+- **Move footage to another episode:** a shot takes all of its takes with it and lands on the
+  **next free scene** of the episode it moves to. The scene number it leaves behind is burned for
+  good, like every other number here — a gap in `EP001` is the correct record of a scene that used
+  to be there. Asked for from the panel's Gallery (any number at once) or Decided page, applied by
+  the worker (`move-shot` in `worker/lib/index-ops.mjs`).
 
 Archive, move and rename are refused while a queued job or an unapplied decision still points at
-the files involved.
+the files involved. Moving footage is refused for the same reasons, and also while one of its
+takes is still waiting for review — decide it first.
+
+### Reading an old shot id forward
+
+`QUEUE.jsonl` and `REVIEW_LOG.jsonl` are append-only history and keep the shot id a job was made
+under, which is right: that is what happened. Every move is recorded in
+`00_PROJECT/queue/SHOT_MOVES.jsonl` instead — old id, new id, and every file that went with it —
+and that is what the panel reads an old id forward through, so a decision from before the move
+still shows its take and still regenerates into the right episode. A shot moved twice is followed
+all the way.
 
 ## 9. Number allocation
 

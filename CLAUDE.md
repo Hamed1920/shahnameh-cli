@@ -63,7 +63,9 @@ Run `/project-log` at the start of a session, or read directly:
   which the worker then names, files and registers. The
   References page works the same way: it appends requests (rename, retire, archive, move, role,
   main look, add) to `00_PROJECT/review/INDEX_OPS.jsonl` and the worker applies them
-  (`worker/lib/index-ops.mjs`). The Prompts page and Regenerate append to
+  (`worker/lib/index-ops.mjs`). Assigning footage to another episode, from the Gallery or Decided
+  page, is one more of those requests (`move-shot`); the worker moves the files, numbers the new
+  scene and records the move in `00_PROJECT/queue/SHOT_MOVES.jsonl`. The Prompts page and Regenerate append to
   `00_PROJECT/review/JOB_REQUESTS.jsonl`; the worker validates and prices, and only after Hamed
   approves the priced batch in the panel does it queue the jobs (`worker/lib/job-requests.mjs`).
   Second, **creating a project**: the picker's "start a new project" form copies
@@ -74,6 +76,9 @@ Run `/project-log` at the start of a session, or read directly:
 - **Nothing is deleted from the index.** Retiring keeps an entity's number and files. Archiving a
   look moves it to `09_OUTPUT/_archive/` with its registry row saved, so it can be restored.
   Renaming changes the ID wording and the files, never the number.
+- **Append-only history is never rewritten.** When footage moves to another episode its old shot
+  id stays in `QUEUE.jsonl` and `REVIEW_LOG.jsonl` — that is what happened — and `SHOT_MOVES.jsonl`
+  is what reads it forward. Don't be tempted to edit the history instead.
 - **When testing a worker against a sandbox copy (`SHM_PROJECTS`, or `SHM_ROOT` on a copied
   project folder), it still spends real credits** unless `SHM_HIGGSFIELD_JS` points at the stub
   CLI. Mark every sandbox queue job processed before any non-dry pass.

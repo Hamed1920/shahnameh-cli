@@ -25,6 +25,12 @@ export function projectPaths(root: string) {
     uploads: path.join(root, '09_OUTPUT', '_uploads'),
     /** Worker-written record of what each upload became. */
     filings: path.join(root, '00_PROJECT', 'queue', 'FILINGS.jsonl'),
+    /**
+     * Worker-written record of footage that changed episode. QUEUE.jsonl and
+     * REVIEW_LOG.jsonl are append-only history and keep the old shot id; this is
+     * how the panel reads that id forward to where the file is now.
+     */
+    shotMoves: path.join(root, '00_PROJECT', 'queue', 'SHOT_MOVES.jsonl'),
     /** References page requests (panel appends) and their outcomes (worker appends). */
     indexOps: path.join(root, '00_PROJECT', 'review', 'INDEX_OPS.jsonl'),
     indexOpResults: path.join(root, '00_PROJECT', 'queue', 'INDEX_OPS_RESULTS.jsonl'),

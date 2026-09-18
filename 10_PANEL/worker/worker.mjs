@@ -23,7 +23,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
-  GENERATE_LOCK, P, PROJECT, ROOT, appendJsonl, loadEntities, log, readCsv, readJsonl, rel,
+  GENERATE_LOCK, P, PROJECT, ROOT, appendJsonl, currentShotId, loadEntities, log, readCsv, readJsonl, rel,
   readState, resolveRef, shotFolder, spentWithin, stateStartProblem, writeCsv, writeState,
 } from './lib/project.mjs'
 import { acquireFileLock, releaseFileLock } from './lib/locks.mjs'
@@ -464,7 +464,7 @@ async function enqueueFinal(decision, sidecar, refs) {
     parentJobId: sidecar.jobId,
     attempt: sidecar.attempt ?? 1,
     stage: 'final',
-    target: sidecar.target,
+    target: await currentShotId(sidecar.target),
     variant: sidecar.variant,
     model: sidecar.model,
     prompt: sidecar.basePrompt ?? sidecar.prompt,
@@ -507,7 +507,7 @@ async function enqueueRevision(decision, sidecar, entities, refs, uploadTokens =
     attempt,
     // A rejected draft re-rolls as a draft. Never escalate cost on a failure.
     stage: sidecar.stage ?? null,
-    target: sidecar.target,
+    target: await currentShotId(sidecar.target),
     variant: sidecar.variant,
     model: sidecar.model,
     prompt: sidecar.basePrompt ?? sidecar.prompt,

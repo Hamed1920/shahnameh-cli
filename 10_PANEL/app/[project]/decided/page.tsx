@@ -10,7 +10,7 @@ import { assetUrl, isVideo } from '@/lib/asset'
 import { getDecidedEntries, type DecidedEntry, type FollowUp } from '@/lib/decided'
 import { requireProject } from '@/lib/projects'
 import { cn } from '@/lib/cn'
-import { episodeLabel, episodesIn, shortEpisode, NO_EPISODE_LABEL } from '@/lib/episodes'
+import { episodeLabel, episodesIn, nextEpisodeId, shortEpisode, NO_EPISODE_LABEL } from '@/lib/episodes'
 import { getCatalog, getEpisodes, getPriceTable, getWorkerConfig } from '@/lib/store'
 import type { RegenerateConfig } from '@/components/regenerate-button'
 
@@ -137,7 +137,7 @@ function EpisodeFilter({ project, episodes, titles, loose, current, countOf }: {
 }
 
 /** What a right-click on one decided take offers: its episode, its ids, its file. */
-function menuFor(entry: DecidedEntry, project: string, current: string): ItemAction[] {
+function menuFor(entry: DecidedEntry, project: string, current: string, episodes: string[], titles: Record<string, string>): ItemAction[] {
   const out: ItemAction[] = [{ kind: 'heading', text: `${entry.title} · ${entry.where}` }]
   if (entry.episode) {
     out.push({
@@ -149,8 +149,18 @@ function menuFor(entry: DecidedEntry, project: string, current: string): ItemAct
     })
   }
   if (current) out.push({ kind: 'link', label: 'All episodes', href: `/${project}/decided`, icon: 'filter' })
+  // Only footage has an episode to move between, and only once it is on disk.
+  if (entry.episode && entry.file) {
+    const elsewhere = [...episodes.filter((e) => e !== entry.episode), nextEpisodeId(episodes)]
+    out.push({
+      kind: 'assign',
+      shots: [entry.target],
+      caption: 'Move it to',
+      episodes: elsewhere.map((e) => ({ id: e, label: episodes.includes(e) ? episodeLabel(e, titles) : `${shortEpisode(e)} · new` })),
+    })
+  }
   out.push({ kind: 'divider' })
-  out.push({ kind: 'copy', label: 'Copy the shot id', text: entry.decision.target })
+  out.push({ kind: 'copy', label: 'Copy the shot id', text: entry.target })
   out.push({ kind: 'copy', label: 'Copy the job id', text: entry.decision.jobId })
   if (entry.file) {
     out.push({ kind: 'reveal', label: 'Show in folder', path: entry.file })
@@ -223,7 +233,7 @@ export default async function DecidedPage({ params, searchParams }: PageProps<'/
           <div className="grid gap-5 lg:grid-cols-2">
             {accepted.map((e, i) => (
               <Reveal key={e.decision.id} index={i}>
-                <ItemMenu actions={menuFor(e, pr.slug, ep)}>
+                <ItemMenu actions={menuFor(e, pr.slug, ep, episodes, titles)}>
                 <Card interactive className="space-y-4 p-5">
                   <Media entry={e} project={pr.slug} />
                   <Heading entry={e} />
@@ -263,7 +273,7 @@ export default async function DecidedPage({ params, searchParams }: PageProps<'/
           <div className="space-y-3">
             {denied.map((e, i) => (
               <Reveal key={e.decision.id} index={i}>
-                <ItemMenu actions={menuFor(e, pr.slug, ep)}>
+                <ItemMenu actions={menuFor(e, pr.slug, ep, episodes, titles)}>
                 <Card interactive className="flex flex-col gap-6 p-5 sm:flex-row">
                   <div className="shrink-0 sm:w-72">
                     <Media entry={e} project={pr.slug} />

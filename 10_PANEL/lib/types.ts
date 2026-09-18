@@ -270,6 +270,8 @@ export interface ArchivedLook {
 
 export type IndexOpType =
   | 'add' | 'retire' | 'restore' | 'status' | 'canonical' | 'role' | 'rename' | 'archive' | 'unarchive' | 'move'
+  /** Footage moves to another episode: the shot keeps its takes, gets the next free scene there. */
+  | 'move-shot'
 
 export interface IndexOp {
   id: string
@@ -285,6 +287,28 @@ export interface IndexOpResult {
   summary?: string
   reason?: string
   ts: string
+}
+
+/** One shot that changed episode, as the worker recorded it. */
+export interface ShotMove {
+  opId: string
+  from: string
+  to: string
+  files: { from: string; to: string }[]
+  ts: string
+}
+
+/**
+ * Where footage went, folded. Plain objects: this crosses to the client.
+ * A shot moved twice is followed all the way, so the oldest id still resolves.
+ */
+export interface ShotMoves {
+  /** Old shot id -> the id it has now. */
+  shot: Record<string, string>
+  /** Old project-relative file -> where that file is now. */
+  file: Record<string, string>
+  /** Old shot id -> the folder its takes are in now. */
+  folder: Record<string, string>
 }
 
 export interface WorkerStatus {

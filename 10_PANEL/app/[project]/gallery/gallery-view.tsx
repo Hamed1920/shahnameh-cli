@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Copy, Film, FolderOpen, GripVertical, Heart, Plus, Search, X } from 'lucide-react'
+import { Check, Copy, Film, FolderOpen, GripVertical, Heart, Plus, Search, X } from 'lucide-react'
 import { revealInFolder } from '@/app/[project]/reveal-action'
+import { assignToEpisode } from '@/app/[project]/shot-actions'
 import { MenuNote } from '@/components/item-menu'
 import { ContextMenu, type MenuEntry } from '@/components/ui/context-menu'
 import { RegenerateButton, type RegenerateConfig } from '@/components/regenerate-button'
@@ -14,7 +15,7 @@ import { Badge, PageHeader, SectionHeading } from '@/components/ui/text'
 import { isVideo as isVideoFile } from '@/lib/asset'
 import { useAssetUrls, useProject } from '@/components/project-context'
 import { cn } from '@/lib/cn'
-import { episodeLabel, episodesIn, groupByEpisode, shortEpisode, NO_EPISODE_LABEL } from '@/lib/episodes'
+import { episodeLabel, episodesIn, groupByEpisode, nextEpisodeId, shortEpisode, NO_EPISODE_LABEL } from '@/lib/episodes'
 import { MAX_TAG_LENGTH, cleanTag, moveWithin, tagKey, type GalleryState } from '@/lib/gallery'
 import type { CatalogEntity, RegenerateSource, RegenerationView } from '@/lib/types'
 import { setLike, setOrder, setTag } from './actions'
@@ -175,6 +176,13 @@ export function GalleryView({
     void run(() => setTag(project.slug, id, tag, false), () => setTags(before))
   }
 
+  /**
+   * The takes picked out to do something to, by decision id. Two takes of one
+   * shot share a target, and a shot moves with all of its takes, so the thing
+   * actually acted on is the set of their shot ids.
+   */
+  const [selected, setSelected] = useState<Set<string>>(new Set())
+  const lastPicked = useRef<string | null>(null)
   const [menu, setMenu] = useState<{ at: { x: number; y: number }; entries: MenuEntry[] } | null>(null)
   const [note, setNote] = useState<{ id: number; text: string; bad?: boolean } | null>(null)
   const say = (text: string, bad?: boolean) => {
@@ -241,13 +249,75 @@ export function GalleryView({
 
   const draggable = sort === 'order'
 
+  // ---------------------------------------------------------------- selection
+
+  /** Click to pick one; shift-click to pick everything between, as a file list does. */
+  const pick = (id: string, shift: boolean) => {
+    setSelected((was) => {
+      const next = new Set(was)
+      const ids = visible.map((t) => t.decisionId)
+      const from = lastPicked.current ? ids.indexOf(lastPicked.current) : -1
+      const to = ids.indexOf(id)
+      if (shift && from >= 0 && to >= 0) {
+        const [a, b] = from < to ? [from, to] : [to, from]
+        const on = !was.has(id)
+        for (const between of ids.slice(a, b + 1)) { if (on) next.add(between); else next.delete(between) }
+      } else if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+    lastPicked.current = id
+  }
+
+  const selectedTakes = takes.filter((t) => selected.has(t.decisionId))
+  /** One shot moves once, however many of its takes are picked. */
+  const shotsOf = (list: GalleryTake[]) => [...new Set(list.filter((t) => t.episode && t.file).map((t) => t.target))]
+  const selectedShots = shotsOf(selectedTakes)
+
+  const assign = (shots: string[], to: string) => {
+    void assignToEpisode(project.slug, shots, to).then((r) => {
+      if (!r.ok) { say(r.error ?? 'That did not save.', true); return }
+      say(`Asked the worker to move ${shots.length} shot${shots.length === 1 ? '' : 's'} to ${shortEpisode(to)}. It moves them on its next pass.`)
+      setSelected(new Set())
+      router.refresh()
+    })
+  }
+
+  /** Every episode a shot could move to, the next free number last. */
+  const destinations = (from: string | null) =>
+    [...episodes.filter((e) => e !== from), nextEpisodeId(episodes)].map((e) => ({
+      id: e,
+      label: episodes.includes(e) ? episodeLabel(e, episodeTitles) : `${shortEpisode(e)} · new episode`,
+    }))
+
+  const assignEntry = (shots: string[], from: string | null): MenuEntry[] =>
+    shots.length === 0
+      ? []
+      : [{
+          caption: shots.length === 1 ? 'Move it to' : `Move ${shots.length} shots to`,
+          chips: destinations(from).map((d) => ({ label: d.label, onSelect: () => assign(shots, d.id) })),
+        }]
+
   /**
    * Right-click menu for one take. Built fresh on every open so the chips show
    * the filters as they stand, and it offers the whole bar -- episode, quality,
    * order -- because the bar is at the top of a long page and the take is not.
    */
-  const menuFor = (t: GalleryTake): MenuEntry[] => [
-    { heading: `${t.title} · ${t.where}` },
+  const menuFor = (t: GalleryTake): MenuEntry[] => {
+    const many = selected.has(t.decisionId) && selected.size > 1
+    const shots = many ? selectedShots : shotsOf([t])
+    return [
+    { heading: many ? `${selected.size} selected` : `${t.title} · ${t.where}` },
+    ...assignEntry(shots, many ? null : t.episode),
+    {
+      label: selected.has(t.decisionId) ? 'Unselect' : 'Select',
+      icon: <Check className="size-3.5" />,
+      onSelect: () => pick(t.decisionId, false),
+    },
+    ...(selected.size
+      ? [{ label: `Clear the selection (${selected.size})`, icon: <X className="size-3.5" />, onSelect: () => setSelected(new Set()) } as MenuEntry]
+      : [{ label: `Select all ${visible.length} shown`, icon: <Check className="size-3.5" />, onSelect: () => setSelected(new Set(visible.map((x) => x.decisionId))) } as MenuEntry]),
+    { divider: true },
     {
       caption: 'Show only',
       chips: [
@@ -295,7 +365,8 @@ export function GalleryView({
     { label: 'Copy the shot id', icon: <Copy className="size-3.5" />, onSelect: () => void copy(t.target) },
     { label: 'Copy the job id', icon: <Copy className="size-3.5" />, onSelect: () => void copy(t.jobId) },
     { label: 'Show in folder', icon: <FolderOpen className="size-3.5" />, disabled: !t.file, onSelect: () => t.file && reveal(t.file) },
-  ]
+    ]
+  }
   const openMenu = (e: React.MouseEvent, t: GalleryTake) => {
     e.preventDefault()
     e.stopPropagation()
@@ -406,6 +477,48 @@ export function GalleryView({
           </div>
         )}
 
+        {selected.size > 0 && (
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-md border border-accent/40 bg-accent/[0.06] px-3 py-2 text-[13px]">
+            <span className="text-fg">
+              {selected.size} selected
+              {selectedShots.length > 0 && selectedShots.length !== selected.size && (
+                <span className="text-faint"> · {selectedShots.length} shot{selectedShots.length === 1 ? '' : 's'}</span>
+              )}
+            </span>
+            {selectedShots.length > 0 ? (
+              <>
+                <span className="text-muted">Move to</span>
+                {destinations(null).map((d) => (
+                  <button
+                    key={d.id}
+                    type="button"
+                    onClick={() => assign(selectedShots, d.id)}
+                    className="focus-ring h-7 cursor-pointer rounded-md border border-edge-strong px-2.5 text-[12px] text-muted transition hover:border-muted hover:text-fg"
+                  >
+                    {d.label}
+                  </button>
+                ))}
+              </>
+            ) : (
+              <span className="text-faint">Nothing picked is footage, so there is no episode to move it to.</span>
+            )}
+            <button
+              type="button"
+              onClick={() => setSelected(new Set(visible.map((t) => t.decisionId)))}
+              className="focus-ring ml-auto h-7 cursor-pointer px-1 text-[12px] text-muted underline-offset-2 hover:text-fg hover:underline"
+            >
+              Select all {visible.length} shown
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelected(new Set())}
+              className="focus-ring h-7 cursor-pointer px-1 text-[12px] text-muted underline-offset-2 hover:text-fg hover:underline"
+            >
+              Clear
+            </button>
+          </div>
+        )}
+
         {error && <p className="rounded-md border border-bad/35 bg-bad/8 px-3 py-2 text-xs text-bad">{error}</p>}
       </div>
 
@@ -444,6 +557,8 @@ export function GalleryView({
                     onDragOver={() => onDragOver(t.decisionId)}
                     onDrop={onDrop}
                     onContextMenu={(e) => openMenu(e, t)}
+                    selected={selected.has(t.decisionId)}
+                    onPick={(shift) => pick(t.decisionId, shift)}
                     catalog={catalog}
                     cfg={cfg}
                     prices={prices}
@@ -463,7 +578,7 @@ export function GalleryView({
 
 function TakeCard({
   take, liked, tags, suggestions, draggable, onToggleLike, onAddTag, onRemoveTag,
-  onDragStart, onDragOver, onDrop, onContextMenu, catalog, cfg, prices,
+  onDragStart, onDragOver, onDrop, onContextMenu, selected, onPick, catalog, cfg, prices,
 }: {
   take: GalleryTake
   liked: boolean
@@ -477,6 +592,8 @@ function TakeCard({
   onDragOver: () => void
   onDrop: () => void
   onContextMenu: (e: React.MouseEvent) => void
+  selected: boolean
+  onPick: (shift: boolean) => void
   catalog: CatalogEntity[]
   cfg: RegenerateConfig
   prices: Record<string, number>
@@ -495,7 +612,7 @@ function TakeCard({
   return (
     <Card
       interactive
-      className="flex flex-col gap-3.5 p-4"
+      className={cn('flex flex-col gap-3.5 p-4', selected && 'border-accent ring-1 ring-accent/40')}
       draggable={draggable}
       onDragStart={onDragStart}
       onDragOver={(e: React.DragEvent) => { if (draggable) { e.preventDefault(); onDragOver() } }}
@@ -503,13 +620,28 @@ function TakeCard({
       onDrop={(e: React.DragEvent) => { e.preventDefault(); onDrop() }}
       onContextMenu={onContextMenu}
     >
-      {take.file ? (
-        <Thumbnail file={take.file} alt={take.title} />
-      ) : (
-        <div className="grid aspect-video w-full place-items-center rounded-lg border border-dashed border-edge-strong p-4 text-center text-[13px] text-muted">
-          {take.missing}
-        </div>
-      )}
+      <div className="relative">
+        {take.file ? (
+          <Thumbnail file={take.file} alt={take.title} />
+        ) : (
+          <div className="grid aspect-video w-full place-items-center rounded-lg border border-dashed border-edge-strong p-4 text-center text-[13px] text-muted">
+            {take.missing}
+          </div>
+        )}
+        <button
+          type="button"
+          aria-pressed={selected}
+          aria-label={selected ? `Unselect ${take.title}` : `Select ${take.title}`}
+          title="Click to select; shift-click to select a run of them"
+          onClick={(e) => onPick(e.shiftKey)}
+          className={cn(
+            'focus-ring absolute top-2 left-2 grid size-6 cursor-pointer place-items-center rounded-md border backdrop-blur transition',
+            selected ? 'border-accent bg-accent text-ink' : 'border-edge-strong bg-ink/70 text-transparent hover:text-muted',
+          )}
+        >
+          <Check aria-hidden className="size-3.5" />
+        </button>
+      </div>
 
       <div className="flex items-start gap-2">
         {draggable && (

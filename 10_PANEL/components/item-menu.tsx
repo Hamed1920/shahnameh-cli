@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import { Copy, ExternalLink, Film, FolderOpen, ListFilter } from 'lucide-react'
 import { revealInFolder } from '@/app/[project]/reveal-action'
+import { assignToEpisode } from '@/app/[project]/shot-actions'
 import { useProject } from '@/components/project-context'
 import { ContextMenu, type MenuEntry } from '@/components/ui/context-menu'
 import { cn } from '@/lib/cn'
@@ -25,6 +26,8 @@ export type ItemAction =
   | { kind: 'reveal'; label: string; path: string }
   /** Open the media itself in a new tab. */
   | { kind: 'open'; label: string; href: string }
+  /** Assign footage to another episode: the worker moves it (see shot-actions.ts). */
+  | { kind: 'assign'; shots: string[]; episodes: { id: string; label: string }[]; caption?: string }
   | { kind: 'divider' }
   | { kind: 'heading'; text: string }
 
@@ -89,6 +92,20 @@ export function ItemMenu({
     }
     if (a.kind === 'open') {
       return { label: a.label, icon: ICONS.link, onSelect: () => window.open(a.href, '_blank', 'noopener') }
+    }
+    if (a.kind === 'assign') {
+      return {
+        caption: a.caption ?? `Assign ${a.shots.length === 1 ? 'it' : `these ${a.shots.length}`} to`,
+        chips: a.episodes.map((e) => ({
+          label: e.label,
+          onSelect: () => {
+            void assignToEpisode(project.slug, a.shots, e.id).then((r) => {
+              say(r.ok ? `Asked the worker to move ${a.shots.length === 1 ? 'it' : `${a.shots.length} shots`} to ${e.label}` : (r.error ?? 'That did not save.'), !r.ok)
+              if (r.ok) router.refresh()
+            })
+          },
+        })),
+      }
     }
     return {
       label: a.label,
