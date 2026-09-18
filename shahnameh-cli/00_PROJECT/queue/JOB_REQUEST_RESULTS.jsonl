@@ -6,3 +6,4 @@
 {"batchId":"B-20260916-HU8","reqId":"jr_mu46dc3jye0m","event":"queued","jobIds":{"r1":"J-20260916-DNF"},"assigned":[{"key":"r1","proposal":"NEXT/EP001","id":"SHM-EP001-SC014-SH0010","shortId":"EP001-SC014-SH0010"}],"total":45,"ts":"2026-09-16T14:07:26.539Z"}
 {"batchId":null,"reqId":"jr_mu4dz7qi4yea","event":"queued","jobIds":{"J-20260914-BTZ":"J-20260916-XXT"},"assigned":[],"total":null,"ts":"2026-09-16T17:40:25.313Z"}
 {"batchId":null,"reqId":"jr_mu4eohhumbas","event":"queued","jobIds":{"J-20260915-GNO":"J-20260916-FSE"},"assigned":[],"total":null,"ts":"2026-09-16T18:00:02.520Z"}
+{"batchId":null,"reqId":"jr_mu5k485hv889","event":"queued","jobIds":{"J-20260914-BTZ":"J-20260917-7X7"},"assigned":[],"total":null,"ts":"2026-09-17T13:20:01.386Z"}

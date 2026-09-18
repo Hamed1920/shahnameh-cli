@@ -1,0 +1,105 @@
+{
+  "jobId": "J-20260917-7X7",
+  "parentJobId": "J-20260914-BTZ",
+  "hfJobId": "c5464fc4-60aa-4537-8de6-1fd4d5a95bd7",
+  "attempt": 5,
+  "stage": "draft",
+  "label": null,
+  "target": "SHM-EP001-SC001-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP001-ZAHHAK-ENTRY/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\r\n\r\nSHOT 1 — CONVERGENCE — 0:00–0:07:\r\n24mm extreme wide static view across a cold rocky plain. Two small groups of Iranian riders and nobles enter from opposite horizontal edges and converge on the same distant stone road. The wide frame must show the empty land between them before they meet. Their spacing is irregular and tired; banners hang low in weak crosswind. No military formation and no raised weapons.\r\n\r\nSHOT 2 — THE FINAL APPROACH — 0:07–0:15:\r\n50mm lateral telephoto observation from behind foreground rock. The joined delegation moves left to right toward Zahhak’s severe stone complex in the far background. A principal noble walks beside a pack animal carrying only three to five wrapped ceremonial gifts. Riders slow as the ground rises. The camera pans only enough to keep them in frame, arriving slightly late and allowing bodies to overlap naturally. End as the first riders stop before the outer threshold.\r\n\r\nGLOBAL EXECUTION RULES:\r\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\r\n\r\nSOUND:\r\nDry wind, dispersed hooves, harness leather, restrained fabric and distant stone resonance. No chant, horns or drums.\r\n\r\nDESIGN NOTE — no reference image was planned for these, so build them from the description above (but if one of them is called with an attached image in this prompt, match that image instead) and keep them identical across blocks: LOC_ZAHHAK_APPROACH, PROP_IRANIAN_BANNER.\r\n\r\nRevision — the previous attempt was rejected for these reasons. Fix them:\r\n- they went to the wrong building. they would go to loc-007\n\nRevision — earlier attempts were rejected for these reasons, oldest first. Fix all of them; where two notes disagree, the later note wins:\n- همه چیز خوبه. فقط از عکس جدید که دادم به عنوان پرچم ایران استفاده کن.\r\nاین پرچم ایران در هر جا که پرچم ایران میخواست استفاده بشه.\n- <<<image_4>>> این عکس نمای بیرونی کاخ ضحاک هست. جایی که سرداران ایرانی به سمتش حرکت میکنند.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in @REF-001/V02. Never show a bare human face.\n\n<<<image_1>>> is Civilization Caste Board (REF-001 V01); match it wherever Civilization Caste Board appears.\n<<<image_2>>> is Diplomatic Gift Set (PRP-010 V01); match it wherever Diplomatic Gift Set appears.\n<<<image_3>>> is Perisan (Iranian) Flag (PRP-016 V02); match it wherever Perisan (Iranian) Flag appears.",
+  "basePrompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\r\n\r\nSHOT 1 — CONVERGENCE — 0:00–0:07:\r\n24mm extreme wide static view across a cold rocky plain. Two small groups of Iranian riders and nobles enter from opposite horizontal edges and converge on the same distant stone road. The wide frame must show the empty land between them before they meet. Their spacing is irregular and tired; banners hang low in weak crosswind. No military formation and no raised weapons.\r\n\r\nSHOT 2 — THE FINAL APPROACH — 0:07–0:15:\r\n50mm lateral telephoto observation from behind foreground rock. The joined delegation moves left to right toward Zahhak’s severe stone complex in the far background. A principal noble walks beside a pack animal carrying only three to five wrapped ceremonial gifts. Riders slow as the ground rises. The camera pans only enough to keep them in frame, arriving slightly late and allowing bodies to overlap naturally. End as the first riders stop before the outer threshold.\r\n\r\nGLOBAL EXECUTION RULES:\r\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\r\n\r\nSOUND:\r\nDry wind, dispersed hooves, harness leather, restrained fabric and distant stone resonance. No chant, horns or drums.\r\n\r\nDESIGN NOTE — no reference image exists for these yet, build them from the description above and keep them identical across blocks: LOC_ZAHHAK_APPROACH, PROP_IRANIAN_BANNER.\r\n\r\nRevision — the previous attempt was rejected for these reasons. Fix them:\r\n- they went to the wrong building. they would go to loc-007",
+  "revisionNotes": [
+    "همه چیز خوبه. فقط از عکس جدید که دادم به عنوان پرچم ایران استفاده کن.\r\nاین پرچم ایران در هر جا که پرچم ایران میخواست استفاده بشه.",
+    "@LOC-018/V01 این عکس نمای بیرونی کاخ ضحاک هست. جایی که سرداران ایرانی به سمتش حرکت میکنند."
+  ],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": false,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@REF-001/V01",
+    "@PRP-010/V01",
+    "@PRP-016/V02",
+    "@LOC-018/V01"
+  ],
+  "createdAt": "2026-09-17T13:29:22.372Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260917_132025_c5464fc4-60aa-4537-8de6-1fd4d5a95bd7.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-17T13:20:25.875139Z",
+      "display_name": "Seedance 2.5",
+      "id": "c5464fc4-60aa-4537-8de6-1fd4d5a95bd7",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": false,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "29127219-e221-4ab9-a4c1-794b3435489c",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/29127219-e221-4ab9-a4c1-794b3435489c.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "0f913b99-27c1-4c4b-8c76-1e6394392e35",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/0f913b99-27c1-4c4b-8c76-1e6394392e35.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "2f304f4d-9431-49bc-aefd-81589e71b243",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/2f304f4d-9431-49bc-aefd-81589e71b243.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "376f6634-c7e0-4f63-a89e-fa5df0e8b2bf",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/376f6634-c7e0-4f63-a89e-fa5df0e8b2bf.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "Create one 15-second horizontal 16:9 cinematic video block. Follow the exact shot timing below; total duration is 15 seconds.\r\n\r\nSHOT 1 — CONVERGENCE — 0:00–0:07:\r\n24mm extreme wide static view across a cold rocky plain. Two small groups of Iranian riders and nobles enter from opposite horizontal edges and converge on the same distant stone road. The wide frame must show the empty land between them before they meet. Their spacing is irregular and tired; banners hang low in weak crosswind. No military formation and no raised weapons.\r\n\r\nSHOT 2 — THE FINAL APPROACH — 0:07–0:15:\r\n50mm lateral telephoto observation from behind foreground rock. The joined delegation moves left to right toward Zahhak’s severe stone complex in the far background. A principal noble walks beside a pack animal carrying only three to five wrapped ceremonial gifts. Riders slow as the ground rises. The camera pans only enough to keep them in frame, arriving slightly late and allowing bodies to overlap naturally. End as the first riders stop before the outer threshold.\r\n\r\nGLOBAL EXECUTION RULES:\r\nHorizontal cinematic frame, exact 16:9 aspect ratio. Never crop or compose vertically. Use the full horizontal width for architecture, lateral blocking, negative space and opposing movement. Every uploaded reference is an immutable identity or design anchor. No redesign, no identity merging and no transfer of masks or costumes. All imagery is physically real, tactile and grounded. No dialogue, narration, music, titles or readable text. No heroic fantasy montage, no glossy commercial light, no magic, no smoke, no floating particles, no drone spectacle, no orbit, no speed ramp and no slow motion. Iranian crowd masks have smooth continuous human-like surfaces and small eye openings; never skull, skeletal, Mexican or Day-of-the-Dead masks. Zahhak is exactly 178 cm, permanently lame and visibly dependent on a staff whenever standing or walking. His five to ten natural black serpents remain alive and move independently across shoulders, neck, back and upper torso; never static ornaments, never dragons and never a Medusa arrangement.\r\n\r\nSOUND:\r\nDry wind, dispersed hooves, harness leather, restrained fabric and distant stone resonance. No chant, horns or drums.\r\n\r\nDESIGN NOTE — no reference image was planned for these, so build them from the description above (but if one of them is called with an attached image in this prompt, match that image instead) and keep them identical across blocks: LOC_ZAHHAK_APPROACH, PROP_IRANIAN_BANNER.\r\n\r\nRevision — the previous attempt was rejected for these reasons. Fix them:\r\n- they went to the wrong building. they would go to loc-007\n\nRevision — earlier attempts were rejected for these reasons, oldest first. Fix all of them; where two notes disagree, the later note wins:\n- همه چیز خوبه. فقط از عکس جدید که دادم به عنوان پرچم ایران استفاده کن.\r\nاین پرچم ایران در هر جا که پرچم ایران میخواست استفاده بشه.\n- <<<image_4>>> این عکس نمای بیرونی کاخ ضحاک هست. جایی که سرداران ایرانی به سمتش حرکت میکنند.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in @REF-001/V02. Never show a bare human face.\n\n<<<image_1>>> is Civilization Caste Board (REF-001 V01); match it wherever Civilization Caste Board appears.\n<<<image_2>>> is Diplomatic Gift Set (PRP-010 V01); match it wherever Diplomatic Gift Set appears.\n<<<image_3>>> is Perisan (Iranian) Flag (PRP-016 V02); match it wherever Perisan (Iranian) Flag appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260917_132025_c5464fc4-60aa-4537-8de6-1fd4d5a95bd7.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260917_132025_c5464fc4-60aa-4537-8de6-1fd4d5a95bd7_thumbnail.webp"
+    }
+  ]
+}
