@@ -25,15 +25,12 @@ export function Th({ className, children, ...props }: React.ComponentProps<'th'>
   )
 }
 
+/** The row's own look, exported so a row that owns a right-click menu can wear it too. */
+export const TR_CLASS = 'border-t border-edge align-top transition-colors duration-150 hover:bg-white/[0.02]'
+
 export function Tr({ className, children, ...props }: React.ComponentProps<'tr'>) {
   return (
-    <tr
-      className={cn(
-        'border-t border-edge align-top transition-colors duration-150 hover:bg-white/[0.02]',
-        className,
-      )}
-      {...props}
-    >
+    <tr className={cn(TR_CLASS, className)} {...props}>
       {children}
     </tr>
   )

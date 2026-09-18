@@ -82,14 +82,18 @@ export function targetModeOf(target: string | null, catalog: CatalogEntity[], co
  *   1. a target the document gives (a `target:` line, an SHM-JOB header)
  *      -- SHM-JOB is the block keyword in every project, whatever its code
  *   2. a shot the document names (SC013 in the file name or label, a full shot id)
- *   3. a video: the next free scene of the latest episode, numbered at approval
+ *   3. a video: the next free scene of the batch's episode, numbered at approval
  *   4. an image: the one entity its references (or its words) point at, else nothing yet
  */
 export function initialTarget(
   parsed: { target: string | null; label: string | null; prompt: string; refs: string[]; model: string | null },
-  ctx: { file: string | null; catalog: CatalogEntity[]; defaultModel: string; knownShots: string[]; code: string },
+  ctx: {
+    file: string | null; catalog: CatalogEntity[]; defaultModel: string; knownShots: string[]; code: string
+    /** The episode this batch is for, chosen on the Prompts page. Falls back to the latest one with footage. */
+    episode?: string
+  },
 ): RowTarget {
-  const episode = latestEpisode(ctx.knownShots, ctx.code)
+  const episode = ctx.episode ?? latestEpisode(ctx.knownShots, ctx.code)
   if (parsed.target) return targetModeOf(parsed.target, ctx.catalog, ctx.code, episode)
   const shot = sceneFromDocument({ file: ctx.file, label: parsed.label, prompt: parsed.prompt }, episode, ctx.code)
   if (shot) return targetModeOf(shot, ctx.catalog, ctx.code, episode)

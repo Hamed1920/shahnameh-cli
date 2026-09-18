@@ -1,5 +1,5 @@
 import { requireProject } from '@/lib/projects'
-import { getCatalog, getPending, getReferenceFor, getReviewContexts, referenceResolver } from '@/lib/store'
+import { getCatalog, getEpisodes, getPending, getReferenceFor, getReviewContexts, referenceResolver } from '@/lib/store'
 import type { ReviewItem } from '@/lib/types'
 import { ReviewWorkspace } from './review-workspace'
 
@@ -11,7 +11,9 @@ export const dynamic = 'force-dynamic'
  */
 export default async function ReviewPage({ params }: PageProps<'/[project]/review'>) {
   const pr = await requireProject((await params).project)
-  const [pending, catalog, resolve] = await Promise.all([getPending(pr), getCatalog(pr), referenceResolver(pr)])
+  const [pending, catalog, resolve, episodes] = await Promise.all([
+    getPending(pr), getCatalog(pr), referenceResolver(pr), getEpisodes(pr),
+  ])
   const contexts = await getReviewContexts(pr, pending)
 
   const items: ReviewItem[] = await Promise.all(
@@ -37,5 +39,11 @@ export default async function ReviewPage({ params }: PageProps<'/[project]/revie
       a.candidate.sidecar.createdAt.localeCompare(b.candidate.sidecar.createdAt),
   )
 
-  return <ReviewWorkspace items={items} catalog={catalog} />
+  return (
+    <ReviewWorkspace
+      items={items}
+      catalog={catalog}
+      episodeTitles={Object.fromEntries(episodes.filter((e) => e.title).map((e) => [e.id, e.title]))}
+    />
+  )
 }

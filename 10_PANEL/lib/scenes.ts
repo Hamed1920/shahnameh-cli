@@ -1,4 +1,5 @@
 import { idRx, shotId } from '../worker/lib/ids.mjs'
+import { EPISODE_RX } from './episodes.ts'
 
 /**
  * Scenes for the Prompts page. A video prompt is footage, and every EP001
@@ -15,7 +16,8 @@ import { idRx, shotId } from '../worker/lib/ids.mjs'
 /** The target a row sends when the worker should pick the scene. */
 export const NEXT_SCENE_RX = /^NEXT\/(EP\d{3})$/
 export const nextSceneTarget = (episode: string) => `NEXT/${episode}`
-export const EPISODE_RX = /^EP\d{3}$/
+/** Episode identity lives in episodes.ts; re-exported so importers here are unchanged. */
+export { EPISODE_RX }
 
 const EP_SC_RX = /(?:^|[^A-Z0-9])EP[\s_-]?(\d{1,3})[\s_-]*SC[\s_-]?(\d{1,3})(?![0-9])/i
 const SC_RX = /(?:^|[^A-Z0-9])SC[\s_-]?(\d{3})(?![0-9])/i

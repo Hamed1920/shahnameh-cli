@@ -5,6 +5,7 @@ import { Library } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Field, Input, Select } from '@/components/ui/field'
 import { Segmented } from '@/components/ui/segmented'
+import { episodeLabel } from '@/lib/episodes'
 import { KINDS, KIND_LABEL, entitySlug } from '@/lib/indexing'
 import { targetCandidates } from '@/lib/ref-suggest'
 import type { DraftRow, TargetMode } from '@/lib/batch-rules'
@@ -20,6 +21,8 @@ export function TargetCell({
   row,
   catalog,
   knownShots,
+  episodes,
+  episodeTitles,
   scenePreview,
   listId,
   onChange,
@@ -28,6 +31,9 @@ export function TargetCell({
   row: DraftRow
   catalog: CatalogEntity[]
   knownShots: string[]
+  /** The episodes this row may file into: the batch's list, plus wherever it already points. */
+  episodes: string[]
+  episodeTitles: Record<string, string>
   /** What the next free scene would be for this row, counting the rows above it. */
   scenePreview: string | null
   listId: string
@@ -42,6 +48,8 @@ export function TargetCell({
     [row.targetMode, row.prompt, row.refs, catalog],
   )
   const usedShot = row.targetMode === 'shot' && !row.sceneAuto && knownShots.includes(row.target.trim())
+  // A document can name an episode the project has never seen; keep it selectable rather than silently moving the row.
+  const episodeChoices = episodes.includes(row.episode) || !row.episode ? episodes : [...episodes, row.episode].sort()
 
   return (
     <div className="grid grid-cols-[6.5rem_minmax(0,1fr)] items-start gap-x-4 gap-y-3">
@@ -65,14 +73,16 @@ export function TargetCell({
                 options={[['auto', 'Next free'], ['specific', 'Specific shot']]}
               />
               {row.sceneAuto ? (
-                <Input
-                  dir="ltr"
+                <Select
                   aria-label="Episode"
                   value={row.episode}
-                  onChange={(e) => onChange({ episode: e.target.value.trim().toUpperCase() })}
-                  placeholder="EP001"
-                  className="w-24 font-mono text-[13px]"
-                />
+                  onChange={(e) => onChange({ episode: e.target.value })}
+                  className="h-9 w-auto"
+                >
+                  {episodeChoices.map((e) => (
+                    <option key={e} value={e}>{episodeLabel(e, episodeTitles)}</option>
+                  ))}
+                </Select>
               ) : (
                 <>
                   <Input

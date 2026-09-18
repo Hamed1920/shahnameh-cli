@@ -1,7 +1,8 @@
 import { WorkerControls } from '@/components/worker-controls'
 import { PageHeader } from '@/components/ui/text'
 import {
-  getBatches, getCatalog, getGeneratingJobId, getKnownShots, getPromptLibrary, getRecentRefs, getWorkerConfig, getWorkerState, getWorkerStatus,
+  getBatches, getCatalog, getEpisodes, getGeneratingJobId, getKnownShots, getPromptLibrary, getRecentRefs, getWorkerConfig,
+  getWorkerState, getWorkerStatus,
 } from '@/lib/store'
 import { requireProject } from '@/lib/projects'
 import type { BatchDefaults } from '@/lib/types'
@@ -18,8 +19,9 @@ export const dynamic = 'force-dynamic'
  */
 export default async function PromptsPage({ params }: PageProps<'/[project]/prompts'>) {
   const pr = await requireProject((await params).project)
-  const [catalog, batches, worker, cfg, knownShots, state, library, recentRefs] = await Promise.all([
+  const [catalog, batches, worker, cfg, knownShots, state, library, recentRefs, episodes] = await Promise.all([
     getCatalog(pr), getBatches(pr), getWorkerStatus(pr), getWorkerConfig(), getKnownShots(pr), getWorkerState(pr), getPromptLibrary(pr), getRecentRefs(pr),
+    getEpisodes(pr),
   ])
   const generating = await getGeneratingJobId(pr, new Set((state?.processedJobs ?? []) as string[]))
 
@@ -44,12 +46,12 @@ export default async function PromptsPage({ params }: PageProps<'/[project]/prom
   return (
     <div className="space-y-16">
       <PageHeader title="Prompts" eyebrow="Generation" meta={<WorkerControls status={worker} generating={generating} compact />}>
-        Paste prompts or drop a document, check where each result is filed and what it references, and send the
-        batch. The worker checks every row and prices it; you approve the total before anything generates. New
-        scenes and new entities get their number when you approve.
+        Paste prompts or drop a document, say which episode the footage belongs to, check where each result is
+        filed and what it references, and send the batch. The worker checks every row and prices it; you approve
+        the total before anything generates. New scenes and new entities get their number when you approve.
       </PageHeader>
 
-      <PromptIntake catalog={catalog} cfg={intakeCfg} knownShots={knownShots} recentRefs={recentRefs} />
+      <PromptIntake catalog={catalog} cfg={intakeCfg} knownShots={knownShots} recentRefs={recentRefs} episodes={episodes} />
       <Batches batches={batches} worker={worker} />
       <PromptLibrary items={library} catalog={catalog} cfg={intakeCfg} batches={batches} />
     </div>

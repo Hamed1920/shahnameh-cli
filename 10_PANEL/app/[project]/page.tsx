@@ -2,7 +2,7 @@ import { getDecidedEntries } from '@/lib/decided'
 import { requireProject } from '@/lib/projects'
 import { allTags } from '@/lib/gallery'
 import { getGalleryState } from '@/lib/gallery-log'
-import { getCatalog, getPriceTable, getWorkerConfig } from '@/lib/store'
+import { getCatalog, getEpisodes, getPriceTable, getWorkerConfig } from '@/lib/store'
 import type { RegenerateConfig } from '@/components/regenerate-button'
 import { GalleryView, type GalleryTake } from './gallery/gallery-view'
 
@@ -21,8 +21,8 @@ export const dynamic = 'force-dynamic'
  */
 export default async function GalleryPage({ params }: PageProps<'/[project]'>) {
   const pr = await requireProject((await params).project)
-  const [entries, gallery, catalog, cfg, priceTable] = await Promise.all([
-    getDecidedEntries(pr), getGalleryState(pr), getCatalog(pr), getWorkerConfig(), getPriceTable(),
+  const [entries, gallery, catalog, cfg, priceTable, episodes] = await Promise.all([
+    getDecidedEntries(pr), getGalleryState(pr), getCatalog(pr), getWorkerConfig(), getPriceTable(), getEpisodes(pr),
   ])
 
   const regenCfg: RegenerateConfig = {
@@ -40,6 +40,7 @@ export default async function GalleryPage({ params }: PageProps<'/[project]'>) {
       jobId: e.decision.jobId,
       title: e.title,
       where: e.where,
+      episode: e.episode,
       target: e.decision.target,
       ts: e.decision.ts,
       stage: e.stage,
@@ -62,6 +63,7 @@ export default async function GalleryPage({ params }: PageProps<'/[project]'>) {
       tags={allTags(gallery)}
       catalog={catalog}
       cfg={regenCfg}
+      episodeTitles={Object.fromEntries(episodes.filter((e) => e.title).map((e) => [e.id, e.title]))}
       // Plain object: a Map does not survive the server -> client boundary.
       prices={Object.fromEntries(priceTable)}
     />

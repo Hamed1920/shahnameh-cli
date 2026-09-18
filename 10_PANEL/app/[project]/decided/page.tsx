@@ -1,4 +1,6 @@
+import Link from 'next/link'
 import { DecisionDetails } from '@/components/decision-details'
+import { ItemMenu, type ItemAction } from '@/components/item-menu'
 import { RegenerateButton } from '@/components/regenerate-button'
 import { ShowInFolder } from '@/components/show-in-folder'
 import { Card, EmptyState } from '@/components/ui/card'
@@ -7,7 +9,9 @@ import { Badge, PageHeader, SectionHeading } from '@/components/ui/text'
 import { assetUrl, isVideo } from '@/lib/asset'
 import { getDecidedEntries, type DecidedEntry, type FollowUp } from '@/lib/decided'
 import { requireProject } from '@/lib/projects'
-import { getCatalog, getPriceTable, getWorkerConfig } from '@/lib/store'
+import { cn } from '@/lib/cn'
+import { episodeLabel, episodesIn, shortEpisode, NO_EPISODE_LABEL } from '@/lib/episodes'
+import { getCatalog, getEpisodes, getPriceTable, getWorkerConfig } from '@/lib/store'
 import type { RegenerateConfig } from '@/components/regenerate-button'
 
 export const dynamic = 'force-dynamic'
@@ -93,6 +97,68 @@ function FollowUpLine({ entry }: { entry: DecidedEntry }) {
   )
 }
 
+/**
+ * Which episode is being read, as links rather than client state: the URL then
+ * says which one, so it survives a reload and can be sent to someone.
+ */
+function EpisodeFilter({ project, episodes, titles, loose, current, countOf }: {
+  project: string
+  episodes: string[]
+  titles: Record<string, string>
+  loose: boolean
+  current: string
+  countOf: (episode: string) => number
+}) {
+  if (episodes.length < 2 && !(episodes.length === 1 && loose)) return null
+  const chips = [
+    { id: '', label: 'All' },
+    ...episodes.map((e) => ({ id: e, label: episodeLabel(e, titles) })),
+    ...(loose ? [{ id: 'none', label: NO_EPISODE_LABEL }] : []),
+  ]
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      <span className="mr-1 text-[11.5px] text-faint">Episode</span>
+      {chips.map((c) => (
+        <Link
+          key={c.id || 'all'}
+          href={c.id ? `/${project}/decided?ep=${c.id}` : `/${project}/decided`}
+          aria-current={current === c.id ? 'true' : undefined}
+          className={cn(
+            'focus-ring inline-flex h-6 items-center rounded-full border px-2.5 text-[11.5px] transition',
+            current === c.id ? 'border-accent bg-accent/8 text-fg' : 'border-edge text-muted hover:border-edge-strong',
+          )}
+        >
+          {c.label}
+          <span className="ml-1.5 font-mono text-faint tabular-nums">{c.id ? countOf(c.id) : countOf('')}</span>
+        </Link>
+      ))}
+    </div>
+  )
+}
+
+/** What a right-click on one decided take offers: its episode, its ids, its file. */
+function menuFor(entry: DecidedEntry, project: string, current: string): ItemAction[] {
+  const out: ItemAction[] = [{ kind: 'heading', text: `${entry.title} · ${entry.where}` }]
+  if (entry.episode) {
+    out.push({
+      kind: 'link',
+      label: `Only ${shortEpisode(entry.episode)}`,
+      href: `/${project}/decided?ep=${entry.episode}`,
+      icon: 'episode',
+      active: current === entry.episode,
+    })
+  }
+  if (current) out.push({ kind: 'link', label: 'All episodes', href: `/${project}/decided`, icon: 'filter' })
+  out.push({ kind: 'divider' })
+  out.push({ kind: 'copy', label: 'Copy the shot id', text: entry.decision.target })
+  out.push({ kind: 'copy', label: 'Copy the job id', text: entry.decision.jobId })
+  if (entry.file) {
+    out.push({ kind: 'reveal', label: 'Show in folder', path: entry.file })
+    out.push({ kind: 'open', label: 'Open the file', href: assetUrl(project, entry.file) })
+  }
+  return out
+}
+
 function Location({ entry }: { entry: DecidedEntry }) {
   if (!entry.file) return null
   return (
@@ -103,11 +169,19 @@ function Location({ entry }: { entry: DecidedEntry }) {
   )
 }
 
-export default async function DecidedPage({ params }: PageProps<'/[project]/decided'>) {
+export default async function DecidedPage({ params, searchParams }: PageProps<'/[project]/decided'>) {
   const pr = await requireProject((await params).project)
-  const [entries, catalog, cfg, priceTable] = await Promise.all([
-    getDecidedEntries(pr), getCatalog(pr), getWorkerConfig(), getPriceTable(),
+  const [all, catalog, cfg, priceTable, episodeList] = await Promise.all([
+    getDecidedEntries(pr), getCatalog(pr), getWorkerConfig(), getPriceTable(), getEpisodes(pr),
   ])
+  const titles = Object.fromEntries(episodeList.filter((e) => e.title).map((e) => [e.id, e.title]))
+  const episodes = episodesIn([], all.map((e) => e.episode))
+  const loose = all.some((e) => e.episode === null)
+  const wanted = String((await searchParams).ep ?? '')
+  // An episode with nothing decided in it is not a filter, it is a stale link.
+  const ep = wanted === 'none' ? (loose ? 'none' : '') : episodes.includes(wanted) ? wanted : ''
+  const matches = (e: DecidedEntry) => (ep === 'none' ? e.episode === null : !ep || e.episode === ep)
+  const entries = all.filter(matches)
   const regenCfg: RegenerateConfig = {
     models: (cfg.models as RegenerateConfig['models']) ?? { image: [], video: [] },
     aspectRatios: (cfg.aspectRatios as string[]) ?? ['16:9', '9:16', '1:1'],
@@ -122,11 +196,24 @@ export default async function DecidedPage({ params }: PageProps<'/[project]/deci
 
   return (
     <div className="space-y-16">
-      <PageHeader title="Decided" eyebrow="Review log" meta={`${entries.length} decisions, newest first`}>
+      <PageHeader
+        title="Decided"
+        eyebrow={ep ? `Review log · ${ep === 'none' ? NO_EPISODE_LABEL : episodeLabel(ep, titles)}` : 'Review log'}
+        meta={`${entries.length} decision${entries.length === 1 ? '' : 's'}, newest first`}
+      >
         Everything you have accepted or denied, and where each take now lives. Nothing is deleted:
         a denied take is kept as the evidence <code className="font-mono text-[13px] text-fg">/learn</code> distils rules
         from.
       </PageHeader>
+
+      <EpisodeFilter
+        project={pr.slug}
+        episodes={episodes}
+        titles={titles}
+        loose={loose}
+        current={ep}
+        countOf={(episode) => (episode ? all.filter((e) => (episode === 'none' ? e.episode === null : e.episode === episode)).length : all.length)}
+      />
 
       <section>
         <SectionHeading tone="good" count={accepted.length}>Accepted</SectionHeading>
@@ -136,6 +223,7 @@ export default async function DecidedPage({ params }: PageProps<'/[project]/deci
           <div className="grid gap-5 lg:grid-cols-2">
             {accepted.map((e, i) => (
               <Reveal key={e.decision.id} index={i}>
+                <ItemMenu actions={menuFor(e, pr.slug, ep)}>
                 <Card interactive className="space-y-4 p-5">
                   <Media entry={e} project={pr.slug} />
                   <Heading entry={e} />
@@ -160,6 +248,7 @@ export default async function DecidedPage({ params }: PageProps<'/[project]/deci
                     />
                   )}
                 </Card>
+                </ItemMenu>
               </Reveal>
             ))}
           </div>
@@ -174,6 +263,7 @@ export default async function DecidedPage({ params }: PageProps<'/[project]/deci
           <div className="space-y-3">
             {denied.map((e, i) => (
               <Reveal key={e.decision.id} index={i}>
+                <ItemMenu actions={menuFor(e, pr.slug, ep)}>
                 <Card interactive className="flex flex-col gap-6 p-5 sm:flex-row">
                   <div className="shrink-0 sm:w-72">
                     <Media entry={e} project={pr.slug} />
@@ -188,6 +278,7 @@ export default async function DecidedPage({ params }: PageProps<'/[project]/deci
                     <Location entry={e} />
                   </div>
                 </Card>
+                </ItemMenu>
               </Reveal>
             ))}
           </div>

@@ -31,6 +31,8 @@ export interface DecidedEntry {
   title: string
   /** "EP001 · SC004 · SH0010", or the target for an entity. */
   where: string
+  /** EP001, when this is footage. Null for a design image filed under an entity. */
+  episode: string | null
   stage: 'draft' | 'final' | null
   attempt: number
   /** waiting: the worker has not picked it up yet; failed: back on Review. */
@@ -228,6 +230,7 @@ export async function getDecidedEntries(pr: Project): Promise<DecidedEntry[]> {
         decision: d,
         title: labelFor(d.jobId) ?? m?.[2] ?? d.target,
         where,
+        episode: m?.[1] ?? null,
         stage,
         attempt: s?.attempt ?? 1,
         status,

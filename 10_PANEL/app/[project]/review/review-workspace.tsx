@@ -2,13 +2,16 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { Check, Film, TriangleAlert, Undo2 } from 'lucide-react'
+import { Check, Copy, Film, TriangleAlert, Undo2 } from 'lucide-react'
 import { useHoldLiveRefresh } from '@/components/live-refresh'
 import { Button } from '@/components/ui/button'
 import { EmptyState } from '@/components/ui/card'
 import { EASE } from '@/components/ui/motion-tokens'
+import { ContextMenu, type MenuEntry } from '@/components/ui/context-menu'
+import { MenuNote } from '@/components/item-menu'
 import { StickyHeader } from '@/components/ui/text'
 import { cn } from '@/lib/cn'
+import { episodeLabel, episodesIn, shortEpisode, NO_EPISODE_LABEL } from '@/lib/episodes'
 import type { CatalogEntity, ReviewItem } from '@/lib/types'
 import { Kbd, ReviewStage, isTyping, type QueuedDecision } from './review-stage'
 
@@ -37,16 +40,44 @@ let seq = 0
  * then. Every stage stays mounted (hidden) so moving away and back, or undoing,
  * keeps what was typed and uploaded.
  */
-export function ReviewWorkspace({ items, catalog }: { items: ReviewItem[]; catalog: CatalogEntity[] }) {
+export function ReviewWorkspace({ items, catalog, episodeTitles }: {
+  items: ReviewItem[]
+  catalog: CatalogEntity[]
+  /** EP001 -> "Zahhak Entry", from the episode folders on disk. */
+  episodeTitles: Record<string, string>
+}) {
   const [currentPath, setCurrentPath] = useState<string | null>(items[0]?.candidate.path ?? null)
+  /** '' is every episode; 'none' is everything that is not footage. */
+  const [episodeFilter, setEpisodeFilter] = useState('')
   const [held, setHeld] = useState<Held[]>([])
   const [saving, setSaving] = useState<Set<string>>(new Set())
   const [toasts, setToasts] = useState<Toast[]>([])
+  const [menu, setMenu] = useState<{ at: { x: number; y: number }; entries: MenuEntry[] } | null>(null)
+  const [copied, setCopied] = useState<string | null>(null)
   const heldRef = useRef(held)
   heldRef.current = held
 
   const hidden = new Set([...held.map((h) => h.path), ...saving])
-  const queue = items.filter((i) => !hidden.has(i.candidate.path))
+  /**
+   * Reviewing one episode at a time. The filter is only which candidates are on
+   * the strip -- a decision on any of them is the same decision either way, and
+   * turning the filter off brings the rest straight back.
+   */
+  const inEpisode = useCallback(
+    (i: ReviewItem) =>
+      !episodeFilter
+        ? true
+        : episodeFilter === 'none'
+          ? i.context.episode === null
+          : i.context.episode === episodeFilter,
+    [episodeFilter],
+  )
+  const waiting = items.filter((i) => !hidden.has(i.candidate.path))
+  const queue = waiting.filter(inEpisode)
+  const episodes = episodesIn([], waiting.map((i) => i.context.episode))
+  const looseItems = waiting.some((i) => i.context.episode === null)
+  const countIn = (episode: string) =>
+    waiting.filter((i) => (episode === 'none' ? i.context.episode === null : i.context.episode === episode)).length
   const current = queue.find((i) => i.candidate.path === currentPath) ?? queue[0] ?? null
   const index = current ? queue.indexOf(current) : -1
   const shownRef = useRef<string | null>(null)
@@ -61,12 +92,12 @@ export function ReviewWorkspace({ items, catalog }: { items: ReviewItem[]; catal
   /** The next candidate after `path` in page order that is still in the queue. */
   const nextAfter = useCallback(
     (path: string, skip: Set<string>) => {
-      const order = items.map((i) => i.candidate.path)
+      const order = items.filter(inEpisode).map((i) => i.candidate.path)
       const at = order.indexOf(path)
       const rest = [...order.slice(at + 1), ...order.slice(0, Math.max(at, 0))]
       return rest.find((p) => !skip.has(p)) ?? null
     },
-    [items],
+    [items, inEpisode],
   )
 
   const commit = useCallback(
@@ -169,6 +200,32 @@ export function ReviewWorkspace({ items, catalog }: { items: ReviewItem[]; catal
     return () => window.removeEventListener('keydown', onKey)
   }, [current, queue, index])
 
+  /** The episode chips as a menu, plus what this one candidate is. */
+  const menuFor = (i: ReviewItem): MenuEntry[] => [
+    { heading: `${i.context.label ?? i.context.scene ?? i.candidate.sidecar.target} · ${i.candidate.sidecar.target}` },
+    {
+      caption: 'Review only',
+      chips: [
+        { label: 'All', active: !episodeFilter, onSelect: () => setEpisodeFilter('') },
+        ...episodes.map((e) => ({ label: shortEpisode(e), active: episodeFilter === e, onSelect: () => setEpisodeFilter(e) })),
+        ...(looseItems ? [{ label: 'No episode', active: episodeFilter === 'none', onSelect: () => setEpisodeFilter('none') }] : []),
+      ],
+    },
+    { divider: true },
+    { label: 'Open it', icon: <Film className="size-3.5" />, onSelect: () => setCurrentPath(i.candidate.path) },
+    {
+      label: 'Copy the shot id',
+      icon: <Copy className="size-3.5" />,
+      onSelect: () => {
+        const id = i.candidate.sidecar.target
+        navigator.clipboard.writeText(id).then(() => {
+          setCopied(`Copied ${id}`)
+          setTimeout(() => setCopied(null), 2200)
+        }, () => setCopied('Could not copy that.'))
+      },
+    },
+  ]
+
   return (
     <div>
       {/* ------------------------------------------------ queue strip */}
@@ -189,6 +246,31 @@ export function ReviewWorkspace({ items, catalog }: { items: ReviewItem[]; catal
             </span>
           )}
         </div>
+        {(episodes.length > 1 || (episodes.length === 1 && looseItems)) && (
+          <div className="mt-5 flex flex-wrap items-center gap-1.5">
+            <span className="mr-1 text-[11.5px] text-faint">Episode</span>
+            {[{ id: '', label: 'All' }, ...episodes.map((e) => ({ id: e, label: episodeLabel(e, episodeTitles) })),
+              ...(looseItems ? [{ id: 'none', label: NO_EPISODE_LABEL }] : [])].map((e) => {
+              const on = episodeFilter === e.id
+              return (
+                <button
+                  key={e.id || 'all'}
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() => setEpisodeFilter(e.id)}
+                  className={cn(
+                    'focus-ring h-6 cursor-pointer rounded-full border px-2.5 text-[11.5px] transition',
+                    on ? 'border-accent bg-accent/8 text-fg' : 'border-edge text-muted hover:border-edge-strong',
+                  )}
+                >
+                  {e.label}
+                  <span className="ml-1.5 font-mono text-faint tabular-nums">{e.id ? countIn(e.id) : waiting.length}</span>
+                </button>
+              )
+            })}
+          </div>
+        )}
+
         {queue.length > 0 && (
           <div className="scroll-pane-x mt-6 flex gap-1.5 overflow-x-auto pb-1">
             {queue.map((i) => {
@@ -199,6 +281,7 @@ export function ReviewWorkspace({ items, catalog }: { items: ReviewItem[]; catal
                   key={i.candidate.path}
                   type="button"
                   onClick={() => setCurrentPath(i.candidate.path)}
+                  onContextMenu={(ev) => { ev.preventDefault(); ev.stopPropagation(); setMenu({ at: { x: ev.clientX, y: ev.clientY }, entries: menuFor(i) }) }}
                   aria-current={on ? 'true' : undefined}
                   title={c.beats.join(' → ')}
                   className={cn(
@@ -236,11 +319,25 @@ export function ReviewWorkspace({ items, catalog }: { items: ReviewItem[]; catal
       {/* ------------------------------------------------ stages */}
       {queue.length === 0 && held.length === 0 && (
         <EmptyState className="py-28">
-          <p className="font-display text-4xl text-fg">All caught up.</p>
-          <p className="mx-auto mt-4 max-w-md">
-            New videos from the worker appear here on their own. Everything you decided is on the
-            Decided page.
-          </p>
+          {waiting.length > 0 ? (
+            <>
+              <p className="font-display text-4xl text-fg">Nothing waiting in this episode.</p>
+              <p className="mx-auto mt-4 max-w-md">
+                {waiting.length} video{waiting.length === 1 ? '' : 's'} elsewhere.{' '}
+                <button type="button" onClick={() => setEpisodeFilter('')} className="focus-ring cursor-pointer underline">
+                  Show every episode
+                </button>
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="font-display text-4xl text-fg">All caught up.</p>
+              <p className="mx-auto mt-4 max-w-md">
+                New videos from the worker appear here on their own. Everything you decided is on the
+                Decided page.
+              </p>
+            </>
+          )}
         </EmptyState>
       )}
 
@@ -253,6 +350,9 @@ export function ReviewWorkspace({ items, catalog }: { items: ReviewItem[]; catal
           onQueue={onQueue}
         />
       ))}
+
+      <ContextMenu at={menu?.at ?? null} entries={menu?.entries ?? []} onClose={() => setMenu(null)} />
+      {copied && <MenuNote text={copied} bad={copied.startsWith('Could not')} />}
 
       {/* ------------------------------------------------ toasts */}
       <div className="pointer-events-none fixed inset-x-0 bottom-6 z-90 flex flex-col items-center gap-2 px-4">

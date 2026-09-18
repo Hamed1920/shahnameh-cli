@@ -15,11 +15,14 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Disclosure } from '@/components/ui/disclosure'
 import { Field, Input, Select, Textarea } from '@/components/ui/field'
 import { Modal } from '@/components/ui/modal'
+import { ContextMenu, type MenuEntry } from '@/components/ui/context-menu'
+import { MenuNote } from '@/components/item-menu'
 import { Badge, SectionHeading } from '@/components/ui/text'
 import { checkRow, initialTarget, isVideoModel, rowModel, shotRx, type DraftRow, type RowConfig } from '@/lib/batch-rules'
 import { lookPath, suggestRefs, targetCandidates, type RefSuggestion } from '@/lib/ref-suggest'
 import { useAssetUrls, useProject } from '@/components/project-context'
-import { previewScenes } from '@/lib/scenes'
+import { episodeLabel, shortEpisode, type EpisodeInfo } from '@/lib/episodes'
+import { latestEpisode, previewScenes } from '@/lib/scenes'
 import { cn } from '@/lib/cn'
 import { DOCUMENT_ACCEPT, MAX_DOCUMENTS, TEXT_EXT } from '@/lib/document-types'
 import { parsePromptDocument, type ParseResult, type SplitMode, type SplitOption } from '@/lib/prompt-parser'
@@ -75,12 +78,14 @@ let seq = 0
  * submitted while a row has a problem, and nothing is generated until the
  * priced batch is approved below.
  */
-export function PromptIntake({ catalog, cfg, knownShots, recentRefs }: {
+export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }: {
   catalog: CatalogEntity[]
   cfg: IntakeConfig
   knownShots: string[]
   /** Reference tokens of the latest queued jobs, newest first. */
   recentRefs: string[]
+  /** Every episode, in order, the next free number last. */
+  episodes: EpisodeInfo[]
 }) {
   const project = useProject()
   const router = useRouter()
@@ -90,6 +95,13 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs }: {
   const [docs, setDocs] = useState<Doc[]>([])
   const [rows, setRows] = useState<DraftRow[]>([])
   const [defaults, setDefaults] = useState<BatchDefaults>(cfg.defaults)
+  /**
+   * The episode this batch's footage belongs to. Every row asking for the next
+   * free scene files into it, so a wave of EP002 prompts cannot quietly land in
+   * EP001 -- which is what happened while the episode was only ever guessed from
+   * whichever one had the most recent shot.
+   */
+  const [episode, setEpisode] = useState(() => latestEpisode(knownShots, cfg.code))
   const [name, setName] = useState('')
   const [prepend, setPrepend] = useState(false)
   const [picker, setPicker] = useState<{ key: string; mode: 'entity' | 'ref' } | null>(null)
@@ -99,6 +111,8 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs }: {
   const [serverErrors, setServerErrors] = useState<Record<string, string[]>>({})
   const [dragging, setDragging] = useState(false)
   const [done, setDone] = useState<string | null>(null)
+  const [menu, setMenu] = useState<{ at: { x: number; y: number }; entries: MenuEntry[] } | null>(null)
+  const [copied, setCopied] = useState<string | null>(null)
 
   const preamble = docs.map((d) => d.preamble).filter(Boolean).join('\n\n')
 
@@ -112,7 +126,7 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs }: {
   }, [rows, catalog, defaults, cfg, serverErrors])
 
   const toDraftRows = useCallback((result: ParseResult, file: string | null): DraftRow[] => result.rows.map((r) => {
-    const t = initialTarget(r, { file, catalog, defaultModel: defaults.model, knownShots, code: cfg.code })
+    const t = initialTarget(r, { file, catalog, defaultModel: defaults.model, knownShots, code: cfg.code, episode })
     return {
       key: `r${++seq}`,
       label: r.label ?? '',
@@ -126,7 +140,7 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs }: {
       params: r.params,
       warnings: r.warnings,
     }
-  }), [catalog, defaults.model, knownShots, cfg.code])
+  }), [catalog, defaults.model, knownShots, cfg.code, episode])
 
   const addDocument = useCallback((source: string, file: string | null, opts: { showText?: boolean } = {}) => {
     const result = parsePromptDocument(source, { file })
@@ -212,9 +226,29 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs }: {
   const addRow = () =>
     setRows((all) => [...all, {
       key: `r${++seq}`, label: '',
-      ...initialTarget({ target: null, label: null, prompt: '', refs: [], model: null }, { file: null, catalog, defaultModel: defaults.model, knownShots, code: cfg.code }),
+      ...initialTarget({ target: null, label: null, prompt: '', refs: [], model: null }, { file: null, catalog, defaultModel: defaults.model, knownShots, code: cfg.code, episode }),
       newDescription: '', variant: '', model: '', stage: '', refs: [], prompt: '', params: {}, warnings: [],
     }])
+
+  /**
+   * Move the batch to another episode, and with it every row that was still
+   * filing into the one being left. A row the document sent somewhere else --
+   * `target: NEXT/EP002`, or a shot id of its own -- keeps where it was put.
+   */
+  const changeEpisode = (next: string) => {
+    setRows((all) => all.map((r) => (r.targetMode === 'shot' && r.sceneAuto && r.episode === episode ? { ...r, episode: next } : r)))
+    setEpisode(next)
+  }
+
+  const episodeIds = useMemo(() => episodes.map((e) => e.id), [episodes])
+  const episodeTitles = useMemo(
+    () => Object.fromEntries(episodes.filter((e) => e.title).map((e) => [e.id, e.title])),
+    [episodes],
+  )
+  /** The chosen episode as the server knows it. Missing means it is the next free number. */
+  const chosenEpisode = episodes.find((e) => e.id === episode)
+  const startingEpisode = !chosenEpisode?.dir && !chosenEpisode?.shots
+  const footageRows = rows.filter((r) => r.targetMode === 'shot' && r.sceneAuto && r.episode === episode).length
 
   const scenePreviews = useMemo(
     () => previewScenes(
@@ -257,6 +291,46 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs }: {
     router.refresh()
   }
 
+  /** Right-click one prompt: where it files, and the row's own three verbs. */
+  const menuForRow = (row: DraftRow, index: number): MenuEntry[] => {
+    const entries: MenuEntry[] = [{ heading: row.label || `Prompt ${String(index + 1).padStart(2, '0')}` }]
+    if (row.targetMode === 'shot' && row.sceneAuto) {
+      entries.push({
+        caption: 'File under',
+        chips: episodeIds.map((e) => ({
+          label: shortEpisode(e),
+          active: row.episode === e,
+          onSelect: () => update(row.key, { episode: e }),
+        })),
+      })
+    } else {
+      entries.push({
+        label: 'Send it to the next free scene',
+        icon: <Plus className="size-3.5" />,
+        onSelect: () => update(row.key, { targetMode: 'shot', sceneAuto: true, episode }),
+      })
+    }
+    entries.push({ divider: true })
+    entries.push({ label: 'Duplicate', icon: <Copy className="size-3.5" />, onSelect: () => duplicate(row.key) })
+    entries.push({
+      label: 'Copy the prompt',
+      icon: <Copy className="size-3.5" />,
+      onSelect: () => {
+        navigator.clipboard.writeText(row.prompt).then(
+          () => { setCopied('Prompt copied'); setTimeout(() => setCopied(null), 2200) },
+          () => { setCopied('Could not copy that.'); setTimeout(() => setCopied(null), 2200) },
+        )
+      },
+    })
+    entries.push({ label: 'Remove', icon: <Trash2 className="size-3.5" />, tone: 'bad', onSelect: () => remove(row.key) })
+    return entries
+  }
+  const openRowMenu = (ev: React.MouseEvent, row: DraftRow, index: number) => {
+    ev.preventDefault()
+    ev.stopPropagation()
+    setMenu({ at: { x: ev.clientX, y: ev.clientY }, entries: menuForRow(row, index) })
+  }
+
   const pickerRow = picker ? rows.find((r) => r.key === picker.key) : null
 
   return (
@@ -264,6 +338,38 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs }: {
       {/* ------------------------------------------------ intake */}
       <section>
         <SectionHeading>Add prompts</SectionHeading>
+
+        {/* Which episode this wave of footage is for, decided once for the batch. */}
+        <Card className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-3 p-4">
+          <span className="text-[12.5px] text-muted">Footage in this batch belongs to</span>
+          <Select
+            aria-label="Episode"
+            value={episode}
+            onChange={(e) => changeEpisode(e.target.value)}
+            className="h-9 w-auto"
+          >
+            {episodes.map((e) => (
+              <option key={e.id} value={e.id}>
+                {episodeLabel(e.id, episodeTitles)}
+                {e.shots > 0 ? ` — ${e.shots} scene${e.shots === 1 ? '' : 's'}` : e.dir ? ' — no footage yet' : ' — start a new episode'}
+              </option>
+            ))}
+          </Select>
+          <p className="min-w-0 flex-1 text-xs leading-relaxed text-faint">
+            {startingEpisode ? (
+              <>
+                <span className="font-mono text-muted">{shortEpisode(episode)}</span> is new. Its folder is made when
+                the worker files the first accepted take, so nothing is written until then.
+              </>
+            ) : (
+              <>
+                Every prompt asking for the next free scene files here. A row can still be sent somewhere else
+                below{footageRows > 0 && <>, and <span className="text-muted">{footageRows}</span> of them {footageRows === 1 ? 'is' : 'are'} following this</>}.
+              </>
+            )}
+          </p>
+        </Card>
+
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           <Card className="space-y-4 p-5">
             <Field label="Paste prompts, SHM-JOB blocks, or a batch JSON array">
@@ -355,7 +461,7 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs }: {
             <Card className="p-5">
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
                 <Field label="Batch name" className="lg:col-span-2">
-                  <Input dir="auto" value={name} onChange={(e) => setName(e.target.value)} placeholder="EP001 blocks, wave 2" />
+                  <Input dir="auto" value={name} onChange={(e) => setName(e.target.value)} placeholder={`${shortEpisode(episode)} blocks, wave 2`} />
                 </Field>
                 <Field label="Model">
                   <Select value={defaults.model} onChange={(e) => setDefaults({ ...defaults, model: e.target.value })}>
@@ -413,6 +519,8 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs }: {
                   cfg={cfg}
                   defaults={defaults}
                   knownShots={knownShots}
+                  episodes={episodeIds}
+                  episodeTitles={episodeTitles}
                   scenePreview={scenePreviews.get(row.key) ?? null}
                   recentRefs={recentRefs}
                   listId={listId}
@@ -422,6 +530,7 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs }: {
                   onDuplicate={() => duplicate(row.key)}
                   onPickEntity={() => setPicker({ key: row.key, mode: 'entity' })}
                   onAddRef={() => setPicker({ key: row.key, mode: 'ref' })}
+                  onContextMenu={(ev) => openRowMenu(ev, row, i)}
                 />
               ))}
             </div>
@@ -442,6 +551,9 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs }: {
           </section>
         </>
       )}
+
+      <ContextMenu at={menu?.at ?? null} entries={menu?.entries ?? []} onClose={() => setMenu(null)} />
+      {copied && <MenuNote text={copied} bad={copied.startsWith('Could not')} />}
 
       <IndexPicker
         open={picker !== null}
@@ -481,7 +593,8 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs }: {
 }
 
 function RowCard({
-  index, row, catalog, cfg, defaults, knownShots, scenePreview, recentRefs, listId, problems, onChange, onRemove, onDuplicate, onPickEntity, onAddRef,
+  index, row, catalog, cfg, defaults, knownShots, episodes, episodeTitles, scenePreview, recentRefs, listId, problems, onChange, onRemove, onDuplicate,
+  onPickEntity, onAddRef, onContextMenu,
 }: {
   index: number
   row: DraftRow
@@ -489,6 +602,8 @@ function RowCard({
   cfg: IntakeConfig
   defaults: BatchDefaults
   knownShots: string[]
+  episodes: string[]
+  episodeTitles: Record<string, string>
   scenePreview: string | null
   recentRefs: string[]
   listId: string
@@ -498,13 +613,14 @@ function RowCard({
   onDuplicate: () => void
   onPickEntity: () => void
   onAddRef: () => void
+  onContextMenu: (e: React.MouseEvent) => void
 }) {
   const model = rowModel(row, defaults)
   const video = isVideoModel(model)
   const overrides = Object.entries(row.params)
 
   return (
-    <Card className={cn('p-5', problems.length && 'border-bad/40')}>
+    <Card className={cn('p-5', problems.length && 'border-bad/40')} onContextMenu={onContextMenu}>
       <div className="flex flex-wrap items-center gap-3">
         <span className="font-mono text-[11px] text-faint">{String(index + 1).padStart(2, '0')}</span>
         <Input dir="auto" value={row.label} onChange={(e) => onChange({ label: e.target.value })} placeholder="Label (P01)" className="h-8 w-44 text-[13px]" />
@@ -520,7 +636,17 @@ function RowCard({
       <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         {/* Where it goes and how it renders: one label column, so every control starts on the same line. */}
         <div className="space-y-3">
-          <TargetCell row={row} catalog={catalog} knownShots={knownShots} scenePreview={scenePreview} listId={listId} onChange={onChange} onPickEntity={onPickEntity} />
+          <TargetCell
+            row={row}
+            catalog={catalog}
+            knownShots={knownShots}
+            episodes={episodes}
+            episodeTitles={episodeTitles}
+            scenePreview={scenePreview}
+            listId={listId}
+            onChange={onChange}
+            onPickEntity={onPickEntity}
+          />
           <div className="grid grid-cols-[6.5rem_minmax(0,1fr)] items-start gap-x-4 gap-y-3">
             <RowLabel>Look</RowLabel>
             <div className="flex items-center gap-3">

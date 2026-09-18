@@ -2,15 +2,19 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { GripVertical, Heart, Plus, Search, X } from 'lucide-react'
+import { Copy, Film, FolderOpen, GripVertical, Heart, Plus, Search, X } from 'lucide-react'
+import { revealInFolder } from '@/app/[project]/reveal-action'
+import { MenuNote } from '@/components/item-menu'
+import { ContextMenu, type MenuEntry } from '@/components/ui/context-menu'
 import { RegenerateButton, type RegenerateConfig } from '@/components/regenerate-button'
 import { ShowInFolder } from '@/components/show-in-folder'
 import { Card, EmptyState } from '@/components/ui/card'
 import { Input, Select } from '@/components/ui/field'
-import { Badge, PageHeader } from '@/components/ui/text'
+import { Badge, PageHeader, SectionHeading } from '@/components/ui/text'
 import { isVideo as isVideoFile } from '@/lib/asset'
 import { useAssetUrls, useProject } from '@/components/project-context'
 import { cn } from '@/lib/cn'
+import { episodeLabel, episodesIn, groupByEpisode, shortEpisode, NO_EPISODE_LABEL } from '@/lib/episodes'
 import { MAX_TAG_LENGTH, cleanTag, moveWithin, tagKey, type GalleryState } from '@/lib/gallery'
 import type { CatalogEntity, RegenerateSource, RegenerationView } from '@/lib/types'
 import { setLike, setOrder, setTag } from './actions'
@@ -21,6 +25,8 @@ export interface GalleryTake {
   jobId: string
   title: string
   where: string
+  /** EP001, or null for a design image filed under an entity. */
+  episode: string | null
   target: string
   ts: string
   stage: 'draft' | 'final' | null
@@ -39,9 +45,9 @@ export interface GalleryTake {
 type Sort = 'order' | 'newest' | 'scene' | 'liked'
 
 const SORTS: { value: Sort; label: string }[] = [
-  { value: 'order', label: 'My order' },
   { value: 'newest', label: 'Newest first' },
-  { value: 'scene', label: 'Scene order' },
+  { value: 'order', label: 'My order' },
+  { value: 'scene', label: 'Episode & scene order' },
   { value: 'liked', label: 'Liked first' },
 ]
 
@@ -93,7 +99,7 @@ function Thumbnail({ file, alt }: { file: string; alt: string }) {
 }
 
 export function GalleryView({
-  takes, state, tags: knownTags, catalog, cfg, prices,
+  takes, state, tags: knownTags, catalog, cfg, prices, episodeTitles,
 }: {
   takes: GalleryTake[]
   state: GalleryState
@@ -101,6 +107,8 @@ export function GalleryView({
   catalog: CatalogEntity[]
   cfg: RegenerateConfig
   prices: Record<string, number>
+  /** EP001 -> "Zahhak Entry", from the episode folders on disk. */
+  episodeTitles: Record<string, string>
 }) {
   const project = useProject()
   const router = useRouter()
@@ -111,10 +119,12 @@ export function GalleryView({
   const [order, setLocalOrder] = useState<string[]>([])
 
   const [query, setQuery] = useState('')
-  const [sort, setSort] = useState<Sort>('order')
+  const [sort, setSort] = useState<Sort>('newest')
   const [likedOnly, setLikedOnly] = useState(false)
   const [tagFilter, setTagFilter] = useState<string | null>(null)
   const [stageFilter, setStageFilter] = useState<'all' | 'final' | 'draft'>('all')
+  /** '' is every episode; 'none' is everything that is not footage. */
+  const [episodeFilter, setEpisodeFilter] = useState<string>('')
 
   const ids = takes.map((t) => t.decisionId)
   const signature = `${state.order.join(',')}|${ids.join(',')}`
@@ -165,6 +175,18 @@ export function GalleryView({
     void run(() => setTag(project.slug, id, tag, false), () => setTags(before))
   }
 
+  const [menu, setMenu] = useState<{ at: { x: number; y: number }; entries: MenuEntry[] } | null>(null)
+  const [note, setNote] = useState<{ id: number; text: string; bad?: boolean } | null>(null)
+  const say = (text: string, bad?: boolean) => {
+    const id = Date.now()
+    setNote({ id, text, bad })
+    setTimeout(() => setNote((n) => (n?.id === id ? null : n)), 2200)
+  }
+  const copy = (text: string) =>
+    navigator.clipboard.writeText(text).then(() => say(`Copied ${text}`), () => say('Could not copy that.', true))
+  const reveal = (path: string) =>
+    void revealInFolder(project.slug, path).then((r) => { if (!r.ok) say(r.error ?? 'Could not open the folder.', true) })
+
   const dragging = useRef<string | null>(null)
   function onDragOver(overId: string) {
     const from = dragging.current
@@ -192,6 +214,7 @@ export function GalleryView({
       if (tagFilter && !(tags[t.decisionId] ?? []).some((x) => tagKey(x) === tagKey(tagFilter))) return false
       if (stageFilter === 'final' && t.stage === 'draft') return false
       if (stageFilter === 'draft' && t.stage !== 'draft') return false
+      if (episodeFilter === 'none' ? t.episode !== null : episodeFilter && t.episode !== episodeFilter) return false
       if (q) {
         const hay = `${t.title} ${t.where} ${t.target} ${t.notes} ${(tags[t.decisionId] ?? []).join(' ')}`.toLowerCase()
         if (!hay.includes(q)) return false
@@ -203,9 +226,81 @@ export function GalleryView({
     else if (sort === 'scene') list = [...list].sort((a, b) => a.target.localeCompare(b.target) || a.ts.localeCompare(b.ts))
     else list = [...list].sort((a, b) => Number(liked.has(b.decisionId)) - Number(liked.has(a.decisionId)) || b.ts.localeCompare(a.ts))
     return list
-  }, [takes, order, query, sort, likedOnly, tagFilter, stageFilter, liked, tags])
+  }, [takes, order, query, sort, likedOnly, tagFilter, stageFilter, episodeFilter, liked, tags])
+
+  /** Every episode with accepted work in it, for the filter. */
+  const episodes = useMemo(() => episodesIn([], takes.map((t) => t.episode)), [takes])
+  const looseTakes = takes.some((t) => t.episode === null)
+  /**
+   * In episode & scene order the page is read as the film runs, so it is cut
+   * into episodes under their own headings. Every other sort is one list: a
+   * drag in "My order" must not be fenced inside a heading it cannot leave.
+   */
+  const sections = sort === 'scene' ? groupByEpisode(visible, (t) => t.episode) : [{ episode: null, items: visible }]
+  const headed = sort === 'scene' && (episodes.length > 1 || (episodes.length === 1 && looseTakes))
 
   const draggable = sort === 'order'
+
+  /**
+   * Right-click menu for one take. Built fresh on every open so the chips show
+   * the filters as they stand, and it offers the whole bar -- episode, quality,
+   * order -- because the bar is at the top of a long page and the take is not.
+   */
+  const menuFor = (t: GalleryTake): MenuEntry[] => [
+    { heading: `${t.title} · ${t.where}` },
+    {
+      caption: 'Show only',
+      chips: [
+        { label: 'All episodes', active: !episodeFilter, onSelect: () => setEpisodeFilter('') },
+        ...episodes.map((e) => ({
+          label: shortEpisode(e),
+          active: episodeFilter === e,
+          onSelect: () => setEpisodeFilter(episodeFilter === e ? '' : e),
+        })),
+        ...(looseTakes ? [{ label: 'No episode', active: episodeFilter === 'none', onSelect: () => setEpisodeFilter(episodeFilter === 'none' ? '' : 'none') }] : []),
+      ],
+    },
+    ...(t.episode && episodeFilter !== t.episode
+      ? [{ label: `Only ${shortEpisode(t.episode)}, this one's episode`, icon: <Film className="size-3.5" />, onSelect: () => setEpisodeFilter(t.episode!) }]
+      : []),
+    { divider: true },
+    {
+      caption: 'Quality',
+      chips: [
+        { label: 'All', active: stageFilter === 'all', onSelect: () => setStageFilter('all') },
+        { label: 'Finals', active: stageFilter === 'final', onSelect: () => setStageFilter('final') },
+        { label: 'Drafts', active: stageFilter === 'draft', onSelect: () => setStageFilter('draft') },
+      ],
+    },
+    {
+      caption: 'Order',
+      chips: SORTS.map((s) => ({ label: s.label, active: sort === s.value, onSelect: () => setSort(s.value) })),
+    },
+    { divider: true },
+    {
+      label: liked.has(t.decisionId) ? 'Unlike' : 'Like',
+      icon: <Heart className={cn('size-3.5', liked.has(t.decisionId) && 'fill-current')} />,
+      onSelect: () => toggleLike(t.decisionId),
+    },
+    ...(suggestions.length
+      ? [{
+          caption: 'Tags',
+          chips: suggestions.map((tag) => {
+            const on = (tags[t.decisionId] ?? []).some((x) => tagKey(x) === tagKey(tag))
+            return { label: tag, active: on, onSelect: () => (on ? removeTag(t.decisionId, tag) : addTag(t.decisionId, tag)) }
+          }),
+        } as MenuEntry]
+      : []),
+    { divider: true },
+    { label: 'Copy the shot id', icon: <Copy className="size-3.5" />, onSelect: () => void copy(t.target) },
+    { label: 'Copy the job id', icon: <Copy className="size-3.5" />, onSelect: () => void copy(t.jobId) },
+    { label: 'Show in folder', icon: <FolderOpen className="size-3.5" />, disabled: !t.file, onSelect: () => t.file && reveal(t.file) },
+  ]
+  const openMenu = (e: React.MouseEvent, t: GalleryTake) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setMenu({ at: { x: e.clientX, y: e.clientY }, entries: menuFor(t) })
+  }
 
   return (
     <div className="space-y-8">
@@ -219,7 +314,27 @@ export function GalleryView({
         <span className="font-mono text-[13px] text-fg">draft</span> sits here too, badged, until its final renders.
       </PageHeader>
 
-      <div className="sticky top-0 z-20 -mx-1 space-y-3 bg-ink/85 px-1 py-3 backdrop-blur">
+      <div
+        className="sticky top-0 z-20 -mx-1 space-y-3 bg-ink/85 px-1 py-3 backdrop-blur"
+        onContextMenu={(e) => {
+          e.preventDefault()
+          setMenu({
+            at: { x: e.clientX, y: e.clientY },
+            entries: [
+              { heading: `${visible.length} of ${takes.length} shown` },
+              {
+                caption: 'Show only',
+                chips: [
+                  { label: 'All episodes', active: !episodeFilter, onSelect: () => setEpisodeFilter('') },
+                  ...episodes.map((e2) => ({ label: shortEpisode(e2), active: episodeFilter === e2, onSelect: () => setEpisodeFilter(e2) })),
+                  ...(looseTakes ? [{ label: 'No episode', active: episodeFilter === 'none', onSelect: () => setEpisodeFilter('none') }] : []),
+                ],
+              },
+              { caption: 'Order', chips: SORTS.map((s) => ({ label: s.label, active: sort === s.value, onSelect: () => setSort(s.value) })) },
+            ],
+          })
+        }}
+      >
         <div className="flex flex-wrap items-center gap-2">
           <div className="relative min-w-52 flex-1">
             <Search aria-hidden className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-faint" />
@@ -244,6 +359,14 @@ export function GalleryView({
           >
             <Heart aria-hidden className={cn('size-3.5', likedOnly && 'fill-current')} /> Liked
           </button>
+
+          {(episodes.length > 1 || (episodes.length === 1 && looseTakes)) && (
+            <Select value={episodeFilter} onChange={(e) => setEpisodeFilter(e.target.value)} className="h-9 w-auto" aria-label="Episode">
+              <option value="">All episodes</option>
+              {episodes.map((e) => <option key={e} value={e}>{episodeLabel(e, episodeTitles)}</option>)}
+              {looseTakes && <option value="none">{NO_EPISODE_LABEL}</option>}
+            </Select>
+          )}
 
           <Select value={stageFilter} onChange={(e) => setStageFilter(e.target.value as typeof stageFilter)} className="h-9 w-auto" aria-label="Quality">
             <option value="all">All qualities</option>
@@ -297,35 +420,50 @@ export function GalleryView({
             : 'No accepted take matches those filters.'}
         </EmptyState>
       ) : (
-        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {visible.map((t) => (
-            <TakeCard
-              key={t.decisionId}
-              take={t}
-              liked={liked.has(t.decisionId)}
-              tags={tags[t.decisionId] ?? []}
-              suggestions={suggestions}
-              draggable={draggable}
-              onToggleLike={() => toggleLike(t.decisionId)}
-              onAddTag={(raw) => addTag(t.decisionId, raw)}
-              onRemoveTag={(tag) => removeTag(t.decisionId, tag)}
-              onDragStart={() => { dragging.current = t.decisionId }}
-              onDragOver={() => onDragOver(t.decisionId)}
-              onDrop={onDrop}
-              catalog={catalog}
-              cfg={cfg}
-              prices={prices}
-            />
+        <div className="space-y-12">
+          {sections.map((section) => (
+            <section key={section.episode ?? 'none'}>
+              {headed && (
+                <SectionHeading count={section.items.length}>
+                  {section.episode ? episodeLabel(section.episode, episodeTitles) : NO_EPISODE_LABEL}
+                </SectionHeading>
+              )}
+              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {section.items.map((t) => (
+                  <TakeCard
+                    key={t.decisionId}
+                    take={t}
+                    liked={liked.has(t.decisionId)}
+                    tags={tags[t.decisionId] ?? []}
+                    suggestions={suggestions}
+                    draggable={draggable}
+                    onToggleLike={() => toggleLike(t.decisionId)}
+                    onAddTag={(raw) => addTag(t.decisionId, raw)}
+                    onRemoveTag={(tag) => removeTag(t.decisionId, tag)}
+                    onDragStart={() => { dragging.current = t.decisionId }}
+                    onDragOver={() => onDragOver(t.decisionId)}
+                    onDrop={onDrop}
+                    onContextMenu={(e) => openMenu(e, t)}
+                    catalog={catalog}
+                    cfg={cfg}
+                    prices={prices}
+                  />
+                ))}
+              </div>
+            </section>
           ))}
         </div>
       )}
+
+      <ContextMenu at={menu?.at ?? null} entries={menu?.entries ?? []} onClose={() => setMenu(null)} />
+      {note && <MenuNote text={note.text} bad={note.bad} />}
     </div>
   )
 }
 
 function TakeCard({
   take, liked, tags, suggestions, draggable, onToggleLike, onAddTag, onRemoveTag,
-  onDragStart, onDragOver, onDrop, catalog, cfg, prices,
+  onDragStart, onDragOver, onDrop, onContextMenu, catalog, cfg, prices,
 }: {
   take: GalleryTake
   liked: boolean
@@ -338,6 +476,7 @@ function TakeCard({
   onDragStart: () => void
   onDragOver: () => void
   onDrop: () => void
+  onContextMenu: (e: React.MouseEvent) => void
   catalog: CatalogEntity[]
   cfg: RegenerateConfig
   prices: Record<string, number>
@@ -362,6 +501,7 @@ function TakeCard({
       onDragOver={(e: React.DragEvent) => { if (draggable) { e.preventDefault(); onDragOver() } }}
       onDragEnd={onDrop}
       onDrop={(e: React.DragEvent) => { e.preventDefault(); onDrop() }}
+      onContextMenu={onContextMenu}
     >
       {take.file ? (
         <Thumbnail file={take.file} alt={take.title} />

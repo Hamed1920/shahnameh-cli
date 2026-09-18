@@ -5,6 +5,7 @@ import { listProjects, type Project } from './projects'
 import { parseCsv } from './csv'
 import { autostartBlockedReason } from './worker-guard'
 import { priceKey } from './batch-rules'
+import { episodeOf, nextEpisodeId, parseEpisodeDir, type EpisodeInfo } from './episodes'
 import type {
   ArchivedLook, AssetRow, AttemptEntry, BatchStatus, BatchView, Candidate, CatalogEntity, Entity, Filing, IndexOp,
   IndexOpResult, JobRequest, JobRequestEvent, Learning, LibraryData, LibraryEntity, PromptLibraryItem, QueueItem, RegenerationView,
@@ -423,6 +424,37 @@ export async function getKnownShots(pr: Project): Promise<string[]> {
     ids.push(...files.map((f) => f.match(rx.shotFileStart)?.[0] ?? ''))
   }
   return [...new Set(ids.filter((t) => rx.episodePrefix.test(t)))].sort()
+}
+
+/**
+ * The project's episodes, in order, with how much footage each already holds.
+ *
+ * Two sources, because an episode exists before its folder does: every folder
+ * under 07_EPISODES (the worker makes one when it files that episode's first
+ * accepted take, matching it by its CODE-EPnnn prefix), plus every episode a
+ * queued job already targets. The last entry is always the next free number,
+ * so the Prompts page can start an episode without anything being written
+ * anywhere -- the number only becomes real when a job is approved against it.
+ */
+export async function getEpisodes(pr: Project): Promise<EpisodeInfo[]> {
+  const shots = await getKnownShots(pr)
+  const found = new Map<string, EpisodeInfo>()
+  const dirs = await fs.readdir(path.join(pr.P.root, '07_EPISODES'), { withFileTypes: true }).catch(() => [])
+  for (const d of dirs) {
+    if (!d.isDirectory()) continue
+    const parsed = parseEpisodeDir(d.name, pr.code)
+    if (parsed) found.set(parsed.id, { id: parsed.id, dir: d.name, title: parsed.title, shots: 0 })
+  }
+  for (const shot of shots) {
+    const id = episodeOf(shot, pr.code)
+    if (id && !found.has(id)) found.set(id, { id, dir: null, title: '', shots: 0 })
+  }
+  for (const ep of found.values()) {
+    ep.shots = new Set(shots.filter((s) => episodeOf(s, pr.code) === ep.id)).size
+  }
+  const list = [...found.values()].sort((a, b) => a.id.localeCompare(b.id))
+  const next = nextEpisodeId(list.map((e) => e.id))
+  return [...list, { id: next, dir: null, title: '', shots: 0 }]
 }
 
 /** Reference tokens of the latest queued jobs, newest first. The Prompts page offers them as "recent". */
