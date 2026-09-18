@@ -32,6 +32,7 @@
 # another machine's panel reviews from _staging, shows attempt history from
 # _drafts and _rejected, and restores from _archive.
 !/shahnameh-cli/
+!/jayson/
 
 # The half-built folder of a project being created, and the machine-wide
 # generation lock. Never travel.
