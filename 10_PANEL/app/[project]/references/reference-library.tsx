@@ -13,8 +13,8 @@ import { useAssetUrls, useProject } from '@/components/project-context'
 import { requestIndexOp } from './actions'
 import { IndexPicker } from '@/components/index-picker'
 import { Lightbox, type LightboxItem } from '@/components/lightbox'
-import { UploadCard, useReferenceEdits } from '@/components/reference-editor'
-import { RoleHelp } from '@/components/role-help'
+import { useReferenceEdits } from '@/components/reference-editor'
+import { BatchAddTable, batchCounts, batchProblems } from '@/components/batch-add-table'
 import { Button } from '@/components/ui/button'
 import { ContextMenu, type MenuEntry } from '@/components/ui/context-menu'
 import { EmptyState } from '@/components/ui/card'
@@ -23,7 +23,9 @@ import { EASE } from '@/components/ui/motion-tokens'
 import { Modal } from '@/components/ui/modal'
 import { Badge, StickyHeader } from '@/components/ui/text'
 import { cn } from '@/lib/cn'
-import { KINDS, MAX_UPLOADS, UPLOAD_ACCEPT, entitySlug, type Kind } from '@/lib/indexing'
+import {
+  KINDS, MAX_ADD_TOTAL_BYTES, MAX_ADD_UPLOADS, MAX_UPLOAD_BYTES, UPLOAD_ACCEPT, entitySlug, type Kind,
+} from '@/lib/indexing'
 import type { CatalogEntity, LibraryData, LibraryEntity, LookUse } from '@/lib/types'
 
 const ROLES = ['HERO', 'TURNAROUND', 'PLATE', 'DETAIL', 'BOARD', 'RENDER']
@@ -752,6 +754,17 @@ function EditDialog({ entity: e, onClose, send, busy }: {
   )
 }
 
+const MB = (n: number) => `${Math.round(n / 1024 / 1024)} MB`
+
+/**
+ * Drop a folder of references at once. Every file arrives with what its name
+ * says it is already filled in (lib/batch-add), and files that show the same
+ * new thing arrive grouped as looks of one entity. Hamed scans the table,
+ * fixes what inference could not settle, and confirms once.
+ *
+ * Opened on an entity (the + on its card), every file starts as a new look of
+ * that entity instead: that is a deliberate act, not a guess.
+ */
 function AddDialog({ entity, catalog, onClose, send, busy }: {
   entity: string
   catalog: CatalogEntity[]
@@ -759,15 +772,32 @@ function AddDialog({ entity, catalog, onClose, send, busy }: {
   send: (op: Record<string, unknown>, fd?: FormData) => Promise<boolean>
   busy: boolean
 }) {
-  const edits = useReferenceEdits([])
+  const { code } = useProject()
+  const edits = useReferenceEdits([], { maxUploads: MAX_ADD_UPLOADS })
   const [picking, setPicking] = useState<string | null>(null)
+  const [viewing, setViewing] = useState<number | null>(null)
   const [dragging, setDragging] = useState(false)
+  const [notice, setNotice] = useState<string | null>(null)
   const input = useRef<HTMLInputElement>(null)
   const target = catalog.find((c) => c.id === entity)
 
+  const problems = useMemo(() => batchProblems(edits.uploads, catalog), [edits.uploads, catalog])
+  const counts = batchCounts(edits.uploads, problems)
+  const overBudget = counts.bytes > MAX_ADD_TOTAL_BYTES
+
   const take = (files: FileList | null) => {
-    const images = [...(files ?? [])].filter((f) => /^image\/(png|jpeg|webp)$/.test(f.type))
-    edits.addFiles(images, { asRef: false, replaceKey: null, entity })
+    const all = [...(files ?? [])]
+    const images = all.filter((f) => /^image\/(png|jpeg|webp)$/.test(f.type))
+    const ok = images.filter((f) => f.size <= MAX_UPLOAD_BYTES)
+    const over = target
+      ? edits.addFiles(ok, { asRef: false, replaceKey: null, entity })
+      : edits.addFilesInferred(ok, { code, catalog })
+    const said = [
+      all.length > images.length && 'only PNG, JPG or WEBP images are accepted',
+      images.length > ok.length && `${images.length - ok.length} over ${MB(MAX_UPLOAD_BYTES)} were skipped`,
+      over > 0 && `at most ${MAX_ADD_UPLOADS} images at a time`,
+    ].filter(Boolean)
+    setNotice(said.length ? `Some files were not added: ${said.join('; ')}.` : null)
   }
 
   async function submit() {
@@ -776,54 +806,106 @@ function AddDialog({ entity, catalog, onClose, send, busy }: {
     if (await send({ type: 'add' }, fd)) onClose()
   }
 
+  const blocked = counts.bad > 0 || overBudget
   return (
     <Modal
       open
-      wide
+      size="xl"
       title={target ? <>Add looks to <span className="font-mono">{target.shortId}</span> {target.name}</> : 'Add references'}
-      onClose={() => { if (!picking) onClose() }}
+      onClose={() => { if (!picking && viewing === null) onClose() }}
+      onKeyGuard={() => !picking && viewing === null}
       footer={
         <>
-          <span className="mr-auto self-center text-xs text-muted">Each image gets its proper ID when the worker files it.</span>
+          <span className="mr-auto self-center text-xs text-muted">
+            {counts.bad > 0
+              ? `${counts.bad} ${counts.bad === 1 ? 'row needs' : 'rows need'} an answer before this can be sent.`
+              : 'Each image gets its proper ID when the worker files it.'}
+          </span>
           <Button type="button" size="sm" tone="ghost" onClick={onClose}>Cancel</Button>
-          <Button type="button" size="sm" tone="accent" pending={busy} disabled={edits.uploads.length === 0} onClick={submit}>
-            Add {edits.uploads.length || ''} {edits.uploads.length === 1 ? 'image' : 'images'}
+          <Button type="button" size="sm" tone="accent" pending={busy} disabled={edits.uploads.length === 0 || blocked} onClick={submit}>
+            Add {counts.files || ''} {counts.files === 1 ? 'image' : 'images'}
+            {counts.newEntities > 0 && ` · ${counts.newEntities} new`}
           </Button>
         </>
       }
     >
       <input ref={input} type="file" accept={UPLOAD_ACCEPT} multiple hidden onChange={(ev) => { take(ev.target.files); ev.target.value = '' }} />
+
       <div
         onDragOver={(ev) => { ev.preventDefault(); setDragging(true) }}
         onDragLeave={() => setDragging(false)}
         onDrop={(ev) => { ev.preventDefault(); setDragging(false); take(ev.dataTransfer.files) }}
-        className={cn('grid place-items-center gap-3 rounded-xl border border-dashed px-6 py-10 text-center transition-colors duration-150', dragging ? 'border-fg/60 bg-white/[0.03]' : 'border-edge-strong')}
+        className={cn(
+          'rounded-xl border border-dashed transition-colors duration-150',
+          dragging ? 'border-fg/60 bg-white/[0.03]' : 'border-edge-strong',
+          counts.files ? 'flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3' : 'grid place-items-center gap-3 px-6 py-10 text-center',
+        )}
       >
-        <Upload aria-hidden strokeWidth={1.5} className="size-6 text-muted" />
-        <p className="font-display text-2xl text-fg">Drop images here</p>
-        <Button type="button" size="sm" tone="outline" onClick={() => input.current?.click()} disabled={edits.uploads.length >= MAX_UPLOADS}>Choose images</Button>
-        <p className="font-mono text-[11px] text-faint">PNG, JPG or WEBP · up to {MAX_UPLOADS} at a time</p>
+        {counts.files === 0 ? (
+          <>
+            <Upload aria-hidden strokeWidth={1.5} className="size-6 text-muted" />
+            <p className="font-display text-2xl text-fg">Drop images here</p>
+            <Button type="button" size="sm" tone="outline" onClick={() => input.current?.click()}>Choose images</Button>
+            <p className="font-mono text-[11px] text-faint">
+              PNG, JPG or WEBP · up to {MAX_ADD_UPLOADS} at a time
+              {!target && ' · named from their filenames'}
+            </p>
+          </>
+        ) : (
+          <>
+            <Upload aria-hidden strokeWidth={1.5} className="size-4 text-muted" />
+            <span className="text-[13px] text-fg">
+              {counts.files} {counts.files === 1 ? 'file' : 'files'}
+              <span className="px-1.5 text-faint">·</span>
+              <span className={cn('font-mono text-[11px]', overBudget ? 'text-bad' : 'text-faint')}>{MB(counts.bytes)}</span>
+            </span>
+            <span className="text-xs text-muted">
+              {counts.newEntities} new {counts.newEntities === 1 ? 'entity' : 'entities'}
+              {counts.groups > 0 && ` (${counts.groups} with several looks)`}
+              <span className="px-1.5 text-faint">·</span>
+              {counts.newLooks} new {counts.newLooks === 1 ? 'look' : 'looks'}
+            </span>
+            <Button type="button" size="sm" tone="outline" onClick={() => input.current?.click()} disabled={counts.files >= MAX_ADD_UPLOADS} className="ml-auto">
+              Add more
+            </Button>
+          </>
+        )}
       </div>
 
-      {edits.uploads.length > 0 && (
-        <div className="mt-6 space-y-4">
-          <p className="flex items-center gap-1.5 text-xs text-muted">Fields go into the registry, so write them in English. Not sure about a role? <RoleHelp /></p>
-          {edits.uploads.map((u, i) => (
-            <UploadCard
-              key={u.id}
-              index={i}
-              upload={u}
-              catalog={catalog}
-              refsEditable={false}
-              inUse={false}
-              onChange={(patch) => edits.updateUpload(u.id, patch)}
-              onDrop={() => edits.dropUpload(u.id)}
-              onToggleRef={() => {}}
-              onPickEntity={() => setPicking(u.id)}
-            />
-          ))}
+      {overBudget && (
+        <p className="mt-4 rounded-md border border-bad/35 bg-bad/8 px-3.5 py-2.5 text-xs leading-relaxed text-bad">
+          That is {MB(counts.bytes)} in all, more than the {MB(MAX_ADD_TOTAL_BYTES)} the panel can send at once. Take a few
+          out and add them in a second batch.
+        </p>
+      )}
+      {notice && <p className="mt-4 rounded-md border border-bad/35 bg-bad/8 px-3.5 py-2.5 text-xs leading-relaxed text-bad">{notice}</p>}
+
+      {counts.files > 0 && (
+        <div className="mt-6">
+          <p className="mb-4 text-xs text-muted">
+            Names and descriptions go into the registry, so write them in English. Nothing is numbered until the worker
+            files the batch.
+          </p>
+          <BatchAddTable
+            uploads={edits.uploads}
+            catalog={catalog}
+            problems={problems}
+            onChange={edits.updateUpload}
+            onDrop={edits.dropUpload}
+            onUngroup={edits.ungroup}
+            onGroup={edits.groupUnder}
+            onPickEntity={setPicking}
+            onView={(id) => setViewing(edits.uploads.findIndex((u) => u.id === id))}
+          />
         </div>
       )}
+
+      <Lightbox
+        items={edits.uploads.map((u) => ({ src: u.preview, title: u.file.name, subtitle: u.why }))}
+        index={viewing}
+        onIndex={setViewing}
+        onClose={() => setViewing(null)}
+      />
 
       <IndexPicker
         open={picking !== null}
@@ -831,7 +913,16 @@ function AddDialog({ entity, catalog, onClose, send, busy }: {
         title="Which entity is this a new look of?"
         catalog={catalog}
         onClose={() => setPicking(null)}
-        onPickEntity={(c) => { if (picking) edits.updateUpload(picking, { entity: c.id }); setPicking(null) }}
+        onPickEntity={(c) => {
+          if (picking) {
+            const u = edits.uploads.find((x) => x.id === picking)
+            edits.updateUpload(picking, {
+              mode: 'variant', entity: c.id, groupOf: '',
+              needs: (u?.needs ?? []).filter((n) => n !== 'entity' && n !== 'kind' && n !== 'name'),
+            })
+          }
+          setPicking(null)
+        }}
       />
     </Modal>
   )

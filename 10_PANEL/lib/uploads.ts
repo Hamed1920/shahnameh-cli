@@ -50,16 +50,31 @@ export interface PendingUpload {
   bytes: Buffer
 }
 
-/** Validate every upload against the index. Nothing is written until all pass. */
-export async function readUploads(pr: Project, formData: FormData, decisionId: string): Promise<PendingUpload[]> {
+/**
+ * Validate every upload against the index. Nothing is written until all pass.
+ *
+ * `max` and `allowGroups` are what separate a Review decision (a handful of
+ * images beside a note) from a References batch add (a folder of them, where
+ * several files may be looks of one new thing). The worker checks all of this
+ * again in worker/lib/promote.mjs before anything is filed.
+ */
+export async function readUploads(
+  pr: Project,
+  formData: FormData,
+  decisionId: string,
+  { max = MAX_UPLOADS, maxTotalBytes = 0, allowGroups = false } = {},
+): Promise<PendingUpload[]> {
   const raw = parseJsonArray(formData, 'uploads') ?? []
-  if (raw.length > MAX_UPLOADS) throw new Invalid(`At most ${MAX_UPLOADS} uploads per decision.`)
+  if (raw.length > max) {
+    throw new Invalid(allowGroups ? `At most ${max} images at a time.` : `At most ${max} uploads per decision.`)
+  }
   if (raw.length === 0) return []
 
   const entities = await getEntities(pr)
   const slugs = new Set<string>()
   const ids = new Set<string>()
   const out: PendingUpload[] = []
+  let total = 0
 
   for (const item of raw) {
     const u = (item ?? {}) as Record<string, unknown>
@@ -74,6 +89,15 @@ export async function readUploads(pr: Project, formData: FormData, decisionId: s
     }
     if (file.size > MAX_UPLOAD_BYTES) {
       throw new Invalid(`${label}: larger than ${MAX_UPLOAD_BYTES / 1024 / 1024} MB.`)
+    }
+    total += file.size
+    if (maxTotalBytes && total > maxTotalBytes) {
+      // The whole multipart body has a hard ceiling (next.config.ts). Past it
+      // Next refuses the action with nothing useful to show, and the drop is
+      // lost -- so say it here, while the dialog can still act on it.
+      throw new Invalid(
+        `That is more than ${Math.round(maxTotalBytes / 1024 / 1024)} MB in all. Take a few out and add them in a second batch.`,
+      )
     }
     const ext = path.extname(file.name).toLowerCase()
     if (!(UPLOAD_EXT as readonly string[]).includes(ext)) {
@@ -102,7 +126,22 @@ export async function readUploads(pr: Project, formData: FormData, decisionId: s
       descriptor,
     }
 
-    if (u.mode === 'variant') {
+    const groupOf = String(u.groupOf ?? '')
+    if (groupOf) {
+      // Another look of the new entity an earlier image proposes. The panel
+      // allocates nothing: the worker makes that entity and gives this its next
+      // look. `out` is built in order, so finding it there is the "strictly
+      // earlier" check, and a cycle cannot be written down.
+      if (!allowGroups) throw new Invalid(`${label}: grouped images are not allowed here.`)
+      if (u.mode !== 'variant' || u.entity) {
+        throw new Invalid(`${label}: a grouped image is a new look of the new entity that ${groupOf} creates.`)
+      }
+      const lead = out.find((p) => p.meta.id === groupOf)
+      if (!lead) throw new Invalid(`${label}: it is grouped with an image that is not earlier in this batch.`)
+      if (lead.meta.mode !== 'new') throw new Invalid(`${label}: ${groupOf} is not a new entity.`)
+      if (lead.meta.groupOf) throw new Invalid(`${label}: groups are one level deep.`)
+      meta.groupOf = groupOf
+    } else if (u.mode === 'variant') {
       const ref = String(u.entity ?? '')
       const ent = entities.find((e) => e.id === ref || e.short_id === ref)
       if (!ent) throw new Invalid(`${label}: choose which entity this is a new look of.`)
@@ -130,7 +169,12 @@ export async function readUploads(pr: Project, formData: FormData, decisionId: s
         )
       }
       if (slugs.has(slug)) {
-        throw new Invalid(`${label}: two uploads propose the same new entity '${slug}'.`)
+        // Load-bearing: this is what makes two looks of one new thing go
+        // through grouping, where the worker allocates a single number, rather
+        // than through two rows that would each ask for one.
+        throw new Invalid(
+          `${label}: two images propose the same new entity '${slug}'. If they are two looks of one thing, group them.`,
+        )
       }
       slugs.add(slug)
       Object.assign(meta, { kind, name, description: description.slice(0, 300) })

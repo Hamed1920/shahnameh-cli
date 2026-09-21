@@ -137,7 +137,7 @@ Skills: `/project-log`, `/sync-out`, `/sync-in`, `/sync-check`, `/learn`, `/run-
 ```
 10_PANEL/       Next.js review panel + generation worker — the system's only code
 tools/          Validate-Project, Build-ContextPack, Ingest-Jobs, Move-ToProjects, Shm-Common
-docs/           INDEXING.md, SYNC_PROTOCOL.md, reference/HIGGSFIELD-CLI.md
+docs/           INDEXING.md, SYNC_PROTOCOL.md, VISION-BATCH-ADD.md (parked), reference/HIGGSFIELD-CLI.md
 templates/      project/ — the skeleton the panel copies to start a new film
 shahnameh-cli/  a project (code SHM). Any top-level folder with a project.json is one.
 .generate.lock  machine-wide: one generation at a time. Never committed.

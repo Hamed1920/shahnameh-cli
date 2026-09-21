@@ -1,15 +1,15 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import {
-  CODE, P, ROOT, RX, appendJsonl, archivedVariants, findEntity, log, readJsonl, readState, readText, resolveRef,
-  restoreText, shotFolder, usedShotIds, writeCsv,
+  CODE, P, ROOT, RX, appendJsonl, archivedVariants, findEntity, log, readJsonl, readState, resolveRef,
+  shotFolder, usedShotIds,
 } from './project.mjs'
 import { episodeFolderName } from './ids.mjs'
-import { parseCsv } from './csv.mjs'
 import { entityId as fullEntityId } from './ids.mjs'
 import {
-  FilingError, checkUploads, entitySlug, fileUpload, nextVariant, syncEntityRow,
+  FilingError, checkUploads, entitySlug, fileUploadInto, nextVariant, syncEntityRow,
 } from './promote.mjs'
+import { MANIFEST_HEADER, OpError, exists, fail, moveFile, rel, transaction } from './tx.mjs'
 
 /**
  * Index management requested from the panel's References page.
@@ -24,93 +24,12 @@ import {
  * saved beside it, so it can be restored.
  */
 
-const MANIFEST_HEADER = [
-  'filename', 'entity_id', 'variant', 'take', 'role', 'status', 'folder',
-  'source', 'original_filename', 'added', 'notes',
-]
 const ROLES = ['HERO', 'TURNAROUND', 'PLATE', 'DETAIL', 'BOARD', 'RENDER']
+/** Mirrors MAX_ADD_UPLOADS in lib/indexing.ts; the worker never trusts the panel's cap. */
+const MAX_ADD_UPLOADS = 40
 const SETTABLE_STATUS = ['CONCEPT', 'APPROVED', 'LOCKED']
 const ASCII = /^[\x20-\x7E]*$/
 const ARCHIVE_INDEX = () => path.join(P.archive, 'index.jsonl')
-
-/** A request that breaks a rule. Retrying cannot help, so it is recorded as failed. */
-export class OpError extends Error {}
-
-const fail = (msg) => { throw new OpError(msg) }
-
-// ---------------------------------------------------------------- transaction
-
-async function moveFile(src, dest) {
-  await fs.mkdir(path.dirname(dest), { recursive: true })
-  try {
-    await fs.rename(src, dest)
-  } catch (e) {
-    if (e.code !== 'EXDEV') throw e
-    await fs.copyFile(src, dest)
-    await fs.rm(src, { force: true })
-  }
-}
-
-async function exists(p) {
-  try { await fs.access(p); return true } catch { return false }
-}
-
-/**
- * Run `fn` against in-memory registries. On success both CSVs are written; on
- * any error every recorded file move is reversed, every rewritten sidecar put
- * back, and the CSVs restored.
- */
-async function transaction(fn) {
-  const [entitiesText, manifestText] = await Promise.all([readText(P.entities), readText(P.manifest)])
-  const e = parseCsv(entitiesText)
-  const m = parseCsv(manifestText)
-  const moves = []
-  const copies = []
-  const rewrites = []
-  const tx = {
-    entities: e.rows,
-    assets: m.rows,
-    async move(src, dest) {
-      if (await exists(dest)) fail(`${rel(dest)} already exists`)
-      await moveFile(src, dest)
-      moves.push([src, dest])
-    },
-    async copy(src, dest) {
-      if (await exists(dest)) fail(`${rel(dest)} already exists`)
-      await fs.mkdir(path.dirname(dest), { recursive: true })
-      await fs.copyFile(src, dest)
-      copies.push(dest)
-    },
-    async rewrite(file, original, next) {
-      await restoreText(file, next)
-      rewrites.push([file, original])
-    },
-  }
-  try {
-    const result = await fn(tx)
-    await writeCsv(P.manifest, tx.assets, m.header.length ? m.header : MANIFEST_HEADER)
-    await writeCsv(P.entities, tx.entities, e.header)
-    // Side records (the archive index) only once the registries are committed.
-    if (typeof result === 'object' && result.after) await result.after()
-    return typeof result === 'object' ? result.summary : result
-  } catch (err) {
-    for (const [src, dest] of moves.reverse()) {
-      await moveFile(dest, src).catch((r) => log(`ROLLBACK move failed ${rel(dest)}: ${r.message}`))
-    }
-    // A copy left nothing behind to put back; undoing it is removing it.
-    for (const dest of copies.reverse()) {
-      await fs.rm(dest, { force: true }).catch((r) => log(`ROLLBACK copy failed ${rel(dest)}: ${r.message}`))
-    }
-    for (const [file, text] of rewrites.reverse()) {
-      await restoreText(file, text).catch((r) => log(`ROLLBACK ${rel(file)} failed: ${r.message}`))
-    }
-    await restoreText(P.manifest, manifestText).catch((r) => log(`ROLLBACK manifest failed: ${r.message}`))
-    await restoreText(P.entities, entitiesText).catch((r) => log(`ROLLBACK entities failed: ${r.message}`))
-    throw err
-  }
-}
-
-const rel = (abs) => path.relative(ROOT, abs).split(path.sep).join('/')
 
 // ---------------------------------------------------------------- helpers
 
@@ -280,20 +199,47 @@ async function assertNotInUse(tx, ctx, { files = [], ids = [] }) {
 // ---------------------------------------------------------------- operations
 
 const OPS = {
-  /** Upload new looks or new entities -- same filing as review uploads. */
-  async add(op) {
+  /**
+   * Upload new looks or new entities -- the same filing as a review upload,
+   * but the whole batch is one unit: the References page sends up to forty at
+   * a time, and forty either all land or none of them do.
+   *
+   * It has to be a unit for two reasons. A group (several files of one new
+   * thing) would otherwise be able to leave an entity half made. And a throw
+   * that is not a FilingError -- a locked file, an EBUSY, routine at this size
+   * -- leaves the op unprocessed and retried, by which point the uploads that
+   * did land have had their sources moved away, so the retry would fail on a
+   * missing file and record a misleading refusal over a half-filed index.
+   */
+  add: (op) => transaction(async (tx) => {
     const uploads = op.uploads ?? []
     if (uploads.length === 0) fail('nothing to add')
+    if (uploads.length > MAX_ADD_UPLOADS) fail(`too many files at once (${MAX_ADD_UPLOADS} max)`)
     try {
-      await checkUploads(uploads)
+      await checkUploads(uploads, new Set(), { allowGroups: true })
+      // What each upload was filed as, so a file that is another look of
+      // something new can be given the entity its leader has just created.
+      // checkUploads proved every groupOf points strictly earlier, so the
+      // leader is always in here by the time it is asked for.
+      const byUpload = new Map()
       const filed = []
-      for (const u of uploads) filed.push((await fileUpload(u, { id: op.id, reviewer: op.reviewer })).token)
-      return `added ${filed.join(', ')}`
+      for (const u of uploads) {
+        const r = await fileUploadInto(tx, u, { id: op.id, reviewer: op.reviewer },
+          { resolveGroup: (id) => byUpload.get(id) })
+        byUpload.set(u.id, r.entity)
+        filed.push(r.token)
+      }
+      return {
+        summary: `added ${filed.join(', ')}`,
+        // Only once both registries are committed: until then the sources are
+        // what a rollback puts the batch back to.
+        after: () => fs.rm(path.join(P.uploads, op.id), { recursive: true, force: true }),
+      }
     } catch (e) {
       if (e instanceof FilingError) fail(e.message)
       throw e
     }
-  },
+  }),
 
   retire: (op) => transaction(async (tx) => {
     const names = []
@@ -832,7 +778,22 @@ export async function runIndexOps(state, { dry = false } = {}) {
   let count = 0
   for (const op of ops.filter((o) => !seen.has(o.id))) {
     const handler = OPS[op.type]
-    if (dry) { await log(`DRY-RUN would apply index op ${op.id} (${op.type})`); continue }
+    if (dry) {
+      // An add carries the whole batch, so say what each file would become:
+      // it makes --dry-run a real check of forty rows and their groups before
+      // anything is filed. checkUploads only reads.
+      if (op.type === 'add') {
+        try {
+          for (const line of await checkUploads(op.uploads ?? [], new Set(), { allowGroups: true })) {
+            await log(`DRY-RUN would file ${line}`)
+          }
+        } catch (e) {
+          await log(`DRY-RUN would refuse index op ${op.id}: ${e.message}`)
+        }
+      }
+      await log(`DRY-RUN would apply index op ${op.id} (${op.type})`)
+      continue
+    }
     try {
       if (!handler) fail(`unknown operation '${op.type}'`)
       const summary = await handler(op, { state })

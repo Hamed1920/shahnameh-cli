@@ -379,6 +379,13 @@ all the way.
   - A reviewer can upload a reference in the review panel and propose it as a new entity (kind +
     English name). The worker assigns the number at filing time. An upload attached to an existing
     entity gets that entity's next `_V` instead. Either way the manifest row has `source` = `upload`.
+    The References page's **batch add** is the same filing for a whole folder at once: it reads each
+    filename to propose what the file is, and Hamed confirms the table before anything is sent.
+    Several images in one batch may be looks of **one** newly proposed entity — they carry a
+    `groupOf` naming the image that proposes it, and land as `V01, V02, V03` of the single number
+    the worker allocates. That is the one case where a slug proposed twice in a batch is not a
+    clash; two *ungrouped* rows proposing the same slug are still rejected, as they must be. The
+    batch is applied as a unit, so forty files either all land or none of them do.
   - A Prompts-page batch can target `NEW/KIND/SLUG`. The worker assigns the number **when the
     batch is approved**, not when it is submitted or priced, so a discarded batch burns nothing.
     The row is written exactly as `Ingest-Jobs.ps1` writes it (`RESERVED`, `NO-ASSET`), with

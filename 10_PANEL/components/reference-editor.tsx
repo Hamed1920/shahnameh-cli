@@ -20,6 +20,7 @@ import {
   KINDS, KIND_LABEL, MAX_UPLOADS, MAX_UPLOAD_BYTES, UPLOAD_ACCEPT, UPLOAD_ROLES,
   entitySlug, isAscii, type Kind,
 } from '@/lib/indexing'
+import { proposeBatch, type Confidence, type Need, type ProposeCtx } from '@/lib/batch-add'
 import { refKey } from '@/lib/mentions'
 import type { CatalogEntity, ResolvedReference } from '@/lib/types'
 
@@ -46,11 +47,21 @@ export interface UploadDraft {
   mode: 'variant' | 'new'
   /** Full entity id, for mode=variant. */
   entity: string
+  /**
+   * Upload id of the `mode: 'new'` draft this is another look of, or ''. Only
+   * a References batch add sets it; see ReviewUpload.groupOf in lib/types.ts.
+   */
+  groupOf: string
   kind: string
   name: string
   description: string
   role: string
   descriptor: string
+  /** How lib/batch-add read the filename. Absent when Hamed added the file by hand. */
+  confidence?: Confidence
+  why?: string
+  candidates?: string[]
+  needs?: Need[]
 }
 
 const initialItems = (original: ResolvedReference[]): RefItem[] =>
@@ -63,7 +74,7 @@ const initialItems = (original: ResolvedReference[]): RefItem[] =>
  * Everything the reviewer changed about a candidate's references. Lives in the
  * card so the form can serialize it on submit.
  */
-export function useReferenceEdits(original: ResolvedReference[]) {
+export function useReferenceEdits(original: ResolvedReference[], { maxUploads = MAX_UPLOADS } = {}) {
   const [items, setItems] = useState<RefItem[]>(() => initialItems(original))
   const [uploads, setUploads] = useState<UploadDraft[]>([])
   const seq = useRef(0)
@@ -115,26 +126,21 @@ export function useReferenceEdits(original: ResolvedReference[]) {
     [place],
   )
 
+  /** An object URL pins the file in memory; the set is revoked on unmount. */
+  const draftFrom = useCallback((file: File, id: string, rest: Partial<UploadDraft>): UploadDraft => {
+    const preview = URL.createObjectURL(file)
+    previews.current.add(preview)
+    return {
+      id, file, preview, mode: 'variant', entity: '', groupOf: '',
+      kind: '', name: '', description: '', role: 'PLATE', descriptor: '', ...rest,
+    }
+  }, [])
+
   const addFiles = useCallback(
     (files: File[], opts: { asRef: boolean; replaceKey: string | null; entity: string }) => {
-      const room = MAX_UPLOADS - uploads.length
+      const room = maxUploads - uploads.length
       const accepted = files.slice(0, Math.max(0, room))
-      const drafts = accepted.map((file) => {
-        const preview = URL.createObjectURL(file)
-        previews.current.add(preview)
-        return {
-          id: `u${++seq.current}`,
-          file,
-          preview,
-          mode: 'variant' as const,
-          entity: opts.entity,
-          kind: '',
-          name: '',
-          description: '',
-          role: 'PLATE',
-          descriptor: '',
-        }
-      })
+      const drafts = accepted.map((file) => draftFrom(file, `u${++seq.current}`, { entity: opts.entity }))
       setUploads((us) => [...us, ...drafts])
       if (opts.asRef) {
         drafts.forEach((d, i) =>
@@ -146,7 +152,29 @@ export function useReferenceEdits(original: ResolvedReference[]) {
       }
       return files.length - accepted.length
     },
-    [uploads.length, place],
+    [uploads.length, maxUploads, place, draftFrom],
+  )
+
+  /**
+   * A batch add: every file arrives with what lib/batch-add read from its name
+   * already filled in, and files that show the same new thing already grouped.
+   * Nothing is allocated here -- the worker still assigns every number.
+   */
+  const addFilesInferred = useCallback(
+    (files: File[], ctx: ProposeCtx) => {
+      const room = maxUploads - uploads.length
+      const accepted = files.slice(0, Math.max(0, room))
+      const proposals = proposeBatch(accepted.map((f) => f.name), ctx)
+      // Ids first, so a proposal's group index can name the draft it points at.
+      const ids = accepted.map(() => `u${++seq.current}`)
+      const drafts = accepted.map((file, i) => {
+        const { groupOf, ...p } = proposals[i]
+        return draftFrom(file, ids[i], { ...p, groupOf: groupOf >= 0 ? ids[groupOf] : '' })
+      })
+      setUploads((us) => [...us, ...drafts])
+      return files.length - accepted.length
+    },
+    [uploads.length, maxUploads, draftFrom],
   )
 
   const remove = useCallback((key: string) => {
@@ -169,10 +197,36 @@ export function useReferenceEdits(original: ResolvedReference[]) {
   const dropUpload = useCallback((id: string) => {
     setUploads((us) => {
       const gone = us.find((u) => u.id === id)
-      if (gone) { URL.revokeObjectURL(gone.preview); previews.current.delete(gone.preview) }
-      return us.filter((u) => u.id !== id)
+      if (!gone) return us
+      URL.revokeObjectURL(gone.preview)
+      previews.current.delete(gone.preview)
+      const left = us.filter((u) => u.id !== id)
+      // Dropping the first of a group must not strand the rest: the next one
+      // becomes the new entity and the others follow it.
+      const [heir, ...rest] = left.filter((u) => u.groupOf === id)
+      if (!heir) return left
+      const followers = new Set(rest.map((u) => u.id))
+      return left.map((u) => {
+        if (u.id === heir.id) {
+          return { ...u, mode: 'new' as const, groupOf: '', entity: '', kind: gone.kind, name: gone.name, description: gone.description }
+        }
+        return followers.has(u.id) ? { ...u, groupOf: heir.id } : u
+      })
     })
     setItems((cur) => cur.filter((i) => i.uploadId !== id))
+  }, [])
+
+  /** Take a look out of its group: it becomes a thing of its own, needing a name. */
+  const ungroup = useCallback((id: string) => {
+    setUploads((us) => us.map((u) => (u.id === id ? { ...u, groupOf: '', mode: 'new', entity: '' } : u)))
+  }, [])
+
+  /** Make these looks of the first of them, which becomes the new entity. */
+  const groupUnder = useCallback((ids: string[], leaderId: string) => {
+    setUploads((us) => us.map((u) => {
+      if (u.id === leaderId) return { ...u, mode: 'new', groupOf: '', entity: '' }
+      return ids.includes(u.id) ? { ...u, mode: 'variant', groupOf: leaderId, entity: '', kind: '', name: '' } : u
+    }))
   }, [])
 
   const toggleUploadRef = useCallback(
@@ -193,8 +247,10 @@ export function useReferenceEdits(original: ResolvedReference[]) {
         fd.set(
           'uploads',
           JSON.stringify(
-            uploads.map(({ id, mode, entity, kind, name, description, role, descriptor }) => ({
+            uploads.map(({ id, mode, entity, groupOf, kind, name, description, role, descriptor }) => ({
               id, mode, entity, kind, name, description, role, descriptor,
+              // Only when set: the Review and Regenerate paths refuse the field.
+              ...(groupOf && { groupOf }),
             })),
           ),
         )
@@ -205,8 +261,8 @@ export function useReferenceEdits(original: ResolvedReference[]) {
   )
 
   return {
-    items, uploads, refs, stale, changed, reset, addToken, addFiles, remove, restore,
-    updateUpload, dropUpload, toggleUploadRef, serialize,
+    items, uploads, refs, stale, changed, reset, addToken, addFiles, addFilesInferred, remove, restore,
+    updateUpload, dropUpload, ungroup, groupUnder, toggleUploadRef, serialize,
   }
 }
 

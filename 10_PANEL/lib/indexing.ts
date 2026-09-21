@@ -27,7 +27,21 @@ export type UploadRole = (typeof UPLOAD_ROLES)[number]
 export const UPLOAD_EXT = ['.png', '.jpg', '.jpeg', '.webp'] as const
 export const UPLOAD_ACCEPT = 'image/png,image/jpeg,image/webp'
 export const MAX_UPLOAD_BYTES = 25 * 1024 * 1024
+/** Per Review decision or Regenerate request: a handful of images beside a note. */
 export const MAX_UPLOADS = 8
+
+/**
+ * One References-page batch add. A decision carries a few images; a batch is a
+ * folder of them, so the two caps are separate on purpose -- raising this one
+ * must not quietly let a decision carry forty.
+ */
+export const MAX_ADD_UPLOADS = 40
+/**
+ * The whole multipart body is capped at 640mb by serverActions.bodySizeLimit
+ * in next.config.ts. Stop short of it in the browser, with room for the rest of
+ * the form: past the limit Next rejects the action opaquely and the drop is lost.
+ */
+export const MAX_ADD_TOTAL_BYTES = 512 * 1024 * 1024
 
 /**
  * Footage put into an episode by hand: a render from somewhere else, a plate,

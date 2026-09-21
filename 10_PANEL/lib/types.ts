@@ -104,6 +104,14 @@ export interface ReviewUpload {
   mode: 'variant' | 'new'
   /** Full entity id, for mode=variant. */
   entity?: string
+  /**
+   * Another look of the NEW entity an earlier upload in this same request
+   * proposes: its upload id. Only with mode=variant and an empty `entity`, and
+   * exactly one level deep -- a grouped upload can never itself be grouped, so
+   * a cycle cannot be written down. Allowed on a References batch add and
+   * refused everywhere else, so nothing else has to learn about it.
+   */
+  groupOf?: string
   /** For mode=new. The worker allocates the number. */
   kind?: string
   name?: string

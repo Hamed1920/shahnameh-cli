@@ -3,7 +3,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { revalidatePath } from 'next/cache'
-import { entitySlug, isAscii } from '@/lib/indexing'
+import { MAX_ADD_TOTAL_BYTES, MAX_ADD_UPLOADS, entitySlug, isAscii } from '@/lib/indexing'
 import { requireProject } from '@/lib/projects'
 import { getAssets, getEntities } from '@/lib/store'
 import { Invalid, readUploads } from '@/lib/uploads'
@@ -115,7 +115,11 @@ export async function requestIndexOp(formData: FormData): Promise<OpRequestResul
         break
       }
       case 'add': {
-        const uploads = await readUploads(pr, formData, id)
+        const uploads = await readUploads(pr, formData, id, {
+          max: MAX_ADD_UPLOADS,
+          maxTotalBytes: MAX_ADD_TOTAL_BYTES,
+          allowGroups: true,
+        })
         if (uploads.length === 0) throw new Invalid('Add at least one image.')
         record.uploads = uploads.map((u) => u.meta)
         files = uploads.map((u) => ({ rel: u.meta.file, bytes: u.bytes }))

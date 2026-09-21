@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Logo } from '@/components/logo'
 import { Reveal } from '@/components/ui/reveal'
 import { cn } from '@/lib/cn'
-import { getPickerData, type AccountSpend, type FilmRow } from '@/lib/picker'
+import { getPickerData, type AccountSpend, type FilmRow, type Frame } from '@/lib/picker'
 import { FilmStrip } from './film-strip'
 import { NewFilm } from './new-film'
 
@@ -94,8 +94,10 @@ function Band({ film }: { film: FilmRow }) {
   return (
     <Link
       href={`/${film.slug}`}
-      className="focus-ring group relative block overflow-hidden border-b border-edge py-12 lg:py-14"
+      className="focus-ring group relative isolate block overflow-hidden border-b border-edge py-12 lg:py-14"
     >
+      <Backdrop frame={film.frames[0]} />
+
       {/*
         The film's own mark, as a watermark. Sized to sit inside the band rather
         than bleed out of it: a cropped round glyph still reads as a watermark,
@@ -139,6 +141,61 @@ function Band({ film }: { film: FilmRow }) {
         <FilmStrip frames={film.frames} emptyNote="no plates yet" />
       </div>
     </Link>
+  )
+}
+
+/**
+ * The film's newest plate, thrown across its own band like light off the gate
+ * of a projector.
+ *
+ * This is the only colour anywhere in the panel, and it is deliberately not
+ * the panel's -- it comes off the film. That is the whole reason it is a plate
+ * and not a decorative shape: a band with no plates gets no wash, because
+ * there is nothing to throw.
+ *
+ * Blurred past recognition on purpose. The strip beside it is where the frames
+ * are meant to be read; a legible second copy of the same image would only
+ * compete with it. Masked to a soft pool over the strip so it never hardens
+ * into a rectangle against the band's own borders, and held low enough that
+ * muted text in front of it keeps its contrast.
+ */
+function Backdrop({ frame }: { frame: Frame | undefined }) {
+  if (!frame) return null
+
+  return (
+    <div
+      aria-hidden
+      className={cn(
+        'pointer-events-none absolute inset-0 -z-20 overflow-hidden',
+        // The gate opens a little as you reach for the film.
+        'opacity-50 transition-opacity duration-500 ease-out-quint group-hover:opacity-[.68]',
+        // Falls off on all four sides. An ellipse wider than it is tall, kept
+        // well inside the band's height, is what stops the wash from reaching
+        // the top and bottom rules and hardening into a slab.
+        'mask-[radial-gradient(62%_56%_at_70%_50%,#000_0%,transparent_72%)]',
+      )}
+    >
+      {/*
+        Scaled past its box so the blur has material to bleed from -- at this
+        radius an unscaled image thins out into a pale frame inside the band.
+
+        Saturation is tripled for one reason: half the plates in a reference
+        library are shot on white sweep, and a blurred white plate is just a
+        grey slab -- the one thing a monochrome panel whose only accent is
+        white cannot afford behind its own text. Pushing saturation first
+        means a plate reaches the page as its colour, and a plate with no
+        colour to give stays close to nothing.
+
+        Decoration, so it loads last and never blocks a plate in the strip.
+      */}
+      <img
+        src={frame.src}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        className="size-full scale-125 object-cover blur-[72px] brightness-[.85] saturate-[3]"
+      />
+    </div>
   )
 }
 
