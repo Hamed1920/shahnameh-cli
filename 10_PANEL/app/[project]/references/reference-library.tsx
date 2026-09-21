@@ -178,11 +178,19 @@ export function ReferenceLibrary({ data, catalog }: { data: LibraryData; catalog
     ? KINDS.map((k) => ({ kind: k as string, items: visible.filter((e) => e.kind === k) })).filter((s) => s.items.length)
     : [{ kind: view as string, items: visible }]
 
-  const toggle = (set: Set<string>, setter: (s: Set<string>) => void, key: string) => {
-    const n = new Set(set)
-    if (n.has(key)) n.delete(key)
-    else n.add(key)
-    setter(n)
+  /**
+   * Off the set as it is when the click lands, not as it was when the thing
+   * that carries the click was built: a right-click menu is built once, on
+   * open, and a stale copy of the selection would undo whatever was picked
+   * between the two.
+   */
+  const toggle = (setter: React.Dispatch<React.SetStateAction<Set<string>>>, key: string) => {
+    setter((was) => {
+      const n = new Set(was)
+      if (n.has(key)) n.delete(key)
+      else n.add(key)
+      return n
+    })
   }
   const clearSelection = () => { setSelE(new Set()); setSelL(new Set()); setSelA(new Set()) }
   const total = selE.size + selL.size + selA.size
@@ -293,7 +301,7 @@ export function ReferenceLibrary({ data, catalog }: { data: LibraryData; catalog
       { label: 'Edit name, ID, description…', icon: <Pencil className="size-3.5" />, onSelect: () => setEditing(e) },
       ...(retired ? [] : [{ label: 'Add looks…', icon: <Plus className="size-3.5" />, onSelect: () => setAdding({ entity: e.id }) }]),
       { label: 'Copy reference', icon: <Copy className="size-3.5" />, hint: `@${e.shortId}`, onSelect: () => copyTokens([`@${e.shortId}`]) },
-      { label: selE.has(e.id) ? 'Unselect' : 'Select', icon: <Check className="size-3.5" />, onSelect: () => toggle(selE, setSelE, e.id) },
+      { label: selE.has(e.id) ? 'Unselect' : 'Select', icon: <Check className="size-3.5" />, onSelect: () => toggle(setSelE, e.id) },
       ...(retired ? [] : [{ caption: 'Status', chips: STATUSES.map((s) => ({ label: s, active: e.status === s, onSelect: () => send({ type: 'status', entities: [e.id], status: s }) })) }]),
       { divider: true },
       retired
@@ -388,13 +396,13 @@ export function ReferenceLibrary({ data, catalog }: { data: LibraryData; catalog
                         { heading: `${a.shortId}/${a.variant} · archived` },
                         { label: 'Restore', icon: <ArchiveRestore className="size-3.5" />, onSelect: () => send({ type: 'unarchive', archiveIds: [a.archiveId] }) },
                         { label: 'Show in folder', icon: <FolderOpen className="size-3.5" />, onSelect: () => reveal(a.file) },
-                        { label: on ? 'Unselect' : 'Select', icon: <Check className="size-3.5" />, onSelect: () => toggle(selA, setSelA, a.archiveId) },
+                        { label: on ? 'Unselect' : 'Select', icon: <Check className="size-3.5" />, onSelect: () => toggle(setSelA, a.archiveId) },
                       ])}
                       className={cn('relative overflow-hidden rounded-lg border bg-sunken', on ? 'border-fg/70' : 'border-edge')}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={assetUrl(a.file)} alt="" className="checker aspect-4/3 w-full object-cover opacity-80" />
-                      <SelectBox checked={on} onChange={() => toggle(selA, setSelA, a.archiveId)} label={`Select archived ${a.shortId} ${a.variant}`} className="absolute top-2 left-2" />
+                      <SelectBox checked={on} onChange={() => toggle(setSelA, a.archiveId)} label={`Select archived ${a.shortId} ${a.variant}`} className="absolute top-2 left-2" />
                       <div className="border-t border-edge px-3 py-2.5 text-[11px]">
                         <div className="font-mono text-fg">{a.shortId} / {a.variant}{a.take !== 'T01' ? ` / ${a.take}` : ''}</div>
                         <div className="mt-0.5 text-faint">archived {a.ts.slice(0, 10)}{a.by ? ` by ${a.by}` : ''}</div>
@@ -437,15 +445,15 @@ export function ReferenceLibrary({ data, catalog }: { data: LibraryData; catalog
                       selected={selE.has(e.id)}
                       selectedLooks={selL}
                       pending={pendingFor(e)}
-                      onSelect={() => toggle(selE, setSelE, e.id)}
-                      onSelectLook={(v) => toggle(selL, setSelL, lookKey(e.id, v))}
+                      onSelect={() => toggle(setSelE, e.id)}
+                      onSelectLook={(v) => toggle(setSelL, lookKey(e.id, v))}
                       onEdit={() => setEditing(e)}
                       onAdd={() => setAdding({ entity: e.id })}
                       onOpen={() => setOpenId(e.id)}
                       onEntityMenu={(ev) => openMenu(ev, entityEntries(e))}
                       onLookMenu={(ev, variant) => openMenu(ev, lookEntries(e, variant, {
                         selected: selL.has(lookKey(e.id, variant)),
-                        toggle: () => toggle(selL, setSelL, lookKey(e.id, variant)),
+                        toggle: () => toggle(setSelL, lookKey(e.id, variant)),
                       }))}
                     />
                   ))}

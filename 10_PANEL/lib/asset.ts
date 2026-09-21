@@ -20,3 +20,16 @@ export function thumbUrl(project: string, rel: string, width = 96) {
 export function isVideo(p: string) {
   return /\.(mp4|mov|webm)$/i.test(p)
 }
+
+/**
+ * Whether a take is filed as footage in an episode.
+ *
+ * The only thing that can change episode. "It has a file" is not the same
+ * question and was the wrong one: an approved 480p draft has a file, in
+ * 09_OUTPUT/_drafts, and the worker -- which looks in the episode's shots
+ * folder -- has nothing to carry. Offering one refused a whole batch of moves
+ * because of a single row.
+ */
+export function isFiledShot(file: string | null | undefined): boolean {
+  return /^07_EPISODES\/[^/]+\/shots\//.test(String(file ?? ''))
+}

@@ -5,12 +5,16 @@ import { listProjects, type Project } from './projects'
 import { parseCsv } from './csv'
 import { autostartBlockedReason } from './worker-guard'
 import { priceKey } from './batch-rules'
-import { episodeOf, nextEpisodeId, parseEpisodeDir, type EpisodeInfo } from './episodes'
+import { foldEpisodeShots, nextEpisodeId, parseEpisodeDir, type EpisodeInfo } from './episodes'
 import type {
   ArchivedLook, AssetRow, AttemptEntry, BatchStatus, BatchView, Candidate, CatalogEntity, Entity, Filing, IndexOp,
   IndexOpResult, JobRequest, JobRequestEvent, Learning, LibraryData, LibraryEntity, PromptLibraryItem, QueueItem, RegenerationView,
-  ResolvedReference, ReviewContext, ReviewDecision, LookUse, ShotMove, ShotMoves, StagingSidecar, WorkerStatus,
+  ResolvedReference, ReviewContext, ReviewDecision, LookUse, ShotMove, ShotMoveRequests, ShotMoves, StagingSidecar,
+  WorkerStatus,
 } from './types'
+
+/** How long a refused move is still worth showing on the page that asked for it. */
+const RECENT_FAILURE_MS = 30 * 60 * 1000
 
 /**
  * Read side of the panel. Everything here touches disk on every call and is
@@ -33,7 +37,7 @@ async function readText(file: string): Promise<string> {
   }
 }
 
-async function readJsonl<T>(file: string): Promise<T[]> {
+export async function readJsonl<T>(file: string): Promise<T[]> {
   const text = await readText(file)
   const out: T[] = []
   for (const line of text.split('\n')) {
@@ -460,17 +464,70 @@ export async function getShotMoves(pr: Project): Promise<ShotMoves> {
 }
 
 /**
+ * Moves the panel has asked for and the worker has not applied yet, and the
+ * ones it refused.
+ *
+ * Without this a card keeps showing the episode it is leaving, so the same
+ * shot gets asked for twice and the second request fails with "has no footage
+ * filed" long after the reviewer has stopped looking. `failed` is only recent
+ * refusals: an old one is history, not something to act on.
+ */
+export async function getShotMoveRequests(pr: Project): Promise<ShotMoveRequests> {
+  const [ops, results, state] = await Promise.all([
+    readJsonl<IndexOp>(pr.P.indexOps),
+    readJsonl<IndexOpResult>(pr.P.indexOpResults),
+    getWorkerState(pr),
+  ])
+  const processed = new Set((state?.processedOps ?? []) as string[])
+  const moves = ops.filter((o) => o.type === 'move-shot')
+
+  const pending: Record<string, string> = {}
+  for (const op of moves) {
+    if (processed.has(op.id)) continue
+    const episode = String(op.episode ?? '')
+    for (const shot of (op.shots ?? []) as string[]) pending[String(shot)] = episode
+  }
+
+  const byId = new Map(moves.map((o) => [o.id, o]))
+  const cutoff = Date.now() - RECENT_FAILURE_MS
+  const failed = results
+    .filter((r) => !r.ok && byId.has(r.opId) && new Date(r.ts).getTime() > cutoff)
+    .slice(-5)
+    .map((r) => ({
+      opId: r.opId,
+      episode: String(byId.get(r.opId)!.episode ?? ''),
+      shots: ((byId.get(r.opId)!.shots ?? []) as string[]).map(String),
+      reason: r.reason ?? 'The worker did not say why.',
+      ts: r.ts,
+    }))
+
+  return { pending, failed }
+}
+
+/**
  * The project's episodes, in order, with how much footage each already holds.
  *
- * Two sources, because an episode exists before its folder does: every folder
- * under 07_EPISODES (the worker makes one when it files that episode's first
- * accepted take, matching it by its CODE-EPnnn prefix), plus every episode a
- * queued job already targets. The last entry is always the next free number,
- * so the Prompts page can start an episode without anything being written
- * anywhere -- the number only becomes real when a job is approved against it.
+ * Two sources for the LIST, because an episode exists before its folder does:
+ * every folder under 07_EPISODES (the worker makes one when it files that
+ * episode's first accepted take, matching it by its CODE-EPnnn prefix), plus
+ * every episode a queued job has ever targeted. Ever, on purpose: an episode
+ * whose footage has all moved away keeps its number, and the next free number
+ * counts it, because numbers are never handed out twice (docs/INDEXING.md
+ * section 9). The last entry is always that next free number, so the Prompts
+ * page can start an episode without anything being written anywhere -- the
+ * number only becomes real when a job is approved against it.
+ *
+ * The COUNT is a different question: how much footage is in this episode now.
+ * QUEUE.jsonl keeps the shot id a job was made under for ever, which is the
+ * right record of what happened but means a shot that has changed episode is
+ * named in both -- so it was counted in both, and an episode a shot had left
+ * still said it held it. The count reads every id forward through
+ * SHOT_MOVES.jsonl first (getShotMoves), so each piece of footage is counted
+ * once, where it is.
  */
 export async function getEpisodes(pr: Project): Promise<EpisodeInfo[]> {
-  const shots = await getKnownShots(pr)
+  const [shots, moves] = await Promise.all([getKnownShots(pr), getShotMoves(pr)])
+  const { episodes, counts } = foldEpisodeShots(shots, pr.code, moves.shot)
   const found = new Map<string, EpisodeInfo>()
   const dirs = await fs.readdir(path.join(pr.P.root, '07_EPISODES'), { withFileTypes: true }).catch(() => [])
   for (const d of dirs) {
@@ -478,13 +535,8 @@ export async function getEpisodes(pr: Project): Promise<EpisodeInfo[]> {
     const parsed = parseEpisodeDir(d.name, pr.code)
     if (parsed) found.set(parsed.id, { id: parsed.id, dir: d.name, title: parsed.title, shots: 0 })
   }
-  for (const shot of shots) {
-    const id = episodeOf(shot, pr.code)
-    if (id && !found.has(id)) found.set(id, { id, dir: null, title: '', shots: 0 })
-  }
-  for (const ep of found.values()) {
-    ep.shots = new Set(shots.filter((s) => episodeOf(s, pr.code) === ep.id)).size
-  }
+  for (const id of episodes) if (!found.has(id)) found.set(id, { id, dir: null, title: '', shots: 0 })
+  for (const ep of found.values()) ep.shots = counts.get(ep.id) ?? 0
   const list = [...found.values()].sort((a, b) => a.id.localeCompare(b.id))
   const next = nextEpisodeId(list.map((e) => e.id))
   return [...list, { id: next, dir: null, title: '', shots: 0 }]
@@ -809,4 +861,12 @@ export async function getWorkerStatus(pr: Project): Promise<WorkerStatus> {
   const times = await Promise.all(files.map((f) => fs.stat(path.join(dir, f)).then((s) => s.mtimeMs, () => 0)))
   // A second of slack: an editor can touch a file in the same moment the worker starts.
   return { running: true, outdated: Math.max(...times) > startedMs + 1000, startedAt: new Date(startedMs).toISOString(), autostartOff }
+}
+
+
+/** Index-op requests the worker has not applied yet. The pages that made them say so. */
+export async function getPendingIndexOps(pr: Project): Promise<IndexOp[]> {
+  const [ops, state] = await Promise.all([readJsonl<IndexOp>(pr.P.indexOps), getWorkerState(pr)])
+  const processed = new Set((state?.processedOps ?? []) as string[])
+  return ops.filter((o) => !processed.has(o.id))
 }

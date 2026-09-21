@@ -2,22 +2,26 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Check, Copy, Film, FolderOpen, GripVertical, Heart, Plus, Search, X } from 'lucide-react'
+import { Check, Copy, Film, FolderOpen, GripVertical, Heart, LoaderCircle, Plus, Search, TriangleAlert, X } from 'lucide-react'
 import { revealInFolder } from '@/app/[project]/reveal-action'
 import { assignToEpisode } from '@/app/[project]/shot-actions'
-import { MenuNote } from '@/components/item-menu'
+import { MenuNote, isTextEntry } from '@/components/item-menu'
+import { EpisodePicker } from '@/components/episode-picker'
 import { ContextMenu, type MenuEntry } from '@/components/ui/context-menu'
 import { RegenerateButton, type RegenerateConfig } from '@/components/regenerate-button'
 import { ShowInFolder } from '@/components/show-in-folder'
 import { Card, EmptyState } from '@/components/ui/card'
 import { Input, Select } from '@/components/ui/field'
 import { Badge, PageHeader, SectionHeading } from '@/components/ui/text'
-import { isVideo as isVideoFile } from '@/lib/asset'
+import { isFiledShot, isVideo as isVideoFile } from '@/lib/asset'
 import { useAssetUrls, useProject } from '@/components/project-context'
 import { cn } from '@/lib/cn'
-import { episodeLabel, episodesIn, groupByEpisode, nextEpisodeId, shortEpisode, NO_EPISODE_LABEL } from '@/lib/episodes'
+import {
+  episodeLabel, episodesIn, groupByEpisode, shortEpisode, NO_EPISODE_LABEL,
+  type EpisodeChoice, type EpisodeOption,
+} from '@/lib/episodes'
 import { MAX_TAG_LENGTH, cleanTag, moveWithin, tagKey, type GalleryState } from '@/lib/gallery'
-import type { CatalogEntity, RegenerateSource, RegenerationView } from '@/lib/types'
+import type { CatalogEntity, RegenerateSource, RegenerationView, ShotMoveFailure } from '@/lib/types'
 import { setLike, setOrder, setTag } from './actions'
 
 /** One accepted take, flattened by the page so this component touches no disk types. */
@@ -51,6 +55,9 @@ const SORTS: { value: Sort; label: string }[] = [
   { value: 'scene', label: 'Episode & scene order' },
   { value: 'liked', label: 'Liked first' },
 ]
+
+/** Per-project, so dismissing a message in one film does not hide another's. */
+const dismissedKey = (project: string) => `shm-gallery-dismissed:${project}`
 
 const when = (iso: string) =>
   new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
@@ -100,7 +107,7 @@ function Thumbnail({ file, alt }: { file: string; alt: string }) {
 }
 
 export function GalleryView({
-  takes, state, tags: knownTags, catalog, cfg, prices, episodeTitles,
+  takes, state, tags: knownTags, catalog, cfg, prices, allEpisodes, nextEpisode, pendingMoves, moveErrors,
 }: {
   takes: GalleryTake[]
   state: GalleryState
@@ -108,12 +115,27 @@ export function GalleryView({
   catalog: CatalogEntity[]
   cfg: RegenerateConfig
   prices: Record<string, number>
-  /** EP001 -> "Zahhak Entry", from the episode folders on disk. */
-  episodeTitles: Record<string, string>
+  /**
+   * Every episode the project has, titled or not, with or without accepted work
+   * in it. The filters below are built from the takes instead -- an episode with
+   * nothing accepted is not worth filtering to -- but footage can be moved to
+   * any of them, and the next free number has to count them all.
+   */
+  allEpisodes: EpisodeOption[]
+  /** The next free episode number, worked out by the server. Never in the browser. */
+  nextEpisode: string
+  /** Shot id -> the episode the worker has been asked to move it to, not yet applied. */
+  pendingMoves: Record<string, string>
+  /** Moves the worker refused in the last half hour. */
+  moveErrors: ShotMoveFailure[]
 }) {
   const project = useProject()
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
+  const episodeTitles = useMemo(
+    () => Object.fromEntries(allEpisodes.filter((e) => e.title).map((e) => [e.id, e.title])),
+    [allEpisodes],
+  )
 
   const [liked, setLiked] = useState(() => new Set(state.liked))
   const [tags, setTags] = useState<Record<string, string[]>>(state.tags)
@@ -201,7 +223,13 @@ export function GalleryView({
     if (!from || from === overId) return
     setLocalOrder((o) => moveWithin(o, from, overId))
   }
+  /**
+   * One save per drag. The card dropped on fires `drop` and the card being
+   * dragged fires `dragend`, both of which land here, and both were appending
+   * the same arrangement to GALLERY.jsonl.
+   */
   function onDrop() {
+    if (!dragging.current) return
     dragging.current = null
     const snapshot = order
     void run(() => setOrder(project.slug, snapshot), () => {})
@@ -251,73 +279,148 @@ export function GalleryView({
 
   // ---------------------------------------------------------------- selection
 
-  /** Click to pick one; shift-click to pick everything between, as a file list does. */
+  /**
+   * Click to pick one; shift-click to pick everything between, as a file list
+   * does; ctrl- or cmd-click is a plain pick, which is what a Mac hand expects.
+   *
+   * The anchor is read here, in the handler, and only then moved. Reading it
+   * inside the setState updater looked the same and was not: React runs the
+   * updater at render time, by which point the anchor had already been moved to
+   * this very card, so every shift-click picked one card and no range.
+   */
   const pick = (id: string, shift: boolean) => {
+    const ids = visible.map((t) => t.decisionId)
+    const anchor = lastPicked.current
+    const from = anchor ? ids.indexOf(anchor) : -1
+    const to = ids.indexOf(id)
+    const range = shift && from >= 0 && to >= 0
+
     setSelected((was) => {
       const next = new Set(was)
-      const ids = visible.map((t) => t.decisionId)
-      const from = lastPicked.current ? ids.indexOf(lastPicked.current) : -1
-      const to = ids.indexOf(id)
-      if (shift && from >= 0 && to >= 0) {
+      if (range) {
         const [a, b] = from < to ? [from, to] : [to, from]
-        const on = !was.has(id)
-        for (const between of ids.slice(a, b + 1)) { if (on) next.add(between); else next.delete(between) }
+        for (const between of ids.slice(a, b + 1)) next.add(between)
       } else if (next.has(id)) next.delete(id)
       else next.add(id)
       return next
     })
-    lastPicked.current = id
+    // A run of shift-clicks all measure from the same card, so widening and
+    // narrowing a range works; a plain click is what moves the anchor.
+    if (!range) lastPicked.current = id
   }
 
-  const selectedTakes = takes.filter((t) => selected.has(t.decisionId))
-  /** One shot moves once, however many of its takes are picked. */
-  const shotsOf = (list: GalleryTake[]) => [...new Set(list.filter((t) => t.episode && t.file).map((t) => t.target))]
-  const selectedShots = shotsOf(selectedTakes)
+  const selectAllShown = () => {
+    setSelected((was) => new Set([...was, ...visible.map((t) => t.decisionId)]))
+    lastPicked.current = visible[0]?.decisionId ?? null
+  }
+  const clearSelection = () => { setSelected(new Set()); lastPicked.current = null }
 
-  const assign = (shots: string[], to: string) => {
-    void assignToEpisode(project.slug, shots, to).then((r) => {
+  /**
+   * Only ever ids that are still on the page. A take decided away, or one the
+   * worker has just moved, would otherwise sit in the count and in every "move
+   * these N" for the rest of the session without showing anywhere.
+   */
+  useEffect(() => {
+    const present = new Set(ids)
+    setSelected((was) => {
+      const kept = [...was].filter((id) => present.has(id))
+      return kept.length === was.size ? was : new Set(kept)
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [signature])
+
+  const selectedTakes = takes.filter((t) => selected.has(t.decisionId))
+  /**
+   * One shot moves once, however many of its takes are picked -- and only a shot
+   * whose footage is filed in an episode. An approved draft has a file, in
+   * 09_OUTPUT/_drafts, and there is nothing in the episode for the worker to
+   * carry: offering one refused the whole batch it was picked with.
+   */
+  const shotsOf = (list: GalleryTake[]) =>
+    [...new Set(list.filter((t) => t.episode && isFiledShot(t.file) && !pendingMoves[t.target]).map((t) => t.target))]
+  const selectedShots = shotsOf(selectedTakes)
+  /** Picked, but filtered off the page: said out loud rather than acted on silently. */
+  const hiddenPicked = selected.size - visible.filter((t) => selected.has(t.decisionId)).length
+
+  const assign = (shots: string[], choice: EpisodeChoice) => {
+    void assignToEpisode(project.slug, shots, choice.id, choice.title).then((r) => {
       if (!r.ok) { say(r.error ?? 'That did not save.', true); return }
-      say(`Asked the worker to move ${shots.length} shot${shots.length === 1 ? '' : 's'} to ${shortEpisode(to)}. It moves them on its next pass.`)
-      setSelected(new Set())
+      const n = r.moved?.length ?? shots.length
+      const extra = r.skipped?.length ? `, ${r.skipped.length} already there` : ''
+      say(`Asked the worker to move ${n} shot${n === 1 ? '' : 's'} to ${shortEpisode(choice.id)}${extra}. It moves them on its next pass.`)
+      clearSelection()
       router.refresh()
     })
   }
 
-  /** Every episode a shot could move to, the next free number last. */
-  const destinations = (from: string | null) =>
-    [...episodes.filter((e) => e !== from), nextEpisodeId(episodes)].map((e) => ({
-      id: e,
-      label: episodes.includes(e) ? episodeLabel(e, episodeTitles) : `${shortEpisode(e)} · new episode`,
-    }))
+  /**
+   * Messages already read.
+   *
+   * A refused move is worth saying once and not for the next half hour, so a
+   * dismissal is kept in this browser. It is a per-viewer convenience and
+   * nothing else reads it, which is what localStorage is for -- and every
+   * access is guarded, because a private window or blocked site data makes it
+   * throw rather than return nothing.
+   */
+  const [dismissed, setDismissed] = useState<Set<string>>(new Set())
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem(dismissedKey(project.slug))
+      if (saved) setDismissed(new Set(JSON.parse(saved) as string[]))
+    } catch { /* no storage; the banner is simply shown again */ }
+  }, [project.slug])
+  const dismiss = (opId: string) => {
+    setDismissed((was) => {
+      const next = new Set(was).add(opId)
+      // Only ones still being reported, so this cannot grow for ever.
+      const live = [...next].filter((id) => moveErrors.some((m) => m.opId === id))
+      try { window.localStorage.setItem(dismissedKey(project.slug), JSON.stringify(live)) } catch { /* ignore */ }
+      return next
+    })
+  }
 
-  const assignEntry = (shots: string[], from: string | null): MenuEntry[] =>
-    shots.length === 0
-      ? []
-      : [{
-          caption: shots.length === 1 ? 'Move it to' : `Move ${shots.length} shots to`,
-          chips: destinations(from).map((d) => ({ label: d.label, onSelect: () => assign(shots, d.id) })),
-        }]
+  /** What the episode picker is open for, once the menu that opened it has closed. */
+  const [picking, setPicking] = useState<{ at: { x: number; y: number }; shots: string[]; from: string[]; label: string } | null>(null)
+  const openPicker = (at: { x: number; y: number }, shots: string[], from: string[]) =>
+    setPicking({ at, shots, from, label: shots.length === 1 ? 'Move it to' : `Move ${shots.length} shots to` })
 
   /**
-   * Right-click menu for one take. Built fresh on every open so the chips show
-   * the filters as they stand, and it offers the whole bar -- episode, quality,
-   * order -- because the bar is at the top of a long page and the take is not.
+   * The one row that offers the move. A row rather than a line of chips: a film
+   * with a dozen episodes turns that line into a wall, and the picker it opens
+   * searches by name, which is how an episode is actually remembered.
    */
-  const menuFor = (t: GalleryTake): MenuEntry[] => {
-    const many = selected.has(t.decisionId) && selected.size > 1
-    const shots = many ? selectedShots : shotsOf([t])
-    return [
-    { heading: many ? `${selected.size} selected` : `${t.title} · ${t.where}` },
-    ...assignEntry(shots, many ? null : t.episode),
-    {
-      label: selected.has(t.decisionId) ? 'Unselect' : 'Select',
-      icon: <Check className="size-3.5" />,
-      onSelect: () => pick(t.decisionId, false),
-    },
-    ...(selected.size
-      ? [{ label: `Clear the selection (${selected.size})`, icon: <X className="size-3.5" />, onSelect: () => setSelected(new Set()) } as MenuEntry]
-      : [{ label: `Select all ${visible.length} shown`, icon: <Check className="size-3.5" />, onSelect: () => setSelected(new Set(visible.map((x) => x.decisionId))) } as MenuEntry]),
-    { divider: true },
+  const assignEntry = (at: { x: number; y: number }, shots: string[], waiting: string[], from: string[]): MenuEntry[] => [
+    ...(shots.length
+      ? [{
+          label: shots.length === 1 ? 'Move it to another episode…' : `Move these ${shots.length} to another episode…`,
+          icon: <Film className="size-3.5" />,
+          onSelect: () => openPicker(at, shots, from),
+        } as MenuEntry]
+      : []),
+    // Said even when there is still something movable, so a count that looks
+    // short -- three picked, two offered -- explains itself.
+    ...(waiting.length
+      ? [{
+          label: waiting.length === 1
+            ? `Moving to ${shortEpisode(pendingMoves[waiting[0]])}`
+            : `${waiting.length} already on their way`,
+          icon: <LoaderCircle className="size-3.5 animate-spin" />,
+          disabled: true,
+          hint: 'waiting',
+          onSelect: () => {},
+        } as MenuEntry]
+      : []),
+  ]
+
+  /**
+   * Right-click menu for the page: what is shown, in what order.
+   *
+   * These belong to the page, not to any one take, so they are only here --
+   * right-click the bar at the top, or anywhere that is not a card. Having them
+   * on every card as well made a card's own menu mostly about the page.
+   */
+  const pageMenu = (): MenuEntry[] => [
+    { heading: `${visible.length} of ${takes.length} shown` },
     {
       caption: 'Show only',
       chips: [
@@ -330,10 +433,6 @@ export function GalleryView({
         ...(looseTakes ? [{ label: 'No episode', active: episodeFilter === 'none', onSelect: () => setEpisodeFilter(episodeFilter === 'none' ? '' : 'none') }] : []),
       ],
     },
-    ...(t.episode && episodeFilter !== t.episode
-      ? [{ label: `Only ${shortEpisode(t.episode)}, this one's episode`, icon: <Film className="size-3.5" />, onSelect: () => setEpisodeFilter(t.episode!) }]
-      : []),
-    { divider: true },
     {
       caption: 'Quality',
       chips: [
@@ -346,6 +445,53 @@ export function GalleryView({
       caption: 'Order',
       chips: SORTS.map((s) => ({ label: s.label, active: sort === s.value, onSelect: () => setSort(s.value) })),
     },
+    { divider: true },
+    ...(selected.size
+      ? [{ label: `Clear the selection (${selected.size})`, icon: <X className="size-3.5" />, onSelect: clearSelection } as MenuEntry]
+      : []),
+    {
+      label: `Select all ${visible.length} shown`,
+      icon: <Check className="size-3.5" />,
+      disabled: visible.length === 0,
+      onSelect: selectAllShown,
+    },
+  ]
+
+  const openPageMenu = (e: React.MouseEvent) => {
+    if (isTextEntry(e.target)) return
+    e.preventDefault()
+    setMenu({ at: { x: e.clientX, y: e.clientY }, entries: pageMenu() })
+  }
+
+  /**
+   * Right-click menu for one take: this take, or the selection it is part of.
+   *
+   * Only what belongs to the footage -- where it goes, whether it is picked,
+   * liked, tagged, and how to get at its ids and its file. The page's own
+   * filters and sort are not here; they are on the page (pageMenu above).
+   *
+   * `on` is what the menu acts on, which is not always what was right-clicked:
+   * a right-click inside the selection acts on the selection, and one outside it
+   * takes the selection over to that card first, the way a file list does. The
+   * menu that then opens says which, so it is never a guess.
+   */
+  const menuFor = (t: GalleryTake, at: { x: number; y: number }, on: GalleryTake[], sel: Set<string>): MenuEntry[] => {
+    const many = on.length > 1
+    const shots = shotsOf(on)
+    const waiting = [...new Set(on.filter((x) => pendingMoves[x.target]).map((x) => x.target))]
+    // `sel` is the selection as it will be once this menu is open, which is not
+    // always `selected`: right-clicking outside the selection takes it over.
+    return [
+    { heading: many ? `${on.length} selected` : `${t.title} · ${t.where}` },
+    ...assignEntry(at, shots, waiting, many ? [] : t.episode ? [t.episode] : []),
+    {
+      label: sel.has(t.decisionId) ? 'Unselect' : 'Select',
+      icon: <Check className="size-3.5" />,
+      onSelect: () => pick(t.decisionId, false),
+    },
+    ...(sel.size
+      ? [{ label: `Clear the selection (${sel.size})`, icon: <X className="size-3.5" />, onSelect: clearSelection } as MenuEntry]
+      : []),
     { divider: true },
     {
       label: liked.has(t.decisionId) ? 'Unlike' : 'Like',
@@ -368,13 +514,42 @@ export function GalleryView({
     ]
   }
   const openMenu = (e: React.MouseEvent, t: GalleryTake) => {
+    // The tag box is a text field; the browser's own menu is the useful one there.
+    if (isTextEntry(e.target)) return
     e.preventDefault()
     e.stopPropagation()
-    setMenu({ at: { x: e.clientX, y: e.clientY }, entries: menuFor(t) })
+    const at = { x: e.clientX, y: e.clientY }
+    const inSelection = selected.has(t.decisionId)
+    // Right-clicking something outside the selection makes it the selection,
+    // the way a file list does, so the menu never acts on cards out of sight.
+    // Nothing picked at all stays nothing picked: a right-click is a look at
+    // what this card offers, not always a pick.
+    const sel = inSelection || selected.size === 0 ? selected : new Set([t.decisionId])
+    if (!inSelection && selected.size) { setSelected(sel); lastPicked.current = t.decisionId }
+    const on = sel.size > 1 ? takes.filter((x) => sel.has(x.decisionId)) : [t]
+    setMenu({ at, entries: menuFor(t, at, on, sel) })
   }
 
+  /** Escape drops the selection; ctrl/cmd-A takes everything on the page. */
+  useEffect(() => {
+    const key = (e: KeyboardEvent) => {
+      if (isTextEntry(e.target)) return
+      if (e.key === 'Escape' && selected.size) { setSelected(new Set()); lastPicked.current = null; return }
+      if ((e.key === 'a' || e.key === 'A') && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault()
+        setSelected(new Set(visible.map((t) => t.decisionId)))
+        lastPicked.current = visible[0]?.decisionId ?? null
+      }
+    }
+    window.addEventListener('keydown', key)
+    return () => window.removeEventListener('keydown', key)
+  }, [selected.size, visible])
+
   return (
-    <div className="space-y-8">
+    // The page's own menu, anywhere that is not a card: a card stops the event,
+    // so a right-click on footage is about the footage and a right-click on the
+    // bar, a heading or the space between cards is about the page.
+    <div className="space-y-8" onContextMenu={openPageMenu}>
       <PageHeader
         title="Gallery"
         eyebrow="Accepted work"
@@ -385,27 +560,7 @@ export function GalleryView({
         <span className="font-mono text-[13px] text-fg">draft</span> sits here too, badged, until its final renders.
       </PageHeader>
 
-      <div
-        className="sticky top-0 z-20 -mx-1 space-y-3 bg-ink/85 px-1 py-3 backdrop-blur"
-        onContextMenu={(e) => {
-          e.preventDefault()
-          setMenu({
-            at: { x: e.clientX, y: e.clientY },
-            entries: [
-              { heading: `${visible.length} of ${takes.length} shown` },
-              {
-                caption: 'Show only',
-                chips: [
-                  { label: 'All episodes', active: !episodeFilter, onSelect: () => setEpisodeFilter('') },
-                  ...episodes.map((e2) => ({ label: shortEpisode(e2), active: episodeFilter === e2, onSelect: () => setEpisodeFilter(e2) })),
-                  ...(looseTakes ? [{ label: 'No episode', active: episodeFilter === 'none', onSelect: () => setEpisodeFilter('none') }] : []),
-                ],
-              },
-              { caption: 'Order', chips: SORTS.map((s) => ({ label: s.label, active: sort === s.value, onSelect: () => setSort(s.value) })) },
-            ],
-          })
-        }}
-      >
+      <div className="sticky top-0 z-20 -mx-1 space-y-3 bg-ink/85 px-1 py-3 backdrop-blur">
         <div className="flex flex-wrap items-center gap-2">
           <div className="relative min-w-52 flex-1">
             <Search aria-hidden className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-faint" />
@@ -484,40 +639,72 @@ export function GalleryView({
               {selectedShots.length > 0 && selectedShots.length !== selected.size && (
                 <span className="text-faint"> · {selectedShots.length} shot{selectedShots.length === 1 ? '' : 's'}</span>
               )}
+              {hiddenPicked > 0 && <span className="text-faint"> · {hiddenPicked} hidden by the filters</span>}
             </span>
             {selectedShots.length > 0 ? (
-              <>
-                <span className="text-muted">Move to</span>
-                {destinations(null).map((d) => (
-                  <button
-                    key={d.id}
-                    type="button"
-                    onClick={() => assign(selectedShots, d.id)}
-                    className="focus-ring h-7 cursor-pointer rounded-md border border-edge-strong px-2.5 text-[12px] text-muted transition hover:border-muted hover:text-fg"
-                  >
-                    {d.label}
-                  </button>
-                ))}
-              </>
+              <button
+                type="button"
+                onClick={(e) => {
+                  const box = (e.currentTarget as HTMLElement).getBoundingClientRect()
+                  openPicker({ x: box.left, y: box.bottom + 6 }, selectedShots, [])
+                }}
+                className="focus-ring inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-edge-strong px-2.5 text-[12px] text-muted transition hover:border-muted hover:text-fg"
+              >
+                <Film aria-hidden className="size-3.5" />
+                Move to an episode…
+              </button>
             ) : (
-              <span className="text-faint">Nothing picked is footage, so there is no episode to move it to.</span>
+              <span className="text-faint">
+                {selectedTakes.some((t) => pendingMoves[t.target])
+                  ? 'These are already on their way to another episode.'
+                  : 'Nothing picked is footage, so there is no episode to move it to.'}
+              </span>
             )}
             <button
               type="button"
-              onClick={() => setSelected(new Set(visible.map((t) => t.decisionId)))}
+              onClick={selectAllShown}
               className="focus-ring ml-auto h-7 cursor-pointer px-1 text-[12px] text-muted underline-offset-2 hover:text-fg hover:underline"
             >
               Select all {visible.length} shown
             </button>
             <button
               type="button"
-              onClick={() => setSelected(new Set())}
+              onClick={clearSelection}
               className="focus-ring h-7 cursor-pointer px-1 text-[12px] text-muted underline-offset-2 hover:text-fg hover:underline"
             >
               Clear
             </button>
           </div>
         )}
+
+        {moveErrors.filter((m) => !dismissed.has(m.opId)).map((m) => (
+          <div key={m.opId} className="flex items-start gap-2 rounded-md border border-bad/35 bg-bad/8 px-3 py-2 text-xs leading-relaxed text-bad">
+            <TriangleAlert aria-hidden className="mt-0.5 size-3.5 shrink-0" />
+            <div className="min-w-0 flex-1 space-y-1">
+              <p>
+                {m.shots.length === 1
+                  ? `${m.shots[0]} did not move`
+                  : `${m.shots.length} shots did not move`} to {shortEpisode(m.episode)}: {m.reason}
+              </p>
+              {/* Fourteen ids is a wall of text in a banner. They are still here
+                  for anyone who needs them, one click away. */}
+              {m.shots.length > 1 && (
+                <details>
+                  <summary className="cursor-pointer text-bad/75 underline-offset-2 hover:underline">which ones</summary>
+                  <p className="mt-1 font-mono text-[10.5px] break-all text-bad/75">{m.shots.join(', ')}</p>
+                </details>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => dismiss(m.opId)}
+              aria-label="Dismiss this message"
+              className="focus-ring -m-1 grid size-6 shrink-0 cursor-pointer place-items-center rounded-md text-bad/70 transition-colors hover:text-bad"
+            >
+              <X aria-hidden className="size-3.5" />
+            </button>
+          </div>
+        ))}
 
         {error && <p className="rounded-md border border-bad/35 bg-bad/8 px-3 py-2 text-xs text-bad">{error}</p>}
       </div>
@@ -558,6 +745,7 @@ export function GalleryView({
                     onDrop={onDrop}
                     onContextMenu={(e) => openMenu(e, t)}
                     selected={selected.has(t.decisionId)}
+                    movingTo={pendingMoves[t.target] ?? null}
                     onPick={(shift) => pick(t.decisionId, shift)}
                     catalog={catalog}
                     cfg={cfg}
@@ -571,6 +759,15 @@ export function GalleryView({
       )}
 
       <ContextMenu at={menu?.at ?? null} entries={menu?.entries ?? []} onClose={() => setMenu(null)} />
+      <EpisodePicker
+        at={picking?.at ?? null}
+        title={picking?.label ?? ''}
+        episodes={allEpisodes}
+        next={nextEpisode}
+        exclude={picking?.from ?? []}
+        onPick={(choice) => { if (picking) assign(picking.shots, choice) }}
+        onClose={() => setPicking(null)}
+      />
       {note && <MenuNote text={note.text} bad={note.bad} />}
     </div>
   )
@@ -578,7 +775,7 @@ export function GalleryView({
 
 function TakeCard({
   take, liked, tags, suggestions, draggable, onToggleLike, onAddTag, onRemoveTag,
-  onDragStart, onDragOver, onDrop, onContextMenu, selected, onPick, catalog, cfg, prices,
+  onDragStart, onDragOver, onDrop, onContextMenu, selected, movingTo, onPick, catalog, cfg, prices,
 }: {
   take: GalleryTake
   liked: boolean
@@ -593,6 +790,8 @@ function TakeCard({
   onDrop: () => void
   onContextMenu: (e: React.MouseEvent) => void
   selected: boolean
+  /** The episode the worker has been asked to move this shot to, and has not yet. */
+  movingTo: string | null
   onPick: (shift: boolean) => void
   catalog: CatalogEntity[]
   cfg: RegenerateConfig
@@ -659,6 +858,7 @@ function TakeCard({
             {take.attempt > 1 && <Badge tone="muted">attempt {take.attempt}</Badge>}
             {take.status === 'waiting' && <Badge tone="accent">waiting for the worker</Badge>}
             {take.status === 'failed' && <Badge tone="bad">not applied</Badge>}
+            {movingTo && <Badge tone="accent">moving to {shortEpisode(movingTo)}</Badge>}
             <span className="ml-auto font-mono text-[10.5px] text-faint tabular-nums">{when(take.ts)}</span>
           </div>
         </div>

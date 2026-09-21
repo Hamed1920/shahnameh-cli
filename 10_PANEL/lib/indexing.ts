@@ -29,6 +29,18 @@ export const UPLOAD_ACCEPT = 'image/png,image/jpeg,image/webp'
 export const MAX_UPLOAD_BYTES = 25 * 1024 * 1024
 export const MAX_UPLOADS = 8
 
+/**
+ * Footage put into an episode by hand: a render from somewhere else, a plate,
+ * a cut someone else made. Exactly the extensions the validator's shot-file
+ * grammar allows (RX_SHOT_FILE in tools/Validate-Project.ps1) -- a file it
+ * would reject must never reach the shots folder.
+ */
+export const FOOTAGE_EXT = ['.png', '.jpg', '.jpeg', '.webp', '.mp4', '.mov'] as const
+export const FOOTAGE_ACCEPT = 'image/png,image/jpeg,image/webp,video/mp4,video/quicktime'
+/** A 1080p ten-second clip is a few MB; this is room for a much longer one. */
+export const MAX_FOOTAGE_BYTES = 200 * 1024 * 1024
+export const MAX_FOOTAGE = 12
+
 /** Registry text is read by PowerShell 5.1, which mangles non-ASCII. */
 export const isAscii = (s: string) => /^[\x20-\x7E]*$/.test(s)
 

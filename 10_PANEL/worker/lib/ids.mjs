@@ -34,6 +34,7 @@ export const SLUG_RX = /^[a-z0-9](?:[a-z0-9-]{0,38}[a-z0-9])?$/
 export const RESERVED_SLUGS = [
   // Panel pages, so a project can never shadow one...
   'api', 'new', 'review', 'decided', 'references', 'entities', 'learnings', 'prompts', 'queue', 'gallery',
+  'episodes',
   // ...and the system's own folders, which sit beside the projects.
   'tools', 'docs', 'templates', 'node_modules',
 ]
@@ -133,3 +134,30 @@ export const shotId = (code, episode, scene) => `${code}-${episode}-SC${String(s
 
 /** CHR-001-ZAHHAK from SHM-CHR-001-ZAHHAK. @param {string} code @param {string} id */
 export const stripCode = (code, id) => String(id ?? '').replace(idRx(code).prefix, '')
+
+// ---------------------------------------------------------------- episodes
+
+/**
+ * A typed episode title as it reads in a folder name: "Zahhak Entry" ->
+ * ZAHHAK-ENTRY. ASCII only, because the folder name is also read by the
+ * PowerShell tools, which are ASCII on purpose. A title with nothing ASCII in
+ * it (a Persian one) slugs to '' and the episode keeps its bare CODE-EPnnn
+ * folder, which is just as valid -- see parseEpisodeDir in lib/episodes.ts.
+ * @param {string} title
+ */
+export function episodeTitleSlug(title) {
+  return String(title ?? '')
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
+    .replace(/[^A-Z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 48)
+    .replace(/-+$/, '')
+}
+
+/** The folder an episode gets when it is first filed: SHM-EP002-ZAHHAK-ENTRY. @param {string} code @param {string} episode @param {string} [title] */
+export function episodeFolderName(code, episode, title) {
+  const slug = episodeTitleSlug(title ?? '')
+  return `${code}-${episode}${slug ? `-${slug}` : ''}`
+}

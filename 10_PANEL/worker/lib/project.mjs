@@ -3,7 +3,7 @@ import fsSync from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parseCsv, toCsv } from './csv.mjs'
-import { codeProblem, idRx, slugProblem } from './ids.mjs'
+import { codeProblem, episodeFolderName, idRx, slugProblem } from './ids.mjs'
 import { spentInWindow } from './spend.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
@@ -170,15 +170,22 @@ export const isShotId = (ref) => SHOT_RX.test(String(ref).trim())
  * Project-relative output folder for a shot: 07_EPISODES/<episode dir>/shots.
  * The episode directory is matched by its CODE-EPnnn prefix, so the readable
  * suffix (...-ZAHHAK-ENTRY) can change without breaking anything.
+ *
+ * `title` names the folder of an episode that has none yet, so filing into an
+ * episode never renames the one it already has: the name it was given when it
+ * started is the one it keeps.
  */
-export async function shotFolder(ref) {
+export async function shotFolder(ref, title = '') {
   const ep = String(ref).match(RX.episodePrefix)[0]
   const root = path.join(ROOT, '07_EPISODES')
-  let dirName = ep
+  let dirName = episodeFolderName(CODE, ep.slice(CODE.length + 1), title)
   try {
+    // The prefix has to end the name or be followed by the title's dash, so a
+    // bare CODE-EP001 never matches a CODE-EP001X someone made by hand.
     const found = (await fs.readdir(root, { withFileTypes: true }))
-      .filter((e) => e.isDirectory() && e.name.startsWith(ep))
-      .map((e) => e.name)[0]
+      .filter((e) => e.isDirectory() && (e.name === ep || e.name.startsWith(`${ep}-`)))
+      .map((e) => e.name)
+      .sort()[0]
     if (found) dirName = found
   } catch { /* episode folder not created yet */ }
   return `07_EPISODES/${dirName}/shots`

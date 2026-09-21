@@ -1,4 +1,4 @@
-import { CheckCheck, Images, Inbox, LayoutGrid, Library, ListOrdered, ScrollText, Sparkles } from 'lucide-react'
+import { CheckCheck, Clapperboard, Images, Inbox, LayoutGrid, Library, ListOrdered, ScrollText, Sparkles } from 'lucide-react'
 
 /**
  * The sections of the panel: the finished work first, then the review loop.
@@ -6,6 +6,7 @@ import { CheckCheck, Images, Inbox, LayoutGrid, Library, ListOrdered, ScrollText
  */
 export const NAV = [
   { path: '', label: 'Gallery', icon: LayoutGrid },
+  { path: '/episodes', label: 'Episodes', icon: Clapperboard },
   { path: '/review', label: 'Review', icon: Inbox },
   { path: '/decided', label: 'Decided', icon: CheckCheck },
   { path: '/references', label: 'References', icon: Images },

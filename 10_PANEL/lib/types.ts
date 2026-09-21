@@ -272,6 +272,33 @@ export type IndexOpType =
   | 'add' | 'retire' | 'restore' | 'status' | 'canonical' | 'role' | 'rename' | 'archive' | 'unarchive' | 'move'
   /** Footage moves to another episode: the shot keeps its takes, gets the next free scene there. */
   | 'move-shot'
+  /** An episode starts: the worker makes its folder, so it exists before it holds anything. */
+  | 'new-episode'
+  /** An episode's readable name changes. Its number never does. */
+  | 'rename-episode'
+  /** Footage put into an episode by hand: filed as a new scene, or a new take of one. */
+  | 'add-shot'
+  /** A shot leaves its episode for 09_OUTPUT/_archive. Not a delete: it can be put back. */
+  | 'archive-shot'
+  /** An archived shot goes back to the episode it came from. */
+  | 'restore-shot'
+  /** An empty episode's folder goes. Its number stays spent for ever. */
+  | 'remove-episode'
+
+/** One file being put into an episode by hand (an 'add-shot' op). */
+export interface FootageUpload {
+  /** u1, u2 ... within this request. */
+  id: string
+  /** Project-relative, under 09_OUTPUT/_uploads/<op id>/. */
+  file: string
+  originalName: string
+  /**
+   * 'next' takes the next free scene of the episode. An SCnnn that the episode
+   * already uses files this as another take of it. Nothing else is accepted:
+   * scene numbers are allocated, never typed.
+   */
+  scene: string
+}
 
 export interface IndexOp {
   id: string
@@ -296,6 +323,22 @@ export interface ShotMove {
   to: string
   files: { from: string; to: string }[]
   ts: string
+}
+
+/** A move the worker refused, so the page that asked can say what happened. */
+export interface ShotMoveFailure {
+  opId: string
+  episode: string
+  shots: string[]
+  reason: string
+  ts: string
+}
+
+/** Moves asked for and not applied yet, plus recent refusals. Plain objects: this crosses to the client. */
+export interface ShotMoveRequests {
+  /** Shot id -> the episode it has been asked to move to. */
+  pending: Record<string, string>
+  failed: ShotMoveFailure[]
 }
 
 /**
@@ -489,4 +532,119 @@ export interface RegenerationView {
   state: 'waiting' | 'queued' | 'rejected'
   jobId: string | null
   reason: string | null
+}
+
+/**
+ * One output of a shot: a take that was generated, filed, or turned down.
+ *
+ * Every file the shot has ever produced that is still on disk, so its history
+ * can be watched rather than read about. A denied take is kept -- nothing is
+ * deleted here -- and is part of how the shot got where it is.
+ */
+export interface ShotOutput {
+  /** Project-relative. */
+  file: string
+  /** T01, T02 ... -- the take, from the filename when it is filed. */
+  take: string
+  /** What was decided about it, when anything was. */
+  verdict: 'accepted' | 'denied' | null
+  stage: 'draft' | 'final' | null
+  attempt: number
+  ts: string
+  /** Why it was accepted or denied, as written at the time. */
+  notes: string
+  /** In the episode's shots folder: this one is the footage, not a record of it. */
+  filed: boolean
+  isVideo: boolean
+}
+
+/** Where one scene of an episode stands, for the Episodes page. */
+export interface EpisodeScene {
+  /** The shot id as it is now: SHM-EP001-SC004-SH0010. */
+  shot: string
+  /** SC004. */
+  scene: string
+  /** The prompt block it came from (P05), when the queue or a sidecar carries one. */
+  label: string | null
+  /**
+   * accepted: a take is filed. review: one is waiting to be decided.
+   * generating / queued: the worker has it. denied: every take so far was
+   * turned down. planned: a target with nothing generated against it yet.
+   */
+  state: 'accepted' | 'review' | 'generating' | 'queued' | 'denied' | 'planned'
+  /**
+   * The pass the shown take came from. An approved 480p `draft` is accepted but
+   * not finished -- its 1080p final may still be queued, or have been denied --
+   * so it must not read the same as a filed final.
+   */
+  stage: 'draft' | 'final' | null
+  /** The accepted take on disk, project-relative, for a thumbnail. */
+  file: string | null
+  /** Accepted takes of this shot. */
+  takes: number
+  /** Credits every generation against this shot has cost, from the ledger. */
+  credits: number
+  /** The episode it has been asked to move to and the worker has not moved it to yet. */
+  movingTo: string | null
+  /** Every output this shot has, oldest first. */
+  outputs: ShotOutput[]
+}
+
+/** One episode, as the Episodes page reads it. */
+export interface EpisodeBoard {
+  id: string
+  title: string
+  /** The folder under 07_EPISODES, or null while the episode has none yet. */
+  dir: string | null
+  scenes: EpisodeScene[]
+  counts: {
+    scenes: number
+    /** Accepted, draft or final. */
+    accepted: number
+    /** Accepted as a 480p draft only: the final is not filed. */
+    drafts: number
+    review: number
+    working: number
+    denied: number
+    planned: number
+  }
+  credits: number
+}
+
+/** A shot taken out of an episode, sitting in 09_OUTPUT/_archive until it is put back. */
+export interface ArchivedShot {
+  archiveId: string
+  /** The shot id it had, and will have again: its number was never reissued. */
+  shot: string
+  episode: string | null
+  /** Project-relative, for a thumbnail. */
+  file: string | null
+  takes: number
+  by: string
+  ts: string
+}
+
+/** One accepted take, as the "add outputs" picker offers it. */
+export interface AcceptedTake {
+  /** The shot id as it is now. Footage moves as a whole shot, so this is the unit. */
+  shot: string
+  /** EP001, or null for a design image filed under an entity -- which cannot move. */
+  episode: string | null
+  scene: string | null
+  /** The prompt block (P05) or whatever the shot is called. */
+  label: string
+  /** Project-relative, for a thumbnail. */
+  file: string | null
+  /**
+   * Filed as footage in an episode, which is the only thing that can move. An
+   * approved 480p draft has a file -- in 09_OUTPUT/_drafts -- and is not this.
+   */
+  filed: boolean
+  isVideo: boolean
+  /** Accepted takes of this shot. */
+  takes: number
+  /** Newest accepted decision, so the list can be newest-first. */
+  ts: string
+  /** The episode the worker has been asked to move it to and has not yet. */
+  movingTo: string | null
 }

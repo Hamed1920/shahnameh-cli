@@ -55,6 +55,167 @@ Open decisions live in [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md) — 8 outstanding.
 
 ## Log
 
+### 2026-09-18 — A shot's whole history, and episodes you can build by hand
+
+**"2 takes" is now a door.** Clicking the count on a shot opens its history: every output that shot
+has ever produced and that is still on disk -- filed takes, approved drafts and denied attempts --
+oldest first, each one playable with its own controls, each with the note that was written at the
+time. A denied take without the reason it was denied teaches nothing, and until now there was no
+way to see one without digging through `09_OUTPUT` by hand. Nothing is synchronised or autoplayed:
+comparing two takes means scrubbing them independently.
+
+**SC is a scene and these are shots, so the panel says shot.** The grammar keeps both segments
+(docs/INDEXING.md section 7) and the ids on disk and in the append-only history are untouched --
+but every id this project has ever made is `SC<n>-SH0010`, one shot per scene, so the number that
+identifies a piece of footage is the SC one and calling it a scene only confused things. `SC014`
+now reads **Shot 14** throughout, with the full id on hover and in Copy the shot id.
+
+**Episodes can be built and unbuilt.**
+
+- A take that is accepted but never filed -- an approved draft in `09_OUTPUT/_drafts` -- can now be
+  added to an episode. It is **copied** in, because the file where it is is what the Decided page
+  resolves. Filed footage still moves; the picker row says which it will be.
+- A shot can be taken out of an episode from its right-click menu: its takes move to
+  `09_OUTPUT/_archive` with a record beside them, exactly as an archived look does, and it can be
+  put back. Not a delete -- nothing is deleted here -- and its number stays spent either way.
+- An empty episode's folder can be removed. The number is not given back.
+- Footage filed by hand had been **invisible**: `getEpisodeBoard` built its rows from queued jobs
+  and decisions, and a file added by hand has neither, so an episode looked empty after putting
+  something in it. The files on disk are now read last and fill in what nothing else claimed.
+
+Plus: the total credits every episode has spent, at the top of the Episodes page (4065 today), and
+a close button on the refused-move banner -- fourteen shot ids is a wall of text that stayed for
+half an hour with no way to dismiss it.
+
+### 2026-09-18 — One un-movable shot no longer refuses a whole batch
+
+Picking all fourteen accepted shots into EP013 moved none of them
+(`op_mu6wot6pi37k`): the worker refused the batch because of `SHM-EP001-SC011-SH0010`, which is
+approved **as a draft**. Its accepted take is in `09_OUTPUT/_drafts`, never filed into the
+episode's `shots` folder, so there was nothing for the worker to carry -- and thirteen good moves
+went with it.
+
+Two mistakes, both fixed:
+
+- **"has a file" is not "is movable footage".** The picker and the Gallery both gated on
+  `file != null`, which an approved draft satisfies. The question is whether the file is filed as
+  footage in an episode, so there is now one predicate for it -- `isFiledShot` in `lib/asset.ts`,
+  true only for `07_EPISODES/<episode>/shots/...` -- and both use it. In the picker a draft-only
+  shot is greyed with *approved as a draft, no final filed in the episode yet* rather than being
+  offered and then refused.
+- **A no-op should not fail a batch.** The worker already skipped a shot already in the target
+  episode; it now skips one with no footage filed too, names every skip in the summary, and fails
+  only if nothing is left to move. A malformed id is still a refusal -- that is a mistake, not a
+  no-op.
+
+### 2026-09-18 — An Episodes page; any episode number can be started
+
+**New page: Episodes** (`/<project>/episodes`, second in the sidebar). The other pages are cuts
+through the work -- Review is the inbox, Decided the log, the Gallery the body of it. This is the
+shape of the film: which episodes exist, what is in each, what each still owes, and what each has
+cost. Per episode: the folder on disk (or that it has none yet), a filed-percentage bar, and a card
+per scene with its take, its state, its takes and its credits. Right-click a scene to send it
+somewhere else. An episode everything has moved out of is still listed -- its number is spent, and
+this is the one place that is visible.
+
+"Filed" means a **final** is on disk. An approved 480p draft is counted and shown apart
+(`SC011` is one: approved as a draft, its final denied twice since), so 13 accepted scenes read as
+12 filed, 92%, rather than a flat 100% that is not true. Read from what happened -- the queue, the
+staging folder, the review log, the ledger -- rather than from any one list
+(`lib/episode-board.ts`, its own module because it reads `lib/decided.ts`, which reads the store).
+
+**Any episode number can be started.** The picker suggested the next in order and refused anything
+else; it now offers whatever was typed and puts the next one beside it, with a note saying which
+was next in case the number was a typo. `EP9`, `9`, and `9 Rostam and Sohrab` all work -- the last
+starts EP009 called Rostam and Sohrab. A gap is Hamed's to leave; what still never happens is a
+number being used twice, so a number that is already an episode is offered as that episode, never
+as a new one.
+
+**An episode can now be started, opened, renamed, and have footage put into it.** Three new index
+ops, so the worker stays the only thing that touches a folder or a file:
+
+- `new-episode` makes an episode's folder before it holds anything, so one can be planned ahead
+  instead of being born the moment its first take is filed. Starting one that exists is a no-op,
+  never a rename.
+- `rename-episode` moves the folder and nothing else. Every shot id carries the number and not the
+  title, and the worker finds an episode by its `CODE-EPnnn` prefix, so nothing that names a shot
+  changes -- which is the whole reason the title is only ever a suffix.
+**"Add outputs" picks from what has already been accepted.** Nearly everything that belongs in an
+episode is already in the Gallery, so choosing it is the normal move and uploading is the exception.
+Picking is a `move-shot` -- the same footage in a different part of the film, not a new asset -- so
+the worker carries the shot's takes across and gives it the next scene number there. Nothing is
+copied and nothing is generated again. Anything that cannot move says why on its own row: a design
+image filed under an entity has no shot id, and one already on its way elsewhere is waiting on the
+worker. Uploading is still there, on the other tab of the same dialog.
+
+The picker's thumbnails are real frames. `api/thumb` only makes JPEGs of images and nearly every
+accepted take is a video, so a video row mounts a `<video preload="metadata">` at `#t=0.1` --
+and only once its row is near the viewport, or a list of eighty would ask for metadata on all of
+them at once.
+
+- `add-shot` puts footage made anywhere else into an episode: a render from another tool, a plate,
+  a cut. Each file lands as a new scene (the next free number, allocated by the worker as always) or
+  as another take of a scene the episode already has. A scene number that is neither is refused, not
+  invented. Only the extensions `RX_SHOT_FILE` allows, and the bytes have to agree with the
+  extension. Shots stay out of ASSET_MANIFEST.csv, like every other shot.
+
+The Episodes list is a grid of tiles and shows **no footage at all** -- a name, how far it has got,
+its counts and its folder. It is the page for getting to an episode, and a wall of videos is slower
+to load and much slower to read than a grid of names. The footage is one click away: each episode
+has its own page (`/episodes/EP001`) with its scenes, its counts, its credits, the folder its
+footage lives in, and the two buttons. `episodes` is now a reserved slug, so a project
+folder can never shadow the page.
+
+### 2026-09-18 — Right-click, multi-select and episode assign, fixed; the episode picker is a combo box
+
+Everything about picking footage and sending it to another episode, gone over end to end.
+
+- **Shift-click picked one card, never a range.** The anchor was read inside the `setSelected`
+  updater, which React runs at render time -- by which point the handler had already moved the
+  anchor to the card just clicked, so the range was always zero long. The anchor is now read in the
+  handler, and a run of shift-clicks measures from the same card, so a range widens and narrows.
+- **The selection is the selection.** Right-clicking a card outside it takes it over, the way a
+  file list does, so a menu can no longer act on cards scrolled out of sight; the menu is built
+  from the selection as it will be, not as it was. Ids that have left the page are dropped from it.
+  Escape clears, ctrl/cmd-A takes the page, and the bar says how many picks the filters are hiding.
+- **A new episode could take a number that was already in use.** The browser worked out "next" from
+  the episodes that had accepted work in them, so an episode that existed only as a folder or a
+  queued target was invisible to it. The number now comes from the server (`getEpisodes`), which
+  counts both. Numbers are never picked in the browser.
+- **Moving a mixed selection failed outright.** One shot already in the target episode refused the
+  whole batch. The panel drops them from the request and the worker skips them and says so, so
+  "put these in EP002" means what it says however many are already there.
+- **The same move could be asked for twice.** Nothing showed that a move was waiting, so a card
+  that had not visibly moved got asked again and the second request failed long after anyone was
+  looking. Pending moves are read out of `INDEX_OPS.jsonl`, cards are badged `moving to EP2`, the
+  menu row says so, and the panel refuses a duplicate. Refusals from the last half hour are shown
+  on the Gallery rather than only in the worker log.
+- **The episode chips are now a combo box** (`components/episode-picker.tsx`). Type to search by
+  number or by name; type a name that is not there and the last row starts an episode called that,
+  which also names its folder (`SHM-EP002-ZAHHAK-ENTRY`) the first time the worker files into it.
+  A title never renames an episode that already has a folder.
+- **Right-click no longer eats the browser's own menu in a text box** (search, tag), a long menu
+  scrolls inside itself instead of running off the bottom of the window, scrolling the page closes
+  it, and an empty menu does not open at all.
+- **A card's menu is about the card.** It carried the whole filter bar -- episodes, quality,
+  order -- so right-clicking one video mostly offered the page. Those moved to the page's own menu:
+  right-click the bar at the top, a heading, or the space between cards. A card now offers only its
+  own: where it goes, picked, liked, tagged, its ids, its file.
+- **An episode counted footage that had left it.** `getEpisodes` counted every shot id ever
+  targeted, and QUEUE.jsonl keeps the id a job was made under for ever -- so once SC008 moved to
+  EP002 it was counted in both, and EP001 read 14 shots when it holds 13. The count now reads each
+  id forward through `SHOT_MOVES.jsonl` first (`foldEpisodeShots` in `lib/episodes.ts`), so each
+  piece of footage is counted once, where it is. The episode **list** and the next free number
+  still come from the raw ids: an episode whose footage has all moved away keeps its number, and
+  that number is never handed out again. The worker's own scene numbering (`usedShotIds`) is
+  untouched and still sees every burned number, so EP001's next scene is SC015, not SC008.
+- One drag now saves one arrangement: `drop` and `dragend` were both appending it.
+
+Verified with a throwaway project run through `runIndexOps` directly -- no queue, no generation:
+two shots into a new titled episode with their takes, a mixed batch, an all-already-there batch, an
+untitled episode, and a shot that was never filed. `npm test` 59 pass, `next build` clean, both
+projects validate.
+
 ### 2026-09-16 — Queue count in the sidebar; a document no longer splits on SHOT headings
 
 - **Queue badge.** The sidebar's Queue item shows how many jobs are waiting (queued and not in

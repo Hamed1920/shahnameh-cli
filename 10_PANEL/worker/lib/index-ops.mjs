@@ -4,6 +4,7 @@ import {
   CODE, P, ROOT, RX, appendJsonl, archivedVariants, findEntity, log, readJsonl, readState, readText, resolveRef,
   restoreText, shotFolder, usedShotIds, writeCsv,
 } from './project.mjs'
+import { episodeFolderName } from './ids.mjs'
 import { parseCsv } from './csv.mjs'
 import { entityId as fullEntityId } from './ids.mjs'
 import {
@@ -64,6 +65,7 @@ async function transaction(fn) {
   const e = parseCsv(entitiesText)
   const m = parseCsv(manifestText)
   const moves = []
+  const copies = []
   const rewrites = []
   const tx = {
     entities: e.rows,
@@ -72,6 +74,12 @@ async function transaction(fn) {
       if (await exists(dest)) fail(`${rel(dest)} already exists`)
       await moveFile(src, dest)
       moves.push([src, dest])
+    },
+    async copy(src, dest) {
+      if (await exists(dest)) fail(`${rel(dest)} already exists`)
+      await fs.mkdir(path.dirname(dest), { recursive: true })
+      await fs.copyFile(src, dest)
+      copies.push(dest)
     },
     async rewrite(file, original, next) {
       await restoreText(file, next)
@@ -89,6 +97,10 @@ async function transaction(fn) {
     for (const [src, dest] of moves.reverse()) {
       await moveFile(dest, src).catch((r) => log(`ROLLBACK move failed ${rel(dest)}: ${r.message}`))
     }
+    // A copy left nothing behind to put back; undoing it is removing it.
+    for (const dest of copies.reverse()) {
+      await fs.rm(dest, { force: true }).catch((r) => log(`ROLLBACK copy failed ${rel(dest)}: ${r.message}`))
+    }
     for (const [file, text] of rewrites.reverse()) {
       await restoreText(file, text).catch((r) => log(`ROLLBACK ${rel(file)} failed: ${r.message}`))
     }
@@ -101,6 +113,26 @@ async function transaction(fn) {
 const rel = (abs) => path.relative(ROOT, abs).split(path.sep).join('/')
 
 // ---------------------------------------------------------------- helpers
+
+/** Exactly what RX_SHOT_FILE in tools/Validate-Project.ps1 allows. */
+const SHOT_EXT = ['.png', '.jpg', '.jpeg', '.webp', '.mp4', '.mov']
+
+/** The EPnnn an op names, checked. */
+function episodeOf(op) {
+  const episode = String(op.episode ?? '').trim().toUpperCase()
+  if (!/^EP\d{3}$/.test(episode)) fail(`'${op.episode}' is not an episode; it looks like EP002`)
+  return episode
+}
+
+/** The folder this episode has under 07_EPISODES, matched by its CODE-EPnnn prefix, or null. */
+async function episodeDir(episode) {
+  const prefix = `${CODE}-${episode}`
+  const names = await fs.readdir(path.join(ROOT, '07_EPISODES'), { withFileTypes: true }).catch(() => [])
+  return names
+    .filter((e) => e.isDirectory() && (e.name === prefix || e.name.startsWith(`${prefix}-`)))
+    .map((e) => e.name)
+    .sort()[0] ?? null
+}
 
 function entityOf(tx, ref) {
   return findEntity(tx.entities, ref) ?? fail(`unknown entity '${ref}'`)
@@ -482,6 +514,214 @@ const OPS = {
   }),
 
   /**
+   * Start an episode.
+   *
+   * An episode is normally born the moment the worker files its first accepted
+   * take, which means one cannot be planned before there is anything in it.
+   * This makes the folder, and nothing else: the number becomes real, shows on
+   * the Episodes page, and can be prompted or moved into. Numbers are never
+   * reused, so an episode that already exists is left exactly as it is rather
+   * than renamed -- the name it was given when it started is the one it keeps.
+   */
+  'new-episode': (op) => transaction(async () => {
+    const episode = episodeOf(op)
+    const title = String(op.title ?? '')
+    const existing = await episodeDir(episode)
+    if (existing) return `${CODE}-${episode} already exists as ${existing}`
+    const dir = episodeFolderName(CODE, episode, title)
+    await fs.mkdir(path.join(ROOT, '07_EPISODES', dir, 'shots'), { recursive: true })
+    return `started ${dir}`
+  }),
+
+  /**
+   * Rename an episode: its wording, never its number.
+   *
+   * Only the folder moves. Every shot id in it carries the episode number and
+   * not the title (docs/INDEXING.md section 7), and the worker finds an episode
+   * folder by its CODE-EPnnn prefix, so nothing that names a shot has to change
+   * -- which is the whole reason the title is only ever a suffix.
+   */
+  'rename-episode': (op) => transaction(async (tx) => {
+    const episode = episodeOf(op)
+    const from = await episodeDir(episode)
+    if (!from) fail(`${CODE}-${episode} has no folder yet, so there is nothing to rename`)
+    const to = episodeFolderName(CODE, episode, String(op.title ?? ''))
+    if (to === from) return `${from} is already called that`
+    await tx.move(path.join(ROOT, '07_EPISODES', from), path.join(ROOT, '07_EPISODES', to))
+    return `renamed ${from} -> ${to}`
+  }),
+
+  /**
+   * Put footage into an episode by hand.
+   *
+   * A render made somewhere else, a plate, a cut of someone else's. Each file
+   * is filed as a new scene of the episode -- the next free number, past every
+   * scene that episode has ever used -- or as another take of a scene it
+   * already has. Scene numbers are allocated here and nowhere else, exactly as
+   * they are for a generated shot (CLAUDE.md), so the panel asks for 'next' and
+   * never for a number.
+   *
+   * Shots are not in ASSET_MANIFEST.csv: that registry indexes reusable
+   * entities, and a shot belongs to exactly one episode (see promoteShot).
+   */
+  'add-shot': (op, ctx) => transaction(async (tx) => {
+    const episode = episodeOf(op)
+    // Two sources, filed the same way but not carried the same way. An upload
+    // is a temp file under 09_OUTPUT/_uploads and is MOVED. A take is a render
+    // that already exists -- an approved 480p draft, say -- and is COPIED: the
+    // file where it is is what the Decided page resolves, and taking it away
+    // would leave that page pointing at nothing.
+    const uploads = (Array.isArray(op.uploads) ? op.uploads : []).map((u) => ({ ...u, carry: 'move' }))
+    const takes = (Array.isArray(op.takes) ? op.takes : []).map((t) => ({ ...t, carry: 'copy' }))
+    const sources = [...uploads, ...takes]
+    if (sources.length === 0) fail('no footage was given')
+    if (sources.length > 50) fail('too many files at once (50 max)')
+
+    const used = await usedShotIds()
+    const mine = new Set()
+    let last = 0
+    for (const id of used) {
+      const m = String(id).match(RX.sceneAnywhere)
+      if (m && m[1] === episode) { mine.add(m[2]); last = Math.max(last, Number(m[2])) }
+    }
+
+    const destFolder = await shotFolder(`${CODE}-${episode}`, String(op.episodeTitle ?? ''))
+    const destDir = path.join(ROOT, destFolder)
+    const plan = []
+    for (const u of sources) {
+      const src = path.join(ROOT, String(u.file ?? ''))
+      // Both live under 09_OUTPUT: uploads in _uploads, renders in _drafts,
+      // _staging or _rejected. Nothing outside it can be filed this way, and an
+      // episode's own shots folder is never a source -- that is a move.
+      const allowed = u.carry === 'move' ? ['09_OUTPUT/_uploads/'] : ['09_OUTPUT/']
+      if (!allowed.some((p) => rel(src).startsWith(p))) fail(`${u.file} is not somewhere this can file from`)
+      if (!(await exists(src))) fail(`${u.file} is not there any more`)
+      const ext = path.extname(src).toLowerCase()
+      if (!SHOT_EXT.includes(ext)) fail(`${ext || 'that file'} is not footage the index allows`)
+
+      const asked = String(u.scene ?? 'next').toUpperCase()
+      let scene
+      if (asked === 'NEXT') {
+        scene = `SC${String(++last).padStart(3, '0')}`
+      } else {
+        const m = /^SC(\d{3})$/.exec(asked)
+        // Never invent a scene number from what was typed: it is either one the
+        // episode already uses, or the next free one. See CLAUDE.md.
+        if (!m || !mine.has(m[1])) fail(`${asked} is not a scene of ${episode}; file it as a new scene instead`)
+        scene = asked
+      }
+      plan.push({ shot: `${CODE}-${episode}-${scene}-SH0010`, src, ext, carry: u.carry, name: String(u.originalName ?? '') })
+    }
+
+    await assertNotInUse(tx, ctx, { ids: plan.map((p) => p.shot) })
+    await fs.mkdir(destDir, { recursive: true })
+
+    const filed = []
+    for (const p of plan) {
+      // The variant every shot on disk carries; a take beyond the first gets _Tnn.
+      const stem = `${p.shot}_V01`
+      let filename = `${stem}${p.ext}`
+      for (let n = 2; await exists(path.join(destDir, filename)); n++) {
+        filename = `${stem}_T${String(n).padStart(2, '0')}${p.ext}`
+      }
+      if (p.carry === 'copy') await tx.copy(p.src, path.join(destDir, filename))
+      else await tx.move(p.src, path.join(destDir, filename))
+      filed.push(`${p.name || path.basename(p.src)} -> ${filename}`)
+    }
+    return `filed into ${destFolder}: ${filed.join(', ')}`
+  }),
+
+  /**
+   * Take a shot out of an episode.
+   *
+   * Not a delete. Nothing is deleted here (CLAUDE.md): the files move to
+   * 09_OUTPUT/_archive with a record beside them, exactly as an archived look
+   * does, so the shot can be put back. Its number stays spent -- a gap where a
+   * shot used to be is the correct record of one having been there -- and
+   * because the number is never handed out again, restoring it later always
+   * finds its place free.
+   */
+  'archive-shot': (op, ctx) => transaction(async (tx) => {
+    const shots = [...new Set((op.shots ?? []).map((s) => String(s).trim().toUpperCase()))]
+    if (shots.length === 0) fail('no footage was chosen')
+
+    const plan = []
+    const already = []
+    for (const shot of shots) {
+      if (!RX.shotFileStart.test(shot)) fail(`'${shot}' is not a shot id; it looks like ${CODE}-EP001-SC004-SH0010`)
+      const folder = await shotFolder(shot)
+      const names = (await fs.readdir(path.join(ROOT, folder)).catch(() => []))
+        .filter((f) => f.startsWith(`${shot}_`))
+      // Already out: the same click sent twice is not an error.
+      if (names.length === 0) { already.push(shot); continue }
+      await assertNotInUse(tx, ctx, { ids: [shot] })
+      plan.push({ shot, folder, names })
+    }
+    if (plan.length === 0) fail(`nothing to take out: ${already.join(', ')} ${already.length === 1 ? 'is' : 'are'} not in an episode`)
+
+    const records = []
+    const out = []
+    for (const p of plan) {
+      const archiveId = `arc_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`
+      const files = []
+      for (const name of p.names) {
+        const dest = path.join(P.archive, archiveId, name)
+        await tx.move(path.join(ROOT, p.folder, name), dest)
+        files.push({ from: `${p.folder}/${name}`, to: rel(dest) })
+      }
+      records.push({ archiveId, kind: 'shot', shot: p.shot, folder: p.folder, files, by: op.reviewer, ts: new Date().toISOString() })
+      out.push(`${p.shot} (${files.length} take${files.length === 1 ? '' : 's'})`)
+    }
+    return {
+      summary: `took ${out.join(', ')} out of the episode` + (already.length ? `; ${already.join(', ')} already out` : ''),
+      after: async () => { for (const r of records) await appendJsonl(ARCHIVE_INDEX(), r) },
+    }
+  }),
+
+  /** Put an archived shot back where it came from. Its number was never reissued. */
+  'restore-shot': (op) => transaction(async (tx) => {
+    const all = await readJsonl(ARCHIVE_INDEX())
+    const restored = new Set(all.filter((x) => x.restored).map((x) => x.archiveId))
+    const done = []
+    for (const archiveId of op.archiveIds ?? []) {
+      const rec = all.find((x) => x.archiveId === archiveId && x.kind === 'shot' && !x.restored)
+      if (!rec || restored.has(archiveId)) fail(`archive entry ${archiveId} not found or already restored`)
+      // Where it goes now, not where it was: the episode may have been renamed.
+      const folder = await shotFolder(rec.shot)
+      for (const f of rec.files ?? []) {
+        await tx.move(path.join(ROOT, f.to), path.join(ROOT, folder, path.basename(f.to)))
+      }
+      done.push({ archiveId, shot: rec.shot })
+    }
+    if (done.length === 0) fail('nothing to restore')
+    return {
+      summary: `put ${done.map((d) => d.shot).join(', ')} back`,
+      after: async () => {
+        for (const d of done) await appendJsonl(ARCHIVE_INDEX(), { archiveId: d.archiveId, restored: true, ts: new Date().toISOString() })
+      },
+    }
+  }),
+
+  /**
+   * Drop an empty episode's folder.
+   *
+   * Only the folder, and only when there is nothing in it -- footage is taken
+   * out one shot at a time, on purpose, so that nothing is ever removed in bulk
+   * by accident. The NUMBER is not given back: it stays spent for good, like
+   * every other number here, and starting an episode with it again is refused.
+   */
+  'remove-episode': (op) => transaction(async () => {
+    const episode = episodeOf(op)
+    const dir = await episodeDir(episode)
+    if (!dir) return `${CODE}-${episode} has no folder`
+    const shots = await fs.readdir(path.join(ROOT, '07_EPISODES', dir, 'shots')).catch(() => [])
+    const kept = shots.filter((f) => !f.startsWith('.'))
+    if (kept.length) fail(`${dir} still holds ${kept.length} file${kept.length === 1 ? '' : 's'}; take those out first`)
+    await fs.rm(path.join(ROOT, '07_EPISODES', dir), { recursive: true, force: true })
+    return `removed the folder ${dir}. ${episode} stays spent and is never handed out again`
+  }),
+
+  /**
    * Move footage to another episode.
    *
    * A shot takes its whole stack of takes with it and lands on the next free
@@ -493,10 +733,21 @@ const OPS = {
    * REVIEW_LOG.jsonl are append-only history, and rewriting them is how two
    * machines end up disagreeing. The move is recorded in SHOT_MOVES.jsonl
    * instead, and the panel reads an old id forward through it.
+   *
+   * A shot with nothing to move is skipped, not failed: one already in the
+   * episode asked for, and one with no footage filed (an approved 480p draft
+   * lives in 09_OUTPUT/_drafts, not in the episode). Both are no-ops, the op log
+   * is append-only so the same request can arrive twice, and refusing fourteen
+   * good moves because of one such row is the wrong answer to "put these in
+   * EP013". Every one that is skipped is named in the summary, so it is never
+   * silent. A malformed id is still a refusal -- that is a mistake, not a no-op.
    */
   'move-shot': (op, ctx) => transaction(async (tx) => {
     const episode = String(op.episode ?? '').trim().toUpperCase()
     if (!/^EP\d{3}$/.test(episode)) fail(`'${op.episode}' is not an episode; it looks like EP002`)
+
+    // Only ever names an episode that has no folder yet; see shotFolder.
+    const title = String(op.episodeTitle ?? '')
 
     const shots = [...new Set((op.shots ?? []).map((s) => String(s).trim().toUpperCase()))]
     if (shots.length === 0) fail('no footage was chosen')
@@ -505,21 +756,30 @@ const OPS = {
     // lands or none of it does and the reviewer is told why.
     const waiting = await waitingForReview(tx)
     const plan = []
+    const already = []
+    const nothing = []
     for (const shot of shots) {
       const parts = shot.match(RX.shotParts)
       if (!parts || !parts[2] || !parts[3]) fail(`'${shot}' is not a shot id; it looks like ${CODE}-EP001-SC004-SH0010`)
-      if (parts[1] === episode) fail(`${shot} is already in ${episode}`)
+      if (parts[1] === episode) { already.push(shot); continue }
 
       const folder = await shotFolder(shot)
       const names = (await fs.readdir(path.join(ROOT, folder)).catch(() => []))
         .filter((f) => f.startsWith(`${shot}_`))
-      if (names.length === 0) fail(`${shot} has no footage filed, so there is nothing to move`)
+      if (names.length === 0) { nothing.push(shot); continue }
 
       const undecided = waiting.find((w) => String(w.sidecar.target ?? '').toUpperCase() === shot)
       if (undecided) fail(`${shot} has a take waiting for review. Decide it first, then move the shot.`)
       await assertNotInUse(tx, ctx, { ids: [shot] })
 
       plan.push({ shot, tail: parts[3], folder, names })
+    }
+    if (plan.length === 0) {
+      const why = [
+        already.length && `${already.join(', ')} already in ${episode}`,
+        nothing.length && `${nothing.join(', ')} with no footage filed`,
+      ].filter(Boolean).join('; ')
+      return `nothing to move: ${why}`
     }
 
     // Past every scene the target episode has ever used: queued targets and
@@ -536,7 +796,7 @@ const OPS = {
     for (const p of plan) {
       const scene = `SC${String(++last).padStart(3, '0')}`
       const to = `${CODE}-${episode}-${scene}-${p.tail}`
-      const destFolder = await shotFolder(to)
+      const destFolder = await shotFolder(to, title)
       const files = []
       for (const name of p.names) {
         const next = `${to}${name.slice(p.shot.length)}`
@@ -548,7 +808,9 @@ const OPS = {
     }
 
     return {
-      summary: `moved ${moved.join(', ')}`,
+      summary: `moved ${moved.join(', ')}`
+        + (already.length ? `; ${already.join(', ')} already in ${episode}` : '')
+        + (nothing.length ? `; skipped ${nothing.join(', ')} (no footage filed)` : ''),
       // Only once the move has committed: a record of a move that was rolled
       // back would send the panel looking for a file that never left.
       after: async () => { for (const r of records) await appendJsonl(P.shotMoves, r) },

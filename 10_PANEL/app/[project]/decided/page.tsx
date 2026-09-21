@@ -10,8 +10,8 @@ import { assetUrl, isVideo } from '@/lib/asset'
 import { getDecidedEntries, type DecidedEntry, type FollowUp } from '@/lib/decided'
 import { requireProject } from '@/lib/projects'
 import { cn } from '@/lib/cn'
-import { episodeLabel, episodesIn, nextEpisodeId, shortEpisode, NO_EPISODE_LABEL } from '@/lib/episodes'
-import { getCatalog, getEpisodes, getPriceTable, getWorkerConfig } from '@/lib/store'
+import { episodeLabel, episodesIn, shortEpisode, NO_EPISODE_LABEL, type EpisodeOption } from '@/lib/episodes'
+import { getCatalog, getEpisodes, getPriceTable, getShotMoveRequests, getWorkerConfig } from '@/lib/store'
 import type { RegenerateConfig } from '@/components/regenerate-button'
 
 export const dynamic = 'force-dynamic'
@@ -38,13 +38,14 @@ function Media({ entry, project }: { entry: DecidedEntry; project: string }) {
 }
 
 /** Which shot, which pass, which attempt, and when -- what tells two SC001 cards apart. */
-function Heading({ entry }: { entry: DecidedEntry }) {
+function Heading({ entry, movingTo }: { entry: DecidedEntry; movingTo?: string | null }) {
   const d = entry.decision
   const approvedDraft = d.verdict === 'accepted' && entry.stage === 'draft'
   return (
     <div className="flex flex-wrap items-center gap-x-2.5 gap-y-2">
       <span className="mr-1 font-display text-2xl leading-none text-fg">{entry.title}</span>
       <span className="font-mono text-xs text-muted">{entry.where}</span>
+      {movingTo && <Badge tone="accent">moving to {shortEpisode(movingTo)}</Badge>}
       {entry.stage && (
         <Badge tone={d.verdict === 'accepted' && !approvedDraft ? 'good' : 'muted'}>
           {approvedDraft ? 'draft approved' : entry.stage}
@@ -137,7 +138,15 @@ function EpisodeFilter({ project, episodes, titles, loose, current, countOf }: {
 }
 
 /** What a right-click on one decided take offers: its episode, its ids, its file. */
-function menuFor(entry: DecidedEntry, project: string, current: string, episodes: string[], titles: Record<string, string>): ItemAction[] {
+function menuFor(
+  entry: DecidedEntry,
+  project: string,
+  current: string,
+  episodes: EpisodeOption[],
+  nextEpisode: string,
+  titles: Record<string, string>,
+  pendingMoves: Record<string, string>,
+): ItemAction[] {
   const out: ItemAction[] = [{ kind: 'heading', text: `${entry.title} · ${entry.where}` }]
   if (entry.episode) {
     out.push({
@@ -151,12 +160,13 @@ function menuFor(entry: DecidedEntry, project: string, current: string, episodes
   if (current) out.push({ kind: 'link', label: 'All episodes', href: `/${project}/decided`, icon: 'filter' })
   // Only footage has an episode to move between, and only once it is on disk.
   if (entry.episode && entry.file) {
-    const elsewhere = [...episodes.filter((e) => e !== entry.episode), nextEpisodeId(episodes)]
     out.push({
       kind: 'assign',
       shots: [entry.target],
-      caption: 'Move it to',
-      episodes: elsewhere.map((e) => ({ id: e, label: episodes.includes(e) ? episodeLabel(e, titles) : `${shortEpisode(e)} · new` })),
+      episodes,
+      next: nextEpisode,
+      exclude: [entry.episode],
+      pendingTo: pendingMoves[entry.target] ?? null,
     })
   }
   out.push({ kind: 'divider' })
@@ -181,10 +191,15 @@ function Location({ entry }: { entry: DecidedEntry }) {
 
 export default async function DecidedPage({ params, searchParams }: PageProps<'/[project]/decided'>) {
   const pr = await requireProject((await params).project)
-  const [all, catalog, cfg, priceTable, episodeList] = await Promise.all([
-    getDecidedEntries(pr), getCatalog(pr), getWorkerConfig(), getPriceTable(), getEpisodes(pr),
+  const [all, catalog, cfg, priceTable, episodeList, moves] = await Promise.all([
+    getDecidedEntries(pr), getCatalog(pr), getWorkerConfig(), getPriceTable(), getEpisodes(pr), getShotMoveRequests(pr),
   ])
   const titles = Object.fromEntries(episodeList.filter((e) => e.title).map((e) => [e.id, e.title]))
+  // getEpisodes ends with the next free number, which is not an episode yet.
+  const allEpisodes: EpisodeOption[] = episodeList.slice(0, -1).map((e) => ({ id: e.id, title: e.title, shots: e.shots }))
+  const nextEpisode = episodeList[episodeList.length - 1].id
+  // The filter only offers what has something decided in it; a filter on an
+  // empty episode is a dead end. Moving to one is a different question.
   const episodes = episodesIn([], all.map((e) => e.episode))
   const loose = all.some((e) => e.episode === null)
   const wanted = String((await searchParams).ep ?? '')
@@ -233,10 +248,10 @@ export default async function DecidedPage({ params, searchParams }: PageProps<'/
           <div className="grid gap-5 lg:grid-cols-2">
             {accepted.map((e, i) => (
               <Reveal key={e.decision.id} index={i}>
-                <ItemMenu actions={menuFor(e, pr.slug, ep, episodes, titles)}>
+                <ItemMenu actions={menuFor(e, pr.slug, ep, allEpisodes, nextEpisode, titles, moves.pending)}>
                 <Card interactive className="space-y-4 p-5">
                   <Media entry={e} project={pr.slug} />
-                  <Heading entry={e} />
+                  <Heading entry={e} movingTo={moves.pending[e.target]} />
                   {e.notes && (
                     <p className="text-[13px] leading-relaxed text-fg/85" dir="auto">
                       <span className="eyebrow mr-2 text-good">why it worked</span> {e.notes}
@@ -273,13 +288,13 @@ export default async function DecidedPage({ params, searchParams }: PageProps<'/
           <div className="space-y-3">
             {denied.map((e, i) => (
               <Reveal key={e.decision.id} index={i}>
-                <ItemMenu actions={menuFor(e, pr.slug, ep, episodes, titles)}>
+                <ItemMenu actions={menuFor(e, pr.slug, ep, allEpisodes, nextEpisode, titles, moves.pending)}>
                 <Card interactive className="flex flex-col gap-6 p-5 sm:flex-row">
                   <div className="shrink-0 sm:w-72">
                     <Media entry={e} project={pr.slug} />
                   </div>
                   <div className="min-w-0 flex-1 space-y-3.5">
-                    <Heading entry={e} />
+                    <Heading entry={e} movingTo={moves.pending[e.target]} />
                     <p className="text-sm leading-relaxed whitespace-pre-line text-fg/90" dir="auto">
                       {e.notes}
                     </p>

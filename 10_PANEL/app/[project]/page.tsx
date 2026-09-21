@@ -2,7 +2,7 @@ import { getDecidedEntries } from '@/lib/decided'
 import { requireProject } from '@/lib/projects'
 import { allTags } from '@/lib/gallery'
 import { getGalleryState } from '@/lib/gallery-log'
-import { getCatalog, getEpisodes, getPriceTable, getWorkerConfig } from '@/lib/store'
+import { getCatalog, getEpisodes, getPriceTable, getShotMoveRequests, getWorkerConfig } from '@/lib/store'
 import type { RegenerateConfig } from '@/components/regenerate-button'
 import { GalleryView, type GalleryTake } from './gallery/gallery-view'
 
@@ -21,9 +21,14 @@ export const dynamic = 'force-dynamic'
  */
 export default async function GalleryPage({ params }: PageProps<'/[project]'>) {
   const pr = await requireProject((await params).project)
-  const [entries, gallery, catalog, cfg, priceTable, episodes] = await Promise.all([
+  const [entries, gallery, catalog, cfg, priceTable, episodes, moves] = await Promise.all([
     getDecidedEntries(pr), getGalleryState(pr), getCatalog(pr), getWorkerConfig(), getPriceTable(), getEpisodes(pr),
+    getShotMoveRequests(pr),
   ])
+  // getEpisodes ends with the next free number, which is not an episode yet.
+  // Only it may be offered as "new": a number is never picked in the browser.
+  const allEpisodes = episodes.slice(0, -1).map((e) => ({ id: e.id, title: e.title, shots: e.shots }))
+  const nextEpisode = episodes[episodes.length - 1].id
 
   const regenCfg: RegenerateConfig = {
     models: (cfg.models as RegenerateConfig['models']) ?? { image: [], video: [] },
@@ -63,7 +68,10 @@ export default async function GalleryPage({ params }: PageProps<'/[project]'>) {
       tags={allTags(gallery)}
       catalog={catalog}
       cfg={regenCfg}
-      episodeTitles={Object.fromEntries(episodes.filter((e) => e.title).map((e) => [e.id, e.title]))}
+      allEpisodes={allEpisodes}
+      nextEpisode={nextEpisode}
+      pendingMoves={moves.pending}
+      moveErrors={moves.failed}
       // Plain object: a Map does not survive the server -> client boundary.
       prices={Object.fromEntries(priceTable)}
     />

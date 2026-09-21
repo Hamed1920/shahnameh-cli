@@ -1,11 +1,12 @@
 import path from 'node:path'
 import {
-  KINDS, MAX_UPLOAD_BYTES, MAX_UPLOADS, UPLOAD_EXT, UPLOAD_ROLES, entitySlug, isAscii,
+  FOOTAGE_EXT, KINDS, MAX_FOOTAGE, MAX_FOOTAGE_BYTES, MAX_UPLOAD_BYTES, MAX_UPLOADS, UPLOAD_EXT, UPLOAD_ROLES,
+  entitySlug, isAscii,
 } from '@/lib/indexing'
 import { toRelative } from '@/lib/paths'
 import type { Project } from '@/lib/projects'
 import { getEntities } from '@/lib/store'
-import type { ReviewUpload } from '@/lib/types'
+import type { FootageUpload, ReviewUpload } from '@/lib/types'
 
 /**
  * Validating reviewer uploads, shared by the Review page's decisions and the
@@ -141,3 +142,81 @@ export async function readUploads(pr: Project, formData: FormData, decisionId: s
   return out
 }
 
+
+/**
+ * mp4 and mov both carry an `ftyp` box near the front. Not a full container
+ * parse -- just enough that a renamed .exe cannot reach the shots folder.
+ */
+function sniffVideo(buf: Buffer): boolean {
+  return buf.length >= 12 && buf.toString('ascii', 4, 8) === 'ftyp'
+}
+
+export interface PendingFootage {
+  meta: FootageUpload
+  bytes: Buffer
+}
+
+/**
+ * Footage being put into an episode by hand: a render from elsewhere, a plate,
+ * a cut someone else made.
+ *
+ * Only the extensions the validator's shot-file grammar allows, and the bytes
+ * have to agree with the extension. The scene is either `next` or one the
+ * episode already uses -- a number is never read off what was typed, because
+ * only the worker allocates one (CLAUDE.md).
+ */
+export async function readFootage(
+  formData: FormData,
+  pr: Project,
+  opId: string,
+  /** Scenes this episode already has, so "another take of SC004" can be checked here too. */
+  scenes: Set<string>,
+): Promise<PendingFootage[]> {
+  const raw = parseJsonArray(formData, 'uploads') ?? []
+  if (raw.length > MAX_FOOTAGE) throw new Invalid(`At most ${MAX_FOOTAGE} files at a time.`)
+  if (raw.length === 0) return []
+
+  const ids = new Set<string>()
+  const out: PendingFootage[] = []
+  for (const item of raw) {
+    const u = (item ?? {}) as Record<string, unknown>
+    const id = String(u.id ?? '')
+    const label = `File ${out.length + 1}`
+    if (!/^u\d{1,3}$/.test(id) || ids.has(id)) throw new Invalid(`${label}: bad id.`)
+    ids.add(id)
+
+    const file = formData.get(`file:${id}`)
+    if (!(file instanceof File) || file.size === 0) {
+      throw new Invalid(`${label}: the file did not arrive. Pick it again.`)
+    }
+    if (file.size > MAX_FOOTAGE_BYTES) {
+      throw new Invalid(`${label}: larger than ${Math.round(MAX_FOOTAGE_BYTES / 1024 / 1024)} MB.`)
+    }
+    const ext = path.extname(file.name).toLowerCase()
+    if (!(FOOTAGE_EXT as readonly string[]).includes(ext)) {
+      throw new Invalid(`${label}: episodes hold PNG, JPG, WEBP, MP4 or MOV.`)
+    }
+    const bytes = Buffer.from(await file.arrayBuffer())
+    const video = ext === '.mp4' || ext === '.mov'
+    if (video ? !sniffVideo(bytes) : !sniffImage(bytes)) {
+      throw new Invalid(`${label}: the file is not really ${ext.slice(1).toUpperCase()}.`)
+    }
+
+    const asked = String(u.scene ?? 'next').toUpperCase()
+    const scene = asked === 'NEXT' ? 'next' : asked
+    if (scene !== 'next' && !scenes.has(scene)) {
+      throw new Invalid(`${label}: ${asked} is not a scene of this episode. File it as a new scene.`)
+    }
+
+    out.push({
+      meta: {
+        id,
+        file: toRelative(pr.root, path.join(pr.P.uploads, opId, `${id}${ext}`)),
+        originalName: file.name.slice(0, 200),
+        scene,
+      },
+      bytes,
+    })
+  }
+  return out
+}

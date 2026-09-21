@@ -1,4 +1,7 @@
-import { idRx } from '../worker/lib/ids.mjs'
+import { episodeFolderName, episodeTitleSlug, idRx } from '../worker/lib/ids.mjs'
+
+/** Folder naming for a new episode, shared with the worker. */
+export { episodeFolderName, episodeTitleSlug }
 
 /**
  * The episode a piece of work belongs to, and how it reads on the page.
@@ -24,7 +27,10 @@ export interface EpisodeInfo {
   dir: string | null
   /** From the folder name: "Zahhak Entry". Empty when the folder is just the id. */
   title: string
-  /** Distinct shots already targeted in it, queued or on disk. */
+  /**
+   * Distinct shots in it NOW: every shot ever targeted, read forward through
+   * the episodes footage has been moved between, so one shot counts once.
+   */
   shots: number
 }
 
@@ -127,9 +133,155 @@ export function groupByEpisode<T>(items: T[], episodeOfItem: (item: T) => string
     .map(([episode, list]) => ({ episode: episode || null, items: list }))
 }
 
+/**
+ * Which episodes exist, and how much footage each holds now.
+ *
+ * Two different questions, answered from the same list of shot ids:
+ *
+ *   - **Which episodes.** Every episode any id names, moved-from ones included.
+ *     An episode whose footage has all gone elsewhere keeps its number, and the
+ *     next free number still counts it: numbers are never handed out twice
+ *     (docs/INDEXING.md section 9).
+ *   - **How much.** Each id read forward through `movedTo` first, then counted
+ *     once. QUEUE.jsonl keeps the id a job was made under for ever -- the right
+ *     record of what happened -- so a shot that has changed episode is named in
+ *     both, and counting the raw list had EP001 still holding a shot that is in
+ *     EP002.
+ *
+ * @param shots every shot id ever targeted: queued targets and files on disk
+ * @param movedTo old shot id -> the id it has now (getShotMoves().shot)
+ */
+export function foldEpisodeShots(
+  shots: string[],
+  code: string,
+  movedTo: Record<string, string> = {},
+): { episodes: string[]; counts: Map<string, number> } {
+  const episodes = new Set<string>()
+  const counts = new Map<string, number>()
+  const now = new Set<string>()
+  for (const shot of shots) {
+    const was = episodeOf(shot, code)
+    if (was) episodes.add(was)
+    now.add(movedTo[shot] ?? shot)
+  }
+  for (const shot of now) {
+    const id = episodeOf(shot, code)
+    if (!id) continue
+    episodes.add(id)
+    counts.set(id, (counts.get(id) ?? 0) + 1)
+  }
+  return { episodes: [...episodes].sort(), counts }
+}
+
 /** Every episode in play, in order: the ones given, plus any an item points at. */
 export function episodesIn(known: string[], seen: (string | null)[]): string[] {
   const all = new Set<string>()
   for (const e of [...known, ...seen]) if (e && EPISODE_RX.test(e)) all.add(e)
   return [...all].sort()
+}
+
+// ---------------------------------------------------------------- picking one
+
+/** An episode as the picker offers it. */
+export interface EpisodeOption {
+  id: string
+  title: string
+  /** Distinct shots already in it, so the list says which episode is which. */
+  shots: number
+}
+
+/** The episode the picker is about to hand back: an existing one, or one that starts now. */
+export interface EpisodeChoice {
+  id: string
+  /** Only set when this starts a new episode, and only when the typed name has ASCII in it. */
+  title: string
+  isNew: boolean
+}
+
+
+/** What a typed query offers: the episodes it matches, and the ones it could start. */
+export interface EpisodeSearch {
+  matches: EpisodeOption[]
+  /**
+   * The episodes this query would start, in the order to offer them: what was
+   * asked for first, then the next number in sequence when that is a different
+   * one. Empty when the query names an episode that already exists.
+   */
+  create: EpisodeChoice[]
+  /** A hint about the numbering, never a refusal. */
+  note: string | null
+}
+
+const norm = (s: string) => String(s ?? '').trim().toLowerCase()
+
+/**
+ * A typed line split into the number it asks for and the name it gives:
+ * "EP9 Rostam and Sohrab" -> EP009 + "Rostam and Sohrab", "9" -> EP009 + "",
+ * "Rostam" -> null + "Rostam".
+ */
+export function parseEpisodeQuery(query: string): { id: string | null; title: string } {
+  const q = String(query ?? '').trim()
+  const m = /^(?:EP\s*)?(\d{1,3})(?:\s*[-–—:.]\s*|\s+|$)(.*)$/i.exec(q)
+  if (!m) return { id: null, title: q }
+  return { id: `EP${m[1].padStart(3, '0')}`, title: m[2].trim() }
+}
+
+/**
+ * Search the episodes and start one, from the same typed line.
+ *
+ * Typing a number finds that episode; typing a name finds it by title. When
+ * nothing matches, the last rows start one -- and the number is whatever was
+ * asked for. **The next free number is offered, not imposed.** Numbers must
+ * never be *reused* (docs/INDEXING.md section 9) and nothing here reuses one --
+ * a number that is already an episode is that episode, offered as a match. A
+ * gap is a different thing entirely, and Hamed's to leave: jumping to EP010
+ * because the tenth part is what is being cut next is a decision, not a
+ * mistake, and the note says which number was next in case it was a typo.
+ */
+export function searchEpisodes(
+  query: string,
+  episodes: EpisodeOption[],
+  next: string,
+  exclude: string[] = [],
+): EpisodeSearch {
+  const skip = new Set(exclude)
+  const pool = episodes.filter((e) => !skip.has(e.id))
+  const taken = new Set(episodes.map((e) => e.id))
+  const q = norm(query)
+  const newEpisode = (id: string, title: string): EpisodeChoice => ({ id, title, isNew: true })
+  /** The next free number as a second offer, when it is not the one asked for. */
+  const alsoNext = (id: string, title: string) => (id === next || taken.has(next) ? [] : [newEpisode(next, title)])
+
+  if (!q) return { matches: pool, create: [newEpisode(next, '')], note: null }
+
+  const { id: asked, title } = parseEpisodeQuery(query)
+
+  if (asked) {
+    // The number names an episode that exists: that is the episode, not a new one.
+    if (taken.has(asked)) {
+      return {
+        matches: pool.filter((e) => e.id === asked),
+        create: [],
+        note: skip.has(asked) ? `${shortEpisode(asked)} is where this already is.` : null,
+      }
+    }
+    return {
+      matches: [],
+      create: [newEpisode(asked, title), ...alsoNext(asked, title)],
+      note: asked === next
+        ? null
+        : `${shortEpisode(next)} is the next one in order. ${shortEpisode(asked)} leaves a gap, which is fine.`,
+    }
+  }
+
+  const matches = pool.filter(
+    (e) => norm(e.title).includes(q) || norm(shortEpisode(e.id)).includes(q) || norm(e.id).includes(q),
+  )
+  if (pool.some((e) => norm(e.title) === q)) return { matches, create: [], note: null }
+  const name = String(query).trim()
+  return {
+    matches,
+    create: [newEpisode(next, name)],
+    note: episodeTitleSlug(name) ? null : 'That name has no Latin letters, so the folder is just the number.',
+  }
 }
