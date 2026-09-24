@@ -33,6 +33,7 @@
 # _drafts and _rejected, and restores from _archive.
 !/shahnameh-cli/
 !/jayson/
+!/shajarian/
 
 # The half-built folder of a project being created, and the machine-wide
 # generation lock. Never travel.
