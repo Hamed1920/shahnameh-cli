@@ -1,6 +1,8 @@
 import { findEntity, isShotId, resolveRef } from './project.mjs'
 import { FOLDER_FOR, entitySlug } from './promote.mjs'
 import { NEXT_SCENE_RX } from './scenes.mjs'
+import { loadCatalog } from './models.mjs'
+import { isVideo, mapParams, modelEntry, modelProblem } from './model-schema.mjs'
 
 /**
  * Turning rows of { target, prompt, ... } into queue jobs. Shared by the
@@ -10,7 +12,27 @@ import { NEXT_SCENE_RX } from './scenes.mjs'
  * nothing is reworded.
  */
 
-export const isVideoModel = (m) => /^(seedance|kling|veo|wan|hailuo|grok_video)/.test(String(m ?? ''))
+/** From the model catalogue (MODEL_CATALOG.json); the old name rule only for a model it does not list. */
+export const isVideoModel = (m) => isVideo(loadCatalog(), m)
+
+/**
+ * The resolution a video stage renders at for this model: the config's draft or
+ * final resolution when the model offers it, else its lowest or highest. Null
+ * for a model with no resolution steps (Kling 3.0, Veo), which has no draft stage.
+ */
+export function stageResolution(model, stage, cfg) {
+  const e = modelEntry(loadCatalog(), model)
+  if (!e) return stage === 'final' ? cfg.videoFinalResolution : cfg.videoDraftResolution
+  if (!e.stages || !stage) return null
+  const want = stage === 'final' ? cfg.videoFinalResolution : cfg.videoDraftResolution
+  return e.stages.options.includes(want) ? want : e.stages[stage]
+}
+
+/** Does this video model have a cheap draft to render first? Without a catalogue, assume so, as before. */
+export function hasDraftStage(model) {
+  const e = modelEntry(loadCatalog(), model)
+  return e ? Boolean(e.stages) : isVideoModel(model)
+}
 
 /** Mirrors the NEW/ target grammar in Ingest-Jobs.ps1 (line 179). */
 export const NEW_TARGET_RX = /^NEW\/([A-Z]{2,3})\/([A-Z0-9][A-Z0-9-]*)$/
@@ -29,7 +51,10 @@ export function newJobId() {
  */
 export function applyVideoDefaults(params, { model, stage, cfg }) {
   if (!isVideoModel(model)) return params
-  if (stage === 'draft' && !params.resolution) params.resolution = cfg.videoDraftResolution
+  if (stage === 'draft' && !params.resolution) {
+    const r = stageResolution(model, 'draft', cfg)
+    if (r) params.resolution = r
+  }
   if (!params.duration) params.duration = cfg.videoDuration
   const v = params.generate_audio
   params.generate_audio = v === undefined || v === null || v === ''
@@ -42,7 +67,9 @@ export function applyVideoDefaults(params, { model, stage, cfg }) {
 export function normalizeRow(raw, cfg) {
   const model = raw.model || cfg.defaultImageModel
   const isVideo = isVideoModel(model)
-  const stage = raw.stage ?? (isVideo ? 'draft' : null)
+  // A model with no resolution steps has no draft: it renders once, as the final.
+  const staged = isVideo && hasDraftStage(model)
+  const stage = staged ? (raw.stage ?? 'draft') : null
   const params = applyVideoDefaults({ ...(raw.params ?? {}) }, { model, stage, cfg })
   return {
     key: raw.key ?? null,
@@ -79,6 +106,8 @@ export async function checkBatch(rows, { entities, assets, cfg, allowNew = false
     const row = normalizeRow(raw, cfg)
     if (!row.target) { bad.push([at, 'missing target', raw?.key ?? null]); continue }
     if (!row.prompt) { bad.push([at, 'missing prompt', raw?.key ?? null]); continue }
+    const modelWhy = modelProblem(loadCatalog(), row.model)
+    if (modelWhy) { bad.push([at, modelWhy, raw?.key ?? null]); continue }
 
     let targetId
     let entity = null
@@ -117,6 +146,10 @@ export async function checkBatch(rows, { entities, assets, cfg, allowNew = false
       if (!r.ok) { refErr = `unresolved ref ${token}: ${r.reason}`; break }
     }
     if (refErr) { bad.push([at, refErr, raw?.key ?? null]); continue }
+
+    // What the model itself takes: how many references, and in what form.
+    const fit = mapParams(modelEntry(loadCatalog(), row.model), { refs: row.refs, params: row.params, stage: row.stage, cfg })
+    if (fit.errors.length) { bad.push([at, fit.errors.join('; '), raw?.key ?? null]); continue }
 
     // Deduplicate within the batch: the same target+variant+prompt twice is
     // almost always a copy-paste artefact in a long document, not an intentional pair.

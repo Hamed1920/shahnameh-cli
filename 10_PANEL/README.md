@@ -230,7 +230,7 @@ npm run worker:dry    # plan and price only - generates nothing, spends nothing
 | Key | Meaning |
 |---|---|
 | `perJobCostCeilingCredits` | a single job above this is held, not run |
-| `costCeilingCredits` | cumulative ceiling for the worker's lifetime; pauses rather than loops |
+| `costCeilingCredits` | ceiling on spend over the last `costWindowHours`, across every project's ledger; a job over it is held |
 | `maxJobsPerRun` | cap per pass |
 | `maxAttempts` | after this many failed revisions the loop stops and asks for a human rethink |
 
@@ -271,6 +271,15 @@ $env:STUB_IMAGE='01_CHARACTERS/<some>.jpeg'
 node worker/worker.mjs
 node scripts/sandbox-flows.mjs C:\path\to\sandbox   # submit, price, approve, discard, regenerate, stop
 ```
+
+The stub also answers `model list` / `model get` from `scripts/stub-models.json` (five real
+schemas: Seedance 2.5, Kling 3.0, Nano Banana Pro, Seedream 5 Pro and a tool), so the sandbox
+worker builds its own model catalogue beside the sandbox and never touches
+`worker/MODEL_CATALOG.json`. `node scripts/sandbox-studio.mjs <sandbox project> <stub log>`
+checks the newer paths: a Kling row sent as `--start-image` / `--sound on`, too many references
+and tool models refused, a Prompts batch carrying an uploaded file, and a whole reference-studio
+session (priced, stale total refused, priority jobs, number allocated at the pick, second pick a
+take, close to `_rejected`). Set `STUB_LOG` in the shell for `sandbox-flows.mjs` too.
 
 `sandbox-flows.mjs` is the end-to-end check for the Prompts channel: it appends the same lines the
 panel appends and asserts what the worker does (numbers reserved only at approval, `--generate-audio`

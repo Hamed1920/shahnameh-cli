@@ -63,11 +63,17 @@ async function annotateMentions(text, refs, entities, assets) {
   return { text: out + src.slice(last), used }
 }
 
-/** Returns { prompt, mentioned }. `mentioned` is true when any text called an attached image. */
-export async function buildPrompt(base, learnings, revisionNotes, refs, entities, assets) {
+/**
+ * Returns { prompt, mentioned }. `mentioned` is true when any text called an attached image.
+ *
+ * With `frames`, the model takes its images as a start (and end) frame, not a
+ * reference list (Kling, Veo, Wan 2.7): it has no `<<<image_N>>>` to point at, so
+ * mentions keep their names and one sentence says what the frame shows.
+ */
+export async function buildPrompt(base, learnings, revisionNotes, refs, entities, assets, { frames = false } = {}) {
   const used = new Set()
   const annotate = async (s) => {
-    const a = await annotateMentions(s, refs, entities, assets)
+    const a = await annotateMentions(s, frames ? [] : refs, entities, assets)
     for (const i of a.used) used.add(i)
     return a.text
   }
@@ -99,11 +105,20 @@ export async function buildPrompt(base, learnings, revisionNotes, refs, entities
   // (a reference added in review with a note like "use the new flag photo"
   // has no mention to hang a token on). Each such image gets one plain
   // sentence naming what it is, and nothing more: no list, no heading.
+  if (frames && refs.length) {
+    parts.push('')
+    refs.forEach((r, i) => parts.push(r.entity
+      ? `The attached ${i === 0 ? 'start' : 'end'} frame shows ${r.entity.name} (${r.entity.short_id} ${r.variant}).`
+      : `Start from the attached ${i === 0 ? 'start' : 'end'} frame.`))
+    return { prompt: parts.join('\n'), mentioned: false }
+  }
   const unmentioned = refs.map((r, i) => ({ r, i })).filter(({ i }) => !used.has(i))
   if (unmentioned.length) {
     parts.push('')
     for (const { r, i } of unmentioned) {
-      parts.push(`${imageToken(i + 1)} is ${r.entity.name} (${r.entity.short_id} ${r.variant}); match it wherever ${r.entity.name} appears.`)
+      parts.push(r.entity
+        ? `${imageToken(i + 1)} is ${r.entity.name} (${r.entity.short_id} ${r.variant}); match it wherever ${r.entity.name} appears.`
+        : `${imageToken(i + 1)} is ${r.label ?? 'a reference picture'}; follow it.`)
     }
   }
   return { prompt: parts.join('\n'), mentioned: used.size > 0 }

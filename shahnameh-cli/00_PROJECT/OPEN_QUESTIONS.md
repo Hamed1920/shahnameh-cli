@@ -31,12 +31,11 @@ Both are flagged `NO-ASSET;NEEDS-HERO-SHEET`. Worth a generation pass?
 
 How many episodes, and what are they? Nothing can be bound to a shot until `SHM-EP001` exists.
 
-### Q8 — Which Higgsfield models should be the defaults?
+### Q8 — Which Higgsfield models should be the defaults? (answered 2026-09-24)
 
-`10_PANEL/worker/config.json` currently defaults to `nano_banana_2` for images and
-`seedance_2_0` for video, taken from the CLI's own help examples. Once authenticated, run
-`higgsfield model list --json` and pick deliberately — the choice affects cost per generation and
-how well reference images are honoured.
+Video defaults to `seedance_2_5`, images to `nano_banana_pro` (`10_PANEL/worker/config.json`).
+Every other Higgsfield image and video model can be chosen per batch or per row; the list comes
+from `higgsfield model list` (`10_PANEL/worker/MODEL_CATALOG.json`).
 
 ### Q9 — Spend ceilings
 

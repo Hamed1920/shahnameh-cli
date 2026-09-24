@@ -11,20 +11,29 @@ const out = (o) => { process.stdout.write(JSON.stringify(o)); process.exit(0) }
 const [cmd, sub, model] = args
 
 if (cmd === 'auth' && sub === 'token') { process.stdout.write('stub-token\n'); process.exit(0) }
-if (cmd === 'model' && sub === 'get') out({ job_type: model, params: [{ name: 'generate_audio', type: 'boolean', default: true }] })
+// A handful of real model schemas, so the worker's model catalogue can be exercised offline.
+const FIXTURE = JSON.parse(fs.readFileSync(path.join(__dirname, 'stub-models.json'), 'utf8')).models
+if (cmd === 'model' && sub === 'list') {
+  out(Object.values(FIXTURE).map((m) => ({ display_name: m.display_name, job_type: m.job_type, type: m.type })))
+}
+if (cmd === 'model' && sub === 'get') {
+  if (FIXTURE[model]) out(FIXTURE[model])
+  process.stderr.write(`stub: no model ${model}\n`)
+  process.exit(1)
+}
 if (cmd === 'generate' && sub === 'cost') {
-  const video = /^(seedance|kling|veo)/.test(model)
+  const video = /^(seedance|kling|veo|wan|minimax|gemini_omni|grok_video)/.test(model)
   const res = args[args.indexOf('--resolution') + 1]
   out({ credits: video ? (res === '1080p' ? 135 : 37.5) : 12 })
 }
 if (cmd === 'generate' && sub === 'create') {
-  const video = /^(seedance|kling|veo)/.test(model)
+  const video = /^(seedance|kling|veo|wan|minimax|gemini_omni|grok_video)/.test(model)
   const id = 'stub-' + Math.random().toString(36).slice(2, 10)
   const base = process.env.STUB_SERVE || 'http://localhost:3199'
   const file = video ? process.env.STUB_VIDEO : process.env.STUB_IMAGE
   // A small delay so "generating now" is observable.
   setTimeout(() => out([{ id, job_type: model, status: 'completed', result_url: `${base}/${file}`, params: {} }]), 1500)
-} else if (!(cmd === 'model' && sub === 'get')) {
+} else {
   process.stderr.write(`stub: unhandled ${args.join(' ')}\n`)
   process.exit(1)
 }

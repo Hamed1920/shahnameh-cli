@@ -24,6 +24,21 @@ type Item =
 const textOf = (node: ReactNode): string =>
   Children.toArray(node).map((c) => (typeof c === 'string' || typeof c === 'number' ? String(c) : isValidElement(c) ? textOf((c.props as { children?: ReactNode }).children) : '')).join('')
 
+/** Options whose text holds `q`, with the groups that still have one. */
+function filterItems(items: Item[], q: string): Item[] {
+  const needle = q.trim().toLowerCase()
+  if (!needle) return items
+  const out: Item[] = []
+  let group: Item | null = null
+  for (const item of items) {
+    if (item.kind === 'group') { group = item; continue }
+    if (!`${item.text} ${item.value}`.toLowerCase().includes(needle)) continue
+    if (group) { out.push(group); group = null }
+    out.push(item)
+  }
+  return out
+}
+
 /** Reads `<option>` and `<optgroup>` children (through fragments and arrays) into a flat list. */
 function collect(children: ReactNode, out: Item[] = []): Item[] {
   Children.forEach(children, (child) => {
@@ -50,6 +65,10 @@ const MAX_LIST = 320
  * like a native select: arrows, Home/End, Enter or Space, a typed letter,
  * Escape. The list is portalled and fixed, so a card or a dialog never clips
  * it; Escape is caught before a surrounding dialog sees it.
+ *
+ * `searchable` puts a filter box at the top of the open list (the model
+ * picker: fifty models is too many to scroll). Focus moves into the box and
+ * the arrows still walk the list.
  */
 export function Select({
   value,
@@ -60,6 +79,7 @@ export function Select({
   title,
   id,
   'aria-label': ariaLabel,
+  searchable = false,
 }: {
   value: string
   onChange?: (e: SelectChange) => void
@@ -69,10 +89,15 @@ export function Select({
   title?: string
   id?: string
   'aria-label'?: string
+  searchable?: boolean
 }) {
-  const items = useMemo(() => collect(children), [children])
+  const all = useMemo(() => collect(children), [children])
+  const [query, setQuery] = useState('')
+  const items = useMemo(() => (searchable ? filterItems(all, query) : all), [all, query, searchable])
+  const selectedAll = all.find((o): o is Extract<Item, { kind: 'option' }> => o.kind === 'option' && o.value === String(value))
+  const search = useRef<HTMLInputElement>(null)
   const options = items.filter((i): i is Extract<Item, { kind: 'option' }> => i.kind === 'option')
-  const selected = options.find((o) => o.value === String(value))
+  const selected = selectedAll
 
   const listId = useId()
   const trigger = useRef<HTMLButtonElement>(null)
@@ -111,6 +136,7 @@ export function Select({
 
   const show = () => {
     if (disabled) return
+    setQuery('')
     const i = options.findIndex((o) => o.value === String(value))
     setActive(enabled(i) ? i : step(-1, 1))
     setOpen(true)
@@ -127,6 +153,7 @@ export function Select({
   }
 
   useLayoutEffect(() => { if (open) place() }, [open, place])
+  useEffect(() => { if (open && searchable) search.current?.focus() }, [open, searchable])
 
   useEffect(() => {
     if (!open) return
@@ -162,13 +189,14 @@ export function Select({
       if (k === 'ArrowDown' || k === 'ArrowUp' || k === 'Enter' || k === ' ') { e.preventDefault(); show() }
       return
     }
+    if (searchable && k === ' ') return
     if (k === 'ArrowDown') { e.preventDefault(); setActive((a) => step(a, 1)) }
     else if (k === 'ArrowUp') { e.preventDefault(); setActive((a) => step(a, -1)) }
     else if (k === 'Home') { e.preventDefault(); setActive(step(-1, 1)) }
     else if (k === 'End') { e.preventDefault(); setActive(step(options.length, -1)) }
     else if (k === 'Enter' || k === ' ') { e.preventDefault(); pick(active) }
     else if (k === 'Tab') close(false)
-    else if (k.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey) {
+    else if (!searchable && k.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey) {
       const now = Date.now()
       typed.current = { buffer: now - typed.current.at > 600 ? k.toLowerCase() : typed.current.buffer + k.toLowerCase(), at: now }
       const q = typed.current.buffer
@@ -199,7 +227,7 @@ export function Select({
         className={cn(CONTROL, 'relative inline-grid h-9 cursor-pointer items-center pr-9 text-left', open && 'border-fg/45', className)}
       >
         {/* Every label stacked invisibly in one cell: a `w-auto` select is as wide as its widest option, like a native one. */}
-        {options.map((o) => (
+        {all.filter((o): o is Extract<Item, { kind: 'option' }> => o.kind === 'option').map((o) => (
           <span key={`size-${o.value}`} aria-hidden className="invisible col-start-1 row-start-1 h-0 overflow-hidden whitespace-nowrap">{o.label}</span>
         ))}
         <span className={cn('col-start-1 row-start-1 min-w-0 truncate', !selected?.value && 'text-muted')}>
@@ -226,6 +254,24 @@ export function Select({
               style={{ left: pos?.left ?? 0, top: pos?.top, bottom: pos?.bottom, minWidth: pos?.width, maxHeight: pos?.maxHeight }}
               className="scroll-pane fixed z-120 max-w-[min(28rem,calc(100vw-16px))] overflow-y-auto rounded-lg border border-edge-strong bg-raise p-1 text-[13px] shadow-[0_16px_40px_-12px_rgba(0,0,0,0.85)]"
             >
+              {searchable && (
+                <input
+                  ref={search}
+                  value={query}
+                  onChange={(e) => {
+                    setQuery(e.target.value)
+                    const list = filterItems(all, e.target.value).filter((x): x is Extract<Item, { kind: 'option' }> => x.kind === 'option')
+                    setActive(list.findIndex((x) => !x.disabled))
+                  }}
+                  onKeyDown={onKeyDown}
+                  placeholder="Search"
+                  aria-label="Search the list"
+                  aria-controls={listId}
+                  aria-activedescendant={active >= 0 ? `${listId}-${active}` : undefined}
+                  className="sticky top-0 z-1 mb-1 h-8 w-full rounded-md border border-edge bg-sunken px-2.5 text-[13px] text-fg outline-none placeholder:text-faint focus:border-edge-strong"
+                />
+              )}
+              {searchable && options.length === 0 && <div className="px-2.5 py-2 text-muted">Nothing matches.</div>}
               {(() => {
                 let n = -1
                 return items.map((item, k) => {

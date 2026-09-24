@@ -199,9 +199,32 @@ export function findEntity(entities, ref) {
 /**
  * Resolve an @-token to a file path, mirroring Resolve-ShmRef in Shm-Common.ps1.
  *   @CHR-001  @CHR-001/V02  @CHR-001/V02/T03
+ *
+ * The reference studio adds two working-space forms, which are not in the
+ * index and have no entity (the caller gets entity: null and a `label`):
+ *   studio:<session>/u1      a picture dropped into the studio (09_OUTPUT/_uploads/<session>/)
+ *   staged:<hfJobId>/T01     an earlier try, still in _staging; once picked, the look it was filed as
  */
+export const STUDIO_SESSION_RX = /^ss_[a-z0-9]{4,40}$/
 export async function resolveRef(token, entities, assets) {
-  const t = String(token).trim().replace(/^@/, '')
+  const raw = String(token).trim()
+  const studio = raw.match(/^studio:(ss_[a-z0-9]{4,40})\/(u\d{1,3})$/)
+  if (studio) {
+    const dir = path.join(P.uploads, studio[1])
+    const f = (await fs.readdir(dir).catch(() => [])).find((n) => n.startsWith(`${studio[2]}.`))
+    if (!f) return { ok: false, reason: `${raw}: the file is gone` }
+    return { ok: true, path: path.join(dir, f), entity: null, variant: null, take: null, label: 'an attached reference picture' }
+  }
+  const staged = raw.match(/^staged:([A-Za-z0-9_-]{4,80})\/(T\d{2})$/)
+  if (staged) {
+    const dir = path.join(P.staging, staged[1])
+    const f = (await fs.readdir(dir).catch(() => [])).find((n) => n.startsWith(`${staged[2]}.`))
+    if (f) return { ok: true, path: path.join(dir, f), entity: null, variant: null, take: null, label: 'an earlier try' }
+    const filed = (await readJsonl(P.filings)).reverse().find((x) => x.ok && x.hfJobId === staged[1] && x.take === staged[2])
+    if (filed?.token) return resolveRef(filed.token, entities, assets)
+    return { ok: false, reason: `${raw}: that try is no longer in staging` }
+  }
+  const t = raw.replace(/^@/, '')
   const [ref, variantIn, takeIn] = t.split('/')
   const ent = findEntity(entities, ref)
   if (!ent) return { ok: false, reason: `unknown entity '${ref}'` }

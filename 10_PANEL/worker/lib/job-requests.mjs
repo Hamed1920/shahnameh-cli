@@ -5,7 +5,9 @@ import {
   spentWithin, usedShotIds, writeCsv,
 } from './project.mjs'
 import { parseCsv } from './csv.mjs'
-import { checkBatch, isVideoModel, makeJob, newJobId } from './batch.mjs'
+import { checkBatch, hasDraftStage, isVideoModel, makeJob, newJobId, stageResolution } from './batch.mjs'
+import { refreshCatalog } from './models.mjs'
+import { priceStudio, studioHandlers } from './studio.mjs'
 import { FilingError, checkUploads, fileUpload, reserveEntity } from './promote.mjs'
 import { NEXT_SCENE_RX, assignScenes } from './scenes.mjs'
 import { stripCode } from './ids.mjs'
@@ -71,9 +73,28 @@ async function registries() {
   return { entities, assets }
 }
 
+/**
+ * A batch's rows with every `upload:<id>` swapped for the token that file was
+ * filed as. The Prompts page sends files with a batch; they are filed when it
+ * is validated (FILINGS.jsonl, keyed by the submit's request id), so pricing
+ * and approval read the same rows the validation did.
+ */
+export async function jobsOf(submit) {
+  const jobs = Array.isArray(submit.jobs) ? submit.jobs : []
+  if (!Array.isArray(submit.uploads) || submit.uploads.length === 0) return jobs
+  const tokens = {}
+  for (const f of await readJsonl(P.filings)) {
+    if (f.requestId === submit.id && f.ok && f.uploadId) tokens[f.uploadId] = f.token
+  }
+  return jobs.map((j) => ({
+    ...j,
+    refs: (j.refs ?? []).map((t) => (String(t).startsWith('upload:') ? tokens[String(t).slice(7)] ?? t : t)),
+  }))
+}
+
 /** Rows of a submitted batch, checked against the registries as they are now. */
 async function checkSubmit(req, { entities, assets }) {
-  const rows = Array.isArray(req.jobs) ? req.jobs : []
+  const rows = await jobsOf(req)
   if (rows.length === 0) fail('the batch has no rows')
   if (rows.length > 200) fail('at most 200 rows in one batch')
   return checkBatch(rows, { entities, assets, cfg, allowNew: true })
@@ -113,8 +134,14 @@ async function fileRequestUploads(req, uploads) {
 }
 
 const HANDLERS = {
-  async 'batch.submit'(req) {
+  async 'batch.submit'(req, { dry }) {
     if (!req.batchId) fail('missing batchId')
+    // Files added on the Prompts page go into the index first, like a Regenerate's.
+    const uploads = Array.isArray(req.uploads) ? req.uploads : []
+    if (uploads.length) {
+      if (dry) { await log(`DRY-RUN would file ${uploads.length} upload(s) for ${req.batchId}, then validate it`); return }
+      await fileRequestUploads(req, uploads)
+    }
     const { ok, bad, newEntities } = await checkSubmit(req, await registries())
     const jobs = [
       ...ok.map((r) => ({ key: r.key, ok: true, target: r.targetId, jobId: newJobId() })),
@@ -149,7 +176,7 @@ const HANDLERS = {
     // not counted as clashes: the same proposal gets the same number back.
     const mine = eRows.filter((e) => String(e.description).includes(`Reserved by ${req.batchId}`))
     const others = eRows.filter((e) => !mine.includes(e))
-    const { ok, bad } = await checkBatch(submit.jobs, { entities: others, assets, cfg, allowNew: true })
+    const { ok, bad } = await checkBatch(await jobsOf(submit), { entities: others, assets, cfg, allowNew: true })
     const jobIdFor = new Map((st.validated?.jobs ?? []).filter((j) => j.ok).map((j) => [j.key, j.jobId]))
     if (ok.some((r) => !jobIdFor.has(r.key))) fail('a row changed since validation; submit the batch again')
     const brokeSince = bad.filter(([, , key]) => jobIdFor.has(key))
@@ -215,6 +242,20 @@ const HANDLERS = {
     }
   },
 
+  // The reference studio (worker/lib/studio.mjs).
+  ...studioHandlers({ fail, emit: (e) => emit(e), getCfg: () => cfg }),
+
+  /** Fetch the Higgsfield model list again (Prompts page, "Refresh models"). */
+  async 'models.refresh'(req, { dry }) {
+    if (dry) { await log('DRY-RUN would refresh the model list'); return }
+    const r = await refreshCatalog({ log })
+    if (!r.ok) {
+      if (/another worker/.test(r.error ?? '')) return // that worker's refresh answers this request too
+      fail(r.error)
+    }
+    await emit({ batchId: null, reqId: req.id, event: 'models', count: r.count, usable: r.usable })
+  },
+
   async 'batch.discard'(req) {
     const st = foldBatch(await readJsonl(P.jobRequestResults), req.batchId)
     if (st.status === 'queued') fail('already queued; jobs cannot be un-queued from here')
@@ -236,7 +277,10 @@ const HANDLERS = {
     if (!(state.processedJobs ?? []).includes(req.jobId)) fail(`job ${req.jobId} has not generated yet`)
 
     const model = String(req.model || src.model)
-    const stage = req.stage === 'draft' || req.stage === 'final' ? req.stage : (src.stage ?? null)
+    let stage = req.stage === 'draft' || req.stage === 'final' ? req.stage : (src.stage ?? null)
+    // A model with no resolution steps renders once; an image model has no stage at all.
+    if (!isVideoModel(model) || !hasDraftStage(model)) stage = null
+    else if (!stage) stage = 'draft'
     const variant = String(req.variant || src.variant || 'V01').toUpperCase()
     if (!/^V\d{2}$/.test(variant)) fail(`look '${variant}' is not V01, V02, ...`)
     let basePrompt = String(req.prompt ?? '').trim() || (src.basePrompt ?? src.prompt)
@@ -254,8 +298,10 @@ const HANDLERS = {
     }
     const params = { ...(src.params ?? {}) }
     // Going from draft to final (or back) moves the resolution with it, unless the request sets one.
-    if (isVideoModel(model) && stage && stage !== (src.stage ?? null)) {
-      params.resolution = stage === 'final' ? cfg.videoFinalResolution : cfg.videoDraftResolution
+    if (isVideoModel(model) && (stage !== (src.stage ?? null) || model !== src.model)) {
+      const r = stageResolution(model, stage, cfg)
+      if (r) params.resolution = r
+      else delete params.resolution
     }
     if (req.params && typeof req.params === 'object') {
       for (const [k, v] of Object.entries(req.params)) if (v !== undefined && v !== null && v !== '') params[k] = v
@@ -345,7 +391,10 @@ export async function runJobRequests(state, { dry = false } = {}) {
       if (!handler) fail(`unknown request type '${req.type}'`)
       await handler(req, { state, dry })
       // In dry mode an approve or regenerate is only described; leave it for a real run.
-      if (dry && (req.type === 'batch.approve' || req.type === 'regenerate')) continue
+      // A dry run only describes what spends or files; leave those for a real run.
+      const spendsOrFiles = ['batch.approve', 'regenerate', 'studio.approve', 'studio.pick', 'studio.close'].includes(req.type)
+        || (req.type === 'batch.submit' && req.uploads?.length)
+      if (dry && spendsOrFiles) continue
       state.processedRequests.push(req.id)
       retrying.delete(req.id)
       count++
@@ -369,6 +418,11 @@ export async function runJobRequests(state, { dry = false } = {}) {
     }
   }
   return count
+}
+
+/** Price reference-studio tries (worker/lib/studio.mjs), with this module's result log. */
+export function priceStudioTries(state, { exclusive } = {}) {
+  return priceStudio(state, { emit, cfg, exclusive })
 }
 
 // Batches being priced right now, so a pass and the watcher never price one twice.
@@ -403,7 +457,8 @@ export async function priceBatches(state, { dry = false, exclusive = (fn) => fn(
       }
       authWarned = false
       const okKeys = new Set((st.validated?.jobs ?? []).filter((j) => j.ok).map((j) => j.key))
-      const { ok } = await exclusive(async () => checkBatch(submit.jobs, { ...(await registries()), cfg, allowNew: true }))
+      const rows = await jobsOf(submit)
+      const { ok } = await exclusive(async () => checkBatch(rows, { ...(await registries()), cfg, allowNew: true }))
       let total = 0
       let unpriced = 0
       for (const row of ok) {

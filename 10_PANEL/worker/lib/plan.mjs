@@ -1,5 +1,7 @@
 import { P, findEntity, isShotId, log, readJsonl, resolveRef } from './project.mjs'
-import { NEW_TARGET_RX, isVideoModel } from './batch.mjs'
+import { NEW_TARGET_RX } from './batch.mjs'
+import { loadCatalog } from './models.mjs'
+import { mapParams, modelEntry, modelProblem } from './model-schema.mjs'
 import { buildPrompt } from './prompt.mjs'
 import { NEXT_SCENE_RX } from './scenes.mjs'
 
@@ -35,11 +37,15 @@ export async function applicableLearnings(entity) {
  */
 export async function planJob(job, entities, assets, { cfg, dry = false, priceOnly = false } = {}) {
   // A shot target is valid but is not an entity; it renders into the episode.
-  const shot = isShotId(job.target) ? job.target : null
+  // A reference-studio try for something not in the index yet has no target:
+  // its number is allocated only when a result is picked (worker/lib/studio.mjs).
+  const studio = job.studio ?? null
+  const unfiled = Boolean(studio && !job.target)
+  const shot = !studio && isShotId(job.target) ? job.target : null
   const isNew = priceOnly && (NEW_TARGET_RX.test(String(job.target ?? '')) || NEXT_SCENE_RX.test(String(job.target ?? '')))
-  const entity = shot || isNew ? null : findEntity(entities, job.target)
-  if (!shot && !isNew && !entity) return { skip: `unknown target ${job.target}` }
-  const targetId = shot ?? entity?.id ?? job.target
+  const entity = shot || isNew || unfiled ? null : findEntity(entities, job.target)
+  if (!shot && !isNew && !unfiled && !entity) return { skip: `unknown target ${job.target}` }
+  const targetId = shot ?? entity?.id ?? job.target ?? `studio:${studio?.proposal?.kind ?? ''}`
 
   // Resolve reference tokens to real paths before spending anything.
   const refPaths = []
@@ -48,33 +54,31 @@ export async function planJob(job, entities, assets, { cfg, dry = false, priceOn
     const r = await resolveRef(token, entities, assets)
     if (!r.ok) return { skip: `unresolved ref ${token}: ${r.reason}` }
     refPaths.push(r.path)
-    refInfo.push({ path: r.path, entity: r.entity, variant: r.variant })
+    refInfo.push({ path: r.path, entity: r.entity, variant: r.variant, label: r.label ?? null })
   }
 
-  const learnings = await applicableLearnings(entity)
-  const { prompt, mentioned } = await buildPrompt(job.prompt, learnings, job.revisionNotes, refInfo, entities, assets)
+  const model = job.model || cfg.defaultImageModel
+  const catalog = loadCatalog()
+  const modelWhy = modelProblem(catalog, model)
+  if (modelWhy) return { skip: modelWhy }
+  const entry = modelEntry(catalog, model)
+  const frames = entry?.refs?.param === 'start_image'
+
+  // A new thing has no entity yet; the rules approved for its kind still apply.
+  const learnings = await applicableLearnings(entity ?? (studio?.proposal ? { kind: studio.proposal.kind } : null))
+  const { prompt, mentioned } = await buildPrompt(job.prompt, learnings, job.revisionNotes, refInfo, entities, assets, { frames })
   if (refInfo.length && !priceOnly) {
-    const key = refInfo.map((r, i) => `image_${i + 1}=${r.entity.short_id}/${r.variant}`).join(' ')
+    const key = refInfo.map((r, i) => `${frames ? (i ? 'end' : 'start') : `image_${i + 1}`}=${r.entity ? `${r.entity.short_id}/${r.variant}` : 'studio-file'}`).join(' ')
     await log(`IMAGES ${job.jobId}: ${key}${mentioned ? ' (called in the text)' : ' (none called in the text; each named once at the end)'}`)
     if (dry) await log(`DRY-RUN prompt for ${job.jobId}:\n${prompt}`)
   }
-  const model = job.model || cfg.defaultImageModel
-  const params = { prompt, ...(job.params ?? {}) }
-
-  // Sound is on for every video unless the job says otherwise. Older queue
-  // lines carry the string "false"; normalise so the flag is a real boolean.
-  if (isVideoModel(model)) {
-    const v = params.generate_audio
-    params.generate_audio = v === undefined || v === null || v === '' ? (cfg.videoSound ?? true) : String(v) === 'true'
-  }
-
-  // Array -> repeated --image-references flags (see paramsToArgs).
-  if (refPaths.length) params.image_references = refPaths
-
-  // Seedance rejects reference media in the default t2v mode; supplying
-  // references without switching mode fails the job after it is priced.
-  if (refPaths.length && /^seedance/.test(model) && !params.mode) {
-    params.mode = 'omni_reference'
-  }
-  return { shot, entity, targetId, refPaths, prompt, model, params }
+  // The job's intent in the form this model takes (model-schema.mjs): sound on
+  // for video unless the job says otherwise (generate_audio, or Kling's sound
+  // on|off), references as a list or a first frame, Seedance's omni_reference
+  // mode when references are attached, and nothing the model does not accept.
+  const mapped = mapParams(entry, { refs: refPaths, params: job.params ?? {}, stage: job.stage ?? null, cfg: { ...cfg, model } })
+  if (mapped.errors.length) return { skip: mapped.errors.join('; ') }
+  if (mapped.warnings.length && !priceOnly) await log(`PARAMS ${job.jobId}: ${mapped.warnings.join('; ')}`)
+  const params = { prompt, ...mapped.params }
+  return { shot, entity, targetId, refPaths, prompt, model, params, entry }
 }

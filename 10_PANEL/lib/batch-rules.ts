@@ -1,6 +1,8 @@
 import { idRx } from '../worker/lib/ids.mjs'
 import { KINDS, entitySlug, isAscii } from './indexing'
+import { checkModelFit, hasDraft, hasSound, isVideoModel, modelInfo, modelProblemOf } from './models'
 import { targetCandidates } from './ref-suggest'
+import type { RefSlot } from './ref-slots'
 import { EPISODE_RX, NEXT_SCENE_RX, latestEpisode, nextSceneTarget, sceneFromDocument } from './scenes'
 import type { BatchDefaults, BatchJobInput, CatalogEntity } from './types'
 
@@ -13,7 +15,8 @@ import type { BatchDefaults, BatchJobInput, CatalogEntity } from './types'
 
 /** CODE-EP001-SC004-SH0010 for one project. */
 export const shotRx = (code: string) => idRx(code).shot
-export const isVideoModel = (m: string | null | undefined) => /^(seedance|kling|veo|wan|hailuo|grok_video)/.test(String(m ?? ''))
+/** From the model catalogue (lib/models.ts); re-exported so existing imports keep working. */
+export { isVideoModel }
 
 /**
  * What one job costs, by everything the price depends on: model, resolution,
@@ -25,7 +28,7 @@ export const isVideoModel = (m: string | null | undefined) => /^(seedance|kling|
  * disk. store.ts re-exports it so there is still one definition.
  */
 export const priceKey = (model: unknown, p: Record<string, unknown> | undefined) =>
-  `${model}|${p?.resolution ?? ''}|${p?.duration ?? ''}|${p?.generate_audio === undefined ? '' : String(p.generate_audio)}`
+  `${model}|${p?.resolution ?? ''}|${p?.duration ?? ''}|${p?.generate_audio === undefined ? '' : String(p.generate_audio)}${p?.mode ? `|${p.mode}` : ''}`
 
 export type TargetMode = 'entity' | 'shot' | 'new'
 
@@ -48,7 +51,14 @@ export interface DraftRow {
   model: string
   /** Empty = the batch default (video only). */
   stage: '' | 'draft' | 'final'
+  /** What the worker gets, in order. Always refsOf(slots, loose) (lib/ref-slots.ts). */
   refs: string[]
+  /** The references by what they are: a slot per thing the prompt names. */
+  slots: RefSlot[]
+  /** References in no slot (the tray). */
+  loose: string[]
+  /** Files added to this row on the page, `upload:<id>` in refs. The worker files them when the batch is submitted. */
+  uploads: RowUpload[]
   prompt: string
   /** Per-row parameter overrides from the document (aspect ratio, duration, sound). */
   params: Record<string, string>
@@ -56,10 +66,43 @@ export interface DraftRow {
   warnings: string[]
 }
 
+/** How a file added on the Prompts page is filed: the same choices as a Review upload. */
+export interface RowUpload {
+  /** u1, u2 ...: unique across the batch, since the batch carries them all. */
+  id: string
+  originalName: string
+  mode: 'variant' | 'new'
+  /** Full entity id, for mode=variant. */
+  entity: string
+  kind: string
+  name: string
+  description: string
+  role: string
+  descriptor: string
+}
+
+/** What is wrong with how an upload is to be filed, if anything. The server and the worker check again. */
+export function uploadProblem(u: RowUpload, catalog: CatalogEntity[]): string | null {
+  const label = u.originalName || u.id
+  if (!u.descriptor.trim()) return `${label}: add a short English description.`
+  if (!isAscii(u.descriptor) || !isAscii(u.name) || !isAscii(u.description)) return `${label}: names and descriptions go into the index, so they must be English.`
+  if (u.mode === 'variant') {
+    if (!catalog.some((e) => e.id === u.entity || e.shortId === u.entity)) return `${label}: say which entity it is a picture of.`
+  } else {
+    if (!(KINDS as readonly string[]).includes(u.kind)) return `${label}: choose a kind for the new entity.`
+    const slug = entitySlug(u.name)
+    if (!slug) return `${label}: name the new entity.`
+    const clash = catalog.find((e) => e.slug === slug)
+    if (clash) return `${label}: '${slug}' already exists as ${clash.shortId}; make it a new look of ${clash.shortId}.`
+  }
+  return null
+}
+
 export interface RowConfig {
   /** The project's ID prefix, e.g. SHM. */
   code: string
-  models: { image: string[]; video: string[] }
+  /** Shown first in model pickers (worker/config.json pinnedModels). Any usable catalogue model is allowed. */
+  pinned: string[]
 }
 
 export type RowTarget = Pick<DraftRow, 'targetMode' | 'target' | 'sceneAuto' | 'episode' | 'newKind' | 'newName'>
@@ -119,8 +162,8 @@ export function checkRow(row: DraftRow, catalog: CatalogEntity[], batch: DraftRo
   if (!row.prompt.trim()) problems.push('The prompt is empty.')
 
   const model = rowModel(row, defaults)
-  const known = [...cfg.models.image, ...cfg.models.video]
-  if (known.length && !known.includes(model)) problems.push(`Model ${model} is not in the worker's list.`)
+  const modelWhy = modelProblemOf(model)
+  if (modelWhy) problems.push(modelWhy)
 
   if (row.targetMode === 'entity') {
     const t = row.target.trim()
@@ -149,12 +192,24 @@ export function checkRow(row: DraftRow, catalog: CatalogEntity[], batch: DraftRo
   if (row.variant && !/^V\d{2}$/i.test(row.variant.trim())) problems.push('A look is V01, V02, ...')
 
   for (const ref of row.refs) {
+    if (ref.startsWith('upload:')) {
+      const u = row.uploads.find((x) => `upload:${x.id}` === ref)
+      if (!u) problems.push(`${ref} is not a file added to this row.`)
+      else { const why = uploadProblem(u, catalog); if (why) problems.push(why) }
+      continue
+    }
     const [id, variant] = ref.replace(/^@/, '').split('/')
     const ent = catalog.find((e) => e.id === id || e.shortId === id)
     if (!ent) { problems.push(`${ref} is not in the index.`); continue }
     const want = (variant || ent.canonical || '').toUpperCase()
     if (!want) problems.push(`${ref}: ${ent.shortId} has no main look yet, so say which look.`)
     else if (!ent.variants.some((v) => v.variant === want)) problems.push(`${ref}: ${ent.shortId} has no look ${want}.`)
+  }
+
+  // How many references, and in what form, is the model's call (Kling takes one start frame).
+  if (!modelWhy) {
+    const fit = checkModelFit(model, row.refs, row.params, row.stage || null)
+    problems.push(...fit.errors)
   }
 
   // Two next-free-scene rows are two scenes, so only the prompt can make them the same.
@@ -171,17 +226,27 @@ export function checkRow(row: DraftRow, catalog: CatalogEntity[], batch: DraftRo
 export function toJobInput(row: DraftRow, defaults: BatchDefaults): BatchJobInput {
   const model = rowModel(row, defaults)
   const video = isVideoModel(model)
+  const info = modelInfo(model)
   const params: Record<string, string | number | boolean> = { aspect_ratio: defaults.aspect_ratio }
   if (video) {
-    params.duration = defaults.duration
-    params.generate_audio = defaults.generate_audio
+    if (!info || info.params.some((p) => p.name === 'duration')) params.duration = defaults.duration
+    if (hasSound(model)) params.generate_audio = defaults.generate_audio
+  }
+  // The batch's model settings apply to rows on the batch's model; another model has other settings.
+  if (model === defaults.model) {
+    const names = new Map((info?.params ?? []).map((p) => [p.name, p]))
+    for (const [k, v] of Object.entries(defaults.extra ?? {})) {
+      const p = names.get(k)
+      if (!p || v === '') continue
+      params[k] = /integer|number/.test(p.type) ? Number(v) : p.type.startsWith('boolean') ? v === 'true' : v
+    }
   }
   for (const [k, v] of Object.entries(row.params)) {
     if (k === 'generate_audio') params[k] = String(v) === 'true'
     else if (k === 'duration') params[k] = Number(v) || v
     else params[k] = v
   }
-  const stage = video ? (row.stage || defaults.stage) : null
+  const stage = video && hasDraft(model) ? (row.stage || defaults.stage) : null
   return {
     key: row.key,
     label: row.label.trim() || null,

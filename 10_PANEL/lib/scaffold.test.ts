@@ -82,6 +82,11 @@ test('a second project cannot take the same folder or the same code', async () =
   await assert.rejects(() => checkNew({ name: '', slug: 'other', code: 'OTH' }), ProjectInvalid)
 })
 
+test('a leftover folder that is not a project is named, not a bare EPERM', async () => {
+  await fs.mkdir(path.join(dir, 'husk', '00_PROJECT'), { recursive: true })
+  await assert.rejects(() => checkNew({ name: 'Husk', slug: 'husk', code: 'HSK' }), /not a project/)
+})
+
 test('a new project opts itself into git, so it is not silently untracked', async () => {
   await fs.writeFile(path.join(dir, '.gitignore'), '/*\n!/silk-road/\n\n# The half-built folder\n/.new-*\n', 'utf8')
   await createProject({ name: 'Second Film', slug: 'second-film', code: 'SEF', description: '' })

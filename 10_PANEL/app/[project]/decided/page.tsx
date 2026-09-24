@@ -208,7 +208,7 @@ export default async function DecidedPage({ params, searchParams }: PageProps<'/
   const matches = (e: DecidedEntry) => (ep === 'none' ? e.episode === null : !ep || e.episode === ep)
   const entries = all.filter(matches)
   const regenCfg: RegenerateConfig = {
-    models: (cfg.models as RegenerateConfig['models']) ?? { image: [], video: [] },
+    pinned: (cfg.pinnedModels as string[] | undefined) ?? [],
     aspectRatios: (cfg.aspectRatios as string[]) ?? ['16:9', '9:16', '1:1'],
     videoDurations: (cfg.videoDurations as number[]) ?? [5, 10, 15],
     videoDraftResolution: String(cfg.videoDraftResolution ?? '480p'),

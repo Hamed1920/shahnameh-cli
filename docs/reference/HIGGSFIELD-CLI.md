@@ -104,8 +104,28 @@ higgsfield model list [--image|--video] [--json]
 higgsfield model get <job_type>              # params, defaults, enums
 ```
 
-Known job types seen in examples: `nano_banana_2`, `seedance_2_0`.
-Run `model list --json` once authenticated and record the real catalogue here.
+The catalogue is no longer recorded here by hand. The worker fetches it
+(`10_PANEL/worker/lib/models.mjs`) into `10_PANEL/worker/MODEL_CATALOG.json`: every image and
+video model from `model list --json`, each with its `model get --json` params and rules,
+condensed by `summarizeModel` in `worker/lib/model-schema.mjs`. It refreshes once a day at worker
+start, or from the Prompts page's Refresh. A sandbox worker on the stub CLI writes its own copy
+beside the sandbox instead.
+
+What the catalogue showed on 2026-09-24 (68 image/video models, 47 usable from a prompt):
+
+- **`model list` gives each model a `type`**: image, video, audio, 3d, data, text. The worker
+  decides image vs video from it, not from the name.
+- **References differ per model.** Seedance, Nano Banana, Seedream, GPT Image, Wan 3 take
+  `image_references` (Nano Banana Pro up to 14, Seedance 2.5 up to 30, Seedance 2.0 up to 9).
+  Kling, Veo, Wan 2.7, Hailuo take only `start_image` (and some `end_image`). Veo 3 *requires*
+  one. The limits come from each model's CEL `rules`.
+- **Sound differs too**: `generate_audio` (boolean) on Seedance, Wan 3, Veo 3.1 Lite; `sound`
+  `on|off` on Kling 3.0; `sound` boolean on Kling 2.6; none elsewhere.
+- **`mode` on Seedance 2.5** is `t2v | omni_reference | ...`; references need `omni_reference`.
+  Gemini Omni Flash 1.1 requires `text-to-video` / `reference-to-video`. The worker sets these.
+- **Tools** (upscalers, background removers, relight, outpaint, video edit) are in the list but
+  take no prompt or need a video; the catalogue marks them unusable and the pickers hide them.
+- Only models with a `resolution` enum get a draft/final pair; Kling 3.0 and Veo render once.
 
 ### `seedance_2_5` (captured with `model get seedance_2_5 --json`, 2026-09-15)
 

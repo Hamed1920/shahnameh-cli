@@ -31,7 +31,7 @@ export default async function GalleryPage({ params }: PageProps<'/[project]'>) {
   const nextEpisode = episodes[episodes.length - 1].id
 
   const regenCfg: RegenerateConfig = {
-    models: (cfg.models as RegenerateConfig['models']) ?? { image: [], video: [] },
+    pinned: (cfg.pinnedModels as string[] | undefined) ?? [],
     aspectRatios: (cfg.aspectRatios as string[]) ?? ['16:9', '9:16', '1:1'],
     videoDurations: (cfg.videoDurations as number[]) ?? [5, 10, 15],
     videoDraftResolution: String(cfg.videoDraftResolution ?? '480p'),

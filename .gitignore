@@ -38,6 +38,9 @@
 # generation lock. Never travel.
 /.new-*
 /.generate.lock
+# The model-list refresh lock, and a sandbox's own copy of the model list.
+.catalog.lock
+.model-catalog.json
 
 # --- vendored third-party skills: reinstall, do not commit -------------
 #   npx skills add higgsfield-ai/skills

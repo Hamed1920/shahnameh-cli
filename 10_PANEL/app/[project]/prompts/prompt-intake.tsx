@@ -1,10 +1,9 @@
 'use client'
 
-import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
-import { createPortal } from 'react-dom'
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useRouter } from 'next/navigation'
-import { Copy, FileText, ImageOff, Plus, Trash2, Upload, X } from 'lucide-react'
+import { Copy, FileText, Plus, Trash2, Upload, X } from 'lucide-react'
 import { extractDocuments, submitBatch } from './actions'
 import { IndexPicker } from '@/components/index-picker'
 import { RowLabel, TargetCell } from '@/components/target-cell'
@@ -18,8 +17,17 @@ import { Modal } from '@/components/ui/modal'
 import { ContextMenu, type MenuEntry } from '@/components/ui/context-menu'
 import { MenuNote } from '@/components/item-menu'
 import { Badge, SectionHeading } from '@/components/ui/text'
-import { checkRow, initialTarget, isVideoModel, rowModel, shotRx, type DraftRow, type RowConfig } from '@/lib/batch-rules'
-import { lookPath, suggestRefs, targetCandidates, type RefSuggestion } from '@/lib/ref-suggest'
+import { checkRow, initialTarget, isVideoModel, rowModel, shotRx, type DraftRow, type RowConfig, type RowUpload } from '@/lib/batch-rules'
+import { UploadCard, type UploadDraft } from '@/components/reference-editor'
+import { detectByKeywords } from '@/lib/asset-detect'
+import { mergeDetected, placeDocRefs, placeToken, refsOf, removeToken, type RefSlot } from '@/lib/ref-slots'
+import { RowReferences, type PageUpload, type SlotsChange } from './ref-slots'
+import { ReferenceStudio, type StudioTarget } from '@/components/reference-studio'
+import { groupOf, type Place } from '@/lib/ref-slots'
+import { ModelPicker } from '@/components/model-picker'
+import { ModelParamFields, extraFor } from '@/components/generation-settings'
+import { aspectRatiosFor, durationsFor, hasDraft, hasSound, modelInfo, modelLabel, refLimit, stageResolutionFor } from '@/lib/models'
+import { targetCandidates } from '@/lib/ref-suggest'
 import { useAssetUrls, useProject } from '@/components/project-context'
 import { episodeLabel, shortEpisode, type EpisodeInfo } from '@/lib/episodes'
 import { latestEpisode, previewScenes } from '@/lib/scenes'
@@ -29,6 +37,8 @@ import { parsePromptDocument, type ParseResult, type SplitMode, type SplitOption
 import type { BatchDefaults, CatalogEntity } from '@/lib/types'
 
 export interface IntakeConfig extends RowConfig {
+  /** The reference studio's model unless another is chosen (worker/config.json defaultImageModel). */
+  defaultImageModel: string
   aspectRatios: string[]
   videoDurations: number[]
   /** What a draft and a final render at; shown on the quality toggle. */
@@ -104,7 +114,13 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
   const [episode, setEpisode] = useState(() => latestEpisode(knownShots, cfg.code))
   const [name, setName] = useState('')
   const [prepend, setPrepend] = useState(false)
-  const [picker, setPicker] = useState<{ key: string; mode: 'entity' | 'ref' } | null>(null)
+  /**
+   * The index picker, for a row's target (entity), a reference (ref: into a
+   * slot, or the tray when slot is null), or the entity an upload is a look of.
+   */
+  /** The reference studio, opened from a slot's Create: what it makes, and where the pick goes. */
+  const [studio, setStudio] = useState<{ rowKey: string; slotKey: string; target: StudioTarget; prompt: string; refs: string[] } | null>(null)
+  const [picker, setPicker] = useState<{ key: string; mode: 'entity' | 'ref'; slot?: string | null; kind?: string | null; upload?: string } | null>(null)
   const [confirm, setConfirm] = useState(false)
   const [busy, setBusy] = useState<null | 'extract' | 'submit'>(null)
   const [error, setError] = useState<string | null>(null)
@@ -115,6 +131,27 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
   const [copied, setCopied] = useState<string | null>(null)
 
   const preamble = docs.map((d) => d.preamble).filter(Boolean).join('\n\n')
+
+  /** Files added on this page, by upload id. Rows hold only how each is to be filed. */
+  const files = useRef(new Map<string, { file: File; preview: string }>())
+  const uploadSeq = useRef(0)
+  useEffect(() => {
+    const m = files.current
+    return () => m.forEach((f) => URL.revokeObjectURL(f.preview))
+  }, [])
+
+  /** Read the prompt again and fold what it names into the row's slots (lib/asset-detect.ts). */
+  const detect = useCallback(
+    (prompt: string, slots: RefSlot[], loose: string[]) =>
+      mergeDetected(slots, loose, detectByKeywords(prompt, { catalog, recent: recentRefs }), catalog),
+    [catalog, recentRefs],
+  )
+  /** A new row's references: what the document named, each in its slot, then what the prompt names. */
+  const arrangedFor = useCallback((prompt: string, docRefs: string[]) => {
+    const placed = placeDocRefs(docRefs, catalog)
+    const a = detect(prompt, placed.slots, placed.loose)
+    return { slots: a.slots, loose: a.loose, refs: refsOf(a.slots, a.loose) }
+  }, [catalog, detect])
 
   const problems = useMemo(() => {
     const out = new Map<string, string[]>()
@@ -135,12 +172,13 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
       variant: r.variant ?? '',
       model: r.model ?? '',
       stage: r.stage ?? '',
-      refs: r.refs,
+      ...arrangedFor(r.prompt, r.refs),
+      uploads: [],
       prompt: r.prompt,
       params: r.params,
       warnings: r.warnings,
     }
-  }), [catalog, defaults.model, knownShots, cfg.code, episode])
+  }), [catalog, defaults.model, knownShots, cfg.code, episode, arrangedFor])
 
   const addDocument = useCallback((source: string, file: string | null, opts: { showText?: boolean } = {}) => {
     const result = parsePromptDocument(source, { file })
@@ -208,11 +246,22 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
     setRows((all) => all.map((r) => {
       if (r.key !== key) return r
       const next = { ...r, ...patch }
+      // A new prompt text is read again; what Hamed placed stays where he put it.
+      if (patch.prompt !== undefined && patch.slots === undefined) {
+        const a = detect(next.prompt, next.slots, next.loose)
+        next.slots = a.slots
+        next.loose = a.loose
+      }
+      if (patch.prompt !== undefined || patch.slots !== undefined || patch.loose !== undefined) {
+        next.refs = refsOf(next.slots, next.loose)
+        // A file no longer used anywhere in the row is not sent.
+        if (patch.uploads === undefined) next.uploads = next.uploads.filter((u) => next.refs.includes(`upload:${u.id}`))
+      }
       // A shot id is not an entity and an entity id is not a shot: switching mode drops a target that does not fit.
       if (patch.targetMode && patch.target === undefined && shotRx(cfg.code).test(next.target.trim()) !== (next.targetMode === 'shot')) next.target = ''
       // A design image with nowhere to go yet takes the entity its references point at,
       // once exactly one fits. Two or more: the row shows them and Hamed picks.
-      if ((patch.refs || patch.targetMode) && next.targetMode === 'entity' && !next.target.trim()) {
+      if ((patch.refs || patch.slots || patch.loose || patch.targetMode) && next.targetMode === 'entity' && !next.target.trim()) {
         const fits = targetCandidates(next.prompt, next.refs, catalog)
         if (fits.length === 1) next.target = fits[0].id
       }
@@ -227,8 +276,76 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
     setRows((all) => [...all, {
       key: `r${++seq}`, label: '',
       ...initialTarget({ target: null, label: null, prompt: '', refs: [], model: null }, { file: null, catalog, defaultModel: defaults.model, knownShots, code: cfg.code, episode }),
-      newDescription: '', variant: '', model: '', stage: '', refs: [], prompt: '', params: {}, warnings: [],
+      newDescription: '', variant: '', model: '', stage: '', refs: [], slots: [], loose: [], uploads: [], prompt: '', params: {}, warnings: [],
     }])
+
+  /**
+   * Files from the computer, into a slot (the first file) or the tray. Each is
+   * filed into the index by the worker when the batch is sent: a new look of the
+   * slot's entity, the slot's new entity, or whatever Hamed says below the row.
+   */
+  const addFiles = (key: string, list: File[], slotKey: string | null) => {
+    const row = rows.find((x) => x.key === key)
+    if (!row) return
+    const slot = slotKey ? row.slots.find((x) => x.key === slotKey) ?? null : null
+    const entity = slot?.entity ? catalog.find((e) => e.shortId === slot.entity) ?? null : null
+    const images = list.filter((f) => /^image\/(png|jpeg|webp)$/.test(f.type)).slice(0, slot ? 1 : 12)
+    if (images.length === 0) { setError('Only PNG, JPG or WEBP images.'); return }
+    const fresh: RowUpload[] = images.map((file) => {
+      const id = `u${++uploadSeq.current}`
+      files.current.set(id, { file, preview: URL.createObjectURL(file) })
+      return {
+        id,
+        originalName: file.name,
+        mode: !entity && slot?.proposal ? 'new' : 'variant',
+        entity: entity?.id ?? '',
+        kind: slot?.proposal ? slot.kind : '',
+        name: slot?.proposal?.name ?? '',
+        description: slot?.proposal?.description ?? '',
+        // The first picture of something is its hero; later ones are plates.
+        role: entity && entity.variants.length ? 'PLATE' : 'HERO',
+        descriptor: descriptorFrom(file.name),
+      }
+    })
+    let arranged: SlotsChange = { slots: row.slots, loose: row.loose }
+    fresh.forEach((u, i) => {
+      arranged = placeToken(arranged.slots, arranged.loose, `upload:${u.id}`, i === 0 && slotKey ? { slot: slotKey } : { tray: arranged.loose.length })
+    })
+    update(key, { ...arranged, uploads: [...row.uploads, ...fresh] })
+  }
+  const changeUpload = (key: string, id: string, patch: Partial<RowUpload>) => {
+    const row = rows.find((x) => x.key === key)
+    if (row) update(key, { uploads: row.uploads.map((u) => (u.id === id ? { ...u, ...patch } : u)) })
+  }
+  const dropUpload = (key: string, id: string) => {
+    const row = rows.find((x) => x.key === key)
+    if (!row) return
+    const left = removeToken(row.slots, row.loose, `upload:${id}`)
+    update(key, { ...left, uploads: row.uploads.filter((u) => u.id !== id) })
+  }
+  /** Put a token into a row as it is now (a studio pick can land long after the dialog opened). */
+  const placeInRow = (rowKey: string, token: string, to: Place) => setRows((all) => all.map((r) => {
+    if (r.key !== rowKey) return r
+    const next = placeToken(r.slots, r.loose, token, to)
+    return { ...r, ...next, refs: refsOf(next.slots, next.loose) }
+  }))
+  const openStudio = (row: DraftRow, slot: RefSlot) => {
+    const ent = slot.entity ? catalog.find((e) => e.shortId === slot.entity) : null
+    const thing = ent?.name ?? slot.proposal?.name ?? `the ${groupOf(slot.kind).one.toLowerCase()}`
+    setStudio({
+      rowKey: row.key,
+      slotKey: slot.key,
+      target: ent ? { entity: ent.id } : { proposal: { kind: slot.kind, name: slot.proposal?.name ?? '', description: slot.proposal?.description } },
+      prompt: `A reference picture of ${thing}. `,
+      refs: slot.token?.startsWith('@') ? [slot.token] : [],
+    })
+  }
+  const pageUploadsOf = (row: DraftRow): PageUpload[] =>
+    row.uploads.map((u) => ({ id: u.id, preview: files.current.get(u.id)?.preview ?? '', name: u.originalName }))
+  const draftsOf = (row: DraftRow): UploadDraft[] => row.uploads.flatMap((u) => {
+    const f = files.current.get(u.id)
+    return f ? [{ ...u, file: f.file, preview: f.preview, groupOf: '' }] : []
+  })
 
   /**
    * Move the batch to another episode, and with it every row that was still
@@ -270,6 +387,16 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
     setError(null)
     const fd = new FormData()
     fd.set('project', project.slug)
+    // Every file the rows use, once, beside the rows that name them.
+    const sent = new Map<string, RowUpload>()
+    for (const r of rows) for (const u of r.uploads) sent.set(u.id, u)
+    if (sent.size) {
+      fd.set('uploads', JSON.stringify([...sent.values()].map(({ originalName: _, ...u }) => u)))
+      for (const id of sent.keys()) {
+        const f = files.current.get(id)
+        if (f) fd.set(`file:${id}`, f.file, f.file.name)
+      }
+    }
     fd.set('payload', JSON.stringify({
       name,
       defaults,
@@ -464,34 +591,54 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
                   <Input dir="auto" value={name} onChange={(e) => setName(e.target.value)} placeholder={`${shortEpisode(episode)} blocks, wave 2`} />
                 </Field>
                 <Field label="Model">
-                  <Select value={defaults.model} onChange={(e) => setDefaults({ ...defaults, model: e.target.value })}>
-                    <optgroup label="Video">{cfg.models.video.map((m) => <option key={m} value={m}>{m}</option>)}</optgroup>
-                    <optgroup label="Image">{cfg.models.image.map((m) => <option key={m} value={m}>{m}</option>)}</optgroup>
-                  </Select>
+                  <ModelPicker
+                    value={defaults.model}
+                    pinned={cfg.pinned}
+                    onChange={(m) => {
+                      const a = aspectRatiosFor(m, cfg.aspectRatios)
+                      const d = durationsFor(m, cfg.videoDurations)
+                      setDefaults({
+                        ...defaults,
+                        model: m,
+                        aspect_ratio: a.includes(defaults.aspect_ratio) ? defaults.aspect_ratio : a[0] ?? defaults.aspect_ratio,
+                        duration: !d || d.includes(defaults.duration) ? defaults.duration : d[d.length - 1],
+                        extra: extraFor(m, defaults.extra ?? {}),
+                      })
+                    }}
+                  />
                 </Field>
                 <Field label="Aspect ratio">
                   <Select value={defaults.aspect_ratio} onChange={(e) => setDefaults({ ...defaults, aspect_ratio: e.target.value })}>
-                    {cfg.aspectRatios.map((a) => <option key={a} value={a}>{a}</option>)}
+                    {aspectRatiosFor(defaults.model, cfg.aspectRatios).map((a) => <option key={a} value={a}>{a}</option>)}
                   </Select>
                 </Field>
                 {isVideoModel(defaults.model) && (
                   <>
-                    <Field label="Duration">
-                      <Select value={String(defaults.duration)} onChange={(e) => setDefaults({ ...defaults, duration: Number(e.target.value) })}>
-                        {cfg.videoDurations.map((d) => <option key={d} value={d}>{d} s</option>)}
-                      </Select>
-                    </Field>
-                    <Field label="First render" hint={defaults.stage === 'draft' ? 'Cheap 480p; approving it buys the 1080p final.' : 'Straight to 1080p. Costs more per take.'}>
+                    {durationsFor(defaults.model, cfg.videoDurations) && (
+                      <Field label="Duration">
+                        <Select value={String(defaults.duration)} onChange={(e) => setDefaults({ ...defaults, duration: Number(e.target.value) })}>
+                          {durationsFor(defaults.model, cfg.videoDurations)!.map((d) => <option key={d} value={d}>{d} s</option>)}
+                        </Select>
+                      </Field>
+                    )}
+                    {hasDraft(defaults.model) && (
+                    <Field label="First render" hint={defaults.stage === 'draft'
+                      ? `Cheap ${stageResolutionFor(defaults.model, 'draft', cfg)}; approving it buys the ${stageResolutionFor(defaults.model, 'final', cfg)} final.`
+                      : `Straight to ${stageResolutionFor(defaults.model, 'final', cfg)}. Costs more per take.`}>
                       <Select value={defaults.stage} onChange={(e) => setDefaults({ ...defaults, stage: e.target.value as 'draft' | 'final' })}>
                         <option value="draft">draft</option>
                         <option value="final">final</option>
                       </Select>
                     </Field>
+                    )}
                   </>
                 )}
               </div>
+              <div className="mt-4">
+                <ModelParamFields model={defaults.model} value={defaults.extra ?? {}} onChange={(extra) => setDefaults({ ...defaults, extra })} />
+              </div>
               <div className="mt-4 flex flex-wrap items-center gap-x-8 gap-y-3">
-                {isVideoModel(defaults.model) && (
+                {hasSound(defaults.model) && (
                   <Checkbox checked={defaults.generate_audio} onChange={(e) => setDefaults({ ...defaults, generate_audio: e.target.checked })} label="Sound on every video" />
                 )}
                 {preamble && (
@@ -529,7 +676,14 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
                   onRemove={() => remove(row.key)}
                   onDuplicate={() => duplicate(row.key)}
                   onPickEntity={() => setPicker({ key: row.key, mode: 'entity' })}
-                  onAddRef={() => setPicker({ key: row.key, mode: 'ref' })}
+                  onPick={(slot, kind) => setPicker({ key: row.key, mode: 'ref', slot, kind })}
+                  uploads={pageUploadsOf(row)}
+                  drafts={draftsOf(row)}
+                  onFiles={(list, slot) => addFiles(row.key, list, slot)}
+                  onUploadChange={(id, patch) => changeUpload(row.key, id, patch)}
+                  onUploadDrop={(id) => dropUpload(row.key, id)}
+                  onUploadEntity={(id) => setPicker({ key: row.key, mode: 'entity', upload: id })}
+                  onCreate={(slot) => openStudio(row, slot)}
                   onContextMenu={(ev) => openRowMenu(ev, row, i)}
                 />
               ))}
@@ -552,18 +706,43 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
         </>
       )}
 
+      {studio && (
+        <ReferenceStudio
+          key={studio.slotKey}
+          open
+          onClose={() => setStudio(null)}
+          catalog={catalog}
+          cfg={{ pinned: cfg.pinned, aspectRatios: cfg.aspectRatios, defaultImageModel: cfg.defaultImageModel }}
+          target={studio.target}
+          initialPrompt={studio.prompt}
+          initialRefs={studio.refs}
+          onPicked={(token) => placeInRow(studio.rowKey, token, { slot: studio.slotKey })}
+        />
+      )}
+
       <ContextMenu at={menu?.at ?? null} entries={menu?.entries ?? []} onClose={() => setMenu(null)} />
       {copied && <MenuNote text={copied} bad={copied.startsWith('Could not')} />}
 
       <IndexPicker
         open={picker !== null}
         mode={picker?.mode ?? 'entity'}
-        title={picker?.mode === 'ref' ? `Add a reference to ${pickerRow?.label || pickerRow?.key || 'the prompt'}` : `What is ${pickerRow?.label || pickerRow?.key || 'this prompt'} for?`}
+        title={picker?.upload
+          ? 'Which entity is this picture of?'
+          : picker?.mode === 'ref'
+            ? `Add a reference to ${pickerRow?.label || pickerRow?.key || 'the prompt'}`
+            : `What is ${pickerRow?.label || pickerRow?.key || 'this prompt'} for?`}
         catalog={catalog}
+        initialKind={picker?.kind ?? null}
         onClose={() => setPicker(null)}
-        onPickEntity={(e) => { if (picker) update(picker.key, { targetMode: 'entity', target: e.id }); setPicker(null) }}
+        onPickEntity={(e) => {
+          if (picker?.upload) changeUpload(picker.key, picker.upload, { mode: 'variant', entity: e.id })
+          else if (picker) update(picker.key, { targetMode: 'entity', target: e.id })
+          setPicker(null)
+        }}
         onPickRef={(token) => {
-          if (picker && pickerRow && !pickerRow.refs.includes(token)) update(picker.key, { refs: [...pickerRow.refs, token] })
+          if (picker && pickerRow) {
+            update(picker.key, placeToken(pickerRow.slots, pickerRow.loose, token, picker.slot ? { slot: picker.slot } : { tray: pickerRow.loose.length }))
+          }
           setPicker(null)
         }}
       />
@@ -594,7 +773,7 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
 
 function RowCard({
   index, row, catalog, cfg, defaults, knownShots, episodes, episodeTitles, scenePreview, recentRefs, listId, problems, onChange, onRemove, onDuplicate,
-  onPickEntity, onAddRef, onContextMenu,
+  onPickEntity, onPick, uploads, drafts, onFiles, onUploadChange, onUploadDrop, onUploadEntity, onCreate, onContextMenu,
 }: {
   index: number
   row: DraftRow
@@ -612,12 +791,33 @@ function RowCard({
   onRemove: () => void
   onDuplicate: () => void
   onPickEntity: () => void
-  onAddRef: () => void
+  onPick: (slot: string | null, kind: string | null) => void
+  uploads: PageUpload[]
+  drafts: UploadDraft[]
+  onFiles: (files: File[], slot: string | null) => void
+  onUploadChange: (id: string, patch: Partial<RowUpload>) => void
+  onUploadDrop: (id: string) => void
+  onUploadEntity: (id: string) => void
+  /** Open the reference studio for a slot. */
+  onCreate?: (slot: RefSlot) => void
   onContextMenu: (e: React.MouseEvent) => void
 }) {
   const model = rowModel(row, defaults)
   const video = isVideoModel(model)
   const overrides = Object.entries(row.params)
+  // What recent jobs used, for things this row has no picture of yet.
+  const recent = useMemo(() => {
+    const have = new Set(row.refs.map((t) => t.replace(/^@/, '').split('/')[0]))
+    const out: string[] = []
+    for (const t of recentRefs) {
+      const id = t.replace(/^@/, '').split('/')[0]
+      if (have.has(id)) continue
+      have.add(id)
+      out.push(t.startsWith('@') ? t : `@${t}`)
+      if (out.length === 6) break
+    }
+    return out
+  }, [row.refs, recentRefs])
 
   return (
     <Card className={cn('p-5', problems.length && 'border-bad/40')} onContextMenu={onContextMenu}>
@@ -625,8 +825,8 @@ function RowCard({
         <span className="font-mono text-[11px] text-faint">{String(index + 1).padStart(2, '0')}</span>
         <Input dir="auto" value={row.label} onChange={(e) => onChange({ label: e.target.value })} placeholder="Label (P01)" className="h-8 w-44 text-[13px]" />
         <Badge tone={problems.length ? 'bad' : 'good'}>{problems.length ? `${problems.length} problem${problems.length === 1 ? '' : 's'}` : 'ready'}</Badge>
-        {video && <Badge tone="muted">{row.stage || defaults.stage}</Badge>}
-        <span className="font-mono text-[11px] text-faint">{model}</span>
+        {video && hasDraft(model) && <Badge tone="muted">{row.stage || defaults.stage}</Badge>}
+        <span className="text-[11.5px] text-faint">{modelLabel(model)}</span>
         <div className="ml-auto flex items-center gap-1">
           <Button type="button" size="sm" tone="ghost" onClick={onDuplicate} aria-label="Duplicate"><Copy aria-hidden className="size-3.5" /></Button>
           <Button type="button" size="sm" tone="ghost" onClick={onRemove} aria-label="Remove"><Trash2 aria-hidden className="size-3.5" /></Button>
@@ -655,12 +855,15 @@ function RowCard({
             </div>
             <RowLabel>Model</RowLabel>
             <div className="flex flex-wrap items-center gap-2">
-              <Select aria-label="Model" value={row.model} onChange={(e) => onChange({ model: e.target.value })} className="w-auto min-w-44">
-                <option value="">Batch default</option>
-                <optgroup label="Video">{cfg.models.video.map((m) => <option key={m} value={m}>{m}</option>)}</optgroup>
-                <optgroup label="Image">{cfg.models.image.map((m) => <option key={m} value={m}>{m}</option>)}</optgroup>
-              </Select>
-              {video && (
+              <ModelPicker
+                aria-label="Model"
+                value={row.model}
+                pinned={cfg.pinned}
+                allowDefault={`Batch default (${modelLabel(defaults.model)})`}
+                onChange={(m) => onChange({ model: m })}
+                className="w-auto min-w-44"
+              />
+              {video && hasDraft(model) && (
                 <Select aria-label="First render" value={row.stage} onChange={(e) => onChange({ stage: e.target.value as DraftRow['stage'] })} className="w-auto min-w-36">
                   <option value="">Default render</option>
                   <option value="draft">Draft first</option>
@@ -698,190 +901,45 @@ function RowCard({
       </div>
 
       {/* References get the full width: they are pictures, and there are often six or more. */}
-      <div className="mt-6 space-y-4 border-t border-edge pt-5">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-          <span className="text-[13px] text-fg">References</span>
-          <span className="font-mono text-[11px] text-faint">{row.refs.length}</span>
-          <span className="text-xs text-faint">in the order the model gets them</span>
-          <Button type="button" size="sm" tone="outline" onClick={onAddRef} className="ml-auto">
-            <Plus aria-hidden className="size-3.5" /> Add from the index
-          </Button>
-        </div>
-
-        {row.refs.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-edge-strong px-4 py-6 text-center text-xs text-faint">
-            No references yet. Pick from the suggestions below, or add from the index.
-          </p>
-        ) : (
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(9.5rem,1fr))] gap-3">
-            {row.refs.map((t, n) => (
-              <RefTile key={t} token={t} order={n + 1} catalog={catalog} onRemove={() => onChange({ refs: row.refs.filter((x) => x !== t) })} />
+      <div className="mt-6 space-y-5 border-t border-edge pt-5">
+        <RowReferences
+          slots={row.slots}
+          loose={row.loose}
+          catalog={catalog}
+          uploads={uploads}
+          recent={recent}
+          maxRefs={modelInfo(model) ? refLimit(model) : 12}
+          onChange={(next) => onChange(next)}
+          onPick={onPick}
+          onFiles={onFiles}
+          onCreate={onCreate}
+        />
+        {drafts.length > 0 && (
+          <div className="space-y-3">
+            <div className="eyebrow text-faint">Files added here: filed into the index when the batch is sent</div>
+            {drafts.map((u, n) => (
+              <UploadCard
+                key={u.id}
+                index={n}
+                upload={u}
+                catalog={catalog}
+                refsEditable={false}
+                inUse
+                onChange={(patch) => onUploadChange(u.id, patch)}
+                onDrop={() => onUploadDrop(u.id)}
+                onToggleRef={() => {}}
+                onPickEntity={() => onUploadEntity(u.id)}
+              />
             ))}
           </div>
         )}
-
-        <RefSuggestions row={row} catalog={catalog} recentRefs={recentRefs} onAdd={(token) => onChange({ refs: [...row.refs, token] })} />
       </div>
     </Card>
   )
 }
 
-/** An attached reference, large: the look itself, its position in the order, its token and name. */
-function RefTile({ token, order, catalog, onRemove }: { token: string; order: number; catalog: CatalogEntity[]; onRemove: () => void }) {
-  const { thumbUrl } = useAssetUrls()
-  const path = lookPath(token, catalog)
-  const [id] = token.replace(/^@/, '').split('/')
-  const entity = catalog.find((e) => e.shortId === id || e.id === id)
-  return (
-    <div className="group relative overflow-hidden rounded-lg border border-edge-strong bg-sunken">
-      <div className="checker aspect-square">
-        {path ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={thumbUrl(path, 480)} alt={entity?.name ?? token} loading="lazy" className="size-full object-cover" />
-        ) : (
-          <div className="grid size-full place-items-center"><ImageOff aria-hidden className="size-5 text-faint" /></div>
-        )}
-      </div>
-      <span className="absolute top-2 left-2 grid h-5 min-w-5 place-items-center rounded-[4px] bg-ink/85 px-1 font-mono text-[10.5px] text-fg">{order}</span>
-      <button
-        type="button"
-        aria-label={`Remove ${token}`}
-        onClick={onRemove}
-        className="focus-ring absolute top-2 right-2 grid size-6 cursor-pointer place-items-center rounded-[4px] bg-ink/85 text-muted opacity-0 transition-opacity duration-150 group-hover:opacity-100 hover:text-fg focus-visible:opacity-100"
-      >
-        <X aria-hidden className="size-3.5" />
-      </button>
-      <div className="space-y-0.5 px-2.5 py-2">
-        <div className="truncate font-mono text-[11.5px] text-fg">{token.replace(/^@/, '')}</div>
-        <div className="truncate text-xs text-muted">{entity?.name ?? 'not in the index'}</div>
-      </div>
-    </div>
-  )
-}
-
-/**
- * References the prompt seems to need, as chips. Nothing is attached until one
- * is clicked. Names and telling words first, then words that fit several
- * entities (pick one), then what the latest queued jobs used.
- */
-function RefSuggestions({ row, catalog, recentRefs, onAdd }: {
-  row: DraftRow
-  catalog: CatalogEntity[]
-  recentRefs: string[]
-  onAdd: (token: string) => void
-}) {
-  const s = useMemo(() => suggestRefs(row.prompt, catalog, row.refs, recentRefs), [row.prompt, row.refs, catalog, recentRefs])
-  if (s.found.length + s.groups.length + s.recent.length === 0) return null
-
-  const lines: { label: ReactNode; items: RefSuggestion[]; why: (x: RefSuggestion) => string }[] = [
-    ...(s.found.length ? [{ label: 'In the prompt', items: s.found, why: (x: RefSuggestion) => `the prompt says "${x.matched}"` }] : []),
-    ...s.groups.map((g) => ({ label: <>&ldquo;{g.word}&rdquo; &middot; pick one</>, items: g.options, why: () => `the prompt says "${g.word}"` })),
-    ...(s.recent.length ? [{ label: 'Used recently', items: s.recent, why: () => 'used in a recent queued job' }] : []),
-  ]
-
-  return (
-    <div className="rounded-lg border border-edge bg-white/[0.015] p-4">
-      <div className="eyebrow mb-3 text-faint">Suggested</div>
-      <div className="grid grid-cols-[7.5rem_minmax(0,1fr)] items-start gap-x-4 gap-y-2.5">
-        {lines.map((line, i) => (
-          <Fragment key={i}>
-            <span className="flex h-9 items-center text-xs text-faint">{line.label}</span>
-            <div className="flex flex-wrap gap-1.5">
-              {line.items.map((x) => (
-                <SuggestionChip key={x.token} suggestion={x} path={lookPath(x.token, catalog)} why={line.why(x)} onAdd={() => onAdd(x.token)} />
-              ))}
-            </div>
-          </Fragment>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-/** A suggested reference. Hovering (or focusing) it shows the look at a size you can judge it by. */
-function SuggestionChip({ suggestion, path, why, onAdd }: { suggestion: RefSuggestion; path: string | null; why: string; onAdd: () => void }) {
-  const ref = useRef<HTMLButtonElement>(null)
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const [at, setAt] = useState<DOMRect | null>(null)
-  const enter = () => {
-    if (timer.current) clearTimeout(timer.current)
-    timer.current = setTimeout(() => setAt(ref.current?.getBoundingClientRect() ?? null), 120)
-  }
-  const leave = () => {
-    if (timer.current) clearTimeout(timer.current)
-    setAt(null)
-  }
-  useEffect(() => () => { if (timer.current) clearTimeout(timer.current) }, [])
-
-  return (
-    <>
-      <button
-        ref={ref}
-        type="button"
-        onClick={() => { leave(); onAdd() }}
-        onMouseEnter={enter}
-        onMouseLeave={leave}
-        onFocus={enter}
-        onBlur={leave}
-        aria-label={`Add ${suggestion.token.replace(/^@/, '')} ${suggestion.entity.name}`}
-        className="group focus-ring inline-flex h-9 cursor-pointer items-center gap-2 rounded-md border border-dashed border-edge-strong py-1 pr-2.5 pl-1 text-[12px] text-muted transition-colors duration-150 hover:border-muted hover:bg-white/[0.03] hover:text-fg"
-      >
-        <LookThumb path={path} />
-        <span className="font-mono text-[11.5px] text-fg/90">{suggestion.token.replace(/^@/, '')}</span>
-        <span className="text-faint group-hover:text-muted">{suggestion.entity.name}</span>
-        <Plus aria-hidden className="size-3 text-faint group-hover:text-fg" />
-      </button>
-      <LookPreview at={at} path={path} token={suggestion.token} name={suggestion.entity.name} why={why} />
-    </>
-  )
-}
-
-const PREVIEW = 256
-
-/** The large hover card: above the chip when there is room, below when not, kept inside the window. */
-function LookPreview({ at, path, token, name, why }: { at: DOMRect | null; path: string | null; token: string; name: string; why: string }) {
-  const { thumbUrl } = useAssetUrls()
-  if (typeof document === 'undefined') return null
-  const h = PREVIEW + 64
-  const above = at ? at.top > h + 16 : true
-  const left = at ? Math.max(8, Math.min(at.left, window.innerWidth - PREVIEW - 24)) : 0
-  return createPortal(
-    <AnimatePresence>
-      {at && (
-        <motion.div
-          role="tooltip"
-          initial={{ opacity: 0, y: above ? 4 : -4, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.08 } }}
-          transition={{ duration: 0.14, ease: EASE }}
-          style={{ left, ...(above ? { bottom: window.innerHeight - at.top + 8 } : { top: at.bottom + 8 }) }}
-          className="pointer-events-none fixed z-120 w-[272px] rounded-lg border border-edge-strong bg-raise p-2 shadow-[0_20px_48px_-12px_rgba(0,0,0,0.9)]"
-        >
-          <div className="checker grid size-[256px] place-items-center overflow-hidden rounded-md">
-            {path ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={thumbUrl(path, 480)} alt="" className="size-full object-contain" />
-            ) : (
-              <span className="text-xs text-faint">No image for this look</span>
-            )}
-          </div>
-          <div className="px-1 pt-2 pb-0.5">
-            <div className="font-mono text-[11.5px] text-fg">{token.replace(/^@/, '')} <span className="font-sans text-muted">{name}</span></div>
-            <div className="mt-0.5 text-[11px] text-faint">Suggested because {why}</div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>,
-    document.body,
-  )
-}
-
-/** A look's picture at chip size; a quiet empty square when the look has no file. */
-function LookThumb({ path }: { path: string | null }) {
-  const { thumbUrl } = useAssetUrls()
-  if (!path) return <span aria-hidden className="grid size-7 shrink-0 place-items-center rounded-[4px] bg-sunken"><ImageOff className="size-3 text-faint" /></span>
-  return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src={thumbUrl(path)} alt="" loading="lazy" className="size-7 shrink-0 rounded-[4px] bg-sunken object-cover" />
-  )
+/** A filename as an English description: "Man_walking-02.jpeg" -> "man walking 02". */
+function descriptorFrom(name: string): string {
+  const d = name.replace(/\.[a-z0-9]+$/i, '').replace(/[^A-Za-z0-9]+/g, ' ').trim().toLowerCase().slice(0, 40).trim()
+  return d || 'reference'
 }

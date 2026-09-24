@@ -5,7 +5,9 @@ import { listProjects, type Project } from './projects'
 import { parseCsv } from './csv'
 import { autostartBlockedReason } from './worker-guard'
 import { priceKey } from './batch-rules'
+import { hasDraft, isVideoModel } from './models'
 import { foldEpisodeShots, nextEpisodeId, parseEpisodeDir, type EpisodeInfo } from './episodes'
+import { foldStudio, openSessionIds, type StudioSession } from './studio'
 import type {
   ArchivedLook, AssetRow, AttemptEntry, BatchStatus, BatchView, Candidate, CatalogEntity, Entity, Filing, IndexOp,
   IndexOpResult, JobRequest, JobRequestEvent, Learning, LibraryData, LibraryEntity, PromptLibraryItem, QueueItem, RegenerationView,
@@ -142,6 +144,8 @@ export async function getCandidates(pr: Project): Promise<Candidate[]> {
     try {
       sidecar = JSON.parse(await fs.readFile(path.join(dir, 'job.json'), 'utf8'))
     } catch { continue }
+    // A reference-studio try is decided in the studio, not on Review (lib/studio.ts).
+    if ((sidecar as { studio?: unknown }).studio) continue
 
     for (const c of sidecar.candidates ?? []) {
       const rel = `09_OUTPUT/_staging/${batch}/${c.file}`
@@ -632,7 +636,7 @@ export async function getBatches(pr: Project): Promise<BatchView[]> {
           assignedId: assignedByKey.get(j.key) ?? assigned.get(j.target) ?? null,
           jobId: v?.jobId || null,
           model,
-          stage: j.stage ?? (/^(seedance|kling|veo|wan|hailuo|grok_video)/.test(model) ? req.defaults?.stage ?? 'draft' : null),
+          stage: j.stage ?? (isVideoModel(model) && hasDraft(model) ? req.defaults?.stage ?? 'draft' : null),
           ok: v ? v.ok : true,
           reason: v?.reason ?? null,
           credits: prices.get(j.key) ?? null,
@@ -701,7 +705,8 @@ export async function getPromptLibrary(pr: Project): Promise<PromptLibraryItem[]
   }
   const chains = new Map<string, Row[]>()
   for (const q of queue) {
-    if (!q?.jobId) continue
+    // Reference-studio tries live in their studio session, not in the prompt library.
+    if (!q?.jobId || (q as { studio?: unknown }).studio) continue
     const root = rootOf(q)
     chains.set(root, [...(chains.get(root) ?? []), q])
   }
@@ -869,4 +874,64 @@ export async function getPendingIndexOps(pr: Project): Promise<IndexOp[]> {
   const [ops, state] = await Promise.all([readJsonl<IndexOp>(pr.P.indexOps), getWorkerState(pr)])
   const processed = new Set((state?.processedOps ?? []) as string[])
   return ops.filter((o) => !processed.has(o.id))
+}
+
+// ---------------------------------------------------------------- reference studio
+
+async function studioInputs(pr: Project) {
+  const [requests, events, queue, state, ledgerText] = await Promise.all([
+    readJsonl<{ id: string; ts: string; type: string; sessionId?: string }>(pr.P.jobRequests),
+    readJsonl<{ event: string; sessionId?: string; reqId?: string }>(pr.P.jobRequestResults),
+    readJsonl<QueueItem>(pr.P.queue),
+    getWorkerState(pr),
+    readText(pr.P.ledger),
+  ])
+  return { requests, events, queue, state, ledgerText }
+}
+
+/** One studio session, rebuilt from the request, result and queue files and _staging (lib/studio.ts). */
+export async function getStudioSession(pr: Project, sessionId: string): Promise<StudioSession> {
+  const { requests, events, queue, state, ledgerText } = await studioInputs(pr)
+  const processed = (state?.processedJobs ?? []) as string[]
+  const staged: { sidecar: Parameters<typeof foldStudio>[1]['staged'][number]['sidecar']; present: string[] }[] = []
+  for (const name of await fs.readdir(pr.P.staging).catch(() => [] as string[])) {
+    const dir = path.join(pr.P.staging, name)
+    try {
+      const sidecar = JSON.parse(await fs.readFile(path.join(dir, 'job.json'), 'utf8'))
+      if (sidecar?.studio?.sessionId !== sessionId) continue
+      staged.push({ sidecar, present: (await fs.readdir(dir)).filter((f) => f !== 'job.json') })
+    } catch { /* not a job folder */ }
+  }
+  const ledgerHf: Record<string, { hfJobId: string; state: string }> = {}
+  for (const row of parseCsv(ledgerText) as unknown as Record<string, string>[]) {
+    if (queue.some((q) => q.jobId === row.job_id && q.studio?.sessionId === sessionId)) ledgerHf[row.job_id] = { hfJobId: row.hf_job_id, state: row.state }
+  }
+  const session = foldStudio(sessionId, {
+    requests, events, queue, processedJobs: processed,
+    held: (state?.held ?? {}) as Record<string, { reason: string }>,
+    staged, ledgerHf,
+    generating: await getGeneratingJobId(pr, new Set(processed)),
+  })
+  const inputs: Record<string, string> = {}
+  for (const f of await fs.readdir(path.join(pr.P.uploads, sessionId)).catch(() => [] as string[])) {
+    const m = f.match(/^(u\d{1,3})\./)
+    if (m) inputs[`studio:${sessionId}/${m[1]}`] = `09_OUTPUT/_uploads/${sessionId}/${f}`
+  }
+  return { ...session, inputs }
+}
+
+/** Open studio sessions, newest first, with what each is for. */
+export async function listStudioSessions(pr: Project): Promise<{ sessionId: string; label: string; startedAt: string | null; results: number }[]> {
+  const { requests, events } = await studioInputs(pr)
+  const out = []
+  for (const id of openSessionIds(requests, events).slice(0, 12)) {
+    const s = await getStudioSession(pr, id)
+    out.push({
+      sessionId: id,
+      label: s.proposal?.name ?? s.entity ?? 'new reference',
+      startedAt: s.startedAt,
+      results: s.tries.reduce((n, t) => n + t.results.filter((r) => !r.picked).length, 0),
+    })
+  }
+  return out
 }

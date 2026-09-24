@@ -1,0 +1,373 @@
+{
+ "_comment": "Real model get answers (captured 2026-09-24) for the stub CLI: a reference-list video model, a start-frame video model, two image models and a tool.",
+ "models": {
+  "seedance_2_5": {
+   "display_name": "Seedance 2.5",
+   "job_type": "seedance_2_5",
+   "params": [
+    {
+     "name": "aspect_ratio",
+     "type": "string",
+     "default": "16:9",
+     "required": false,
+     "enum": [
+      "auto",
+      "21:9",
+      "16:9",
+      "4:3",
+      "1:1",
+      "3:4",
+      "9:16"
+     ]
+    },
+    {
+     "name": "audio_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "bitrate_mode",
+     "type": "string",
+     "default": "standard",
+     "required": false,
+     "enum": [
+      "standard",
+      "high"
+     ]
+    },
+    {
+     "name": "duration",
+     "type": "integer",
+     "default": 5,
+     "required": false
+    },
+    {
+     "name": "end_image",
+     "type": "object|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "extension_mode",
+     "type": "string|null",
+     "default": null,
+     "required": false,
+     "enum": [
+      "backward",
+      "forward"
+     ]
+    },
+    {
+     "name": "generate_audio",
+     "type": "boolean",
+     "default": true,
+     "required": false
+    },
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "mode",
+     "type": "string",
+     "default": "t2v",
+     "required": false,
+     "enum": [
+      "t2v",
+      "omni_reference",
+      "video_edit",
+      "video_extension"
+     ]
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "resolution",
+     "type": "string",
+     "default": "720p",
+     "required": false,
+     "enum": [
+      "480p",
+      "720p",
+      "1080p"
+     ]
+    },
+    {
+     "name": "start_image",
+     "type": "object|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "video_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    }
+   ],
+   "rules": [
+    {
+     "cel": "params.mode != \"t2v\" || size(params.image_references) + size(params.video_references) + size(params.audio_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) == 0",
+     "message": "mode 't2v' does not accept reference media"
+    },
+    {
+     "cel": "params.mode != \"omni_reference\" || size(params.image_references) + size(params.video_references) + size(params.audio_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) > 0",
+     "message": "mode 'omni_reference' requires at least one reference media item"
+    },
+    {
+     "cel": "size(params.image_references) + size(params.video_references) + size(params.audio_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) <= 50",
+     "message": "at most 50 reference media items are allowed in total"
+    },
+    {
+     "cel": "params.mode != \"video_edit\" || size(params.video_references) == 1",
+     "message": "mode 'video_edit' requires exactly one video reference"
+    },
+    {
+     "cel": "params.mode != \"video_extension\" || size(params.video_references) >= 1",
+     "message": "mode 'video_extension' requires at least one video reference"
+    },
+    {
+     "cel": "params.mode != \"video_extension\" || !(params.extension_mode == null)",
+     "message": "'extension_mode' is required for mode 'video_extension'"
+    },
+    {
+     "cel": "params.mode == \"video_extension\" || params.extension_mode == null",
+     "message": "'extension_mode' is only allowed for mode 'video_extension'"
+    },
+    {
+     "cel": "size(params.image_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) <= 30",
+     "message": "at most 30 images are allowed (counting start_image and end_image)"
+    },
+    {
+     "cel": "params.mode == \"omni_reference\" || (params.start_image == null && params.end_image == null)",
+     "message": "start_image and end_image are only allowed for mode 'omni_reference'"
+    }
+   ],
+   "type": "video"
+  },
+  "kling3_0": {
+   "display_name": "Kling v3.0",
+   "job_type": "kling3_0",
+   "params": [
+    {
+     "name": "aspect_ratio",
+     "type": "string",
+     "default": "16:9",
+     "required": false,
+     "enum": [
+      "16:9",
+      "9:16",
+      "1:1"
+     ]
+    },
+    {
+     "name": "duration",
+     "type": "integer",
+     "default": 5,
+     "required": false
+    },
+    {
+     "name": "end_image",
+     "type": "object|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "mode",
+     "type": "string",
+     "default": "std",
+     "required": false,
+     "enum": [
+      "std",
+      "pro",
+      "4k"
+     ]
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "sound",
+     "type": "string",
+     "default": "on",
+     "required": false,
+     "enum": [
+      "on",
+      "off"
+     ]
+    },
+    {
+     "name": "start_image",
+     "type": "object|null",
+     "default": null,
+     "required": false
+    }
+   ],
+   "rules": [],
+   "type": "video"
+  },
+  "nano_banana_pro": {
+   "display_name": "Nano Banana Pro",
+   "job_type": "nano_banana_pro",
+   "params": [
+    {
+     "name": "aspect_ratio",
+     "type": "string",
+     "default": "1:1",
+     "required": false,
+     "enum": [
+      "1:1",
+      "3:2",
+      "2:3",
+      "4:3",
+      "3:4",
+      "4:5",
+      "5:4",
+      "9:16",
+      "16:9",
+      "21:9"
+     ]
+    },
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "resolution",
+     "type": "string",
+     "default": "2k",
+     "required": false,
+     "enum": [
+      "1k",
+      "2k",
+      "4k"
+     ]
+    }
+   ],
+   "rules": [
+    {
+     "cel": "params.prompt != \"\" || size(params.image_references) > 0",
+     "message": "a non-empty prompt or at least one image reference is required"
+    },
+    {
+     "cel": "size(params.image_references) <= 14",
+     "message": "at most 14 image references are allowed"
+    }
+   ],
+   "type": "image"
+  },
+  "seedream_v5_pro": {
+   "display_name": "Seedream 5.0 Pro",
+   "job_type": "seedream_v5_pro",
+   "params": [
+    {
+     "name": "aspect_ratio",
+     "type": "string",
+     "default": "1:1",
+     "required": false,
+     "enum": [
+      "1:1",
+      "4:3",
+      "3:4",
+      "16:9",
+      "9:16",
+      "3:2",
+      "2:3",
+      "21:9"
+     ]
+    },
+    {
+     "name": "height",
+     "type": "integer|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "is_inpaint",
+     "type": "boolean",
+     "default": false,
+     "required": false
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "remove_bg",
+     "type": "boolean",
+     "default": false,
+     "required": false
+    },
+    {
+     "name": "resolution",
+     "type": "string",
+     "default": "2k",
+     "required": false,
+     "enum": [
+      "1k",
+      "1.5k",
+      "2k"
+     ]
+    },
+    {
+     "name": "width",
+     "type": "integer|null",
+     "default": null,
+     "required": false
+    }
+   ],
+   "rules": [
+    {
+     "cel": "size(params.image_references) <= 10",
+     "message": "at most 10 image_references are allowed"
+    }
+   ],
+   "type": "image"
+  },
+  "image_background_remover": {
+   "display_name": "Image Background Remover",
+   "job_type": "image_background_remover",
+   "params": [
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    }
+   ],
+   "rules": [
+    {
+     "cel": "size(params.image_references) == 1",
+     "message": "exactly one image_references entry is required"
+    }
+   ],
+   "type": "image"
+  }
+ }
+}

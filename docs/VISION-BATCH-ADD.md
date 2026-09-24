@@ -82,3 +82,30 @@ becomes a habit.
 2. Whether a vision proposal may ever arrive pre-confirmed, or always lands in the table as now.
    Current answer: always the table — a wrong guess burns a number.
 3. Whether to log Anthropic spend, and where.
+
+## Prompt asset extraction — the same idea, for the Prompts page
+
+**Status: parked 2026-09-24, same reason (no Anthropic key yet). The plug-in point is built.**
+
+The Prompts page arranges each row's references into slots by what the prompt names: Characters,
+Locations, Props & vehicles, and so on (`10_PANEL/lib/ref-slots.ts`). What fills those slots is a
+**detector** (`10_PANEL/lib/asset-detect.ts`). Today there is one, `keyword`, which matches words
+against `ENTITIES.csv` names and slug words. It only knows things already in the index.
+
+A model-backed detector would also read the script for things the index does not have yet (a new
+character the scene introduces) and return them as `proposal` slots. Hamed then fills such a slot
+with **Create**, the reference studio, which numbers the new entity only when a result is picked.
+
+To add it:
+
+- Implement `AssetDetector` (`id`, async `detect(prompt, { catalog, recent })` returning
+  `DetectedAsset[]`: kind, entity or proposal, candidates, matched words) and `registerDetector` it.
+  It must run server-side (a server action), since the key cannot reach the browser.
+- Set `"detector": "<id>"` in `10_PANEL/worker/config.json`.
+- `detectAssets` already falls back to `keyword` when a detector throws, so a missing key or a
+  failed call still leaves the page working.
+- Same cost shape as above: the catalog (~3k tokens) is cached across a document's prompts; a
+  prompt is a few hundred tokens in and ~200 out. Log the spend as noted in the open decisions.
+- Today the page calls the keyword detector directly on every keystroke (`detect` in
+  `app/[project]/prompts/prompt-intake.tsx`). A model-backed one needs a debounced async call
+  there, merged with `mergeDetected(..., 'ai')`; the merge already keeps what Hamed placed.

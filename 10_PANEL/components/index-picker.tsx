@@ -32,7 +32,10 @@ export function IndexPicker({
   onPickRef,
   onPickEntity,
   onUpload,
+  initialKind = null,
 }: {
+  /** Open filtered to this kind (a Characters slot opens on CHR); the chips still switch. */
+  initialKind?: string | null
   open: boolean
   mode: PickerMode
   title: string
@@ -61,6 +64,9 @@ export function IndexPicker({
   }, [open, onClose])
 
   const kinds = useMemo(() => [...new Set(catalog.map((e) => e.kind))], [catalog])
+  useEffect(() => {
+    if (open) setKind(initialKind && catalog.some((e) => e.kind === initialKind) ? initialKind : null)
+  }, [open, initialKind, catalog])
 
   const shown = useMemo(() => {
     const q = query.trim().toLowerCase()

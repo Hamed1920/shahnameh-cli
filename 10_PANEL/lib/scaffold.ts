@@ -77,6 +77,11 @@ export async function checkNew(input: Partial<NewProject>): Promise<NewProject> 
   if (existing.some((p) => p.slug === slug)) throw new ProjectInvalid(`There is already a project in the folder "${slug}".`)
   const clash = existing.find((p) => p.code === code)
   if (clash) throw new ProjectInvalid(`${clash.name} already uses the code ${code}. Every project needs its own, so IDs never collide.`)
+  // A folder that is not a project -- typically what is left of a deleted one.
+  // Without this the rename below fails with a bare EPERM on Windows.
+  if (await fs.stat(path.join(projectsDir(), slug)).then(() => true, () => false)) {
+    throw new ProjectInvalid(`There is already a folder called "${slug}" that is not a project, probably left from a deleted one. Remove it, or change the folder name.`)
+  }
 
   // Two graphemes, not two code units: a Persian letter must survive intact.
   const mark = Array.from(String(input.mark ?? '').trim()).slice(0, 2).join('')

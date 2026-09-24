@@ -7,6 +7,7 @@ import {
 import { requireProject } from '@/lib/projects'
 import type { BatchDefaults } from '@/lib/types'
 import { Batches } from './batches'
+import { ModelListStatus } from './model-list-status'
 import { PromptIntake, type IntakeConfig } from './prompt-intake'
 import { PromptLibrary } from './prompt-library'
 
@@ -25,9 +26,9 @@ export default async function PromptsPage({ params }: PageProps<'/[project]/prom
   ])
   const generating = await getGeneratingJobId(pr, new Set((state?.processedJobs ?? []) as string[]))
 
-  const models = (cfg.models as IntakeConfig['models']) ?? { image: [], video: [] }
+  const pinned = (cfg.pinnedModels as string[] | undefined) ?? []
   const defaults: BatchDefaults = {
-    model: String(cfg.defaultVideoModel ?? models.video[0] ?? cfg.defaultImageModel ?? ''),
+    model: String(cfg.defaultVideoModel ?? cfg.defaultImageModel ?? ''),
     aspect_ratio: '16:9',
     duration: Number(cfg.videoDuration ?? 15),
     stage: 'draft',
@@ -35,7 +36,8 @@ export default async function PromptsPage({ params }: PageProps<'/[project]/prom
   }
   const intakeCfg: IntakeConfig = {
     code: pr.code,
-    models,
+    pinned,
+    defaultImageModel: String(cfg.defaultImageModel ?? 'nano_banana_pro'),
     aspectRatios: (cfg.aspectRatios as string[]) ?? ['16:9', '9:16', '1:1'],
     videoDurations: (cfg.videoDurations as number[]) ?? [5, 10, 15],
     videoDraftResolution: String(cfg.videoDraftResolution ?? '480p'),
@@ -45,11 +47,14 @@ export default async function PromptsPage({ params }: PageProps<'/[project]/prom
 
   return (
     <div className="space-y-16">
-      <PageHeader title="Prompts" eyebrow="Generation" meta={<WorkerControls status={worker} generating={generating} compact />}>
-        Paste prompts or drop a document, say which episode the footage belongs to, check where each result is
-        filed and what it references, and send the batch. The worker checks every row and prices it; you approve
-        the total before anything generates. New scenes and new entities get their number when you approve.
-      </PageHeader>
+      <div className="space-y-3">
+        <PageHeader title="Prompts" eyebrow="Generation" meta={<WorkerControls status={worker} generating={generating} compact />}>
+          Paste prompts or drop a document, say which episode the footage belongs to, check where each result is
+          filed and what it references, and send the batch. The worker checks every row and prices it; you approve
+          the total before anything generates. New scenes and new entities get their number when you approve.
+        </PageHeader>
+        <ModelListStatus />
+      </div>
 
       <PromptIntake catalog={catalog} cfg={intakeCfg} knownShots={knownShots} recentRefs={recentRefs} episodes={episodes} />
       <Batches batches={batches} worker={worker} />

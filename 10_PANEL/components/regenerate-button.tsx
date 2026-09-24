@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Coins, RotateCcw } from 'lucide-react'
 import { requestRegenerate } from '@/app/[project]/decided/actions'
 import { useProject } from '@/components/project-context'
-import { GenerationSettings, settingsFrom, type GenerationConfig, type GenerationSettingsValue } from '@/components/generation-settings'
+import { GenerationSettings, setExtra, settingsFrom, type GenerationConfig, type GenerationSettingsValue } from '@/components/generation-settings'
 import { MentionTextarea } from '@/components/mention-textarea'
 import { ReferenceEditor, useMentionOptions, sameRefFor, useReferenceEdits } from '@/components/reference-editor'
 import { Button } from '@/components/ui/button'
@@ -93,6 +93,7 @@ export function RegenerateButton({
       fd.set('duration', duration)
       if (sound) fd.set('sound', 'on')
     }
+    setExtra(fd, model, settings.extra)
     fd.set('note', note)
     const r = await requestRegenerate(fd).catch((e: Error) => ({ ok: false, error: e.message }))
     setBusy(false)

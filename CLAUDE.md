@@ -68,6 +68,12 @@ Run `/project-log` at the start of a session, or read directly:
   scene and records the move in `00_PROJECT/queue/SHOT_MOVES.jsonl`. The Prompts page and Regenerate append to
   `00_PROJECT/review/JOB_REQUESTS.jsonl`; the worker validates and prices, and only after Hamed
   approves the priced batch in the panel does it queue the jobs (`worker/lib/job-requests.mjs`).
+  Files dropped onto a Prompts row travel with the batch (`_uploads/<request id>/`) and are filed
+  when the worker validates it. The **reference studio** is the same channel: `studio.price`,
+  then `studio.approve` (the priced Generate button is the approval), `studio.pick` to file a
+  result, and `studio.close` (`worker/lib/studio.mjs`). A studio try for a new thing carries a
+  proposal and is numbered only at the pick. Pictures dropped into the studio are inputs in
+  `_uploads/<session>/`, never filed.
   Second, **creating a project**: the picker's "start a new project" form copies
   `templates/project/` into a new folder, writes its `project.json` and adds the folder to
   `.gitignore`'s allowlist (`10_PANEL/lib/scaffold.ts`). Creating empty registries is not writing
@@ -85,6 +91,11 @@ Run `/project-log` at the start of a session, or read directly:
 - **Never mark a learning `approved` yourself** — only Hamed does, in the panel. Only approved
   rules reach a prompt.
 - **Never spend credits without pricing first.** `generate cost` before `generate create`.
+- **Models come from the catalogue.** `10_PANEL/worker/MODEL_CATALOG.json` is fetched by the
+  worker from `higgsfield model list` / `model get`; never edit it by hand. Image vs video, the
+  reference limit, and whether references go as a list or a start frame all come from it
+  (`worker/lib/model-schema.mjs`), never from a model's name. Defaults: `seedance_2_5` for video,
+  `nano_banana_pro` for images; `pinnedModels` in `config.json` only orders the pickers.
 - **The spend ceiling is a rolling window, and it is account-wide.** `costCeilingCredits` per
   `costWindowHours` in `10_PANEL/worker/config.json`, summed from **every** project's
   `00_PROJECT/sync/JOB_LEDGER.csv`, because all of them spend from the same Higgsfield account

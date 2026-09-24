@@ -161,9 +161,11 @@ export function nextVariant(assets, entityId, reserved = []) {
   return 'V' + String(used.length ? Math.max(...used) + 1 : 1).padStart(2, '0')
 }
 
-function uploadSource(upload) {
+function uploadSource(upload, { allowStaging = false } = {}) {
   const src = path.resolve(ROOT, String(upload.file || ''))
-  if (!src.startsWith(P.uploads + path.sep)) {
+  // A reference-studio pick files a generated try straight from _staging.
+  const inStaging = allowStaging && src.startsWith(P.staging + path.sep)
+  if (!src.startsWith(P.uploads + path.sep) && !inStaging) {
     throw new FilingError(`${upload.id}: file is not inside 09_OUTPUT/_uploads`)
   }
   const ext = path.extname(src).toLowerCase()
@@ -285,12 +287,26 @@ export function reserveEntity(rows, { kind, slug, name, description, by }) {
  * caller that passes none refuses `groupOf` outright -- only a References batch
  * add groups, and a Review decision must never be able to.
  */
-export async function fileUploadInto(tx, upload, decision, { resolveGroup = null } = {}) {
-  const { src, ext } = uploadSource(upload)
+export async function fileUploadInto(tx, upload, decision, {
+  resolveGroup = null,
+  /** 'higgsfield' for a reference-studio pick: a generation, filed like an upload. */
+  source = 'upload',
+  allowStaging = false,
+  /** File as the next take of this look instead of a new look: a second pick from the same studio try. */
+  takeOf = null,
+  notes = null,
+} = {}) {
+  const { src, ext } = uploadSource(upload, { allowStaging })
 
   let ent
   let variant
-  if (upload.groupOf) {
+  let take = 'T01'
+  if (takeOf) {
+    ent = findEntity(tx.entities, takeOf.entity)
+    if (!ent) throw new FilingError(`${upload.id}: unknown entity '${takeOf.entity}'`)
+    variant = takeOf.variant
+    take = nextTake(tx.assets, ent.id, variant)
+  } else if (upload.groupOf) {
     if (!resolveGroup) throw new FilingError(`${upload.id}: grouped uploads are not allowed here`)
     ent = findEntity(tx.entities, resolveGroup(upload.groupOf) || '')
     if (!ent) throw new FilingError(`${upload.id}: ${upload.groupOf} was not filed`)
@@ -326,7 +342,8 @@ export async function fileUploadInto(tx, upload, decision, { resolveGroup = null
     variant = 'V01'
   }
 
-  const filename = `${ent.id}_${variant}_${descriptorSlug(upload.descriptor)}${ext}`
+  // T01 is implicit in the filename grammar; only later takes carry _T.
+  const filename = `${ent.id}_${variant}${take === 'T01' ? '' : `_${take}`}_${descriptorSlug(upload.descriptor)}${ext}`
   const dest = path.join(ROOT, ent.folder, filename)
 
   if (await exists(dest)) {
@@ -349,19 +366,19 @@ export async function fileUploadInto(tx, upload, decision, { resolveGroup = null
     filename,
     entity_id: ent.id,
     variant,
-    take: 'T01',
+    take,
     role: upload.role,
     status: 'CONCEPT',
     folder: ent.folder,
-    source: 'upload',
+    source,
     original_filename: String(upload.originalName || path.basename(src)),
     added: new Date().toISOString().slice(0, 10),
-    notes: `Uploaded by ${decision.reviewer} on ${decision.id}`,
+    notes: notes ?? `Uploaded by ${decision.reviewer} on ${decision.id}`,
   })
   syncEntityRow(tx.entities.find((r) => r.id === ent.id), tx.assets, variant)
 
-  const token = `@${ent.short_id}/${variant}`
-  await log(`FILED upload ${decision.id}/${upload.id} -> ${ent.folder}/${filename} (${token})`)
+  const token = `@${ent.short_id}/${variant}${take === 'T01' ? '' : `/${take}`}`
+  await log(`FILED ${source === 'upload' ? 'upload' : source} ${decision.id}/${upload.id} -> ${ent.folder}/${filename} (${token})`)
   return { token, entity: ent.id, filename: `${ent.folder}/${filename}` }
 }
 

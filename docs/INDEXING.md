@@ -390,6 +390,14 @@ all the way.
     batch is approved**, not when it is submitted or priced, so a discarded batch burns nothing.
     The row is written exactly as `Ingest-Jobs.ps1` writes it (`RESERVED`, `NO-ASSET`), with
     `Reserved by <batch id>` in the description until a look lands.
+  - The **reference studio** (Prompts-page slot → Create, or References → Create a reference)
+    generates tries for an existing entity or for a proposed new one (kind + English name). A try
+    carries the proposal, never a number. The worker assigns the number **when a result is
+    picked**, so an abandoned session burns nothing. The first pick from a try is a new `_V`
+    (`V01` of a new entity); a second pick from the **same** try is the next `_T` of that look, per
+    §3. The manifest row has `source` = `higgsfield`, `status` = `CONCEPT` and the role chosen
+    at the pick (`HERO` by default). Unpicked results go to `09_OUTPUT/_rejected/` when the
+    session is finished.
 - In Shahnameh, `PRP-010` was hand-assigned in v1.0, leaving `003`–`009` free. They stay free.
   Gaps are not errors.
 

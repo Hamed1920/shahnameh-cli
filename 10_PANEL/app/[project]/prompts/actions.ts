@@ -1,12 +1,17 @@
 'use server'
 
-import { checkRow, isVideoModel, shotRx, toJobInput, type DraftRow, type RowConfig } from '@/lib/batch-rules'
+import { checkRow, shotRx, toJobInput, type DraftRow, type RowConfig } from '@/lib/batch-rules'
+import { checkRefCount, readGenerationForm } from '@/lib/generation-form'
+import { stageResolutionFor } from '@/lib/models'
 import { DOCUMENT_EXT, MAX_DOCUMENTS, MAX_DOCUMENT_BYTES, documentToText } from '@/lib/documents'
 import { REVIEWER, appendJobRequest, newBatchId, newRequestId } from '@/lib/job-requests'
 import { requireProject } from '@/lib/projects'
 import { revalidateProject } from '@/lib/revalidate'
 import { getBatches, getCatalog, getQueue, getWorkerConfig, resolveRefToken } from '@/lib/store'
-import { Invalid, parseJsonArray } from '@/lib/uploads'
+import fs from 'node:fs/promises'
+import path from 'node:path'
+import { MAX_ADD_TOTAL_BYTES, MAX_ADD_UPLOADS } from '@/lib/indexing'
+import { Invalid, parseJsonArray, readUploads, type PendingUpload } from '@/lib/uploads'
 import type { BatchDefaults, BatchJobInput, QueueItem } from '@/lib/types'
 
 /**
@@ -37,6 +42,14 @@ export async function extractDocuments(formData: FormData): Promise<{ ok: boolea
   return { ok: true, files: out }
 }
 
+/** Ask the worker to fetch the Higgsfield model list again. Free: it only reads `model list` / `model get`. */
+export async function refreshModels(project: string): Promise<{ ok: boolean; error?: string }> {
+  const pr = await requireProject(project)
+  await appendJobRequest(pr, { id: newRequestId(), ts: new Date().toISOString(), reviewer: REVIEWER, type: 'models.refresh' })
+  revalidateProject(pr.slug)
+  return { ok: true }
+}
+
 interface SubmitPayload {
   name: string
   defaults: BatchDefaults
@@ -59,7 +72,7 @@ export async function submitBatch(formData: FormData): Promise<{ ok: boolean; ba
   if (payload.rows.length > 200) return { ok: false, error: 'At most 200 prompts in one batch.' }
 
   const [catalog, cfg] = await Promise.all([getCatalog(pr), getWorkerConfig()])
-  const rowCfg: RowConfig = { code: pr.code, models: (cfg.models as RowConfig['models']) ?? { image: [], video: [] } }
+  const rowCfg: RowConfig = { code: pr.code, pinned: (cfg.pinnedModels as string[] | undefined) ?? [] }
   const rowErrors: Record<string, string[]> = {}
   for (const row of payload.rows) {
     const problems = checkRow(row, catalog, payload.rows, payload.defaults, rowCfg)
@@ -73,10 +86,33 @@ export async function submitBatch(formData: FormData): Promise<{ ok: boolean; ba
     return prefix ? { ...job, prompt: `${prefix}\n\n${job.prompt}` } : job
   })
 
-  const batchId = newBatchId()
+  // Files added to rows: checked like any upload, and every one a row names must have arrived.
+  const requestId = newRequestId()
+  let uploads: PendingUpload[] = []
   try {
+    uploads = await readUploads(pr, formData, requestId, { max: MAX_ADD_UPLOADS, maxTotalBytes: MAX_ADD_TOTAL_BYTES })
+    const ids = new Set(uploads.map((u) => u.meta.id))
+    for (const job of jobs) {
+      for (const t of job.refs) {
+        if (t.startsWith('upload:') && !ids.has(t.slice(7))) throw new Invalid(`${job.label || job.key}: the file ${t} did not arrive. Add it again.`)
+      }
+    }
+  } catch (e) {
+    if (e instanceof Invalid) return { ok: false, error: e.message }
+    throw e
+  }
+
+  const batchId = newBatchId()
+  // Files first, request second: the worker must never see a request whose upload is not on disk.
+  const dir = path.join(pr.P.uploads, requestId)
+  try {
+    if (uploads.length) {
+      await fs.mkdir(dir, { recursive: true })
+      for (const u of uploads) await fs.writeFile(path.join(pr.root, u.meta.file), u.bytes)
+    }
     await appendJobRequest(pr, {
-      id: newRequestId(),
+      id: requestId,
+      ...(uploads.length && { uploads: uploads.map((u) => u.meta) }),
       ts: new Date().toISOString(),
       reviewer: REVIEWER,
       type: 'batch.submit',
@@ -87,6 +123,7 @@ export async function submitBatch(formData: FormData): Promise<{ ok: boolean; ba
       jobs,
     })
   } catch (e) {
+    await fs.rm(dir, { recursive: true, force: true })
     return { ok: false, error: `Could not save the batch: ${(e as Error).message}` }
   }
   revalidateProject(pr.slug)
@@ -117,36 +154,31 @@ export async function generateFromPrompt(formData: FormData): Promise<{ ok: bool
     const prompt = String(formData.get('prompt') ?? '').trim()
     if (!prompt) throw new Invalid('The prompt cannot be empty.')
 
-    const models = (cfg.models as { image?: string[]; video?: string[] } | undefined) ?? {}
-    const known = [...(models.image ?? []), ...(models.video ?? [])]
-    const model = String(formData.get('model') ?? '').trim()
-    if (!model) throw new Invalid('Choose a model.')
-    if (known.length && !known.includes(model)) throw new Invalid(`Model ${model} is not in the worker's list.`)
+    const form = readGenerationForm(formData, cfg)
+    const model = form.model
 
     const variant = String(formData.get('variant') ?? '').trim().toUpperCase()
     if (variant && !/^V\d{2}$/.test(variant)) throw new Invalid('A look is V01, V02, ...')
 
     const refs = (parseJsonArray(formData, 'refs') ?? []).map((r) => String(r ?? '').trim()).filter(Boolean)
-    if (refs.length > 12) throw new Invalid('At most 12 references.')
+    checkRefCount(model, new Set(refs).size)
     for (const token of refs) {
       if (!token.startsWith('@') || !(await resolveRefToken(pr, token))) throw new Invalid(`Reference ${token} does not resolve to a file in the index.`)
     }
 
-    const aspect = String(formData.get('aspect_ratio') ?? '').trim() || '16:9'
-    const allowed = (cfg.aspectRatios as string[] | undefined) ?? []
-    if (allowed.length && !allowed.includes(aspect)) throw new Invalid(`Aspect ratio ${aspect} is not in the worker's list.`)
-
-    const video = isVideoModel(model)
-    const stage = formData.get('stage') === 'final' ? 'final' : 'draft'
-    const duration = Number(formData.get('duration') ?? '') || Number(cfg.videoDuration ?? 15)
-    const sound = formData.get('sound') === 'on'
-    const params: BatchJobInput['params'] = { aspect_ratio: aspect }
+    const video = form.video
+    const aspect = String(form.params.aspect_ratio ?? '16:9')
+    const stage = form.stage ?? 'draft'
+    const duration = Number(form.params.duration ?? '') || Number(cfg.videoDuration ?? 15)
+    const sound = form.sound ?? false
+    const params: BatchJobInput['params'] = { ...form.params, aspect_ratio: aspect }
     if (video) {
-      params.duration = duration
-      params.generate_audio = sound
+      if (form.sound !== null) params.generate_audio = sound
       // Stated outright: a final queued as a batch row would otherwise get the model's own default.
-      const resolution = stage === 'final' ? cfg.videoFinalResolution : cfg.videoDraftResolution
-      if (resolution) params.resolution = String(resolution)
+      const resolution = form.stage ? stageResolutionFor(model, stage, {
+        videoDraftResolution: String(cfg.videoDraftResolution), videoFinalResolution: String(cfg.videoFinalResolution),
+      }) : null
+      if (resolution) params.resolution = resolution
     }
 
     job = {
@@ -155,7 +187,7 @@ export async function generateFromPrompt(formData: FormData): Promise<{ ok: bool
       target,
       variant: variant || null,
       model,
-      stage: video ? stage : null,
+      stage: form.stage,
       refs: [...new Set(refs)],
       params,
       prompt,

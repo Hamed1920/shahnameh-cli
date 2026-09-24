@@ -5,12 +5,17 @@ import { IndexPicker } from '@/components/index-picker'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Field, Input, Select } from '@/components/ui/field'
-import { isVideoModel, priceKey } from '@/lib/batch-rules'
+import { ModelPicker } from '@/components/model-picker'
+import { priceKey } from '@/lib/batch-rules'
 import { cn } from '@/lib/cn'
+import {
+  aspectRatiosFor, durationsFor, extraParams, hasDraft, hasSound, isVideoModel, stageResolutionFor, type ModelParam,
+} from '@/lib/models'
 import type { CatalogEntity } from '@/lib/types'
 
 export interface GenerationConfig {
-  models: { image: string[]; video: string[] }
+  /** Shown first in the model picker (worker/config.json pinnedModels). */
+  pinned: string[]
   aspectRatios: string[]
   videoDurations: number[]
   /** What a draft and a final actually render at, from the worker's config. */
@@ -27,6 +32,87 @@ export interface GenerationSettingsValue {
   stage: 'draft' | 'final'
   duration: string
   sound: boolean
+  /** The model's own settings (Kling's mode, Nano Banana's resolution, ...), as strings. */
+  extra: Record<string, string>
+}
+
+/** The model settings a job carries, for the fields this model shows. */
+export function extraFrom(model: string, params: Record<string, unknown> | undefined): Record<string, string> {
+  const out: Record<string, string> = {}
+  for (const p of extraParams(model)) {
+    const v = params?.[p.name]
+    if (v !== undefined && v !== null && v !== '') out[p.name] = String(v)
+  }
+  return out
+}
+
+/** Only the settings the chosen model has; a switch of model drops the rest. */
+export function extraFor(model: string, extra: Record<string, string>): Record<string, string> {
+  const names = new Set(extraParams(model).map((p) => p.name))
+  return Object.fromEntries(Object.entries(extra).filter(([k, v]) => names.has(k) && v !== ''))
+}
+
+/** Put the settings on a form as JSON, read back by readGenerationForm (lib/generation-form.ts). */
+export function setExtra(fd: FormData, model: string, extra: Record<string, string>) {
+  const e = extraFor(model, extra)
+  if (Object.keys(e).length) fd.set('extra', JSON.stringify(e))
+}
+
+/**
+ * A field for each setting the model has beyond aspect, duration, quality and
+ * sound, drawn from its schema: a list as a dropdown, a number as a number,
+ * a yes/no as a checkbox. Empty means the model's own default.
+ */
+export function ModelParamFields({ model, value, onChange }: {
+  model: string
+  value: Record<string, string>
+  onChange: (next: Record<string, string>) => void
+}) {
+  const params = extraParams(model)
+  if (params.length === 0) return null
+  const set = (name: string, v: string) => onChange({ ...value, [name]: v })
+  const title = (p: ModelParam) => p.name.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase())
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      {params.map((p) => {
+        const current = value[p.name] ?? ''
+        if (p.enum) {
+          return (
+            <Field key={p.name} label={title(p)}>
+              <Select value={current} onChange={(e) => set(p.name, e.target.value)}>
+                <option value="">{`Default${p.default != null ? ` (${p.default})` : ''}`}</option>
+                {p.enum.map((v) => <option key={String(v)} value={String(v)}>{String(v)}</option>)}
+              </Select>
+            </Field>
+          )
+        }
+        if (p.type.startsWith('boolean')) {
+          return (
+            <div key={p.name} className="flex items-end pb-2">
+              <Checkbox
+                checked={current === '' ? p.default === true : current === 'true'}
+                onChange={(e) => set(p.name, e.target.checked ? 'true' : 'false')}
+                label={title(p)}
+              />
+            </div>
+          )
+        }
+        const numeric = /integer|number/.test(p.type)
+        return (
+          <Field key={p.name} label={title(p)}>
+            <Input
+              dir="ltr"
+              inputMode={numeric ? 'decimal' : undefined}
+              value={current}
+              placeholder={p.default === null || p.default === undefined ? 'model default' : `default ${p.default}`}
+              onChange={(e) => set(p.name, numeric ? e.target.value.replace(/[^\d.-]/g, '') : e.target.value)}
+              className="font-mono"
+            />
+          </Field>
+        )
+      })}
+    </div>
+  )
 }
 
 /** Settings as a queued job carries them, with the config's first choices where the job is silent. */
@@ -42,6 +128,7 @@ export function settingsFrom(
     stage: job?.stage ?? 'draft',
     duration: String(job?.params?.duration ?? cfg.videoDurations[0] ?? 15),
     sound: job ? String(job.params?.generate_audio) !== 'false' : true,
+    extra: extraFrom(job?.model ?? '', job?.params),
   }
 }
 
@@ -69,8 +156,8 @@ function QualityToggle({
   prices?: Record<string, number>
 }) {
   const options = [
-    { stage: 'draft' as const, label: 'Draft', resolution: cfg.videoDraftResolution },
-    { stage: 'final' as const, label: 'Final', resolution: cfg.videoFinalResolution },
+    { stage: 'draft' as const, label: 'Draft', resolution: stageResolutionFor(model, 'draft', cfg) ?? cfg.videoDraftResolution },
+    { stage: 'final' as const, label: 'Final', resolution: stageResolutionFor(model, 'final', cfg) ?? cfg.videoFinalResolution },
   ]
   return (
     <div className="space-y-1.5">
@@ -102,7 +189,7 @@ function QualityToggle({
         })}
       </div>
       <p className="text-[11.5px] leading-relaxed text-faint">
-        A draft you accept is re-run at {cfg.videoFinalResolution} on its own, so the final is only paid for once it is
+        A draft you accept is re-run at {options[1].resolution} on its own, so the final is only paid for once it is
         worth having.
       </p>
     </div>
@@ -129,7 +216,9 @@ export function GenerationSettings({
   /** False where the dialog shows references itself, as thumbnails (Regenerate). */
   showRefs?: boolean
 }) {
-  const { refs, model, variant, aspect, stage, duration, sound } = value
+  const { refs, model, variant, aspect, stage, duration, sound, extra } = value
+  const aspects = aspectRatiosFor(model, cfg.aspectRatios)
+  const durations = durationsFor(model, cfg.videoDurations)
   const refName = (token: string) => {
     const [id, v] = token.replace(/^@/, '').split('/')
     const e = catalog.find((x) => x.id === id || x.shortId === id)
@@ -166,11 +255,15 @@ export function GenerationSettings({
       </>)}
 
       <Field label="Model">
-        <Select value={model} onChange={(e) => onChange({ model: e.target.value })}>
-          <optgroup label="Video">{cfg.models.video.map((m) => <option key={m} value={m}>{m}</option>)}</optgroup>
-          <optgroup label="Image">{cfg.models.image.map((m) => <option key={m} value={m}>{m}</option>)}</optgroup>
-          {model && !cfg.models.video.includes(model) && !cfg.models.image.includes(model) && <option value={model}>{model}</option>}
-        </Select>
+        <ModelPicker
+          value={model}
+          pinned={cfg.pinned}
+          onChange={(m) => {
+            // Keep the aspect ratio when the new model takes it, else its first one.
+            const a = aspectRatiosFor(m, cfg.aspectRatios)
+            onChange({ model: m, aspect: a.includes(aspect) ? aspect : a[0] ?? aspect, extra: extraFor(m, extra) })
+          }}
+        />
       </Field>
       <div className="grid grid-cols-2 gap-3">
         <Field label="Look">
@@ -178,31 +271,36 @@ export function GenerationSettings({
         </Field>
         <Field label="Aspect ratio">
           <Select value={aspect} onChange={(e) => onChange({ aspect: e.target.value })}>
-            {cfg.aspectRatios.map((a) => <option key={a} value={a}>{a}</option>)}
-            {!cfg.aspectRatios.includes(aspect) && <option value={aspect}>{aspect}</option>}
+            {aspects.map((a) => <option key={a} value={a}>{a}</option>)}
+            {!aspects.includes(aspect) && <option value={aspect}>{aspect}</option>}
           </Select>
         </Field>
       </div>
       {isVideoModel(model) && (
         <>
-          <QualityToggle
-            value={stage}
-            onChange={(stage) => onChange({ stage })}
-            cfg={cfg}
-            model={model}
-            duration={duration}
-            sound={sound}
-            prices={prices}
-          />
-          <Field label="Duration">
-            <Select value={duration} onChange={(e) => onChange({ duration: e.target.value })}>
-              {cfg.videoDurations.map((d) => <option key={d} value={String(d)}>{d} s</option>)}
-              {!cfg.videoDurations.map(String).includes(duration) && <option value={duration}>{duration} s</option>}
-            </Select>
-          </Field>
-          <Checkbox checked={sound} onChange={(e) => onChange({ sound: e.target.checked })} label="Sound" />
+          {hasDraft(model) && (
+            <QualityToggle
+              value={stage}
+              onChange={(stage) => onChange({ stage })}
+              cfg={cfg}
+              model={model}
+              duration={duration}
+              sound={sound}
+              prices={prices}
+            />
+          )}
+          {durations && (
+            <Field label="Duration">
+              <Select value={duration} onChange={(e) => onChange({ duration: e.target.value })}>
+                {durations.map((d) => <option key={d} value={String(d)}>{d} s</option>)}
+                {!durations.map(String).includes(duration) && <option value={duration}>{duration} s</option>}
+              </Select>
+            </Field>
+          )}
+          {hasSound(model) && <Checkbox checked={sound} onChange={(e) => onChange({ sound: e.target.checked })} label="Sound" />}
         </>
       )}
+      <ModelParamFields model={model} value={extra} onChange={(next) => onChange({ extra: next })} />
     </div>
   )
 }

@@ -171,6 +171,14 @@ export interface QueueItem {
   refs: string[]
   enqueuedAt: string
   enqueuedBy: string
+  /**
+   * A reference-studio try (worker/lib/studio.mjs). Its `target` is empty
+   * (the empty string here, null in the file) when it is for a new thing, which is
+   * numbered only when a result is picked.
+   */
+  studio?: { sessionId: string; genId: string; proposal?: { kind: string; name: string; description?: string } }
+  /** Runs ahead of batch work: someone is waiting on it in an open dialog. */
+  priority?: boolean
 }
 
 /** A prompt reference token paired with the asset it resolved to, if any. */
@@ -390,6 +398,8 @@ export interface BatchDefaults {
   duration: number
   stage: 'draft' | 'final'
   generate_audio: boolean
+  /** The default model's own settings (Kling's mode, ...), for rows that use that model. */
+  extra?: Record<string, string>
 }
 
 /** One row of a submitted batch, as the worker validates it. `target` may be `NEW/KIND/SLUG`. */
@@ -422,6 +432,12 @@ export type JobRequest =
       source: { kind: 'paste' | 'files' | 'library'; files: string[] }
       defaults: BatchDefaults
       jobs: BatchJobInput[]
+      /**
+       * Files added on the Prompts page. Rows name them as `upload:<id>`; the
+       * worker files them into the index when it validates the batch and swaps
+       * each placeholder for the token it was filed as.
+       */
+      uploads?: ReviewUpload[]
     })
   | (JobRequestBase & { type: 'batch.approve'; batchId: string; expectedTotal: number | null })
   | (JobRequestBase & { type: 'batch.discard'; batchId: string })
@@ -442,6 +458,37 @@ export type JobRequest =
       /** Images added in the dialog. The worker files them before it queues anything. */
       uploads?: ReviewUpload[]
     })
+  /** Fetch the Higgsfield model list again (worker/lib/models.mjs). */
+  | (JobRequestBase & { type: 'models.refresh' })
+  // The reference studio (worker/lib/studio.mjs).
+  | (JobRequestBase & {
+      type: 'studio.price'
+      sessionId: string
+      genId: string
+      /** An existing entity (the pick becomes a new look of it)... */
+      target?: { entity: string }
+      /** ...or a new thing, numbered only when a result is picked. */
+      proposal?: StudioProposal
+      model: string
+      prompt: string
+      /** @-tokens, `studio:<session>/uN` (a file dropped in), `staged:<hfJobId>/Tnn` (an earlier try). */
+      refs: string[]
+      params: Record<string, string | number | boolean>
+      count: number
+    })
+  | (JobRequestBase & { type: 'studio.approve'; sessionId: string; genId: string; expectedTotal: number | null })
+  | (JobRequestBase & {
+      type: 'studio.pick'
+      sessionId: string
+      hfJobId: string
+      take: string
+      fileAs: { mode: 'variant'; entity: string } | ({ mode: 'new' } & StudioProposal)
+      role: string
+      descriptor: string
+    })
+  | (JobRequestBase & { type: 'studio.close'; sessionId: string })
+
+export interface StudioProposal { kind: string; name: string; description?: string }
 
 export type JobRequestType = JobRequest['type']
 
@@ -454,6 +501,13 @@ export type JobRequestEvent = { batchId?: string | null; reqId?: string; ts: str
   | { event: 'queued'; jobIds: Record<string, string>; assigned: { key: string; proposal: string; id: string; shortId: string }[]; total: number | null; ceilingNote?: string }
   | { event: 'discarded' }
   | { event: 'error'; reason: string }
+  | { event: 'models'; count: number; usable: number }
+  | { event: 'studio.received'; sessionId: string; genId: string }
+  | { event: 'studio.priced'; sessionId: string; genId: string; credits: number | null; count: number; total: number | null }
+  | { event: 'studio.error'; sessionId: string; genId: string; reason: string }
+  | { event: 'studio.queued'; sessionId: string; genId: string; jobIds: string[]; total: number | null }
+  | { event: 'studio.picked'; sessionId: string; hfJobId: string; take: string; token: string; entity: string }
+  | { event: 'studio.closed'; sessionId: string; putAway: number }
 )
 
 export type BatchStatus = 'received' | 'validated' | 'pricing' | 'priced' | 'approving' | 'queued' | 'discarded' | 'rejected'

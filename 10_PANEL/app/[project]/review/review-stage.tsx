@@ -15,6 +15,7 @@ import { Field, Input } from '@/components/ui/field'
 import { EASE, SPRING_SNAPPY } from '@/components/ui/motion-tokens'
 import { Badge } from '@/components/ui/text'
 import { isVideo } from '@/lib/asset'
+import { hasSound } from '@/lib/models'
 import { useAssetUrls, useProject } from '@/components/project-context'
 import { cn } from '@/lib/cn'
 import type { AttemptEntry, CatalogEntity, ReviewItem, Verdict } from '@/lib/types'
@@ -94,7 +95,8 @@ export function ReviewStage({
   // Sound is on by default for whatever this decision queues, whatever this take had.
   const [sound, setSound] = useState(true)
   const [error, setError] = useState<string | null>(candidate.failedDecision?.reason ?? null)
-  const isVideoJob = /^(seedance|kling|veo|wan|hailuo|grok_video)/.test(s.model)
+  // A video model with a sound setting: the only kind where "silent" and the Sound choice mean anything.
+  const isVideoJob = hasSound(s.model)
   const wasSilent = String(s.params?.generate_audio) === 'false'
   const [checking, setChecking] = useState(false)
   const [comparing, setComparing] = useState<AttemptEntry | null>(null)

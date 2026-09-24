@@ -2,7 +2,7 @@
 
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { isVideoModel } from '@/lib/batch-rules'
+import { checkRefCount, readGenerationForm } from '@/lib/generation-form'
 import { REVIEWER, appendJobRequest, newRequestId } from '@/lib/job-requests'
 import { requireProject } from '@/lib/projects'
 import { revalidateProject } from '@/lib/revalidate'
@@ -50,7 +50,8 @@ export async function requestRegenerate(formData: FormData): Promise<{ ok: boole
     if (uploads.length) req.uploads = uploads.map((u) => u.meta)
 
     const refs = (parseJsonArray(formData, 'refs') ?? []).map((r) => String(r ?? '').trim()).filter(Boolean)
-    if (refs.length > 12) throw new Invalid('At most 12 references.')
+    const form = readGenerationForm(formData, cfg)
+    checkRefCount(form.model, new Set(refs).size)
     const resolve = await referenceResolver(pr)
     for (const token of refs) {
       if (token.startsWith('upload:')) {
@@ -68,32 +69,15 @@ export async function requestRegenerate(formData: FormData): Promise<{ ok: boole
       if (!uploadIds.has(m[1])) throw new Invalid(`${m[0]} is not one of the images added here.`)
     }
 
-    const models = (cfg.models as { image?: string[]; video?: string[] } | undefined) ?? {}
-    const known = [...(models.image ?? []), ...(models.video ?? [])]
-    const model = String(formData.get('model') ?? '').trim()
-    if (!model) throw new Invalid('Choose a model.')
-    if (known.length && !known.includes(model)) throw new Invalid(`Model ${model} is not in the worker's list.`)
-    req.model = model
+    req.model = form.model
 
     const variant = String(formData.get('variant') ?? '').trim().toUpperCase()
     if (variant && !/^V\d{2}$/.test(variant)) throw new Invalid('A look is V01, V02, ...')
     if (variant) req.variant = variant
 
-    const params: Record<string, string | number | boolean> = {}
-    const aspect = String(formData.get('aspect_ratio') ?? '').trim()
-    if (aspect) {
-      const allowed = (cfg.aspectRatios as string[] | undefined) ?? []
-      if (allowed.length && !allowed.includes(aspect)) throw new Invalid(`Aspect ratio ${aspect} is not in the worker's list.`)
-      params.aspect_ratio = aspect
-    }
-    if (isVideoModel(model)) {
-      const stage = String(formData.get('stage') ?? '')
-      if (stage === 'draft' || stage === 'final') req.stage = stage
-      const duration = Number(formData.get('duration') ?? '')
-      if (Number.isFinite(duration) && duration > 0) params.duration = duration
-      req.sound = formData.get('sound') === 'on'
-    }
-    if (Object.keys(params).length) req.params = params
+    if (form.stage) req.stage = form.stage
+    if (form.sound !== null) req.sound = form.sound
+    if (Object.keys(form.params).length) req.params = form.params
   } catch (e) {
     if (e instanceof Invalid) return { ok: false, error: e.message }
     throw e

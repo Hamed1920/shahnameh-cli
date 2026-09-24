@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Check, Coins, LoaderCircle, Search, Sparkles } from 'lucide-react'
 import { approveBatch, generateFromPrompt } from './actions'
 import { useProject } from '@/components/project-context'
-import { GenerationSettings, settingsFrom, type GenerationConfig, type GenerationSettingsValue } from '@/components/generation-settings'
+import { GenerationSettings, setExtra, settingsFrom, type GenerationConfig, type GenerationSettingsValue } from '@/components/generation-settings'
 import { Button } from '@/components/ui/button'
 import { EmptyState } from '@/components/ui/card'
 import { Disclosure } from '@/components/ui/disclosure'
@@ -179,6 +179,7 @@ function GenerateDialog({
       fd.set('duration', settings.duration)
       if (settings.sound) fd.set('sound', 'on')
     }
+    setExtra(fd, settings.model, settings.extra)
     const r = await generateFromPrompt(fd).catch((e: Error) => ({ ok: false, error: e.message, batchId: undefined }))
     setBusy(false)
     if (!r.ok || !r.batchId) { setError(r.error ?? 'Could not send that.'); return }

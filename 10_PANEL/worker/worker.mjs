@@ -31,8 +31,10 @@ import { estimateCost, extractJobId, extractResultUrls, hfJson, isAuthenticated,
 import { FilingError, checkUploads, fileUpload, promote, reject } from './lib/promote.mjs'
 import { runIndexOps } from './lib/index-ops.mjs'
 import { planJob } from './lib/plan.mjs'
-import { isVideoModel } from './lib/batch.mjs'
-import { configure as configureRequests, priceBatches, runJobRequests } from './lib/job-requests.mjs'
+import { isVideoModel, stageResolution } from './lib/batch.mjs'
+import { soundOf } from './lib/model-schema.mjs'
+import { ensureFreshCatalog } from './lib/models.mjs'
+import { configure as configureRequests, priceBatches, priceStudioTries, runJobRequests } from './lib/job-requests.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const argv = process.argv.slice(2)
@@ -63,6 +65,22 @@ async function stopNow(where) {
   await fs.rm(P.stopFlag, { force: true })
   await log(`worker stopping: panel request (${where})`)
   if (state) await writeState(state)
+  await releaseGenerateLock()
+  await releaseLock()
+  process.exit(0)
+}
+
+/**
+ * The project was deleted under this worker. Stop without writing anything:
+ * state or a log line would recreate files in a folder being removed, and the
+ * open handles are what make Windows refuse to delete it, leaving a husk that
+ * blocks a new project of the same name.
+ */
+async function projectGone() {
+  try { await fs.access(path.join(ROOT, 'project.json')); return false } catch { return true }
+}
+async function exitGone() {
+  console.error(`project.json is gone from ${ROOT}; worker exiting`)
   await releaseGenerateLock()
   await releaseLock()
   process.exit(0)
@@ -144,7 +162,10 @@ async function drainQueue(state) {
   const done = new Set(state.processedJobs)
   // Holds for jobs that are no longer pending (processed, or gone) are stale.
   for (const id of Object.keys(state.held ?? {})) if (done.has(id) || !queue.some((q) => q.jobId === id)) unhold(state, id)
-  const pending = queue.filter((q) => !done.has(q.jobId)).slice(0, cfg.maxJobsPerRun)
+  // Reference-studio tries go first: Hamed is waiting on them in an open dialog.
+  // They pass the same price, lock and ceiling checks as everything else.
+  const waiting = queue.filter((q) => !done.has(q.jobId))
+  const pending = [...waiting.filter((q) => q.priority), ...waiting.filter((q) => !q.priority)].slice(0, cfg.maxJobsPerRun)
   if (pending.length === 0) return 0
 
   if (!DRY && !(await isAuthenticated())) {
@@ -171,7 +192,9 @@ async function drainQueue(state) {
       state.processedJobs.push(job.jobId)
       continue
     }
-    const { shot, entity, targetId, refPaths, prompt, model, params } = plan
+    const { shot, entity, targetId, refPaths, prompt, model, params, entry } = plan
+    // Sound as the model took it (generate_audio, or Kling's sound on|off); undefined for images.
+    const sound = isVideoModel(model) ? soundOf(entry, params) : undefined
 
     const { credits } = await estimateCost(model, params)
     await log(`COST ${job.jobId} ${model} = ${credits ?? 'unknown'} credits`)
@@ -202,7 +225,7 @@ async function drainQueue(state) {
       dryTotal.jobs++
       if (credits != null) dryTotal.credits += credits
       else dryTotal.unpriced++
-      await log(`DRY-RUN would generate ${job.jobId} -> ${targetId} ${job.variant} (${model}) refs=${refPaths.length}${isVideoModel(model) ? ` sound=${params.generate_audio}` : ''}`)
+      await log(`DRY-RUN would generate ${job.jobId} -> ${targetId} ${job.variant} (${model}) refs=${refPaths.length}${sound !== undefined ? ` sound=${sound}` : ''}`)
       continue
     }
 
@@ -211,14 +234,14 @@ async function drainQueue(state) {
       ...paramsToArgs(params),
       '--wait', '--wait-timeout', cfg.waitTimeout, '--wait-interval', cfg.waitInterval,
     ]
-    await log(`GENERATE ${job.jobId} ${targetId} ${job.variant} model=${model}${isVideoModel(model) ? ` sound=${params.generate_audio}` : ''}`)
+    await log(`GENERATE ${job.jobId} ${targetId} ${job.variant} model=${model}${sound !== undefined ? ` sound=${sound}` : ''}`)
     const res = await hfJson(args, { timeoutMs: 25 * 60_000 })
 
     if (res.code !== 0) {
       await log(`FAIL ${job.jobId}: exit ${res.code} ${res.stderr.trim().slice(0, 400)}`)
       await ledgerAppend({
         job_id: job.jobId, content_hash: '', author: job.enqueuedBy, type: ledgerType(model),
-        target: job.target, resolved_target: targetId, variant: job.variant, engine: 'higgsfield',
+        target: job.target ?? '', resolved_target: targetId, variant: job.variant ?? '', engine: 'higgsfield',
         state: 'FAILED', ingested: new Date().toISOString(), source_file: 'queue',
         parent_job_id: job.parentJobId ?? '', hf_job_id: '', attempt: String(job.attempt ?? 1),
         cost: String(credits ?? ''),
@@ -258,7 +281,9 @@ async function drainQueue(state) {
     // The sidecar keeps the normalised params (a real boolean for sound), so a
     // revision or final inherits what was actually sent.
     const sentParams = { ...(job.params ?? {}) }
-    if (isVideoModel(model)) sentParams.generate_audio = params.generate_audio
+    // Kept as generate_audio whatever the model calls it: that is the job's intent, which planJob maps.
+    if (sound !== undefined) sentParams.generate_audio = sound
+    else delete sentParams.generate_audio
 
     await fs.writeFile(path.join(dir, 'job.json'), JSON.stringify({
       jobId: job.jobId,
@@ -269,8 +294,10 @@ async function drainQueue(state) {
       label: job.label ?? null,
       target: targetId,
       isShot: Boolean(shot),
-      outputFolder: shot ? await shotFolder(shot) : entity.folder,
-      variant: job.variant || entity.canonical_variant || 'V01',
+      outputFolder: shot ? await shotFolder(shot) : entity?.folder ?? null,
+      variant: job.variant || entity?.canonical_variant || 'V01',
+      // A reference-studio try: decided in the studio, not on the Review page.
+      ...(job.studio && { studio: job.studio }),
       model,
       prompt,
       // The un-augmented prompt and the notes so far. Revisions rebuild from
@@ -287,7 +314,7 @@ async function drainQueue(state) {
 
     await ledgerAppend({
       job_id: job.jobId, content_hash: '', author: job.enqueuedBy, type: ledgerType(model),
-      target: job.target, resolved_target: targetId, variant: job.variant, engine: 'higgsfield',
+      target: job.target ?? '', resolved_target: targetId, variant: job.variant ?? '', engine: 'higgsfield',
       state: 'GENERATED', ingested: new Date().toISOString(), source_file: 'queue',
       parent_job_id: job.parentJobId ?? '', hf_job_id: hfJobId,
       attempt: String(job.attempt ?? 1), cost: String(credits ?? ''),
@@ -457,7 +484,8 @@ function paramsFor(decision, sidecar) {
 async function enqueueFinal(decision, sidecar, refs) {
   const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, '')
   const jobId = `J-${stamp}-${Math.random().toString(36).slice(2, 5).toUpperCase()}`
-  const params = { ...paramsFor(decision, sidecar), resolution: cfg.videoFinalResolution }
+  const finalRes = stageResolution(sidecar.model, 'final', cfg)
+  const params = { ...paramsFor(decision, sidecar), ...(finalRes && { resolution: finalRes }) }
 
   await appendJsonl(P.queue, {
     jobId,
@@ -476,7 +504,7 @@ async function enqueueFinal(decision, sidecar, refs) {
     enqueuedAt: new Date().toISOString(),
     enqueuedBy: 'worker:final',
   })
-  await log(`FINAL QUEUED ${sidecar.jobId} -> ${jobId} at ${cfg.videoFinalResolution}${'generate_audio' in params ? ` sound=${params.generate_audio}` : ''}`)
+  await log(`FINAL QUEUED ${sidecar.jobId} -> ${jobId} at ${finalRes ?? 'its own resolution'}${'generate_audio' in params ? ` sound=${params.generate_audio}` : ''}`)
 }
 
 async function enqueueRevision(decision, sidecar, entities, refs, uploadTokens = {}) {
@@ -561,6 +589,7 @@ async function applyJobRequests() {
   const n = await exclusive(() => runJobRequests(state, { dry: DRY }))
   if (n) await writeState(state)
   await priceBatches(state, { dry: DRY, exclusive })
+  await priceStudioTries(state, { exclusive })
   return n
 }
 
@@ -622,6 +651,9 @@ async function main() {
     await fs.rm(P.stopFlag, { force: true })
     await log(`worker started (project=${PROJECT.slug} code=${PROJECT.code} once=${ONCE} dryRun=${DRY} root=${ROOT})`)
     state = await readState()
+    // The model list, once a day. A failure keeps the old list; it never stops the worker.
+    const cat = await ensureFreshCatalog({ log })
+    if (!cat.ok) await log(`MODELS not refreshed: ${cat.error}`)
 
     if (ONCE) { await pass(); return }
     if (!DRY) {
@@ -629,6 +661,7 @@ async function main() {
       watch('JOB REQUESTS', applyJobRequests)
     }
     for (;;) {
+      if (await projectGone()) await exitGone()
       try { await pass() } catch (e) { await log(`PASS ERROR: ${e.stack ?? e.message}`) }
       if (await stopRequested()) await stopNow('idle')
       await new Promise((r) => setTimeout(r, cfg.pollSeconds * 1000))

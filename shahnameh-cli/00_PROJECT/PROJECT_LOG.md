@@ -55,6 +55,28 @@ Open decisions live in [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md) — 8 outstanding.
 
 ## Log
 
+### 2026-09-24 — Every Higgsfield model, references in slots, and a reference studio
+
+System change (10_PANEL); no Shahnameh asset or registry row was touched.
+
+- **All image and video models are selectable.** The worker now fetches the Higgsfield catalogue
+  (`10_PANEL/worker/MODEL_CATALOG.json`: 68 models, 47 usable from a prompt). Pickers can be
+  searched, with Seedance and Nano Banana pinned at the top. Defaults are unchanged:
+  `seedance_2_5` / `nano_banana_pro`. Each model's own settings, aspect ratios, durations and
+  reference limit come from its schema. Kling and Veo get their reference as a start frame,
+  and Kling gets `sound on|off`. Mapping checked with free `generate cost` calls on the real CLI
+  for Seedance 2.5, Kling 3.0, Veo 3.1, Nano Banana Pro and Seedream 5 Pro.
+- **Prompts page references are arranged by what the prompt names:** a slot per character,
+  location, prop and so on, plus a tray for anything else. Everything drags between slots and
+  the tray, files can be uploaded from the computer, and a slot's **Create** opens the studio.
+  Slots only guide; none has to be filled.
+- **Reference studio** (slot → Create, or References → Create a reference): describe a picture,
+  add references, generate with Nano Banana (or any image model), iterate, pick. Every Generate
+  is priced first. A new entity is numbered only when a result is picked.
+- Q8 (default models) answered.
+- **Before using any of this, restart this project's worker** (Queue page: stop, then start). A
+  worker started before this change refuses the new request types.
+
 ### 2026-09-18 — A shot's whole history, and episodes you can build by hand
 
 **"2 takes" is now a door.** Clicking the count on a shot opens its history: every output that shot
