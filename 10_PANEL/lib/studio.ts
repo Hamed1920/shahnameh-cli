@@ -74,6 +74,8 @@ export function foldStudio(
     generating: string | null
     /** hfJobId per job id, from the ledger, for tries whose staging folder is gone. */
     ledgerHf?: Record<string, { hfJobId: string; state: string }>
+    /** Why a job ended without a take (state.failedJobs, worker.mjs recordFailure). */
+    failedJobs?: Record<string, { reason: string }>
   },
 ): StudioSession {
   const mine = input.requests.filter((r) => r.sessionId === sessionId)
@@ -115,14 +117,26 @@ export function foldStudio(
     }
 
     let status: TryStatus = 'pricing'
+    // Ended without a take: the CLI refused it, or Higgsfield returned nothing or timed out.
+    const ENDED_EMPTY = new Set(['FAILED', 'NO_RESULT', 'TIMED_OUT'])
+    const failed = jobIds.filter((j) => ENDED_EMPTY.has(input.ledgerHf?.[j]?.state ?? '') || input.failedJobs?.[j])
     if (queued || jobIds.length) {
       const finished = jobIds.filter((j) => done.has(j))
-      const failed = jobIds.filter((j) => input.ledgerHf?.[j]?.state === 'FAILED')
       status = finished.length === jobIds.length
         ? (failed.length === jobIds.length ? 'failed' : 'done')
         : jobIds.includes(input.generating ?? '') ? 'generating' : 'queued'
     } else if (error) status = error.reason === 'replaced by a later edit' ? 'replaced' : 'error'
     else if (priced) status = 'priced'
+
+    // Why, when there is something to say: a refusal; a price that came back unknown;
+    // a failed generation; or, while still pricing, the worker's retryable error
+    // (the CLI not signed in, say), which does not end the try.
+    const waiting = [...own].reverse().find((e) => e.event === 'error')
+    const reason = (error?.reason as string | undefined)
+      ?? (priced && priced.total == null ? (priced.reason as string | undefined) : undefined)
+      ?? (status === 'failed' ? failed.map((j) => input.failedJobs?.[j]?.reason).find(Boolean) : undefined)
+      ?? (status === 'pricing' ? (waiting?.reason as string | undefined) : undefined)
+      ?? null
 
     const held = jobIds.map((j) => input.held[j]?.reason).find(Boolean) ?? null
     return {
@@ -132,7 +146,7 @@ export function foldStudio(
       status,
       credits: (priced?.credits as number | null | undefined) ?? null,
       total: (priced?.total as number | null | undefined) ?? null,
-      reason: (error?.reason as string | undefined) ?? null,
+      reason,
       jobIds, held, results,
     }
   })

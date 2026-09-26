@@ -142,3 +142,25 @@ test('scene numbers already given out stay taken: moved and archived shots count
   assert.ok(used.includes('TST-EP002-SC005-SH0010'))
   assert.ok(used.includes('TST-EP002-SC007-SH0010'))
 })
+
+test('a reference an approved learning names is attached; one that no longer resolves is named in words', async () => {
+  const { P, appendJsonl } = lib.project
+  const REAL = path.join(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')), 'MODEL_CATALOG.json')
+  fs.copyFileSync(REAL, path.join(TMP, '.model-catalog.json'))
+  fs.mkdirSync(path.join(ROOT, '08_REFERENCE'), { recursive: true })
+  fs.writeFileSync(path.join(ROOT, '08_REFERENCE', 'TST-REF-001-BOARD_V01_board.png'), 'png')
+  fs.writeFileSync(P.entities, 'id,short_id,kind,number,slug,name,family,status,canonical_variant,variant_count,folder,related,flags,description\n'
+    + 'TST-REF-001-BOARD,REF-001,REF,001,BOARD,Caste Board,BOARD,CONCEPT,V01,1,08_REFERENCE,,,\n')
+  fs.writeFileSync(P.manifest, 'filename,entity_id,variant,take,role,status,folder,source,original_name,added,notes\n'
+    + 'TST-REF-001-BOARD_V01_board.png,TST-REF-001-BOARD,V01,T01,BOARD,CONCEPT,08_REFERENCE,upload,board.png,2026-09-26,\n')
+  await appendJsonl(P.learnings, { id: 'L-1', status: 'approved', scope: {}, rule: 'Masks as in @REF-001/V01. Castes as in @REF-001/V02.' })
+  const { planJob } = await import('./lib/plan.mjs')
+  const { loadEntities, readCsv } = lib.project
+  const job = { jobId: 'J-T', target: 'TST-REF-001-BOARD', model: 'nano_banana_pro', prompt: 'A board.', params: {}, refs: [] }
+  const plan = await planJob(job, await loadEntities(), (await readCsv(P.manifest)).rows, { cfg: { defaultImageModel: 'nano_banana_pro' }, priceOnly: true })
+  assert.equal(plan.skip, undefined, plan.skip)
+  assert.equal(plan.refPaths.length, 1, 'the learning\'s picture is attached')
+  assert.match(plan.prompt, /Masks as in <<<image_1>>>/)
+  assert.doesNotMatch(plan.prompt, /@REF-001\/V02/, 'no raw token for a look that is gone')
+  assert.match(plan.prompt, /Castes as in REF-001, Caste Board/)
+})

@@ -20,7 +20,7 @@ export function StudioLauncher({ catalog, cfg, sessions }: { catalog: CatalogEnt
   const close = () => { setOpen(null); router.refresh() }
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <Button type="button" tone="accent" size="sm" onClick={() => setOpen({ sessionId: null })}>
+      <Button type="button" tone="accent" size="sm" className="h-9 px-3.5" onClick={() => setOpen({ sessionId: null })}>
         <Sparkles aria-hidden className="size-3.5" /> Create a reference
       </Button>
       {sessions.length > 0 && <span className="ml-2 text-xs text-faint">Open in the studio:</span>}

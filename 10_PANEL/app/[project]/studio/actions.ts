@@ -149,21 +149,36 @@ export async function studioUpload(formData: FormData): Promise<{ ok: boolean; t
   try { sessionId = sessionOf(formData) } catch (e) { return { ok: false, error: (e as Error).message } }
   const files = formData.getAll('files').filter((f): f is File => f instanceof File)
   if (files.length === 0 || files.length > 8) return { ok: false, error: '1 to 8 pictures at a time.' }
-  const dir = path.join(pr.P.uploads, sessionId)
-  await fs.mkdir(dir, { recursive: true })
-  const taken = new Set((await fs.readdir(dir)).map((n) => n.split('.')[0]))
-  let n = 1
-  const tokens: string[] = []
+  // Every picture is checked before any is written, so a bad one in the middle
+  // does not leave the ones before it behind in the session folder.
+  const checked: { bytes: Buffer; ext: string }[] = []
   for (const f of files) {
     if (f.size === 0 || f.size > MAX_UPLOAD_BYTES) return { ok: false, error: `${f.name}: empty or larger than ${MAX_UPLOAD_BYTES / 1024 / 1024} MB.` }
     const bytes = Buffer.from(await f.arrayBuffer())
     const ext = sniffImage(bytes)
     if (!ext) return { ok: false, error: `${f.name} is not a PNG, JPG or WEBP image.` }
+    checked.push({ bytes, ext })
+  }
+  const dir = path.join(pr.P.uploads, sessionId)
+  await fs.mkdir(dir, { recursive: true })
+  const taken = new Set((await fs.readdir(dir)).map((n) => n.split('.')[0]))
+  const names: string[] = []
+  let n = 1
+  for (const c of checked) {
     while (taken.has(`u${n}`)) n++
     if (n > 999) return { ok: false, error: 'Too many pictures in this session.' }
     taken.add(`u${n}`)
-    await fs.writeFile(path.join(dir, `u${n}${ext}`), bytes)
-    tokens.push(`studio:${sessionId}/u${n}`)
+    names.push(`u${n}${c.ext}`)
   }
-  return { ok: true, tokens }
+  const written: string[] = []
+  try {
+    for (const [i, c] of checked.entries()) {
+      await fs.writeFile(path.join(dir, names[i]), c.bytes)
+      written.push(names[i])
+    }
+  } catch (e) {
+    for (const w of written) await fs.rm(path.join(dir, w), { force: true })
+    return { ok: false, error: `Could not save the pictures: ${(e as Error).message}` }
+  }
+  return { ok: true, tokens: names.map((f) => `studio:${sessionId}/${f.split('.')[0]}`) }
 }

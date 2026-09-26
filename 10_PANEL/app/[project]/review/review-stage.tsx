@@ -27,6 +27,13 @@ export interface QueuedDecision {
   regenerates: boolean
   /** Actually records the decision. Resolves with the server's answer. */
   commit: () => Promise<ActionResult>
+  /**
+   * The same decision as a form, for sending with navigator.sendBeacon when the
+   * page is closed or reloaded inside the Undo window (review-workspace.tsx).
+   */
+  form: FormData
+  /** Carries uploaded files: may be too big for a beacon, so leaving still warns. */
+  hasUploads: boolean
 }
 
 /** True while the reviewer is typing, so single-key shortcuts stay out of the way. */
@@ -140,13 +147,15 @@ export function ReviewStage({
       setError(r.error ?? 'Could not check this decision.')
       return
     }
+    fd.set('project', project.slug)
     onQueue({
       path: candidate.path,
       title,
       verdict,
       regenerates,
+      form: fd,
+      hasUploads: [...fd.values()].some((v) => typeof v !== 'string' && v.size > 0),
       commit: async () => {
-        fd.set('project', project.slug)
         const res = await decide(null, fd)
         if (!res.ok) setError(res.error ?? 'Could not save this decision.')
         return res

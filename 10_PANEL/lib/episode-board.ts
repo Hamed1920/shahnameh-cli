@@ -44,8 +44,10 @@ export async function getEpisodeBoard(pr: Project): Promise<EpisodeBoard[]> {
 
   /** One row per shot, filled in by whichever source knows most about it. */
   const rows = new Map<string, EpisodeScene>()
-  const row = (id: string): EpisodeScene | null => {
-    const shot = now(id)
+  // A reference-studio job has no target (it makes a picture, not a shot), so ids
+  // here can be null: they are simply not rows.
+  const row = (id: string | null | undefined): EpisodeScene | null => {
+    const shot = now(String(id ?? ''))
     const parts = shot.match(rx.shotParts)
     if (!parts || !parts[2]) return null
     let r = rows.get(shot)
@@ -254,7 +256,7 @@ export async function getAcceptedTakes(pr: Project): Promise<AcceptedTake[]> {
   // Newest first, so the first take seen of a shot is the one shown.
   for (const e of decided) {
     if (e.decision.verdict !== 'accepted') continue
-    const parts = e.target.match(rx.shotParts)
+    const parts = String(e.target ?? '').match(rx.shotParts)
     const row = byShot.get(e.target)
     if (row) {
       row.takes += 1

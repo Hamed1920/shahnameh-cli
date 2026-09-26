@@ -120,11 +120,15 @@ export function ReferenceStudio({
   }, [resumeId, session])
 
   // Hand each new pick to the caller (a Prompts slot fills itself with it).
+  // A pick for a new thing makes it an entity, so the session now targets that
+  // entity: the next try is another look of it, not the same "new" name again,
+  // which would read as already taken and block every further try.
   useEffect(() => {
     for (const p of session?.picks ?? []) {
       const key = `${p.hfJobId}/${p.take}`
       if (seenPicks.current.has(key)) continue
       seenPicks.current.add(key)
+      if (p.entity) setEntity((cur) => cur || p.entity)
       onPicked?.(p.token)
       router.refresh()
     }
@@ -349,6 +353,10 @@ export function ReferenceStudio({
               <Sparkles aria-hidden className="size-4" /> {priceLabel}
             </Button>
             {error && <p className="text-xs text-bad">{error}</p>}
+            {current && current.status !== 'error' && current.reason && (
+              // Why pricing is waiting (the CLI not signed in) or came back unknown.
+              <p className="text-xs text-bad" dir="auto">{current.reason}</p>
+            )}
             {session?.refused && <p className="text-xs text-bad">The worker refused: {session.refused}</p>}
           </div>
         </div>
@@ -452,6 +460,7 @@ function TryHeader({ t, onReuse }: { t: StudioTry; onReuse: () => void }) {
         <RotateCcw aria-hidden className="size-3" /> Reuse this prompt
       </button>
       {t.status === 'failed' && <Badge tone="bad">failed</Badge>}
+      {t.status === 'failed' && t.reason && <span className="w-full text-xs text-bad" dir="auto">{t.reason}</span>}
     </div>
   )
 }

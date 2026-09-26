@@ -2,11 +2,12 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Check, Copy, Film, FolderOpen, GripVertical, Heart, LoaderCircle, Plus, Search, TriangleAlert, X } from 'lucide-react'
+import { Check, Copy, Film, FolderOpen, GripVertical, Heart, LoaderCircle, Plus, Search, X } from 'lucide-react'
 import { revealInFolder } from '@/app/[project]/reveal-action'
 import { assignToEpisode } from '@/app/[project]/shot-actions'
 import { MenuNote, isTextEntry } from '@/components/item-menu'
 import { EpisodePicker } from '@/components/episode-picker'
+import { MoveErrors } from '@/components/move-errors'
 import { ContextMenu, type MenuEntry } from '@/components/ui/context-menu'
 import { RegenerateButton, type RegenerateConfig } from '@/components/regenerate-button'
 import { ShowInFolder } from '@/components/show-in-folder'
@@ -55,9 +56,6 @@ const SORTS: { value: Sort; label: string }[] = [
   { value: 'scene', label: 'Episode & scene order' },
   { value: 'liked', label: 'Liked first' },
 ]
-
-/** Per-project, so dismissing a message in one film does not hide another's. */
-const dismissedKey = (project: string) => `shm-gallery-dismissed:${project}`
 
 const when = (iso: string) =>
   new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
@@ -350,32 +348,6 @@ export function GalleryView({
       say(`Asked the worker to move ${n} shot${n === 1 ? '' : 's'} to ${shortEpisode(choice.id)}${extra}. It moves them on its next pass.`)
       clearSelection()
       router.refresh()
-    })
-  }
-
-  /**
-   * Messages already read.
-   *
-   * A refused move is worth saying once and not for the next half hour, so a
-   * dismissal is kept in this browser. It is a per-viewer convenience and
-   * nothing else reads it, which is what localStorage is for -- and every
-   * access is guarded, because a private window or blocked site data makes it
-   * throw rather than return nothing.
-   */
-  const [dismissed, setDismissed] = useState<Set<string>>(new Set())
-  useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem(dismissedKey(project.slug))
-      if (saved) setDismissed(new Set(JSON.parse(saved) as string[]))
-    } catch { /* no storage; the banner is simply shown again */ }
-  }, [project.slug])
-  const dismiss = (opId: string) => {
-    setDismissed((was) => {
-      const next = new Set(was).add(opId)
-      // Only ones still being reported, so this cannot grow for ever.
-      const live = [...next].filter((id) => moveErrors.some((m) => m.opId === id))
-      try { window.localStorage.setItem(dismissedKey(project.slug), JSON.stringify(live)) } catch { /* ignore */ }
-      return next
     })
   }
 
@@ -677,34 +649,7 @@ export function GalleryView({
           </div>
         )}
 
-        {moveErrors.filter((m) => !dismissed.has(m.opId)).map((m) => (
-          <div key={m.opId} className="flex items-start gap-2 rounded-md border border-bad/35 bg-bad/8 px-3 py-2 text-xs leading-relaxed text-bad">
-            <TriangleAlert aria-hidden className="mt-0.5 size-3.5 shrink-0" />
-            <div className="min-w-0 flex-1 space-y-1">
-              <p>
-                {m.shots.length === 1
-                  ? `${m.shots[0]} did not move`
-                  : `${m.shots.length} shots did not move`} to {shortEpisode(m.episode)}: {m.reason}
-              </p>
-              {/* Fourteen ids is a wall of text in a banner. They are still here
-                  for anyone who needs them, one click away. */}
-              {m.shots.length > 1 && (
-                <details>
-                  <summary className="cursor-pointer text-bad/75 underline-offset-2 hover:underline">which ones</summary>
-                  <p className="mt-1 font-mono text-[10.5px] break-all text-bad/75">{m.shots.join(', ')}</p>
-                </details>
-              )}
-            </div>
-            <button
-              type="button"
-              onClick={() => dismiss(m.opId)}
-              aria-label="Dismiss this message"
-              className="focus-ring -m-1 grid size-6 shrink-0 cursor-pointer place-items-center rounded-md text-bad/70 transition-colors hover:text-bad"
-            >
-              <X aria-hidden className="size-3.5" />
-            </button>
-          </div>
-        ))}
+        <MoveErrors errors={moveErrors} />
 
         {error && <p className="rounded-md border border-bad/35 bg-bad/8 px-3 py-2 text-xs text-bad">{error}</p>}
       </div>

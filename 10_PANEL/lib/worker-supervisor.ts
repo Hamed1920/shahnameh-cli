@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import fsp from 'node:fs/promises'
 import path from 'node:path'
 import { listProjects, projectsDir, type Project } from './projects'
-import { autostartBlockedReason } from './worker-guard'
+import { RESTART_FLAG, autostartBlockedReason, stopFlagKind, workersPaused } from './worker-guard'
 import { getGeneratingJobId, getWorkerState, getWorkerStatus } from './store'
 
 /**
@@ -40,6 +40,8 @@ export function superviseWorker() {
 
   const tick = async () => {
     try {
+      // "Stop all workers" (Queue page): start nothing until "Start workers".
+      if (workersPaused()) { setTimeout(tick, TICK_MS).unref(); return }
       for (const pr of await listProjects()) {
         try {
           await superviseOne(pr, backoff)
@@ -58,6 +60,11 @@ export function superviseWorker() {
 async function superviseOne(pr: Project, backoff: Map<string, { ms: number; nextStart: number }>) {
   const status = await getWorkerStatus(pr)
   if (!status.running) {
+    // A worker someone stopped stays stopped. One this supervisor stopped to move
+    // it onto new code ("restart ..." in the flag) comes straight back.
+    const flag = stopFlagKind(pr.P.stopFlag)
+    if (flag === 'stop') return
+    if (flag === 'restart') await fsp.rm(pr.P.stopFlag, { force: true })
     const b = backoff.get(pr.slug) ?? { ms: 0, nextStart: 0 }
     if (Date.now() < b.nextStart) return
     if (await startWorker(pr)) backoff.delete(pr.slug)
@@ -71,7 +78,7 @@ async function superviseOne(pr: Project, backoff: Map<string, { ms: number; next
   const state = await getWorkerState(pr)
   const generating = await getGeneratingJobId(pr, new Set((state?.processedJobs ?? []) as string[]))
   if (!generating && !fs.existsSync(pr.P.stopFlag)) {
-    await fsp.writeFile(pr.P.stopFlag, `restart for new code ${new Date().toISOString()}`, 'utf8')
+    await fsp.writeFile(pr.P.stopFlag, `${RESTART_FLAG} for new code ${new Date().toISOString()}`, 'utf8')
   }
 }
 

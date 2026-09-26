@@ -54,8 +54,11 @@ interface SubmitPayload {
   name: string
   defaults: BatchDefaults
   rows: DraftRow[]
-  /** Text the page prepends to every prompt (a document's rules preamble), or null. */
+  /** Text prepended to every prompt, or null. Older pages; `prefixes` wins when given. */
   prefix: string | null
+  /** Per row: the rules preamble of the document that row came from, prepended to that row only. */
+  prefixes?: Record<string, string>
+
   source: { kind: 'paste' | 'files'; files: string[] }
 }
 
@@ -80,9 +83,10 @@ export async function submitBatch(formData: FormData): Promise<{ ok: boolean; ba
   }
   if (Object.keys(rowErrors).length) return { ok: false, error: 'Some rows need attention.', rowErrors }
 
-  const prefix = String(payload.prefix ?? '').trim()
+  const shared = String(payload.prefix ?? '').trim()
   const jobs: BatchJobInput[] = payload.rows.map((row) => {
     const job = toJobInput(row, payload.defaults)
+    const prefix = payload.prefixes ? String(payload.prefixes[row.key] ?? '').trim() : shared
     return prefix ? { ...job, prompt: `${prefix}\n\n${job.prompt}` } : job
   })
 

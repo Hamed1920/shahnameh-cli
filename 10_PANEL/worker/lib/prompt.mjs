@@ -1,4 +1,4 @@
-import { resolveRef } from './project.mjs'
+import { findEntity, resolveRef } from './project.mjs'
 
 /**
  * The prompt a generation actually sends: the authored text, the reviewer's
@@ -14,7 +14,7 @@ import { resolveRef } from './project.mjs'
  * MENTION_RX in lib/mentions.ts (upload placeholders are swapped for real
  * tokens before a job is queued, so only index tokens reach this point).
  */
-const MENTION_RX = /@((?:CHR|GRP|LOC|PRP|CRT|COS|VEH|FX|REF)-\d{3}(?:\/V\d{2}(?:\/T\d{2})?)?)(?![\w/-])/g
+export const MENTION_RX = /@((?:CHR|GRP|LOC|PRP|CRT|COS|VEH|FX|REF)-\d{3}(?:\/V\d{2}(?:\/T\d{2})?)?)(?![\w/-])/g
 
 /**
  * How Higgsfield's panel refers to an attached image inside a prompt. When
@@ -56,6 +56,11 @@ async function annotateMentions(text, refs, entities, assets) {
       const at = refs.findIndex((x) => x.path === r.path)
       if (at >= 0) { label = imageToken(at + 1); used.add(at) }
       else label = `${r.entity.short_id} ${r.variant}, ${r.entity.name}`
+    } else {
+      // A look that no longer resolves (archived, or never there): its entity by
+      // name, never a raw @token the model cannot look at.
+      const ent = findEntity(entities, m[1].split('/')[0])
+      if (ent) label = `${ent.short_id}, ${ent.name}`
     }
     out += src.slice(last, m.index) + label
     last = m.index + m[0].length

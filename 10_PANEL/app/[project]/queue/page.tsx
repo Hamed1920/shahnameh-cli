@@ -1,9 +1,12 @@
 import {
   getCandidates, getDecisions, getEpisodes, getFilings, getGeneratingJobId, getQueue, getWorkerState, getWorkerStatus,
 } from '@/lib/store'
-import { requireProject } from '@/lib/projects'
+import { listProjects, requireProject } from '@/lib/projects'
+import { workersPaused } from '@/lib/worker-guard'
 import { episodeLabel, episodeOf, groupByEpisode, shortEpisode, NO_EPISODE_LABEL } from '@/lib/episodes'
 import { WorkerControls } from '@/components/worker-controls'
+import { WorkerSwitch } from '@/components/worker-switch'
+import { Disclosure } from '@/components/ui/disclosure'
 import { EmptyState, StatTile } from '@/components/ui/card'
 import { Reveal } from '@/components/ui/reveal'
 import { ItemMenu, type ItemAction } from '@/components/item-menu'
@@ -22,7 +25,8 @@ function menuFor(q: QueueItem, project: string, code: string): ItemAction[] {
     out.push({ kind: 'divider' })
   }
   out.push({ kind: 'copy', label: 'Copy the job id', text: q.jobId })
-  out.push({ kind: 'copy', label: 'Copy the target', text: q.target })
+  // A reference-studio try has no target: it makes a picture, filed when it is picked.
+  if (q.target) out.push({ kind: 'copy', label: 'Copy the target', text: q.target })
   out.push({ kind: 'copy', label: 'Copy the prompt', text: q.prompt })
   return out
 }
@@ -40,6 +44,13 @@ export default async function QueuePage({ params }: PageProps<'/[project]/queue'
   ])
   const failedIds = Object.keys((state?.failedDecisions ?? {}) as Record<string, string>)
   const failures = filings.filter((f) => !f.ok && !!f.decisionId && failedIds.includes(f.decisionId)).reverse()
+  // Generations that ended without a take, and why (worker.mjs recordFailure). The ten newest.
+  const failedJobs = Object.entries((state?.failedJobs ?? {}) as Record<string, { reason: string; at: string }>)
+    .sort(([, a], [, b]) => b.at.localeCompare(a.at))
+    .slice(0, 10)
+  // Stop/Start covers every project's worker, so it needs all of them.
+  const everyWorker = await Promise.all((await listProjects()).map((p) => getWorkerStatus(p)))
+  const runningWorkers = everyWorker.filter((w) => w.running).length
 
   // The worker's own record is the truth. "Has a file in _staging" is not: a
   // candidate leaves _staging once it is decided, which made finished jobs
@@ -76,16 +87,31 @@ export default async function QueuePage({ params }: PageProps<'/[project]/queue'
         ))}
       </div>
 
-      <section>
-        <SectionHeading>Worker</SectionHeading>
-        {state ? (
-          <pre className="scroll-pane max-h-96 rounded-xl border border-edge bg-sunken p-6 font-mono text-xs leading-[1.7] text-fg/80">
-            {JSON.stringify(state, null, 2)}
-          </pre>
-        ) : (
-          <EmptyState>The worker has not run yet. The panel starts it on its own.</EmptyState>
-        )}
-      </section>
+      <WorkerSwitch paused={workersPaused()} running={runningWorkers} />
+
+      {failedJobs.length > 0 && (
+        <section>
+          <SectionHeading tone="bad" count={failedJobs.length}>Generations that failed</SectionHeading>
+          <Table>
+            <Thead>
+              <tr>
+                <Th>Job</Th>
+                <Th>Reason</Th>
+                <Th>When</Th>
+              </tr>
+            </Thead>
+            <tbody>
+              {failedJobs.map(([jobId, f]) => (
+                <Tr key={jobId}>
+                  <Td className="font-mono text-xs text-fg">{jobId}</Td>
+                  <Td className="text-xs text-bad" dir="auto">{f.reason}</Td>
+                  <Td className="font-mono text-xs whitespace-nowrap text-muted">{f.at.slice(0, 16).replace('T', ' ')}</Td>
+                </Tr>
+              ))}
+            </tbody>
+          </Table>
+        </section>
+      )}
 
       {failures.length > 0 && (
         <section>
@@ -166,7 +192,7 @@ export default async function QueuePage({ params }: PageProps<'/[project]/queue'
                           )}
                         </Td>
                         <Td className="font-mono text-xs text-fg">
-                          {q.target} {q.variant}
+                          {q.target ? `${q.target} ${q.variant ?? ''}` : <span className="font-sans text-muted">reference studio</span>}
                         </Td>
                         <Td className="font-mono text-xs text-muted">{q.model}</Td>
                         <Td className="text-xs">
@@ -187,6 +213,20 @@ export default async function QueuePage({ params }: PageProps<'/[project]/queue'
               </div>
             ))}
           </div>
+        )}
+      </section>
+
+      {/* The worker's raw record: rarely needed, so last and closed until asked for. */}
+      <section>
+        <SectionHeading>Worker</SectionHeading>
+        {state ? (
+          <Disclosure summary="Show the worker’s state (state.json)">
+            <pre className="scroll-pane max-h-96 rounded-xl border border-edge bg-sunken p-6 font-mono text-xs leading-[1.7] text-fg/80">
+              {JSON.stringify(state, null, 2)}
+            </pre>
+          </Disclosure>
+        ) : (
+          <EmptyState>The worker has not run yet. The panel starts it on its own.</EmptyState>
         )}
       </section>
     </div>

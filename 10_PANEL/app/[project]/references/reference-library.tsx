@@ -104,7 +104,12 @@ function Menu({ label, icon, items, disabled }: { label: string; icon: React.Rea
  * the worker applies (it is the only writer of the registries), so an edited
  * card shows "applying" for a moment and then refreshes with the result.
  */
-export function ReferenceLibrary({ data, catalog }: { data: LibraryData; catalog: CatalogEntity[] }) {
+/**
+ * `actions` sit in the sticky header beside "Add references" (the reference
+ * studio's launcher). Rendered above the library instead, they sat under this
+ * header, which pulls itself up over whatever comes first on the page.
+ */
+export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData; catalog: CatalogEntity[]; actions?: React.ReactNode }) {
   const project = useProject()
   const { assetUrl } = useAssetUrls()
   const router = useRouter()
@@ -338,6 +343,7 @@ export function ReferenceLibrary({ data, catalog }: { data: LibraryData; catalog
               <option value="ALL">Any status</option>
               {STATUSES.map((s) => <option key={s} value={s}>{s[0] + s.slice(1).toLowerCase()}</option>)}
             </Select>
+            {actions}
             <Button type="button" tone="accent" size="sm" className="h-9 px-3.5" onClick={() => setAdding({ entity: '' })}>
               <Plus aria-hidden className="size-3.5" /> Add references
             </Button>
@@ -696,8 +702,9 @@ function EditDialog({ entity: e, onClose, send, busy }: {
   const [slug, setSlug] = useState(e.slug)
   const [description, setDescription] = useState(e.description)
   const [canonical, setCanonical] = useState(e.canonical)
+  const { code } = useProject()
   const cleanSlug = entitySlug(slug)
-  const newId = `SHM-${e.kind}-${e.number}-${cleanSlug || '…'}`
+  const newId = `${code}-${e.kind}-${e.number}-${cleanSlug || '…'}`
   const idChanges = cleanSlug !== e.slug
   const detailsChange = name.trim() !== e.name || description.trim() !== e.description || idChanges
 

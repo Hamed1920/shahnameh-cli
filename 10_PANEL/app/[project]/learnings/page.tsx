@@ -1,5 +1,6 @@
 import { requireProject } from '@/lib/projects'
-import { getDecisions, getLearnings } from '@/lib/store'
+import { parseMentions } from '@/lib/mentions'
+import { getDecisions, getLearnings, resolveRefToken } from '@/lib/store'
 import { decideLearning } from '../actions'
 import { Button } from '@/components/ui/button'
 import { Card, EmptyState } from '@/components/ui/card'
@@ -24,6 +25,21 @@ export default async function LearningsPage({ params }: PageProps<'/[project]/le
   const proposed = learnings.filter((l) => l.status === 'proposed')
   const approved = learnings.filter((l) => l.status === 'approved')
   const rejected = learnings.filter((l) => l.status === 'rejected')
+
+  // A rule that names a look is sent with that picture attached (worker/lib/plan.mjs).
+  // A look that has since been archived or never existed cannot be, so say which.
+  const broken = new Map<string, string[]>()
+  for (const l of [...proposed, ...approved]) {
+    const bad: string[] = []
+    for (const token of parseMentions(l.rule)) if (!(await resolveRefToken(pr, token))) bad.push(token)
+    if (bad.length) broken.set(l.id, bad)
+  }
+  const brokenNote = (id: string) => broken.has(id) && (
+    <p className="mt-2 text-xs leading-relaxed text-bad">
+      Names {broken.get(id)!.join(', ')}, which is not in the index any more (archived or never filed), so no picture
+      is sent with it; the prompt only names the entity. Point it at a look that exists.
+    </p>
+  )
 
   return (
     <div className="space-y-16">
@@ -57,6 +73,7 @@ export default async function LearningsPage({ params }: PageProps<'/[project]/le
                     </div>
 
                     <Textarea name="rule" rows={2} defaultValue={l.rule} className="text-[15px]" />
+                    {brokenNote(l.id)}
 
                     <Disclosure summary={`Evidence (${l.evidence.length})`} className="mt-5">
                       <ul className="space-y-2 border-l border-edge pl-4 text-[13px] leading-relaxed text-muted">
@@ -99,7 +116,10 @@ export default async function LearningsPage({ params }: PageProps<'/[project]/le
                 <Reveal index={i}>
                   <Card interactive className="flex items-start gap-4 px-6 py-5 text-[15px] leading-relaxed">
                     <Badge className="mt-0.5 shrink-0">{scopeLabel(l.scope)}</Badge>
-                    <span className="text-fg/90">{l.rule}</span>
+                    <span className="text-fg/90">
+                      {l.rule}
+                      {brokenNote(l.id)}
+                    </span>
                   </Card>
                 </Reveal>
               </li>

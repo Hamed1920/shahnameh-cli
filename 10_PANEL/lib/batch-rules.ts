@@ -213,8 +213,16 @@ export function checkRow(row: DraftRow, catalog: CatalogEntity[], batch: DraftRo
   }
 
   // Two next-free-scene rows are two scenes, so only the prompt can make them the same.
+  // A blank look is the one the worker will use (batch.mjs checkBatch): the entity's
+  // main look, else V01 -- so "blank" and "V01" on the same entity are one look.
+  const lookOf = (r: DraftRow) => {
+    const set = r.variant.trim().toUpperCase()
+    if (set) return set
+    const ent = r.targetMode === 'entity' ? catalog.find((e) => e.id === r.target.trim() || e.shortId === r.target.trim()) : null
+    return (ent?.canonical || 'V01').toUpperCase()
+  }
   const sameKey = (r: DraftRow) =>
-    `${r.targetMode === 'shot' && r.sceneAuto ? 'NEXT' : rowTarget(r)}|${r.variant.trim().toUpperCase() || ''}|${r.prompt.trim()}`
+    `${r.targetMode === 'shot' && r.sceneAuto ? 'NEXT' : rowTarget(r)}|${lookOf(r)}|${r.prompt.trim()}`
   const me = sameKey(row)
   const dup = batch.find((r) => r !== row && sameKey(r) === me)
   if (dup && batch.indexOf(dup) < batch.indexOf(row)) problems.push(`Same target and prompt as row ${dup.label || dup.key}.`)

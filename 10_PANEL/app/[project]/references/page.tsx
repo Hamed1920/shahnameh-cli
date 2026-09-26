@@ -14,9 +14,12 @@ export default async function ReferencesPage({ params }: PageProps<'/[project]/r
     defaultImageModel: String(cfg.defaultImageModel ?? 'nano_banana_pro'),
   }
   return (
-    <div className="space-y-6">
-      <StudioLauncher catalog={catalog} cfg={studioCfg} sessions={sessions} />
-      <ReferenceLibrary data={data} catalog={catalog} />
-    </div>
+    <ReferenceLibrary
+      data={data}
+      catalog={catalog}
+      // Keyed: it lands among the header's other controls, and an element made here
+      // on the server is checked as a list child there.
+      actions={<StudioLauncher key="studio" catalog={catalog} cfg={studioCfg} sessions={sessions} />}
+    />
   )
 }

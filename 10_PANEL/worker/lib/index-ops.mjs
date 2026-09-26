@@ -85,8 +85,12 @@ function tidyEntity(tx, ent) {
   }
 }
 
-// "P12 SHM-EP001-SC012-SH0010" (any project code), or the job id when there is no shot label
-const jobName = (x) => (x.label ? `${x.label} ${x.target}` : `${x.jobId} (${x.target})`)
+// "P12 SHM-EP001-SC012-SH0010" (any project code), or the job id when there is no shot label.
+// A reference-studio try has no target (it makes a picture, filed when picked).
+const jobName = (x) => {
+  const target = x.target || (x.studio ? 'reference studio' : '')
+  return x.label ? `${x.label}${target ? ` ${target}` : ''}` : `${x.jobId}${target ? ` (${target})` : ''}`
+}
 
 /**
  * Generated results waiting for review, or for their decision to be applied,

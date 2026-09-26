@@ -270,8 +270,12 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
     setServerErrors((e) => { if (!e[key]) return e; const n = { ...e }; delete n[key]; return n })
   }
   const remove = (key: string) => setRows((all) => all.filter((r) => r.key !== key))
-  const duplicate = (key: string) =>
-    setRows((all) => all.flatMap((r) => (r.key === key ? [r, { ...r, key: `r${++seq}`, label: r.label ? `${r.label} copy` : '' }] : [r])))
+  const duplicate = (key: string) => {
+    const copy = `r${++seq}`
+    setRows((all) => all.flatMap((r) => (r.key === key ? [r, { ...r, key: copy, label: r.label ? `${r.label} copy` : '' }] : [r])))
+    // The copy belongs to the same document, so it gets that document's preamble too.
+    setDocs((all) => all.map((d) => (d.rowKeys.includes(key) ? { ...d, rowKeys: [...d.rowKeys, copy] } : d)))
+  }
   const addRow = () =>
     setRows((all) => [...all, {
       key: `r${++seq}`, label: '',
@@ -401,7 +405,11 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
       name,
       defaults,
       rows,
-      prefix: prepend && preamble ? preamble : null,
+      prefix: null,
+      // Each document's opening rules go on that document's own rows, not on every row of the batch.
+      prefixes: prepend
+        ? Object.fromEntries(docs.filter((d) => d.preamble).flatMap((d) => d.rowKeys.map((k) => [k, d.preamble as string])))
+        : {},
       source: { kind: docs.some((d) => d.name !== 'pasted text') ? 'files' : 'paste', files: docs.map((d) => d.name) },
     }))
     const r = await submitBatch(fd).catch((e: Error) => ({ ok: false, error: e.message }))

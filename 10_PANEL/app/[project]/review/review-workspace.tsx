@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { Check, Copy, Film, TriangleAlert, Undo2 } from 'lucide-react'
 import { useHoldLiveRefresh } from '@/components/live-refresh'
+import { useProject } from '@/components/project-context'
 import { Button } from '@/components/ui/button'
 import { EmptyState } from '@/components/ui/card'
 import { EASE } from '@/components/ui/motion-tokens'
@@ -46,6 +47,7 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
   /** EP001 -> "Zahhak Entry", from the episode folders on disk. */
   episodeTitles: Record<string, string>
 }) {
+  const project = useProject()
   const [currentPath, setCurrentPath] = useState<string | null>(items[0]?.candidate.path ?? null)
   /** '' is every episode; 'none' is everything that is not footage. */
   const [episodeFilter, setEpisodeFilter] = useState('')
@@ -149,16 +151,28 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
   }, [items])
 
   // Leaving the page records anything still waiting out its Undo window.
+  //  - Another page of the panel: this unmounts, and each is committed as usual.
+  //  - Closing the tab, reloading, typing another address: nothing unmounts, so
+  //    each is sent with a beacon as the page goes (api/decide). A decision with
+  //    uploaded files may be too big for a beacon (about 64 KB), so for those the
+  //    browser still asks before leaving.
   useEffect(() => {
     const warn = (e: BeforeUnloadEvent) => {
-      if (heldRef.current.length) { e.preventDefault(); e.returnValue = '' }
+      if (heldRef.current.some((h) => h.hasUploads)) { e.preventDefault(); e.returnValue = '' }
+    }
+    const flush = () => {
+      for (const h of heldRef.current) {
+        if (navigator.sendBeacon(`/${project.slug}/api/decide`, h.form)) clearTimeout(h.timer)
+      }
     }
     window.addEventListener('beforeunload', warn)
+    window.addEventListener('pagehide', flush)
     return () => {
       window.removeEventListener('beforeunload', warn)
+      window.removeEventListener('pagehide', flush)
       heldRef.current.forEach((h) => { clearTimeout(h.timer); void h.commit() })
     }
-  }, [])
+  }, [project.slug])
 
   // New videos arrive through <LiveRefresh> in the layout. It waits while a
   // decision is still in its Undo window.

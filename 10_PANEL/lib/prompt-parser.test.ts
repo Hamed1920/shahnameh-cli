@@ -134,3 +134,31 @@ test('docx XML to text keeps Persian and ZWNJ, turns paragraphs and breaks into 
   assert.equal(text, `P01\n${PERSIAN}\nline two & "q" س\n\n\ttabbed`)
   assert.ok(text.includes('‌'))
 })
+
+test('one P01 prompt pasted alone: its target and refs are metadata, not prompt text', () => {
+  const r = parsePromptDocument('P01\ntarget: SHM-EP001-SC001-SH0010\nrefs: @LOC-018/V01\nA slow wide shot of a cold plain.')
+  assert.equal(r.split, 'block')
+  assert.equal(r.rows.length, 1)
+  assert.equal(r.rows[0].label, 'P01')
+  assert.equal(r.rows[0].target, 'SHM-EP001-SC001-SH0010')
+  assert.deepEqual(r.rows[0].refs, ['@LOC-018/V01'])
+  assert.equal(r.rows[0].prompt, 'A slow wide shot of a cold plain.')
+})
+
+test('blank lines between a heading and its metadata do not end the metadata', () => {
+  const r = parsePromptDocument('P01\n\n\ntarget: PRP-002\n\nThe prompt.')
+  assert.equal(r.rows[0].target, 'PRP-002')
+  assert.equal(r.rows[0].prompt, 'The prompt.')
+})
+
+test('a heading that does not open the document is still prompt text', () => {
+  const r = parsePromptDocument('A wide shot.\nP01 is the palace gate.')
+  assert.equal(r.split, 'none')
+  assert.equal(r.rows[0].prompt, 'A wide shot.\nP01 is the palace gate.')
+})
+
+test('a single SHOT heading never cuts a prompt', () => {
+  const r = parsePromptDocument('SHOT 1 — CONVERGENCE\nRiders meet on the road.')
+  assert.equal(r.split, 'none')
+  assert.match(r.rows[0].prompt, /^SHOT 1/)
+})

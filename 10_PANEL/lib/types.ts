@@ -377,6 +377,12 @@ export interface WorkerStatus {
   /** Running, but started before its code last changed, so newer features are missing. */
   outdated: boolean
   startedAt?: string
+  /** "Stop all workers" is in force: none is started until "Start workers". */
+  paused?: boolean
+  /** This project's worker was asked to stop (queue/worker.stop), and stays stopped. */
+  stopRequested?: boolean
+  /** Not running: the last lines its console printed, which usually say why. */
+  lastOutput?: string | null
 }
 
 export interface LibraryData {

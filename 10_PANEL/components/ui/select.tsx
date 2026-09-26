@@ -143,6 +143,9 @@ export function Select({
   }
   const close = (refocus = true) => {
     setOpen(false)
+    // Cleared here, not only in show(): show() reads `options` straight away, and
+    // those would still be filtered by the last search, so Enter picked the wrong item.
+    setQuery('')
     if (refocus) trigger.current?.focus()
   }
   const pick = (i: number) => {

@@ -1,12 +1,13 @@
 import Link from 'next/link'
 import { DecisionDetails } from '@/components/decision-details'
 import { ItemMenu, type ItemAction } from '@/components/item-menu'
+import { MoveErrors } from '@/components/move-errors'
 import { RegenerateButton } from '@/components/regenerate-button'
 import { ShowInFolder } from '@/components/show-in-folder'
 import { Card, EmptyState } from '@/components/ui/card'
 import { Reveal } from '@/components/ui/reveal'
 import { Badge, PageHeader, SectionHeading } from '@/components/ui/text'
-import { assetUrl, isVideo } from '@/lib/asset'
+import { assetUrl, isFiledShot, isVideo } from '@/lib/asset'
 import { getDecidedEntries, type DecidedEntry, type FollowUp } from '@/lib/decided'
 import { requireProject } from '@/lib/projects'
 import { cn } from '@/lib/cn'
@@ -158,8 +159,9 @@ function menuFor(
     })
   }
   if (current) out.push({ kind: 'link', label: 'All episodes', href: `/${project}/decided`, icon: 'filter' })
-  // Only footage has an episode to move between, and only once it is on disk.
-  if (entry.episode && entry.file) {
+  // Only footage has an episode to move between, and only once it is filed in the
+  // episode: an approved draft is kept in _drafts, and there is nothing yet to move.
+  if (entry.episode && entry.file && isFiledShot(entry.file)) {
     out.push({
       kind: 'assign',
       shots: [entry.target],
@@ -230,6 +232,12 @@ export default async function DecidedPage({ params, searchParams }: PageProps<'/
         a denied take is kept as the evidence <code className="font-mono text-[13px] text-fg">/learn</code> distils rules
         from.
       </PageHeader>
+
+      {moves.failed.length > 0 && (
+        <div className="space-y-2">
+          <MoveErrors errors={moves.failed} />
+        </div>
+      )}
 
       <EpisodeFilter
         project={pr.slug}

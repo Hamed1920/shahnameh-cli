@@ -209,10 +209,17 @@ export function parseShmJobs(text: string, file: string | null = null): ParseRes
 
 interface Block { label: string | null; body: string; line: number }
 
-function splitByHeading(lines: string[], rx: RegExp): { blocks: Block[]; preamble: string } | null {
+/**
+ * Cut at every line the heading matches. Two headings make blocks; with
+ * `single`, so does one that opens the document (the first non-empty line):
+ * "P01 / target: ... / refs: ... / the prompt" pasted alone is one block whose
+ * target and refs are metadata, not prompt text sent to the model.
+ */
+function splitByHeading(lines: string[], rx: RegExp, { single = false } = {}): { blocks: Block[]; preamble: string } | null {
   const starts: number[] = []
   lines.forEach((l, i) => { if (rx.test(l)) starts.push(i) })
-  if (starts.length < 2) return null
+  const opensDocument = starts.length === 1 && lines.slice(0, starts[0]).every((l) => l.trim() === '')
+  if (starts.length < 2 && !(single && opensDocument)) return null
   const preamble = lines.slice(0, starts[0]).join('\n').trim()
   const blocks: Block[] = starts.map((s, n) => {
     const end = n + 1 < starts.length ? starts[n + 1] : lines.length
@@ -277,7 +284,7 @@ export function splitTextBlocks(text: string, file: string | null = null, split:
   // SHOT 1..5 inside one 15-second block, or blank lines between its sections, are not five prompts.
   const byBlank = splitByBlankLines(lines, 2)
   const cuts: Record<Exclude<SplitMode, 'none'>, { blocks: Block[]; preamble: string } | null> = {
-    block: splitByHeading(lines, BLOCK_HEADING_RX),
+    block: splitByHeading(lines, BLOCK_HEADING_RX, { single: true }),
     shot: splitByHeading(lines, SHOT_HEADING_RX),
     numbered: splitNumbered(lines),
     blank: byBlank && { blocks: byBlank, preamble: '' },
@@ -295,12 +302,15 @@ export function splitTextBlocks(text: string, file: string | null = null, split:
   const rows: ParsedRow[] = blocks.map((b) => {
     const row = emptyRow(file, b.line)
     row.label = b.label
-    // Leading `key: value` lines are metadata, not prompt text.
+    // Leading `key: value` lines are metadata, not prompt text. Blank lines before
+    // them (a heading followed by an empty line or two) do not end the metadata.
     const bodyLines = b.body.split('\n')
     let i = 0
+    let sawMeta = false
     while (i < bodyLines.length) {
       const l = bodyLines[i]
-      if (l.trim() === '' && i === 0) { i++; continue }
+      if (l.trim() === '' && !sawMeta) { i++; continue }
+      sawMeta = true
       const m = l.match(META_RX)
       if (!m) break
       const k = m[1].toLowerCase() as (typeof META_KEYS)[number]

@@ -52,3 +52,25 @@ test('a refused request shows as the reason, and a closed session is not open', 
   assert.deepEqual(openSessionIds(requests, events), [S])
   assert.deepEqual(openSessionIds(requests, [...events, { event: 'studio.closed', sessionId: S }]), [])
 })
+
+test('a try the worker cannot price yet says why, and keeps waiting', () => {
+  const requests = [price('r1', 'g1')]
+  const events = [
+    { event: 'studio.received', reqId: 'r1', sessionId: S, genId: 'g1' },
+    { event: 'error', reqId: 'r1', sessionId: S, genId: 'g1', reason: 'no Higgsfield workspace is selected' },
+  ]
+  const s = foldStudio(S, { requests, events, queue: [], processedJobs: [], held: {}, staged: [], generating: null })
+  assert.equal(s.tries[0].status, 'pricing')
+  assert.match(s.tries[0].reason ?? '', /workspace/)
+})
+
+test('a failed try carries the worker\'s reason', () => {
+  const requests = [price('r1', 'g1')]
+  const events = [{ event: 'studio.queued', reqId: 'r2', sessionId: S, genId: 'g1', jobIds: ['J1'], total: 12 }]
+  const s = foldStudio(S, {
+    requests, events, queue: [], processedJobs: ['J1'], held: {}, staged: [], generating: null,
+    ledgerHf: { J1: { hfJobId: 'hf1', state: 'NO_RESULT' } }, failedJobs: { J1: { reason: 'Higgsfield returned no file' } },
+  })
+  assert.equal(s.tries[0].status, 'failed')
+  assert.equal(s.tries[0].reason, 'Higgsfield returned no file')
+})

@@ -64,9 +64,12 @@ export function IndexPicker({
   }, [open, onClose])
 
   const kinds = useMemo(() => [...new Set(catalog.map((e) => e.kind))], [catalog])
+  // Set when the picker opens, not whenever `catalog` changes: a live refresh hands
+  // in a new array every few seconds, and the kind chosen while browsing would jump back.
   useEffect(() => {
     if (open) setKind(initialKind && catalog.some((e) => e.kind === initialKind) ? initialKind : null)
-  }, [open, initialKind, catalog])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, initialKind])
 
   const shown = useMemo(() => {
     const q = query.trim().toLowerCase()

@@ -1,8 +1,8 @@
 import { P, findEntity, isShotId, log, readJsonl, resolveRef } from './project.mjs'
 import { NEW_TARGET_RX } from './batch.mjs'
 import { loadCatalog } from './models.mjs'
-import { mapParams, modelEntry, modelProblem } from './model-schema.mjs'
-import { buildPrompt } from './prompt.mjs'
+import { mapParams, maxRefs, modelEntry, modelProblem } from './model-schema.mjs'
+import { MENTION_RX, buildPrompt } from './prompt.mjs'
 import { NEXT_SCENE_RX } from './scenes.mjs'
 
 /**
@@ -66,6 +66,25 @@ export async function planJob(job, entities, assets, { cfg, dry = false, priceOn
 
   // A new thing has no entity yet; the rules approved for its kind still apply.
   const learnings = await applicableLearnings(entity ?? (studio?.proposal ? { kind: studio.proposal.kind } : null))
+
+  // A reference an approved learning or a revision note names ("masks as in
+  // @REF-001/V01") is attached like the job's own, so the model gets the picture
+  // the rule points at, not just its name. Only as many as the model takes, and
+  // never as a start frame (a frame model's one image is the shot's own). One that
+  // does not resolve (archived, say) is left to buildPrompt to name in words.
+  if (!frames) {
+    const room = maxRefs(entry) - refInfo.length
+    const extra = []
+    for (const text of [...learnings, ...(job.revisionNotes ?? [])]) {
+      for (const m of String(text ?? '').matchAll(MENTION_RX)) {
+        if (extra.length >= room) break
+        const r = await resolveRef(m[1], entities, assets)
+        if (!r.ok || refPaths.includes(r.path) || extra.some((x) => x.path === r.path)) continue
+        extra.push({ path: r.path, entity: r.entity, variant: r.variant, label: r.label ?? null })
+      }
+    }
+    for (const x of extra) { refPaths.push(x.path); refInfo.push(x) }
+  }
   const { prompt, mentioned } = await buildPrompt(job.prompt, learnings, job.revisionNotes, refInfo, entities, assets, { frames })
   if (refInfo.length && !priceOnly) {
     const key = refInfo.map((r, i) => `${frames ? (i ? 'end' : 'start') : `image_${i + 1}`}=${r.entity ? `${r.entity.short_id}/${r.variant}` : 'studio-file'}`).join(' ')

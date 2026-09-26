@@ -4,7 +4,7 @@ import { idRx } from '../worker/lib/ids.mjs'
 import { lockIsStale, readLock } from '../worker/lib/locks.mjs'
 import { listProjects, type Project } from './projects'
 import { parseCsv } from './csv'
-import { autostartBlockedReason } from './worker-guard'
+import { autostartBlockedReason, stopFlagKind, workersPaused } from './worker-guard'
 import { priceKey } from './batch-rules'
 import { hasDraft, isVideoModel } from './models'
 import { foldEpisodeShots, nextEpisodeId, parseEpisodeDir, type EpisodeInfo } from './episodes'
@@ -399,7 +399,7 @@ export async function getReviewContexts(pr: Project, candidates: Candidate[]): P
       parent = job?.parentJobId ?? null
     }
 
-    const m = s.target.match(idRx(pr.code).shotParts)
+    const m = String(s.target ?? '').match(idRx(pr.code).shotParts)
     const finalParams = { ...s.params, resolution: cfg.videoFinalResolution }
     out.set(c.path, {
       label,
@@ -420,12 +420,20 @@ export async function getReviewContexts(pr: Project, candidates: Candidate[]): P
 
 // ---------------------------------------------------------------- prompts page
 
-/** Distinct shot ids that have been generation targets, for the Shot picker's suggestions. */
-/** Every shot id in use: queued targets and shot files on disk, the two things the worker counts when it numbers a scene. */
+/**
+ * Every shot id in use, for the Shot picker's suggestions and the next-free-scene
+ * preview. The same list the worker counts when it numbers a scene (usedShotIds in
+ * worker/lib/project.mjs): queued targets, shot files on disk, where footage was
+ * moved to, and shots taken out into _archive.
+ */
 export async function getKnownShots(pr: Project): Promise<string[]> {
   const rx = idRx(pr.code)
   const queue = await readJsonl<QueueItem>(pr.P.queue)
-  const ids = queue.map((q) => q.target)
+  const ids = queue.map((q) => String(q.target ?? ''))
+  for (const m of await readJsonl<ShotMove>(pr.P.shotMoves)) ids.push(String(m?.from ?? ''), String(m?.to ?? ''))
+  for (const a of await readJsonl<{ kind?: string; shot?: string }>(path.join(pr.P.archive, 'index.jsonl'))) {
+    if (a?.kind === 'shot') ids.push(String(a.shot ?? ''))
+  }
   const root = path.join(pr.P.root, '07_EPISODES')
   const eps = await fs.readdir(root, { withFileTypes: true }).catch(() => [])
   for (const ep of eps.filter((e) => e.isDirectory())) {
@@ -547,10 +555,15 @@ export async function getEpisodes(pr: Project): Promise<EpisodeInfo[]> {
   return [...list, { id: next, dir: null, title: '', shots: 0 }]
 }
 
-/** Reference tokens of the latest queued jobs, newest first. The Prompts page offers them as "recent". */
+/**
+ * Reference tokens of the latest queued jobs, newest first. The Prompts page offers
+ * them as "recent". Only index references (@CHR-001/V02): a reference-studio try
+ * uses working files (studio:..., staged:...) that no prompt row can point at, so
+ * studio jobs are left out and do not push real references out of the window.
+ */
 export async function getRecentRefs(pr: Project, jobs = 12): Promise<string[]> {
-  const queue = await readJsonl<QueueItem>(pr.P.queue)
-  return queue.slice(-jobs).reverse().flatMap((q) => q.refs ?? [])
+  const queue = (await readJsonl<QueueItem & { studio?: unknown }>(pr.P.queue)).filter((q) => !q.studio)
+  return queue.slice(-jobs).reverse().flatMap((q) => (q.refs ?? []).filter((t) => String(t).startsWith('@')))
 }
 
 /**
@@ -860,8 +873,12 @@ async function getLookUsage(
  */
 export async function getWorkerStatus(pr: Project): Promise<WorkerStatus> {
   const autostartOff = autostartBlockedReason()
+  const paused = workersPaused()
+  const stopRequested = stopFlagKind(pr.P.stopFlag) === 'stop'
   const lock = await readLock(pr.P.workerLock)
-  if (!lock || lockIsStale(lock)) return { running: false, outdated: false, autostartOff }
+  if (!lock || lockIsStale(lock)) {
+    return { running: false, outdated: false, autostartOff, paused, stopRequested, lastOutput: await lastWorkerOutput(pr) }
+  }
   const startedMs = lock.startedMs
 
   const dir = path.join(process.cwd(), 'worker')
@@ -869,9 +886,22 @@ export async function getWorkerStatus(pr: Project): Promise<WorkerStatus> {
   const files = ['worker.mjs', 'config.json', ...libs.map((f) => path.join('lib', f))]
   const times = await Promise.all(files.map((f) => fs.stat(path.join(dir, f)).then((s) => s.mtimeMs, () => 0)))
   // A second of slack: an editor can touch a file in the same moment the worker starts.
-  return { running: true, outdated: Math.max(...times) > startedMs + 1000, startedAt: new Date(startedMs).toISOString(), autostartOff }
+  return {
+    running: true, outdated: Math.max(...times) > startedMs + 1000, startedAt: new Date(startedMs).toISOString(),
+    autostartOff, paused, stopRequested,
+  }
 }
 
+/**
+ * The end of a stopped worker's console (queue/worker.stdout.log): why it would
+ * not start ("Refusing to start ...", "already running", a crash), so a worker
+ * that keeps failing says so instead of "starting..." for ever.
+ */
+async function lastWorkerOutput(pr: Project): Promise<string | null> {
+  const text = await fs.readFile(pr.P.workerStdout, 'utf8').catch(() => '')
+  const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean)
+  return lines.length ? lines.slice(-3).join('\n').slice(-600) : null
+}
 
 /** Index-op requests the worker has not applied yet. The pages that made them say so. */
 export async function getPendingIndexOps(pr: Project): Promise<IndexOp[]> {
@@ -913,6 +943,7 @@ export async function getStudioSession(pr: Project, sessionId: string): Promise<
   const session = foldStudio(sessionId, {
     requests, events, queue, processedJobs: processed,
     held: (state?.held ?? {}) as Record<string, { reason: string }>,
+    failedJobs: (state?.failedJobs ?? {}) as Record<string, { reason: string }>,
     staged, ledgerHf,
     generating: await getGeneratingJobId(pr, new Set(processed)),
   })
