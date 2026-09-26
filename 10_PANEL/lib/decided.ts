@@ -290,14 +290,14 @@ function pairUnidentifiedTakes(
   for (const e of entries) {
     const c = claims.get(e.decision.id)
     if (!c) continue
-    const key = `${c.folder} ${c.stem} ${c.ext}`
+    const key = `${c.folder}\u0000${c.stem}\u0000${c.ext}`
     const list = groups.get(key)
     if (list) list.push(e)
     else groups.set(key, [e])
   }
 
   for (const [key, list] of groups) {
-    const [folder, stem, ext] = key.split(' ')
+    const [folder, stem, ext] = key.split('\u0000')
     const free = (shotFiles.get(folder) ?? [])
       .filter((n) => n === stem + ext || n.startsWith(stem + '_T'))
       .filter((n) => !claimed.has(`${folder}/${n}`))

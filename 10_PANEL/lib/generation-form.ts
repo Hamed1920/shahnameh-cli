@@ -58,11 +58,11 @@ export function readGenerationForm(formData: FormData, cfg: Record<string, unkno
       const s = String(v ?? '').trim()
       if (!s) continue
       if (p.enum && !p.enum.map(String).includes(s)) throw new Invalid(`${k} is one of ${p.enum.join(', ')}.`)
-      if (/integer|number/.test(p.type)) {
+      if (/integer|number/.test(String(p.type ?? ''))) {
         const n = Number(s)
         if (!Number.isFinite(n)) throw new Invalid(`${k} is a number.`)
         params[k] = n
-      } else if (p.type.startsWith('boolean')) params[k] = s === 'true'
+      } else if (String(p.type ?? '').startsWith('boolean')) params[k] = s === 'true'
       else params[k] = s.slice(0, 200)
     }
   }

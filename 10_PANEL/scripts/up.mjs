@@ -6,7 +6,10 @@
  * (lib/worker-supervisor.ts), so this is now the same as npm run dev, with
  * the output prefixed. Kept so the command people know still works.
  *
- * SHM_ROOT and SHM_HIGGSFIELD_JS pass through untouched, so a sandbox works.
+ * The environment passes through untouched, so a sandbox works: SHM_PROJECTS for
+ * the copied projects and SHM_HIGGSFIELD_JS for the stub CLI (10_PANEL/.env.local).
+ * Not SHM_ROOT: the panel sets that per worker, and refuses to start workers when
+ * it is set for the panel itself (lib/worker-guard.ts).
  */
 import { spawn } from 'node:child_process'
 import path from 'node:path'

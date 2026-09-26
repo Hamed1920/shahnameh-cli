@@ -110,7 +110,7 @@ export function RegenerateButton({
           {regenerations.map((r) => (
             <li key={r.reqId} className="flex flex-wrap items-center gap-2">
               <RotateCcw aria-hidden className="size-3 text-faint" />
-              <span>Regenerated {when(r.ts)}</span>
+              <span suppressHydrationWarning>Regenerated {when(r.ts)}</span>
               {r.state === 'queued' && <Badge tone="good">queued{r.jobId ? ` · ${r.jobId}` : ''}</Badge>}
               {r.state === 'waiting' && <Badge tone="accent">waiting for the worker</Badge>}
               {r.state === 'rejected' && <Badge tone="bad">not queued: {r.reason}</Badge>}

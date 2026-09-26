@@ -804,7 +804,7 @@ function TakeCard({
             {take.status === 'waiting' && <Badge tone="accent">waiting for the worker</Badge>}
             {take.status === 'failed' && <Badge tone="bad">not applied</Badge>}
             {movingTo && <Badge tone="accent">moving to {shortEpisode(movingTo)}</Badge>}
-            <span className="ml-auto font-mono text-[10.5px] text-faint tabular-nums">{when(take.ts)}</span>
+            <span suppressHydrationWarning className="ml-auto font-mono text-[10.5px] text-faint tabular-nums">{when(take.ts)}</span>
           </div>
         </div>
         <button

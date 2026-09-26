@@ -3,6 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // pdf.js is loaded at runtime by lib/documents.ts; bundling its legacy build breaks it.
   serverExternalPackages: ["pdfjs-dist"],
+  // The dev server serves its own scripts only to localhost. Opened at 127.0.0.1 the
+  // page rendered and never came alive: every button dead, "Add these" never enabled.
+  // A network address is still refused on purpose (CLAUDE.md, Environment).
+  allowedDevOrigins: ["127.0.0.1"],
   experimental: {
     serverActions: {
       // Reviewer uploads go through the decide action, and footage added to an

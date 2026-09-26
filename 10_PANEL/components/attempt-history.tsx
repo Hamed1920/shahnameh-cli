@@ -7,8 +7,10 @@ import { useAssetUrls } from '@/components/project-context'
 import { cn } from '@/lib/cn'
 import type { AttemptEntry } from '@/lib/types'
 
+// A fixed locale: with the default, the server (Node's locale) and the browser could
+// write the same date differently, and React would redraw the whole list to reconcile.
 const when = (iso: string | null) =>
-  iso ? new Date(iso).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : null
+  iso ? new Date(iso).toLocaleString('en-GB', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : null
 
 /**
  * Every earlier attempt at this shot, oldest first: the video, what was
@@ -69,7 +71,7 @@ export function AttemptHistory({
                   {h.verdict === 'denied' && <Badge tone="bad">denied</Badge>}
                   {h.verdict === 'accepted' && <Badge tone="good">{h.stage === 'draft' ? 'draft approved' : 'accepted'}</Badge>}
                   {!h.verdict && <Badge tone="muted">not reviewed</Badge>}
-                  {when(h.decidedAt) && <span className="font-mono text-[11px] text-faint">{when(h.decidedAt)}</span>}
+                  {when(h.decidedAt) && <span suppressHydrationWarning className="font-mono text-[11px] text-faint">{when(h.decidedAt)}</span>}
                   {h.video && (
                     <Button type="button" size="sm" tone={on ? 'accent' : 'outline'} onClick={() => onCompare(on ? null : h)} className="ml-auto h-7">
                       <Columns2 aria-hidden className="size-3.5" />

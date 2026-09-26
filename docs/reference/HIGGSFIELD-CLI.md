@@ -1,8 +1,13 @@
 # Higgsfield CLI — captured surface
 
 `@higgsfield/cli` **1.1.24** (build `74e091a`, 2026-08-29). Captured from `--help` on this
-machine 2026-09-03. **This file, not documentation or memory, is what the worker is written
-against.** Re-capture after any CLI upgrade.
+machine 2026-09-03; the workspace section re-checked against **1.1.26** (build `69f3a33`,
+2026-09-18) on 2026-09-26. **This file, not documentation or memory, is what the worker is
+written against.** Re-capture after any CLI upgrade.
+
+1.1.26 ships a native binary (`vendor/hf.exe`) behind the same `bin/higgsfield.js` entry the
+worker runs, so nothing about how it is spawned changed. `npm i -g @higgsfield/cli` may warn that
+its postinstall script was not run; `higgsfield --version` answering means it is installed.
 
 Binaries: `higgsfield`, `higgs`, `hf` (all aliases of the same command).
 
@@ -42,17 +47,30 @@ higgsfield auth logout
 
 There is **no `auth status`**. Probe auth with `auth token` and check the exit code.
 
-## Workspace — required after login
+## Workspace — required after login, once per machine
 
-`account status` fails with `No workspace selected.` until a workspace is chosen. This is a
-second setup step that is easy to miss:
+Until a workspace is chosen, **every** account, `model` and `generate` call (`cost` and `create`
+included) fails with exit code 4 and:
 
 ```
-higgsfield workspace list
+Error: No workspace selected.
+Hint: Run: hf workspace set <workspace_id>
+```
+
+`auth token` still succeeds, so a signed-in CLI can look fine and still price nothing. The choice
+is stored in the CLI's own config, not passed per call: the worker has no flag for it, and every
+worker on the machine uses the one set here.
+
+```
+higgsfield workspace list            # ID, NAME, PLAN, CREDITS, SELECTED
 higgsfield workspace set <workspace_id>
-higgsfield workspace status
-higgsfield workspace unset          # back to private account context
+higgsfield workspace status          # "<name> — <plan>, <n> credits"
+higgsfield workspace unset           # back to private account context
 ```
+
+The worker checks `auth token` and then `workspace status` before pricing or generating
+(`cliReady` in `worker/lib/hf.mjs`). Missing either, jobs are held and batches wait, each with
+the reason on the Queue and Prompts pages, and nothing is spent.
 
 ## Generation
 

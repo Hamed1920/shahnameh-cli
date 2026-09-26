@@ -36,7 +36,7 @@ $script:ShmFolderFor = [ordered]@{
 # Top-level entries that belong to the system, never to a project. Anything else at the
 # top level is a project when it holds a project.json.
 $script:ShmSystemDirs  = @('10_PANEL','tools','docs','templates','node_modules')
-$script:ShmSystemFiles = @('CLAUDE.md','README.md','startup.md','skills-lock.json')
+$script:ShmSystemFiles = @('CLAUDE.md','README.md','startup.md','skills-lock.json','HANDOFF.md')
 
 # Project slug and code grammar, and the words a code may never be.
 $script:ShmSlugPattern  = '^[a-z0-9](?:[a-z0-9-]{0,38}[a-z0-9])?$'
@@ -318,6 +318,27 @@ function Resolve-ShmRef {
 
 # Rewrites a registry CSV. An empty row set is ignored so a header-only CSV is never
 # truncated to zero bytes (Export-Csv writes no header without rows).
+# Is a lock file (queue\worker.lock, .generate.lock) held by a running process?
+# Mirrors lockIsStale in 10_PANEL/worker/lib/locks.mjs: the first word is the pid; a
+# lock whose second line says heartbeat=<s> is also stale once nobody has touched it
+# for 3 minutes, because after a crash and a reboot Windows can give that pid to
+# another process.
+function Test-ShmLiveLock {
+    param([Parameter(Mandatory)][string]$LockPath)
+    if (-not (Test-Path -LiteralPath $LockPath)) { return $false }
+    $raw = ''
+    try { $raw = [string](Get-Content -LiteralPath $LockPath -Raw) } catch { $raw = '' }
+    $tok = @(($raw.Trim()) -split '\s+')[0]
+    $procId = 0
+    if (-not [int]::TryParse($tok, [ref]$procId) -or $procId -le 0) { return $false }
+    if ($null -eq (Get-Process -Id $procId -ErrorAction SilentlyContinue)) { return $false }
+    if ($raw -match 'heartbeat=\d+') {
+        $age = (Get-Date) - (Get-Item -LiteralPath $LockPath).LastWriteTime
+        if ($age.TotalMinutes -gt 3) { return $false }
+    }
+    return $true
+}
+
 function Write-ShmCsv {
     param(
         [Parameter(Mandatory)][AllowEmptyCollection()][object[]]$Rows,

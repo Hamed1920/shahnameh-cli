@@ -10,6 +10,31 @@ project template. Every **project** — one film — is a top-level folder besid
 Prompts are authored in the panel's **Prompts** page, or in **Claude Chat** / **Claude Cowork**.
 This CLI **executes** them, owns the filesystem, and owns every ID. See `docs/SYNC_PROTOCOL.md`.
 
+## Pending on the machine that runs the workers (delete this section once done)
+
+Since 2026-09-24 the panel on the main machine (the one with the Higgsfield account that has
+credits) renders but does not respond: Submit and "Add these" stay disabled, so nothing reaches the
+queue. The committed code works on another machine, so the cause is on this one. **At the start of
+a session on that machine** (`higgsfield workspace status` shows credits), before anything else:
+
+1. With the panel running the usual way (`npm run up`), run
+   `powershell.exe -NoProfile -ExecutionPolicy Bypass -File "tools\Check-Panel.ps1"` and read
+   `%TEMP%\fmfd-panel-check.txt`.
+2. Remedies, in this order. Say what you found and what you are about to do before each one:
+   - Something other than this panel listens on port 3000 (an old panel from the old
+     `Kagu\shahnameh-cli` folder, another Next app): name it and ask before stopping it.
+   - The `.next` build cache is older than the last pull: stop the panel, delete `10_PANEL\.next`,
+     start it again.
+   - `higgsfield workspace status` says no workspace: `higgsfield workspace list`, then
+     `higgsfield workspace set <id>` for the paid workspace (ask which).
+   - The panel is being opened at `127.0.0.1` or the machine's network address: use
+     `http://localhost:3000` (only `127.0.0.1` is allowed besides localhost).
+   - `node -v` is older than 22.6: install Node 24 LTS.
+3. If the Prompts page still does not respond, ask the user to open DevTools (F12) → Console on it
+   and paste the red errors.
+4. Record what the cause was in `shahnameh-cli/00_PROJECT/PROJECT_LOG.md`, then delete this section
+   and commit.
+
 ## Which project?
 
 Everything below happens inside one project. Before touching anything, know which:
@@ -111,8 +136,8 @@ Run `/project-log` at the start of a session, or read directly:
 
 ## Tools
 
-All four live in `tools\` and take `-Project <slug>`. It is required once more than one project
-exists; with exactly one they find it themselves.
+They live in `tools\` and take `-Project <slug>`. It is required once more than one project
+exists; with exactly one they find it themselves. (`Check-Panel.ps1` is for the whole machine.)
 
 ```powershell
 # must pass before you finish   (no -Project: every project, plus the system-level checks)
@@ -127,6 +152,10 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File "tools\Ingest-Jobs.ps1" 
 # once per machine after pulling the multi-project branch: moves the leftover
 # gitignored runtime files out of the old single-project root layout
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File "tools\Move-ToProjects.ps1" -WhatIf
+
+# the panel renders but does not respond, or workers will not start: read-only report
+# of this machine (Node, CLI workspace, ports, .next age, worker logs) to %TEMP%\fmfd-panel-check.txt
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "tools\Check-Panel.ps1"
 ```
 
 ```powershell
@@ -134,7 +163,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File "tools\Move-ToProjects.p
 npm run up         # same as dev; the panel server starts one worker per project and keeps them running
 npm run dev        # http://localhost:3000 — the project picker
 npm run worker -- --project <slug>    # one project by hand; add --dry-run to price without spending
-npm test           # prompt parser tests
+npm test           # panel lib + worker tests (Node 22.6+)
 ```
 
 Hamed's normal path for new prompts is the panel's **Prompts** page (paste or drop a document, fix
@@ -147,11 +176,12 @@ Skills: `/project-log`, `/sync-out`, `/sync-in`, `/sync-check`, `/learn`, `/run-
 
 ```
 10_PANEL/       Next.js review panel + generation worker — the system's only code
-tools/          Validate-Project, Build-ContextPack, Ingest-Jobs, Move-ToProjects, Shm-Common
+tools/          Validate-Project, Build-ContextPack, Ingest-Jobs, Move-ToProjects, Check-Panel, Shm-Common
 docs/           INDEXING.md, SYNC_PROTOCOL.md, VISION-BATCH-ADD.md (parked), reference/HIGGSFIELD-CLI.md
 templates/      project/ — the skeleton the panel copies to start a new film
 shahnameh-cli/  a project (code SHM). Any top-level folder with a project.json is one.
 .generate.lock  machine-wide: one generation at a time. Never committed.
+.workers-paused "Stop all workers" on the Queue page is in force. Never committed.
 ```
 
 Inside a project:
@@ -186,18 +216,19 @@ download every render.
   decision and spend credits. The panel's server starts one worker per project and keeps them
   running (`lib/worker-supervisor.ts`), so on any other machine set `SHM_WORKER=off` in
   `10_PANEL/.env.local` before running the panel. Pull before starting the panel; commit and push
-  after stopping the workers (each project's `queue/worker.stop`). The panel can run anywhere,
-  since JSONL is append-only and union-merged.
-- **Author is Hamed alone.** Every commit is authored by Hamed, with exactly one trailer:
-
-  ```
-  Co-Authored-By: Parsa Xavier <parsaxavier@gmail.com>
-  ```
+  after stopping the workers: **Stop all workers** on the Queue page, then wait until it says
+  "All workers stopped" (each finishes the job in hand first). Without the panel running, create
+  each project's `queue/worker.stop` instead. Don't drop a `worker.stop` while the panel runs and
+  expect it to stick unless it is the Queue page's: the supervisor restarts a worker on new code.
+  The panel can run anywhere, since JSONL is append-only and union-merged.
+- **Author is Parsa Mansouri alone.** Every commit is authored and committed by
+  `Parsa Mansouri <parsaxavier@gmail.com>` (the repo's local `user.name` / `user.email`), with no
+  trailer. Commits before 2026-09-26 carry Hamed as author; they are not rewritten.
 
   **No AI co-author, ever.** No `Co-Authored-By: Claude`, no "Generated with Claude Code" line,
   no Claude or Anthropic attribution of any kind, in the commit message or the PR body.
-- **"commit" is an instruction, not a question.** When Hamed says "commit" in a Claude chat,
-  stage and commit the working tree right then, with the trailer above. Don't ask first.
+- **"commit" is an instruction, not a question.** When the user says "commit" in a Claude chat,
+  stage and commit the working tree right then. Don't ask first.
 - **Always sync, never just commit.** A commit that only sits on this machine isn't done. After
   committing, pull (`git pull --rebase`) and push, so the other machine can clone the work.
   Media pushes through LFS, so give the upload time to finish and confirm it did.
@@ -206,7 +237,15 @@ download every render.
 
 ## Environment
 
-Windows 11, PowerShell 5.1, Node 24 LTS, Git 2.55.
+Windows 11, PowerShell 5.1, Node 24 LTS (22.6 at the least), Git 2.55.
+
+- **The Higgsfield CLI needs a workspace chosen, once per machine** (CLI 1.1.26+): without it every
+  `generate` and `cost` call fails with "No workspace selected". `higgsfield workspace list`, then
+  `higgsfield workspace set <id>` for the workspace with the credits. The worker holds jobs and says
+  so on the Queue and Prompts pages when it is missing.
+- Open the panel at `http://localhost:3000`. Next's dev server blocks its own scripts for other
+  addresses (a network IP), and the page then renders but never responds. `127.0.0.1` is allowed
+  in `next.config.ts`.
 
 - PowerShell scripts are **ASCII-only on purpose** — PS 5.1 reads BOM-less `.ps1` as ANSI, so
   non-ASCII characters corrupt silently.

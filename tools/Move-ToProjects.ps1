@@ -36,7 +36,8 @@
 #>
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
-    [string]$Slug = 'shahnameh-cli',
+    # -Project, like every other tool (CLAUDE.md).
+    [Alias('Project')][string]$Slug = 'shahnameh-cli',
     [string]$RepoRoot
 )
 

@@ -35,19 +35,23 @@
 !/jayson/
 !/shajarian/
 
-# The half-built folder of a project being created, and the machine-wide
-# generation lock. Never travel.
+# The half-built folder of a project being created, the machine-wide
+# generation lock, and "Stop all workers" (Queue page). Never travel.
 /.new-*
 /.generate.lock
+/.workers-paused
 # The model-list refresh lock, and a sandbox's own copy of the model list.
 .catalog.lock
 .model-catalog.json
 
 # --- vendored third-party skills: reinstall, do not commit -------------
-#   npx skills add higgsfield-ai/skills
-/.agents/
-/skills-lock.json
-/.claude/skills/higgsfield-*
+#   npx skills add higgsfield-ai/skills -g     (user-level; run in a folder
+#   it installs into that folder, e.g. 10_PANEL, so these match at any depth)
+.agents/
+skills-lock.json
+**/.claude/skills/higgsfield-*
+# A person's own Claude Code permissions on one machine.
+**/.claude/settings.local.json
 
 # --- node / next ------------------------------------------------------
 node_modules/

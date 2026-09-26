@@ -308,6 +308,14 @@ if ($WhatIf) {
     exit 0
 }
 
+# The worker rewrites ENTITIES.csv and JOB_LEDGER.csv whole too; writing them while it
+# runs would lose one side's changes. Stop it first (Queue page: Stop all workers).
+if (Test-ShmLiveLock -LockPath (Join-Path $P.Queue 'worker.lock')) {
+    Write-Output "REFUSED: this project's worker is running, and it rewrites the same registries."
+    Write-Output "Stop it first (Queue page -> Stop all workers), then run this again. Nothing was written."
+    exit 1
+}
+
 foreach ($dir in @($P.Sync, $P.Receipts, $P.Processed)) {
     if (-not (Test-Path -LiteralPath $dir)) { New-Item -ItemType Directory -Force -Path $dir | Out-Null }
 }

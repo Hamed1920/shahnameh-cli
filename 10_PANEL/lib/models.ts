@@ -108,7 +108,7 @@ export function extraParams(model: string | null | undefined): ModelParam[] {
     // extending a video is not something a prompt row does.
     && !(p.name === 'mode' && p.enum?.some((v) => ['t2v', 'omni_reference', 'text-to-video', 'reference-to-video'].includes(String(v))))
     && p.name !== 'extension_mode'
-    && !/array|object/.test(p.type))
+    && !/array|object/.test(String(p.type ?? '')))
 }
 
 /** What the worker would do with these references and params: errors block, warnings inform. */

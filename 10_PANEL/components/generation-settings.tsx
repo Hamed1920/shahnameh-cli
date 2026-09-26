@@ -86,7 +86,7 @@ export function ModelParamFields({ model, value, onChange }: {
             </Field>
           )
         }
-        if (p.type.startsWith('boolean')) {
+        if (String(p.type ?? '').startsWith('boolean')) {
           return (
             <div key={p.name} className="flex items-end pb-2">
               <Checkbox
@@ -97,7 +97,7 @@ export function ModelParamFields({ model, value, onChange }: {
             </div>
           )
         }
-        const numeric = /integer|number/.test(p.type)
+        const numeric = /integer|number/.test(String(p.type ?? ''))
         return (
           <Field key={p.name} label={title(p)}>
             <Input

@@ -246,7 +246,7 @@ export function toJobInput(row: DraftRow, defaults: BatchDefaults): BatchJobInpu
     for (const [k, v] of Object.entries(defaults.extra ?? {})) {
       const p = names.get(k)
       if (!p || v === '') continue
-      params[k] = /integer|number/.test(p.type) ? Number(v) : p.type.startsWith('boolean') ? v === 'true' : v
+      params[k] = /integer|number/.test(String(p.type ?? '')) ? Number(v) : String(p.type ?? '').startsWith('boolean') ? v === 'true' : v
     }
   }
   for (const [k, v] of Object.entries(row.params)) {
