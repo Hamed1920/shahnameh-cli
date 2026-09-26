@@ -718,6 +718,8 @@ export async function getPromptLibrary(pr: Project): Promise<PromptLibraryItem[]
   ])
   const processed = new Set((state?.processedJobs ?? []) as string[])
   const failedDecisions = (state?.failedDecisions ?? {}) as Record<string, string>
+  const failedJobs = (state?.failedJobs ?? {}) as Record<string, { reason: string }>
+  const held = (state?.held ?? {}) as Record<string, { reason: string }>
   const generating = await getGeneratingJobId(pr, processed)
   const ledger = new Map<string, string>()
   for (const row of parseCsv(ledgerText) as unknown as Record<string, string>[]) ledger.set(row.job_id, row.state)
@@ -760,6 +762,8 @@ export async function getPromptLibrary(pr: Project): Promise<PromptLibraryItem[]
       state: !processed.has(last.jobId)
         ? last.jobId === generating ? 'generating' : 'queued'
         : v ?? (ledger.get(last.jobId) === 'GENERATED' ? 'to-review' : 'failed'),
+      // Why it failed (worker.mjs recordFailure), or why a queued one is held.
+      note: failedJobs[last.jobId]?.reason ?? (!processed.has(last.jobId) ? held[last.jobId]?.reason ?? null : null),
     })
   }
   return out.sort((a, b) => String(b.enqueuedAt).localeCompare(String(a.enqueuedAt)))

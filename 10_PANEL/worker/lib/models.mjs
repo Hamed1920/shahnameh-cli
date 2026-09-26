@@ -2,7 +2,7 @@ import fs from 'node:fs/promises'
 import fsSync from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { hfJson } from './hf.mjs'
+import { cliProblem, hfJson } from './hf.mjs'
 import { acquireFileLock, releaseFileLock } from './locks.mjs'
 import { summarizeModel } from './model-schema.mjs'
 
@@ -69,7 +69,7 @@ export async function refreshCatalog({ lockDir, log = async () => {} } = {}) {
   try {
     const list = await hfJson(['model', 'list'], { timeoutMs: 120_000 })
     if (list.code !== 0 || !Array.isArray(list.json)) {
-      return { ok: false, error: `model list failed: ${(list.stderr || list.stdout || '').trim().slice(0, 300)}` }
+      return { ok: false, error: `the model list could not be fetched: ${cliProblem(list.stderr || list.stdout)}` }
     }
     const previous = loadCatalog()?.models ?? {}
     const wanted = list.json.filter((m) => CATALOG_KINDS.includes(m.type))

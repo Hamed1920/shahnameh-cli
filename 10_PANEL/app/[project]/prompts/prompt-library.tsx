@@ -102,7 +102,8 @@ export function PromptLibrary({
                     <Td className="font-mono text-xs text-muted">{i.model}{i.stage ? ` · ${i.stage}` : ''}</Td>
                     <Td className="text-xs text-muted">
                       <Badge tone={STATE[i.state].tone}>{STATE[i.state].text}</Badge>
-                      <div className="mt-1 font-mono text-[11px] text-faint tabular-nums">
+                      {i.note && <div className="mt-1 max-w-56 text-[11.5px] leading-snug text-bad" dir="auto">{i.note}</div>}
+                      <div suppressHydrationWarning className="mt-1 font-mono text-[11px] text-faint tabular-nums">
                         {i.attempts > 1 ? `${i.attempts} attempts · ` : ''}{when(i.enqueuedAt)}
                       </div>
                     </Td>

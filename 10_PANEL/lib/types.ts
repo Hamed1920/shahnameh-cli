@@ -591,6 +591,8 @@ export interface PromptLibraryItem {
   /** Notes the latest attempt carried. A fresh run does not inherit them. */
   revisionNotes: string[]
   state: 'queued' | 'generating' | 'failed' | 'to-review' | 'accepted' | 'denied'
+  /** Why it failed, or why a queued one is held (not signed in, over a ceiling). */
+  note: string | null
 }
 
 /** A Regenerate request and what became of it, for the Decided page. */

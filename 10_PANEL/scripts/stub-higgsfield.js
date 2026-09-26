@@ -10,7 +10,17 @@ fs.appendFileSync(log, JSON.stringify({ ts: new Date().toISOString(), args }) + 
 const out = (o) => { process.stdout.write(JSON.stringify(o)); process.exit(0) }
 const [cmd, sub, model] = args
 
+// Failure switches for testing, as files beside STUB_LOG so a running worker picks
+// them up without a restart: CLI 1.1.26's answer when no workspace is chosen.
+const flag = (name) => fs.existsSync(path.join(path.dirname(log), name))
+const noWorkspace = () => { process.stderr.write('Error: No workspace selected.\nHint: Run: hf workspace set <workspace_id>\n'); process.exit(4) }
+
 if (cmd === 'auth' && sub === 'token') { process.stdout.write('stub-token\n'); process.exit(0) }
+if (cmd === 'workspace' && sub === 'status') {
+  if (flag('stub-no-workspace')) noWorkspace()
+  process.stdout.write('stub workspace\n'); process.exit(0)
+}
+if (cmd === 'generate' && sub === 'cost' && flag('stub-fail-cost')) noWorkspace()
 // A handful of real model schemas, so the worker's model catalogue can be exercised offline.
 const FIXTURE = JSON.parse(fs.readFileSync(path.join(__dirname, 'stub-models.json'), 'utf8')).models
 if (cmd === 'model' && sub === 'list') {

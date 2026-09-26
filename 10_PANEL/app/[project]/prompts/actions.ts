@@ -7,12 +7,12 @@ import { DOCUMENT_EXT, MAX_DOCUMENTS, MAX_DOCUMENT_BYTES, documentToText } from 
 import { REVIEWER, appendJobRequest, newBatchId, newRequestId } from '@/lib/job-requests'
 import { requireProject } from '@/lib/projects'
 import { revalidateProject } from '@/lib/revalidate'
-import { getBatches, getCatalog, getQueue, getShotMoves, getWorkerConfig, resolveRefToken } from '@/lib/store'
+import { getBatches, getCatalog, getQueue, getShotMoves, getWorkerConfig, readJsonl, resolveRefToken } from '@/lib/store'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { MAX_ADD_TOTAL_BYTES, MAX_ADD_UPLOADS } from '@/lib/indexing'
 import { Invalid, parseJsonArray, readUploads, type PendingUpload } from '@/lib/uploads'
-import type { BatchDefaults, BatchJobInput, QueueItem } from '@/lib/types'
+import type { BatchDefaults, BatchJobInput, JobRequestEvent, QueueItem } from '@/lib/types'
 
 /**
  * Write side of the Prompts page: one append to JOB_REQUESTS.jsonl per
@@ -43,11 +43,31 @@ export async function extractDocuments(formData: FormData): Promise<{ ok: boolea
 }
 
 /** Ask the worker to fetch the Higgsfield model list again. Free: it only reads `model list` / `model get`. */
-export async function refreshModels(project: string): Promise<{ ok: boolean; error?: string }> {
+export async function refreshModels(project: string): Promise<{ ok: boolean; reqId?: string; error?: string }> {
   const pr = await requireProject(project)
-  await appendJobRequest(pr, { id: newRequestId(), ts: new Date().toISOString(), reviewer: REVIEWER, type: 'models.refresh' })
+  const reqId = newRequestId()
+  await appendJobRequest(pr, { id: reqId, ts: new Date().toISOString(), reviewer: REVIEWER, type: 'models.refresh' })
   revalidateProject(pr.slug)
-  return { ok: true }
+  return { ok: true, reqId }
+}
+
+/**
+ * What became of a "Refresh models" request: done (with the count), refused (the
+ * CLI could not list models, say, with no workspace selected), still trying
+ * (with the latest reason), or not picked up yet.
+ */
+export async function modelRefreshResult(project: string, reqId: string): Promise<
+  { state: 'done'; count: number; usable: number } | { state: 'failed' | 'retrying'; reason: string } | { state: 'waiting' }
+> {
+  const pr = await requireProject(project)
+  const events = (await readJsonl<JobRequestEvent>(pr.P.jobRequestResults)).filter((e) => e.reqId === reqId)
+  const done = events.find((e) => e.event === 'models')
+  if (done && done.event === 'models') return { state: 'done', count: done.count, usable: done.usable }
+  const refused = events.find((e) => e.event === 'rejected')
+  if (refused && refused.event === 'rejected') return { state: 'failed', reason: refused.reason }
+  const trying = [...events].reverse().find((e) => e.event === 'error')
+  if (trying && trying.event === 'error') return { state: 'retrying', reason: trying.reason }
+  return { state: 'waiting' }
 }
 
 interface SubmitPayload {
