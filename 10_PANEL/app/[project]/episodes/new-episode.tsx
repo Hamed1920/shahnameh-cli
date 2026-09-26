@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Plus } from 'lucide-react'
 import { MenuNote } from '@/components/item-menu'
 import { useProject } from '@/components/project-context'
@@ -25,7 +24,6 @@ import { startEpisode } from './actions'
  */
 export function NewEpisode({ next, taken }: { next: string; taken: string[] }) {
   const project = useProject()
-  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [number, setNumber] = useState(shortEpisode(next))
   const [name, setName] = useState('')
@@ -51,7 +49,6 @@ export function NewEpisode({ next, taken }: { next: string; taken: string[] }) {
     setOpen(false)
     setNote(`Asked the worker to start ${shortEpisode(id)}. It makes the folder on its next pass.`)
     setTimeout(() => setNote(null), 3500)
-    router.refresh()
   }
 
   return (

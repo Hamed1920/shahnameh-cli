@@ -80,13 +80,20 @@ export function ReviewStage({
   item,
   catalog,
   active,
+  near = false,
   onQueue,
 }: {
   item: ReviewItem
   catalog: CatalogEntity[]
   active: boolean
+  /** Next to the active one on the strip: load its video now, so moving to it is instant. */
+  near?: boolean
   onQueue: (d: QueuedDecision) => void
 }) {
+  // Every stage stays mounted so what was typed survives moving around, but a
+  // video loads only once its stage is on screen or next to it, not all at once.
+  const [seen, setSeen] = useState(active || near)
+  if ((active || near) && !seen) setSeen(true)
   const project = useProject()
   const { assetUrl } = useAssetUrls()
   const { candidate, context: ctx } = item
@@ -256,8 +263,10 @@ export function ReviewStage({
               </Button>
             </div>
           </div>
-        ) : (
+        ) : seen ? (
           <Player path={candidate.path} />
+        ) : (
+          <div className="aspect-video w-full rounded-xl border border-edge bg-black" />
         )}
 
         <ReferenceEditor

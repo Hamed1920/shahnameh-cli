@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import { cache } from 'react'
 import { idRx } from '../worker/lib/ids.mjs'
 import { lockIsStale, readLock } from '../worker/lib/locks.mjs'
 import { listProjects, type Project } from './projects'
@@ -20,9 +21,10 @@ import type {
 const RECENT_FAILURE_MS = 30 * 60 * 1000
 
 /**
- * Read side of the panel. Everything here touches disk on every call and is
- * never cached — the worker mutates these files underneath us, so a cached
- * read would show Hamed a stale queue.
+ * Read side of the panel. Nothing here is cached across requests — the worker
+ * mutates these files underneath us, so a cached read would show Hamed a stale
+ * queue. Within one page render a file is read once (readText below): a page
+ * and its layout between them ask for state.json and the queue a dozen times.
  *
  * The panel NEVER writes CSVs or moves asset files. It appends JSONL and drops
  * raw uploads into 09_OUTPUT/_uploads (see actions.ts). The worker is the single
@@ -31,12 +33,44 @@ const RECENT_FAILURE_MS = 30 * 60 * 1000
  * Every read is of one project (lib/projects.ts), passed in as `pr`.
  */
 
-async function readText(file: string): Promise<string> {
+/**
+ * A file as text, '' when it does not exist. Memoised for the length of one
+ * server render (React cache), so a render sees one consistent reading of each
+ * file. Outside a render -- a server action, a route handler -- it reads the
+ * disk every time, so a write followed by a read sees the write. Text, not
+ * parsed rows: callers sort and push the arrays they parse, and must not share them.
+ */
+export const readText = cache(async (file: string): Promise<string> => {
   try {
     return await fs.readFile(file, 'utf8')
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === 'ENOENT') return ''
     throw err
+  }
+})
+
+/**
+ * The last `bytes` of a file, from the first whole line; '' when it does not
+ * exist. For worker.log, which is never rotated: the panel only ever wants its
+ * recent lines, and reading the whole thing grows slower every day.
+ */
+export async function readTail(file: string, bytes = 64 * 1024): Promise<string> {
+  let fh
+  try {
+    fh = await fs.open(file, 'r')
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === 'ENOENT') return ''
+    throw err
+  }
+  try {
+    const { size } = await fh.stat()
+    const start = Math.max(0, size - bytes)
+    const buf = Buffer.alloc(size - start)
+    await fh.read(buf, 0, buf.length, start)
+    const text = buf.toString('utf8')
+    return start === 0 ? text : text.slice(text.indexOf('\n') + 1)
+  } finally {
+    await fh.close()
   }
 }
 
@@ -138,20 +172,21 @@ export async function getCandidates(pr: Project): Promise<Candidate[]> {
       .map((e) => e.name)
   } catch { return [] }
 
-  const out: Candidate[] = []
-  for (const batch of batches) {
+  // Every batch at once: there is one folder per job ever run, and this runs on
+  // every render of every page (the Review badge).
+  const perBatch = await Promise.all(batches.map(async (batch): Promise<Candidate[]> => {
     const dir = path.join(pr.P.staging, batch)
     let sidecar: StagingSidecar
     try {
-      sidecar = JSON.parse(await fs.readFile(path.join(dir, 'job.json'), 'utf8'))
-    } catch { continue }
+      sidecar = JSON.parse(await readText(path.join(dir, 'job.json')))
+    } catch { return [] }
     // A reference-studio try is decided in the studio, not on Review (lib/studio.ts).
-    if ((sidecar as { studio?: unknown }).studio) continue
+    if ((sidecar as { studio?: unknown }).studio) return []
 
-    for (const c of sidecar.candidates ?? []) {
+    const found = await Promise.all((sidecar.candidates ?? []).map(async (c): Promise<Candidate | null> => {
       const rel = `09_OUTPUT/_staging/${batch}/${c.file}`
-      try { await fs.access(path.join(dir, c.file)) } catch { continue }
-      out.push({
+      try { await fs.access(path.join(dir, c.file)) } catch { return null }
+      return {
         hfJobId: sidecar.hfJobId,
         take: c.take,
         path: rel,
@@ -159,9 +194,11 @@ export async function getCandidates(pr: Project): Promise<Candidate[]> {
         sidecar,
         decided: byCandidate.get(rel) ?? null,
         failedDecision: failedFor.get(rel) ?? null,
-      })
-    }
-  }
+      }
+    }))
+    return found.filter((c): c is Candidate => c !== null)
+  }))
+  const out = perBatch.flat()
   out.sort((a, b) => (a.sidecar.createdAt < b.sidecar.createdAt ? 1 : -1))
   return out
 }
@@ -260,11 +297,20 @@ export async function getReferenceFor(
 }
 
 /**
- * The job the worker is generating right now, if any: the most recent GENERATE
- * line in worker.log for a job the worker has not yet recorded as processed.
+ * The job the worker is generating right now, if any: the job in worker.now
+ * (written as a generation starts, removed when a worker starts), unless the
+ * worker has since recorded it as processed. A worker from before worker.now
+ * existed is read from the last GENERATE line of its log instead.
  */
 export async function getGeneratingJobId(pr: Project, processed: Set<string>): Promise<string | null> {
-  const lines = (await readText(pr.P.workerLog)).trimEnd().split('\n').slice(-200)
+  const now = await readText(pr.P.workerNow)
+  if (now.trim()) {
+    try {
+      const { jobId } = JSON.parse(now) as { jobId?: string }
+      return jobId && !processed.has(jobId) ? jobId : null
+    } catch { /* torn write: read the log instead */ }
+  }
+  const lines = (await readTail(pr.P.workerLog)).trimEnd().split('\n').slice(-200)
   for (let i = lines.length - 1; i >= 0; i--) {
     const m = lines[i].match(/\sGENERATE (\S+)/)
     if (m) return processed.has(m[1]) ? null : m[1]
@@ -902,7 +948,7 @@ export async function getWorkerStatus(pr: Project): Promise<WorkerStatus> {
  * that keeps failing says so instead of "starting..." for ever.
  */
 async function lastWorkerOutput(pr: Project): Promise<string | null> {
-  const text = await fs.readFile(pr.P.workerStdout, 'utf8').catch(() => '')
+  const text = await readTail(pr.P.workerStdout, 8 * 1024).catch(() => '')
   const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean)
   return lines.length ? lines.slice(-3).join('\n').slice(-600) : null
 }
@@ -931,15 +977,18 @@ async function studioInputs(pr: Project) {
 export async function getStudioSession(pr: Project, sessionId: string): Promise<StudioSession> {
   const { requests, events, queue, state, ledgerText } = await studioInputs(pr)
   const processed = (state?.processedJobs ?? []) as string[]
-  const staged: { sidecar: Parameters<typeof foldStudio>[1]['staged'][number]['sidecar']; present: string[] }[] = []
-  for (const name of await fs.readdir(pr.P.staging).catch(() => [] as string[])) {
+  type Staged = { sidecar: Parameters<typeof foldStudio>[1]['staged'][number]['sidecar']; present: string[] }
+  // In parallel, and job.json through the per-render cache: References lists up to
+  // a dozen sessions, and each one used to walk every staging folder in turn.
+  const names = await fs.readdir(pr.P.staging).catch(() => [] as string[])
+  const staged = (await Promise.all(names.map(async (name): Promise<Staged | null> => {
     const dir = path.join(pr.P.staging, name)
     try {
-      const sidecar = JSON.parse(await fs.readFile(path.join(dir, 'job.json'), 'utf8'))
-      if (sidecar?.studio?.sessionId !== sessionId) continue
-      staged.push({ sidecar, present: (await fs.readdir(dir)).filter((f) => f !== 'job.json') })
-    } catch { /* not a job folder */ }
-  }
+      const sidecar = JSON.parse(await readText(path.join(dir, 'job.json')))
+      if (sidecar?.studio?.sessionId !== sessionId) return null
+      return { sidecar, present: (await fs.readdir(dir)).filter((f) => f !== 'job.json') }
+    } catch { return null /* not a job folder */ }
+  }))).filter((s): s is Staged => s !== null)
   const ledgerHf: Record<string, { hfJobId: string; state: string }> = {}
   for (const row of parseCsv(ledgerText) as unknown as Record<string, string>[]) {
     if (queue.some((q) => q.jobId === row.job_id && q.studio?.sessionId === sessionId)) ledgerHf[row.job_id] = { hfJobId: row.hf_job_id, state: row.state }

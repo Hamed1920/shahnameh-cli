@@ -1,4 +1,4 @@
-import catalogJson from '../worker/MODEL_CATALOG.json'
+import bundledJson from '../worker/MODEL_CATALOG.json'
 import {
   INTERNAL_PARAMS, isVideo, mapParams, maxRefs, modelEntry, modelKind, modelProblem, usableModels,
 } from '../worker/lib/model-schema.mjs'
@@ -7,7 +7,11 @@ import {
  * The Higgsfield model catalogue as the panel sees it: the file the worker
  * fetches from `model list` / `model get` (worker/lib/models.mjs), bundled at
  * build time so the browser can draw pickers and settings without a request.
- * A refresh rewrites the file and the dev server picks it up.
+ *
+ * The worker rewrites the file (daily, or from the Refresh button) while a
+ * production build keeps the copy it was built with. So the server reads the
+ * file again (lib/catalog.ts), the project layout hands a newer copy to the
+ * browser (components/catalog-sync.tsx), and installCatalog swaps it in here.
  *
  * The rules themselves live in worker/lib/model-schema.mjs, shared with the
  * worker, so what the page allows is what the worker will send.
@@ -39,17 +43,29 @@ export interface ModelCatalog {
   models: Record<string, ModelInfo>
 }
 
-export const CATALOG = catalogJson as unknown as ModelCatalog
+const BUNDLED = bundledJson as unknown as ModelCatalog
+let current = BUNDLED
 
-export const modelInfo = (model: string | null | undefined): ModelInfo | null => modelEntry(CATALOG, model) as ModelInfo | null
-export const modelKindOf = (model: string | null | undefined): 'image' | 'video' | null => modelKind(CATALOG, model) as 'image' | 'video' | null
-export const isVideoModel = (model: string | null | undefined): boolean => isVideo(CATALOG, model)
-export const modelProblemOf = (model: string | null | undefined): string | null => modelProblem(CATALOG, model)
+/** The catalogue in use: the bundled one until a newer one is installed. */
+export const catalog = (): ModelCatalog => current
+
+/** When the build's copy was fetched, so the server can tell whether a browser needs a newer one. */
+export const bundledFetchedAt = BUNDLED.fetchedAt
+
+/** Use this catalogue from now on. A missing or torn one keeps the current. */
+export function installCatalog(next: ModelCatalog | null | undefined) {
+  if (next?.models && next.fetchedAt !== current.fetchedAt) current = next
+}
+
+export const modelInfo = (model: string | null | undefined): ModelInfo | null => modelEntry(current, model) as ModelInfo | null
+export const modelKindOf = (model: string | null | undefined): 'image' | 'video' | null => modelKind(current, model) as 'image' | 'video' | null
+export const isVideoModel = (model: string | null | undefined): boolean => isVideo(current, model)
+export const modelProblemOf = (model: string | null | undefined): string | null => modelProblem(current, model)
 export const refLimit = (model: string | null | undefined): number => maxRefs(modelInfo(model))
 
 /** Usable models of one kind (or both), the config's pinned ones first. */
 export const modelsFor = (kind: 'image' | 'video' | null, pinned: string[] = []): ModelInfo[] =>
-  usableModels(CATALOG, kind, pinned) as ModelInfo[]
+  usableModels(current, kind, pinned) as ModelInfo[]
 
 /** The display name, or the job type when the catalogue does not know it. */
 export const modelLabel = (model: string | null | undefined): string => modelInfo(model)?.display_name ?? String(model ?? '')

@@ -2,6 +2,7 @@
 
 import { checkRow, shotRx, toJobInput, type DraftRow, type RowConfig } from '@/lib/batch-rules'
 import { checkRefCount, readGenerationForm } from '@/lib/generation-form'
+import { freshCatalog } from '@/lib/catalog'
 import { stageResolutionFor } from '@/lib/models'
 import { DOCUMENT_EXT, MAX_DOCUMENTS, MAX_DOCUMENT_BYTES, documentToText } from '@/lib/documents'
 import { REVIEWER, appendJobRequest, newBatchId, newRequestId } from '@/lib/job-requests'
@@ -84,6 +85,7 @@ interface SubmitPayload {
 
 export async function submitBatch(formData: FormData): Promise<{ ok: boolean; batchId?: string; error?: string; rowErrors?: Record<string, string[]> }> {
   const pr = await requireProject(formData.get('project'))
+  freshCatalog()
   let payload: SubmitPayload
   try {
     payload = JSON.parse(String(formData.get('payload') ?? ''))
@@ -162,6 +164,7 @@ export async function submitBatch(formData: FormData): Promise<{ ok: boolean; ba
  */
 export async function generateFromPrompt(formData: FormData): Promise<{ ok: boolean; batchId?: string; error?: string }> {
   const pr = await requireProject(formData.get('project'))
+  freshCatalog()
   const jobId = String(formData.get('jobId') ?? '').trim()
   const [queue, catalog, cfg, moves] = await Promise.all([getQueue(pr), getCatalog(pr), getWorkerConfig(), getShotMoves(pr)])
   const src = queue.find((q) => q.jobId === jobId) as (QueueItem & { label?: string | null }) | undefined

@@ -12,8 +12,13 @@ import type { Project } from './projects'
  * Cheap on purpose: stats, one directory listing, and state.json.
  */
 
+/**
+ * Not worker.log: the worker writes a line for every step, and each one would
+ * re-render every open tab (pricing a 30-row batch writes ~60). What the pages
+ * show from the log -- the job being generated -- is in worker.now instead.
+ */
 const files = ({ P }: Project) => [
-  P.reviewLog, P.queue, P.workerLog, P.filings, P.ledger, P.entities, P.manifest,
+  P.reviewLog, P.queue, P.workerNow, P.filings, P.ledger, P.entities, P.manifest,
   P.learnings, P.indexOps, P.indexOpResults, P.jobRequests, P.jobRequestResults,
   // Likes, tags and the Gallery's order, so a second tab follows along.
   P.gallery,

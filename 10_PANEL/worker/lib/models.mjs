@@ -43,10 +43,10 @@ let cachedMtime = 0
 export function loadCatalog() {
   const file = catalogPath()
   let mtime = 0
-  try { mtime = fsSync.statSync(file).mtimeMs } catch { return cached }
+  try { mtime = fsSync.statSync(/*turbopackIgnore: true*/ file).mtimeMs } catch { return cached }
   if (cached && mtime === cachedMtime) return cached
   try {
-    cached = JSON.parse(fsSync.readFileSync(file, 'utf8'))
+    cached = JSON.parse(fsSync.readFileSync(/*turbopackIgnore: true*/ file, 'utf8'))
     cachedMtime = mtime
   } catch { /* a torn write: keep the last good copy */ }
   return cached

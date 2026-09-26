@@ -4,7 +4,7 @@ import { idRx } from '../worker/lib/ids.mjs'
 import type { Project } from './projects'
 import {
   getAssets, getDecisions, getFilings, getGeneratingJobId, getPriceTable, getQueue, getRegenerations, getShotMoves,
-  getWorkerState, priceKey, referenceResolver,
+  getWorkerState, priceKey, readText as readStoreText, referenceResolver,
 } from './store'
 import type { Filing, QueueItem, RegenerateSource, RegenerationView, ReviewDecision, StagingSidecar } from './types'
 
@@ -65,9 +65,8 @@ async function exists(pr: Project, rel: string): Promise<boolean> {
   try { await fs.access(path.join(pr.P.root, rel)); return true } catch { return false }
 }
 
-async function readText(file: string): Promise<string> {
-  try { return await fs.readFile(file, 'utf8') } catch { return '' }
-}
+/** Through the store's per-render cache: this page and the Episodes board both read the whole log. */
+const readText = (file: string): Promise<string> => readStoreText(file).catch(() => '')
 
 /** candidate -> destination, from the worker's PROMOTED / DRAFT APPROVED / REJECTED lines. */
 async function movesFromLog(pr: Project): Promise<Map<string, string>> {
@@ -85,7 +84,7 @@ async function sidecars(pr: Project): Promise<Map<string, StagingSidecar>> {
   try { dirs = await fs.readdir(pr.P.staging) } catch { return out }
   await Promise.all(
     dirs.map(async (d) => {
-      try { out.set(d, JSON.parse(await fs.readFile(path.join(pr.P.staging, d, 'job.json'), 'utf8'))) } catch { /* not a batch */ }
+      try { out.set(d, JSON.parse(await readText(path.join(pr.P.staging, d, 'job.json')))) } catch { /* not a batch */ }
     }),
   )
   return out

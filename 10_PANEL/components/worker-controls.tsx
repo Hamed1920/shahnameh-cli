@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/cn'
 import type { WorkerStatus } from '@/lib/types'
 
@@ -13,26 +12,17 @@ const at = (iso: string) => new Date(iso).toLocaleTimeString('en-GB', { hour: '2
  * Queue page (components/worker-switch.tsx) is the one way to hold it down.
  */
 export function WorkerControls({ status, generating, compact = false }: { status: WorkerStatus; generating: string | null; compact?: boolean }) {
-  const router = useRouter()
   const held = status.paused || status.stopRequested
   const settling = (!status.running && !status.autostartOff && !held) || status.outdated
 
-  // While it starts or restarts, refresh until it is up: every 3 s, then every 15 s
-  // after a minute, so a worker that cannot start does not keep every page busy.
+  // A worker coming up rewrites worker.lock, which LiveRefresh watches, so the page
+  // follows it without polling. After a minute still settling, say it is not starting.
   const [slow, setSlow] = useState(false)
   useEffect(() => {
     if (!settling) { setSlow(false); return }
-    const since = Date.now()
-    let t: ReturnType<typeof setTimeout>
-    const tick = () => {
-      router.refresh()
-      const long = Date.now() - since > 60_000
-      if (long) setSlow(true)
-      t = setTimeout(tick, long ? 15_000 : 3000)
-    }
-    t = setTimeout(tick, 3000)
+    const t = setTimeout(() => setSlow(true), 60_000)
     return () => clearTimeout(t)
-  }, [settling, router])
+  }, [settling])
 
   const text = status.running
     ? status.stopRequested

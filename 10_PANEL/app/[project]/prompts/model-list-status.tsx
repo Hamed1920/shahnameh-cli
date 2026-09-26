@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { RefreshCw } from 'lucide-react'
 import { useProject } from '@/components/project-context'
 import { Button } from '@/components/ui/button'
-import { CATALOG, modelsFor } from '@/lib/models'
+import { catalog, modelsFor } from '@/lib/models'
 import { modelRefreshResult, refreshModels } from './actions'
 
 /**
@@ -21,7 +21,8 @@ export function ModelListStatus() {
   const [note, setNote] = useState<{ text: string; bad: boolean } | null>(null)
   const video = modelsFor('video').length
   const image = modelsFor('image').length
-  const at = CATALOG.fetchedAt ? new Date(CATALOG.fetchedAt) : null
+  const fetchedAt = catalog().fetchedAt
+  const at = fetchedAt ? new Date(fetchedAt) : null
 
   async function refresh() {
     setNote({ text: 'Asked the worker…', bad: false })

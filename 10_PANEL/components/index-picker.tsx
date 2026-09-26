@@ -216,7 +216,7 @@ function EntityTile({
   onClick: () => void
   onPickVariant: (variant: string, path: string) => void
 }) {
-  const { assetUrl } = useAssetUrls()
+  const { thumbUrl } = useAssetUrls()
   const canonical = e.variants.find((v) => v.variant === e.canonical) ?? e.variants[0]
   const [hover, setHover] = useState<string | null>(null)
   const preview = e.variants.find((v) => v.variant === hover) ?? canonical
@@ -243,7 +243,7 @@ function EntityTile({
         {preview ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={assetUrl(preview.path)}
+            src={thumbUrl(preview.path, 480)}
             alt={e.name}
             loading="lazy"
             className="checker aspect-4/3 w-full object-contain transition-transform duration-300 ease-out-quint group-hover:scale-[1.03]"

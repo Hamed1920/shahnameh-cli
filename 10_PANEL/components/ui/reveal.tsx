@@ -26,10 +26,10 @@ export function Reveal({
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration: 0.25,
+        duration: 0.2,
         ease: EASE,
-        // Capped so a fifty-card review queue does not crawl in one by one.
-        delay: Math.min(index * 0.04, 0.3),
+        // Capped low: a page should look finished almost at once, not crawl in card by card.
+        delay: Math.min(index * 0.025, 0.12),
       }}
       whileHover={lift ? { y: -2, transition: { duration: 0.15, ease: EASE } } : undefined}
       className={className}

@@ -1,7 +1,6 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Check, Coins, LoaderCircle, Search, Sparkles } from 'lucide-react'
 import { approveBatch, generateFromPrompt } from './actions'
 import { useProject } from '@/components/project-context'
@@ -147,7 +146,6 @@ function GenerateDialog({
   onClose: () => void
 }) {
   const project = useProject()
-  const router = useRouter()
   const [picker, setPicker] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -185,7 +183,6 @@ function GenerateDialog({
     setBusy(false)
     if (!r.ok || !r.batchId) { setError(r.error ?? 'Could not send that.'); return }
     setBatchId(r.batchId)
-    router.refresh()
   }
 
   async function approve() {
@@ -195,7 +192,6 @@ function GenerateDialog({
     const r = await approveBatch(project.slug, batch.batchId, batch.total).catch((e: Error) => ({ ok: false, error: e.message }))
     setBusy(false)
     if (!r.ok) setError(r.error ?? 'Could not approve.')
-    router.refresh()
   }
 
   const waiting = status === 'received' || status === 'validated' || status === 'pricing' || status === 'approving'

@@ -3,7 +3,8 @@ import { ShowInFolder } from '@/components/show-in-folder'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/text'
 import { TakesDialog } from './takes-dialog'
-import { assetUrl, isVideo } from '@/lib/asset'
+import { TakeMedia } from '@/components/take-media'
+import { assetUrl } from '@/lib/asset'
 import { cn } from '@/lib/cn'
 import { shortEpisode, type EpisodeOption } from '@/lib/episodes'
 import type { EpisodeScene } from '@/lib/types'
@@ -91,16 +92,7 @@ export function SceneCard({
     <ItemMenu actions={menuFor(scene, episode, project, episodes, next)}>
       <Card interactive className="flex flex-col gap-2.5 p-3">
         {scene.file ? (
-          isVideo(scene.file) ? (
-            <video
-              src={`${assetUrl(project, scene.file)}#t=0.1`}
-              className="aspect-video w-full rounded-md border border-edge bg-black object-contain"
-              controls loop playsInline preload="metadata"
-            />
-          ) : (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={assetUrl(project, scene.file)} alt={scene.shot} className="checker aspect-video w-full rounded-md border border-edge object-contain" />
-          )
+          <TakeMedia file={scene.file} alt={scene.shot} className="rounded-md border border-edge" />
         ) : (
           <div className="grid aspect-video w-full place-items-center rounded-md border border-dashed border-edge-strong px-3 text-center text-[12px] text-faint">
             {s.label}

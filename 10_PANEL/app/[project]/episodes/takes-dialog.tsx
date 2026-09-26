@@ -5,6 +5,7 @@ import { Check, FolderOpen, Layers, X } from 'lucide-react'
 import { revealInFolder } from '@/app/[project]/reveal-action'
 import { useAssetUrls, useProject } from '@/components/project-context'
 import { MenuNote } from '@/components/item-menu'
+import { TakeMedia } from '@/components/take-media'
 import { Modal } from '@/components/ui/modal'
 import { Badge } from '@/components/ui/text'
 import { cn } from '@/lib/cn'
@@ -97,20 +98,7 @@ function TakeList({ outputs }: { outputs: ShotOutput[] }) {
             )}
           >
             <div className="shrink-0 sm:w-72">
-              {o.isVideo ? (
-                <video
-                  src={`${assetUrl(o.file)}#t=0.1`}
-                  className="aspect-video w-full rounded-lg border border-edge bg-black object-contain"
-                  controls loop playsInline preload="metadata"
-                />
-              ) : (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={assetUrl(o.file)}
-                  alt={o.take}
-                  className="checker aspect-video w-full rounded-lg border border-edge object-contain"
-                />
-              )}
+              <TakeMedia file={o.file} alt={o.take} />
             </div>
 
             <div className="min-w-0 flex-1 space-y-2.5">

@@ -3,7 +3,7 @@
 import { Columns2, History } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/text'
-import { useAssetUrls } from '@/components/project-context'
+import { TakeMedia } from '@/components/take-media'
 import { cn } from '@/lib/cn'
 import type { AttemptEntry } from '@/lib/types'
 
@@ -26,7 +26,6 @@ export function AttemptHistory({
   comparing: string | null
   onCompare: (entry: AttemptEntry | null) => void
 }) {
-  const { assetUrl } = useAssetUrls()
   if (history.length === 0) return null
 
   return (
@@ -56,7 +55,7 @@ export function AttemptHistory({
                   aria-label={`Compare attempt ${h.attempt} with the current video`}
                   className="focus-ring shrink-0 cursor-pointer overflow-hidden rounded-lg border border-edge transition-colors duration-150 hover:border-edge-strong sm:w-48"
                 >
-                  <video src={`${assetUrl(h.video)}#t=1`} muted playsInline preload="metadata" className="aspect-video w-full bg-black object-cover" />
+                  <TakeMedia file={h.video} alt={`Attempt ${h.attempt}`} controls={false} at={1} className="" />
                 </button>
               ) : (
                 <div className="grid aspect-video shrink-0 place-items-center rounded-lg border border-dashed border-edge-strong text-[11px] text-faint sm:w-48">

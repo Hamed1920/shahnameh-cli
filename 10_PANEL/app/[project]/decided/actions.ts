@@ -2,6 +2,7 @@
 
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import { freshCatalog } from '@/lib/catalog'
 import { checkRefCount, readGenerationForm } from '@/lib/generation-form'
 import { REVIEWER, appendJobRequest, newRequestId } from '@/lib/job-requests'
 import { requireProject } from '@/lib/projects'
@@ -22,6 +23,7 @@ import type { JobRequest } from '@/lib/types'
  */
 export async function requestRegenerate(formData: FormData): Promise<{ ok: boolean; error?: string }> {
   const pr = await requireProject(formData.get('project'))
+  freshCatalog()
   const jobId = String(formData.get('jobId') ?? '').trim()
   const decisionId = String(formData.get('decisionId') ?? '').trim()
   if (!jobId || !decisionId) return { ok: false, error: 'Missing job.' }

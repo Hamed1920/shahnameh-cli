@@ -270,6 +270,9 @@ async function drainQueue(state) {
       '--wait', '--wait-timeout', cfg.waitTimeout, '--wait-interval', cfg.waitInterval,
     ]
     await log(`GENERATE ${job.jobId} ${targetId} ${job.variant} model=${model}${sound !== undefined ? ` sound=${sound}` : ''}`)
+    // What the panel shows as "generating", and what its live refresh watches
+    // instead of the whole log. The job's end moves state.json, so no clear-up.
+    await fs.writeFile(P.workerNow, JSON.stringify({ jobId: job.jobId, since: new Date().toISOString() })).catch(() => {})
     const res = await hfJson(args, { timeoutMs: GENERATE_KILL_MS })
 
     // One ledger row per job that reached Higgsfield, whatever came of it: the
@@ -705,6 +708,8 @@ async function main() {
   try {
     // A stop flag left by a crash must not stop this worker before it starts.
     await fs.rm(P.stopFlag, { force: true })
+    // Nothing is in flight in a worker that has only just started.
+    await fs.rm(P.workerNow, { force: true })
     await log(`worker started (project=${PROJECT.slug} code=${PROJECT.code} once=${ONCE} dryRun=${DRY} root=${ROOT})`)
     state = await readState()
     // The model list, once a day. A failure keeps the old list; it never stops the worker.

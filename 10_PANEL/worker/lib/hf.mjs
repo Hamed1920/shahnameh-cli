@@ -36,7 +36,7 @@ function resolveEntry() {
     path.join(nodeDir, '..', 'lib', 'node_modules', 'npm', 'bin', 'npm-cli.js'),
   ]) {
     try {
-      if (!fs.existsSync(cli)) continue
+      if (!fs.existsSync(/*turbopackIgnore: true*/ cli)) continue
       const root = execFileSync(process.execPath, [cli, 'root', '-g'], { encoding: 'utf8' }).trim()
       candidates.push(path.join(root, '@higgsfield', 'cli', 'bin', 'higgsfield.js'))
       break

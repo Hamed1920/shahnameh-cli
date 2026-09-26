@@ -103,7 +103,6 @@ export function ItemMenu({
       if (!r.ok) { say(r.error ?? 'That did not save.', true); return }
       const n = r.moved?.length ?? shots.length
       say(`Asked the worker to move ${n === 1 ? 'it' : `${n} shots`} to ${shortEpisode(choice.id)}. It moves them on its next pass.`)
-      router.refresh()
     })
   }
 
@@ -214,7 +213,6 @@ export function ItemMenu({
                 setConfirming(null)
                 if (!r.ok) { say(r.error ?? 'That did not save.', true); return }
                 say('Asked the worker to take it out. It moves the files to the archive on its next pass.')
-                router.refresh()
               }}
             >
               Take it out

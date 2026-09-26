@@ -2,6 +2,7 @@ import { createReadStream } from 'node:fs'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { Readable } from 'node:stream'
+import { fileEtag, notModified } from '@/lib/http-cache'
 import { safeResolve } from '@/lib/paths'
 import { getProject } from '@/lib/projects'
 
@@ -73,14 +74,23 @@ export async function GET(request: Request, ctx: RouteContext<'/[project]/api/as
   }
   if (!stat.isFile()) return new Response('not found', { status: 404 })
 
+  const etag = fileEtag(stat)
   const headers = {
     'Content-Type': type,
     'Accept-Ranges': 'bytes',
-    // Files are immutable once written; the URL changes when the file does.
-    'Cache-Control': 'private, max-age=60',
+    // The URL is the file's path, and a path can be given a new file (a restore,
+    // a re-filed upload). So: fresh for a minute, then shown from cache at once
+    // while the browser checks in the background, which costs a 304, not the file.
+    'Cache-Control': 'private, max-age=60, stale-while-revalidate=86400',
+    ETag: etag,
+    'Last-Modified': stat.mtime.toUTCString(),
   }
 
-  const rangeHeader = request.headers.get('range')
+  if (notModified(request, etag, stat.mtime)) return new Response(null, { status: 304, headers })
+
+  // If-Range: a ranged request for a file that has since changed gets the whole new file.
+  const ifRange = request.headers.get('if-range')
+  const rangeHeader = ifRange && ifRange !== etag ? null : request.headers.get('range')
   if (rangeHeader) {
     const range = parseRange(rangeHeader.trim(), stat.size)
     if (!range) {

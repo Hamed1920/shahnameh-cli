@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { cookies } from 'next/headers'
+import { CatalogSync } from '@/components/catalog-sync'
 import { LiveRefresh } from '@/components/live-refresh'
 import { SIDEBAR_COOKIE } from '@/components/nav-items'
 import { ProjectProvider } from '@/components/project-context'
 import { Sidebar } from '@/components/sidebar'
+import { freshCatalog } from '@/lib/catalog'
 import { getProjectVersion } from '@/lib/live'
 import { getProject, publicInfo } from '@/lib/projects'
 import { getPending, getWaitingJobs } from '@/lib/store'
@@ -33,12 +35,14 @@ export default async function ProjectLayout({ children, params }: LayoutProps<'/
 
   return (
     <ProjectProvider project={publicInfo(pr)}>
-      <LiveRefresh project={pr.slug} initialVersion={version}>
-        <Sidebar defaultCollapsed={collapsed} counts={{ '/review': pending.length, '/queue': waiting.length }} />
-        <main className="scroll-pane flex-1">
-          <div className="mx-auto max-w-[1600px] px-6 pt-10 pb-24 lg:px-12">{children}</div>
-        </main>
-      </LiveRefresh>
+      <CatalogSync catalog={freshCatalog()}>
+        <LiveRefresh project={pr.slug} initialVersion={version}>
+          <Sidebar defaultCollapsed={collapsed} counts={{ '/review': pending.length, '/queue': waiting.length }} />
+          <main className="scroll-pane flex-1">
+            <div className="mx-auto max-w-[1600px] px-6 pt-10 pb-24 lg:px-12">{children}</div>
+          </main>
+        </LiveRefresh>
+      </CatalogSync>
     </ProjectProvider>
   )
 }

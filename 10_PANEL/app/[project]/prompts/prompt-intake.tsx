@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { useRouter } from 'next/navigation'
 import { Copy, FileText, Plus, Trash2, Upload, X } from 'lucide-react'
 import { extractDocuments, submitBatch } from './actions'
 import { IndexPicker } from '@/components/index-picker'
@@ -98,7 +97,6 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
   episodes: EpisodeInfo[]
 }) {
   const project = useProject()
-  const router = useRouter()
   const listId = useId()
   const fileInput = useRef<HTMLInputElement>(null)
   const [text, setText] = useState('')
@@ -423,7 +421,6 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
     clearAll()
     setName('')
     setDone(`Batch ${'batchId' in r ? r.batchId : ''} sent to the worker. It is priced below; nothing generates until you approve it.`)
-    router.refresh()
   }
 
   /** Right-click one prompt: where it files, and the row's own three verbs. */

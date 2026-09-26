@@ -5,6 +5,7 @@ import path from 'node:path'
 import { checkRefCount, readGenerationForm } from '@/lib/generation-form'
 import { KINDS, MAX_UPLOAD_BYTES, UPLOAD_ROLES, entitySlug, isAscii } from '@/lib/indexing'
 import { REVIEWER, appendJobRequest, newRequestId } from '@/lib/job-requests'
+import { freshCatalog } from '@/lib/catalog'
 import { modelKindOf } from '@/lib/models'
 import { requireProject } from '@/lib/projects'
 import { revalidateProject } from '@/lib/revalidate'
@@ -40,6 +41,7 @@ async function run(fn: () => Promise<void>): Promise<Result> {
 /** What a try would cost. The worker answers with `generate cost`; nothing is queued. */
 export async function studioPrice(formData: FormData): Promise<Result> {
   const pr = await requireProject(formData.get('project'))
+  freshCatalog()
   return run(async () => {
     const sessionId = sessionOf(formData)
     const genId = String(formData.get('genId') ?? '')

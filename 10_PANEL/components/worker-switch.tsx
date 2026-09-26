@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Play, Square } from 'lucide-react'
 import { startAllWorkers, stopAllWorkers } from '@/app/[project]/queue/actions'
 import { useProject } from '@/components/project-context'
@@ -14,7 +13,6 @@ import { Button } from '@/components/ui/button'
  */
 export function WorkerSwitch({ paused, running }: { paused: boolean; running: number }) {
   const project = useProject()
-  const router = useRouter()
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -24,7 +22,6 @@ export function WorkerSwitch({ paused, running }: { paused: boolean; running: nu
     const r = await fn(project.slug).catch((e: Error) => ({ ok: false, error: e.message }))
     setBusy(false)
     if (!r.ok) setError(r.error ?? 'That did not work.')
-    router.refresh()
   }
 
   return (

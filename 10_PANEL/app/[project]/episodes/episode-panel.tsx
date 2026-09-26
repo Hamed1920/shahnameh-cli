@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Check, FileVideo, LoaderCircle, Pencil, Plus, Search, TriangleAlert, Upload, X } from 'lucide-react'
 import { assignToEpisode } from '@/app/[project]/shot-actions'
 import { MenuNote } from '@/components/item-menu'
@@ -54,7 +53,6 @@ export function EpisodePanel({
   accepted: AcceptedTake[]
   applying: boolean
 }) {
-  const router = useRouter()
   const [renaming, setRenaming] = useState(false)
   const [adding, setAdding] = useState(false)
   const [note, setNote] = useState<{ id: number; text: string; bad?: boolean } | null>(null)
@@ -65,7 +63,8 @@ export function EpisodePanel({
     setNote({ id, text, bad })
     setTimeout(() => setNote((n) => (n?.id === id ? null : n)), bad ? 7000 : 3000)
   }
-  const done = (text: string, bad?: boolean) => { say(text, bad); if (!bad) router.refresh() }
+  // Every episode action re-renders the page in its own response (episodes/actions.ts).
+  const done = say
 
   return (
     <>

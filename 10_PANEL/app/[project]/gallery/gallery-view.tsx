@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Check, Copy, Film, FolderOpen, GripVertical, Heart, LoaderCircle, Plus, Search, X } from 'lucide-react'
 import { revealInFolder } from '@/app/[project]/reveal-action'
 import { assignToEpisode } from '@/app/[project]/shot-actions'
@@ -14,8 +13,9 @@ import { ShowInFolder } from '@/components/show-in-folder'
 import { Card, EmptyState } from '@/components/ui/card'
 import { Input, Select } from '@/components/ui/field'
 import { Badge, PageHeader, SectionHeading } from '@/components/ui/text'
-import { isFiledShot, isVideo as isVideoFile } from '@/lib/asset'
-import { useAssetUrls, useProject } from '@/components/project-context'
+import { TakeMedia } from '@/components/take-media'
+import { isFiledShot } from '@/lib/asset'
+import { useProject } from '@/components/project-context'
 import { cn } from '@/lib/cn'
 import {
   episodeLabel, episodesIn, groupByEpisode, shortEpisode, NO_EPISODE_LABEL,
@@ -60,50 +60,6 @@ const SORTS: { value: Sort; label: string }[] = [
 const when = (iso: string) =>
   new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
 
-/**
- * A take's picture.
- *
- * A video mounts only once its card comes near the viewport, and then asks for
- * metadata with a `#t=0.1` fragment so the browser seeks a tenth of a second in
- * and paints that frame as the poster. `preload="none"` costs nothing but shows
- * a black box, and letting all ~50 takes load at once buries the server in
- * range requests before a single one is played.
- */
-function Thumbnail({ file, alt }: { file: string; alt: string }) {
-  const { assetUrl } = useAssetUrls()
-  const box = useRef<HTMLDivElement>(null)
-  const [near, setNear] = useState(false)
-
-  useEffect(() => {
-    const el = box.current
-    if (!el || near) return
-    if (typeof IntersectionObserver === 'undefined') { setNear(true); return }
-    const io = new IntersectionObserver(
-      (entries) => { if (entries.some((e) => e.isIntersecting)) { setNear(true); io.disconnect() } },
-      { rootMargin: '600px' },
-    )
-    io.observe(el)
-    return () => io.disconnect()
-  }, [near])
-
-  if (!isVideoFile(file)) {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img src={assetUrl(file)} alt={alt} loading="lazy" className="checker aspect-video w-full rounded-lg border border-edge object-contain" />
-  }
-
-  return (
-    <div ref={box} className="aspect-video w-full overflow-hidden rounded-lg border border-edge bg-black">
-      {near && (
-        <video
-          src={`${assetUrl(file)}#t=0.1`}
-          className="size-full object-contain"
-          controls loop playsInline preload="metadata"
-        />
-      )}
-    </div>
-  )
-}
-
 export function GalleryView({
   takes, state, tags: knownTags, catalog, cfg, prices, allEpisodes, nextEpisode, pendingMoves, moveErrors,
 }: {
@@ -128,7 +84,6 @@ export function GalleryView({
   moveErrors: ShotMoveFailure[]
 }) {
   const project = useProject()
-  const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const episodeTitles = useMemo(
     () => Object.fromEntries(allEpisodes.filter((e) => e.title).map((e) => [e.id, e.title])),
@@ -171,7 +126,6 @@ export function GalleryView({
     setError(null)
     const r = await fn().catch((e: Error) => ({ ok: false, error: e.message }))
     if (!r.ok) { revert(); setError(r.error ?? 'That did not save.'); return }
-    router.refresh()
   }
 
   function toggleLike(id: string) {
@@ -347,7 +301,6 @@ export function GalleryView({
       const extra = r.skipped?.length ? `, ${r.skipped.length} already there` : ''
       say(`Asked the worker to move ${n} shot${n === 1 ? '' : 's'} to ${shortEpisode(choice.id)}${extra}. It moves them on its next pass.`)
       clearSelection()
-      router.refresh()
     })
   }
 
@@ -766,7 +719,7 @@ function TakeCard({
     >
       <div className="relative">
         {take.file ? (
-          <Thumbnail file={take.file} alt={take.title} />
+          <TakeMedia file={take.file} alt={take.title} />
         ) : (
           <div className="grid aspect-video w-full place-items-center rounded-lg border border-dashed border-edge-strong p-4 text-center text-[13px] text-muted">
             {take.missing}

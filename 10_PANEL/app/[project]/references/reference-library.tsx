@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'motion/react'
 import {
   Archive, ArchiveRestore, Check, ChevronDown, Copy, FolderOpen, ImageOff, LoaderCircle, Maximize2,
@@ -111,8 +110,7 @@ function Menu({ label, icon, items, disabled }: { label: string; icon: React.Rea
  */
 export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData; catalog: CatalogEntity[]; actions?: React.ReactNode }) {
   const project = useProject()
-  const { assetUrl } = useAssetUrls()
-  const router = useRouter()
+  const { assetUrl, thumbUrl } = useAssetUrls()
   const [view, setView] = useState<View>('ALL')
   const [query, setQuery] = useState('')
   const [status, setStatus] = useState<'ALL' | (typeof STATUSES)[number]>('ALL')
@@ -149,12 +147,6 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
       toast(r.ok ? 'good' : 'bad', r.ok ? `Done: ${r.summary}` : `Not applied: ${r.reason}`, r.ok ? 4500 : 9000)
     }
   }, [data.results, toast])
-  useEffect(() => {
-    if (data.pending.length === 0) return
-    const t = setInterval(() => router.refresh(), 2000)
-    return () => clearInterval(t)
-  }, [data.pending.length, router])
-
   const oldestPending = data.pending[0]?.ts
   const [now, setNow] = useState(() => Date.now())
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), 5000); return () => clearInterval(t) }, [])
@@ -206,12 +198,12 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
     fd.set('op', JSON.stringify(op))
     setBusy(true)
     fd.set('project', project.slug)
-    const r = await requestIndexOp(fd)
+    // The action re-renders this page in its own response; results arrive through LiveRefresh.
+    const r = await requestIndexOp(fd).catch((e: Error) => ({ ok: false as const, error: e.message }))
     setBusy(false)
     if (!r.ok) { toast('bad', r.error ?? 'Could not send that.', 8000); return false }
     toast('muted', 'Sent to the worker…', 2500)
     clearSelection()
-    router.refresh()
     return true
   }
 
@@ -409,7 +401,7 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
                       className={cn('relative overflow-hidden rounded-lg border bg-sunken', on ? 'border-fg/70' : 'border-edge')}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={assetUrl(a.file)} alt="" className="checker aspect-4/3 w-full object-cover opacity-80" />
+                      <img src={thumbUrl(a.file, 480)} alt="" className="checker aspect-4/3 w-full object-cover opacity-80" />
                       <SelectBox checked={on} onChange={() => toggle(setSelA, a.archiveId)} label={`Select archived ${a.shortId} ${a.variant}`} className="absolute top-2 left-2" />
                       <div className="border-t border-edge px-3 py-2.5 text-[11px]">
                         <div className="font-mono text-fg">{a.shortId} / {a.variant}{a.take !== 'T01' ? ` / ${a.take}` : ''}</div>
@@ -624,7 +616,7 @@ function EntityCard({
   onEntityMenu: (ev: React.MouseEvent) => void
   onLookMenu: (ev: React.MouseEvent, variant: string) => void
 }) {
-  const { assetUrl } = useAssetUrls()
+  const { thumbUrl } = useAssetUrls()
   const retired = e.status === 'RETIRED'
   return (
     <div
@@ -668,7 +660,7 @@ function EntityCard({
           return (
             <div key={l.variant} onContextMenu={(ev) => onLookMenu(ev, l.variant)} className={cn('group relative overflow-hidden rounded-md border bg-sunken', on ? 'border-fg ring-1 ring-fg/50' : 'border-edge')}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={assetUrl(l.path)} alt="" loading="lazy" className="checker aspect-4/3 w-full object-cover" />
+              <img src={thumbUrl(l.path, 480)} alt="" loading="lazy" className="checker aspect-4/3 w-full object-cover" />
               <SelectBox checked={on} onChange={() => onSelectLook(l.variant)} label={`Select ${e.shortId}/${l.variant}`}
                 className={cn('absolute top-1.5 left-1.5 size-4', !on && 'opacity-0 group-hover:opacity-100 focus-visible:opacity-100')} />
               {l.variant === e.canonical && (
@@ -960,7 +952,7 @@ function EntityView({
   onToast: (tone: Toast['tone'], text: string, ms?: number) => void
 }) {
   const project = useProject()
-  const { assetUrl } = useAssetUrls()
+  const { assetUrl, thumbUrl } = useAssetUrls()
   const [sel, setSel] = useState<Set<string>>(new Set())
   const retired = e.status === 'RETIRED'
   const looks = e.looks
@@ -1096,7 +1088,7 @@ function EntityView({
                     className="focus-ring block w-full cursor-pointer"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={assetUrl(l.path)} alt={`${e.name} ${l.variant}`} className="checker aspect-4/3 w-full object-contain" />
+                    <img src={thumbUrl(l.path, 720)} alt={`${e.name} ${l.variant}`} className="checker aspect-4/3 w-full object-contain" />
                   </button>
 
                   <span className={cn(

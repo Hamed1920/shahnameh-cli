@@ -270,7 +270,7 @@ export type ReferenceEdits = ReturnType<typeof useReferenceEdits>
 
 /** What "@" offers in a note or prompt: exactly the references in use, in the order the model gets them. */
 export function useMentionOptions(edits: ReferenceEdits, catalog: CatalogEntity[]): MentionOption[] {
-  const { assetUrl } = useAssetUrls()
+  const { thumbUrl } = useAssetUrls()
   return edits.items
     .filter((i) => !i.removed)
     .map((i, n) => {
@@ -286,7 +286,7 @@ export function useMentionOptions(edits: ReferenceEdits, catalog: CatalogEntity[
         position: n + 1,
         title: ent?.name ?? i.token,
         subtitle: ent ? `${KIND_LABEL[ent.kind as Kind] ?? ent.kind} ${key!.split('/')[1]}` : 'reference',
-        thumb: i.path ? assetUrl(i.path) : null,
+        thumb: i.path ? thumbUrl(i.path, 96) : null,
         keywords: ent ? `${ent.id} ${ent.kind}` : '',
       }
     })
@@ -322,7 +322,7 @@ export function ReferenceEditor({
   /** Told when the picker or lightbox opens and closes, so a dialog around this can leave Escape to them. */
   onOverlayChange?: (open: boolean) => void
 }) {
-  const { assetUrl } = useAssetUrls()
+  const { assetUrl, thumbUrl } = useAssetUrls()
   const [viewing, setViewing] = useState<number | null>(null)
   const [picker, setPicker] = useState<{ mode: PickerMode; replaceKey: string | null; uploadId?: string } | null>(null)
   const overlayOpen = viewing !== null || picker !== null
@@ -450,7 +450,7 @@ export function ReferenceEditor({
               className="focus-ring group relative cursor-zoom-in overflow-hidden rounded-lg border border-dashed border-edge-strong bg-sunken text-left"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={assetUrl(plate.path)} alt={plate.token} className="checker aspect-4/3 w-full object-contain opacity-80" />
+              <img src={thumbUrl(plate.path, 480)} alt={plate.token} className="checker aspect-4/3 w-full object-contain opacity-80" />
               <span className="absolute top-2 left-2 rounded-[4px] bg-black/80 px-1.5 py-1 text-[10px] leading-none text-muted">compare only</span>
               <span className="block truncate border-t border-dashed border-edge-strong px-3 py-2.5 font-mono text-[11px] text-muted">
                 {plate.token}
@@ -594,9 +594,9 @@ function RefTile({
   onReplace: () => void
   onUseSuggested: () => void
 }) {
-  const { assetUrl } = useAssetUrls()
+  const { thumbUrl } = useAssetUrls()
   const broken = item.origin === 'job' && !item.path && !item.removed
-  const src = item.origin === 'upload' ? item.path : item.path ? assetUrl(item.path) : null
+  const src = item.origin === 'upload' ? item.path : item.path ? thumbUrl(item.path, 480) : null
   const name = item.token ? catalog.find((e) => e.shortId === shortOf(item.token))?.name : undefined
   const label =
     item.origin === 'upload'

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { Check, Coins, LoaderCircle, TriangleAlert } from 'lucide-react'
 import { approveBatch, discardBatch } from './actions'
 import { useProject } from '@/components/project-context'
@@ -34,25 +33,12 @@ const STATUS: Record<BatchStatus, { text: string; tone: 'accent' | 'good' | 'bad
  */
 export function Batches({ batches, worker }: { batches: BatchView[]; worker: WorkerStatus }) {
   const project = useProject()
-  const router = useRouter()
   const [busy, setBusy] = useState<string | null>(null)
   const [note, setNote] = useState<Record<string, string>>({})
   const [confirm, setConfirm] = useState<BatchView | null>(null)
 
-  const live = batches.some((b) => STATUS[b.status].busy || b.pending.length > 0)
-  // Every 2 s at first, then every 15 s: a batch that is stuck (worker down, CLI not
-  // signed in) must not make the page re-read every file every 2 s for ever.
-  useEffect(() => {
-    if (!live) return
-    const since = Date.now()
-    let t: ReturnType<typeof setTimeout>
-    const tick = () => {
-      router.refresh()
-      t = setTimeout(tick, Date.now() - since < 60_000 ? 2000 : 15_000)
-    }
-    t = setTimeout(tick, 2000)
-    return () => clearTimeout(t)
-  }, [live, router])
+  // No polling of its own: the worker's answers land in JOB_REQUEST_RESULTS.jsonl
+  // and queue/state.json, which LiveRefresh watches, so the page redraws as they come.
 
   // The oldest batch still waiting on the worker: a request it has not read, or a
   // batch it has read but not finished checking or pricing.
@@ -71,7 +57,6 @@ export function Batches({ batches, worker }: { batches: BatchView[]; worker: Wor
     const r = await fn().catch((e: Error) => ({ ok: false, error: e.message }))
     setBusy(null)
     setNote((n) => ({ ...n, [b.batchId]: r.ok ? 'Sent to the worker…' : r.error ?? 'Could not send that.' }))
-    router.refresh()
   }
 
   return (

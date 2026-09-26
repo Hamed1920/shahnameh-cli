@@ -7,7 +7,8 @@ import { ShowInFolder } from '@/components/show-in-folder'
 import { Card, EmptyState } from '@/components/ui/card'
 import { Reveal } from '@/components/ui/reveal'
 import { Badge, PageHeader, SectionHeading } from '@/components/ui/text'
-import { assetUrl, isFiledShot, isVideo } from '@/lib/asset'
+import { TakeMedia } from '@/components/take-media'
+import { assetUrl, isFiledShot } from '@/lib/asset'
 import { getDecidedEntries, type DecidedEntry, type FollowUp } from '@/lib/decided'
 import { requireProject } from '@/lib/projects'
 import { cn } from '@/lib/cn'
@@ -29,13 +30,7 @@ function Media({ entry, project }: { entry: DecidedEntry; project: string }) {
       </div>
     )
   }
-  const src = assetUrl(project, entry.file)
-  return isVideo(entry.file) ? (
-    <video src={src} className="aspect-video w-full rounded-lg border border-edge bg-black object-contain" controls loop playsInline preload="metadata" />
-  ) : (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={entry.title} className="checker aspect-video w-full rounded-lg border border-edge object-contain" />
-  )
+  return <TakeMedia file={entry.file} alt={entry.title} />
 }
 
 /** Which shot, which pass, which attempt, and when -- what tells two SC001 cards apart. */

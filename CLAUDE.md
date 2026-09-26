@@ -160,8 +160,8 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File "tools\Check-Panel.ps1"
 
 ```powershell
 # review panel + generation workers (from 10_PANEL)
-npm run up         # same as dev; the panel server starts one worker per project and keeps them running
-npm run dev        # http://localhost:3000 — the project picker
+npm run up         # the fast production build (rebuilt only when the code changed); the panel server starts one worker per project and keeps them running
+npm run dev        # the dev server, for editing the panel's code; http://localhost:3000 — the project picker
 npm run worker -- --project <slug>    # one project by hand; add --dry-run to price without spending
 npm test           # panel lib + worker tests (Node 22.6+)
 ```

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Coins, RotateCcw } from 'lucide-react'
 import { requestRegenerate } from '@/app/[project]/decided/actions'
 import { useProject } from '@/components/project-context'
@@ -45,7 +44,6 @@ export function RegenerateButton({
   prices?: Record<string, number>
 }) {
   const project = useProject()
-  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [overlay, setOverlay] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -100,7 +98,6 @@ export function RegenerateButton({
     if (!r.ok) { setError(r.error ?? 'Could not send that.'); return }
     setOpen(false)
     reset()
-    router.refresh()
   }
 
   return (

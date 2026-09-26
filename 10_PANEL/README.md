@@ -10,9 +10,9 @@ Next.js 16.3 · React 19.2 · Tailwind 4 · localhost only.
 
 ```powershell
 cd 10_PANEL
-npm run up         # panel at http://localhost:3000; its server starts the worker and keeps it running
+npm run up         # panel at http://localhost:3000, production build (rebuilt when the code changed); its server starts the worker and keeps it running
 # or separately:
-npm run dev        # panel only
+npm run dev        # the dev server, for editing the panel's code (same as npm run up -- --dev)
 npm run worker     # generation worker by hand, only with SHM_WORKER=off (otherwise the panel runs it)
 ```
 

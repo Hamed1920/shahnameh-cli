@@ -16,6 +16,8 @@ export function projectPaths(root: string) {
     queue: path.join(root, '00_PROJECT', 'queue', 'QUEUE.jsonl'),
     workerState: path.join(root, '00_PROJECT', 'queue', 'state.json'),
     workerLog: path.join(root, '00_PROJECT', 'queue', 'worker.log'),
+    /** `{ jobId, since }` of the job the worker last started generating (worker.mjs). */
+    workerNow: path.join(root, '00_PROJECT', 'queue', 'worker.now'),
     /** Holds the running worker's pid; its modified time is when that worker started. */
     workerLock: path.join(root, '00_PROJECT', 'queue', 'worker.lock'),
     staging: path.join(root, '09_OUTPUT', '_staging'),

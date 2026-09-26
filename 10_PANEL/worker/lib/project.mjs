@@ -90,6 +90,8 @@ export const P = {
   stopFlag: path.join(ROOT, '00_PROJECT', 'queue', 'worker.stop'),
   // Console output of a worker started from the panel (crash traces, "already running").
   workerStdout: path.join(ROOT, '00_PROJECT', 'queue', 'worker.stdout.log'),
+  // The job being generated right now, for the panel. Per machine, like the lock.
+  workerNow: path.join(ROOT, '00_PROJECT', 'queue', 'worker.now'),
 }
 
 export const rel = (abs) => path.relative(ROOT, abs).split(path.sep).join('/')

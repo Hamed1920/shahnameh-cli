@@ -361,6 +361,7 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
           item={i}
           catalog={catalog}
           active={i === current}
+          near={index >= 0 && queue.includes(i) && Math.abs(queue.indexOf(i) - index) === 1}
           onQueue={onQueue}
         />
       ))}
