@@ -29,7 +29,7 @@ export function StickyHeader({ className, children }: { className?: string; chil
   return (
     <div
       ref={ref}
-      className={cn('bleed-x sticky top-0 z-30 -mt-8 mb-10 border-b border-edge bg-ink/95 pt-7 pb-4 lg:-mt-10', className)}
+      className={cn('bleed-x sticky top-0 z-30 -mt-10 mb-10 border-b border-edge bg-ink/95 pt-7 pb-4', className)}
     >
       {children}
     </div>

@@ -1,11 +1,10 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import {
   Archive, ArchiveRestore, Check, ChevronDown, Copy, FolderOpen, ImageOff, LoaderCircle, Maximize2,
-  MoveRight, Pencil, Plus, Search, Star, Tag, TriangleAlert, Undo2, Upload, X,
+  MoveRight, Pencil, Plus, Search, Star, Tag, Undo2, Upload, X,
 } from 'lucide-react'
 import { revealInFolder } from '../reveal-action'
 import { useAssetUrls, useProject } from '@/components/project-context'
@@ -21,6 +20,7 @@ import { Field, Input, Select, Textarea } from '@/components/ui/field'
 import { EASE } from '@/components/ui/motion-tokens'
 import { Modal } from '@/components/ui/modal'
 import { Badge, StickyHeader } from '@/components/ui/text'
+import { useToast } from '@/components/toast'
 import { cn } from '@/lib/cn'
 import {
   KINDS, MAX_ADD_TOTAL_BYTES, MAX_ADD_UPLOADS, MAX_UPLOAD_BYTES, UPLOAD_ACCEPT, entitySlug, type Kind,
@@ -44,8 +44,7 @@ const USE_STATE: Record<LookUse['state'], string> = { generating: 'generating no
 const usesText = (uses: LookUse[]) => uses.map((u) => `${u.label} (${USE_STATE[u.state]})`).join(', ')
 /** Uses the worker has to wait out: it will not pull a file from under a job that still needs it. */
 const blockingUses = (uses: LookUse[]) => uses.filter((u) => u.state !== 'review')
-type Toast = { id: number; tone: 'good' | 'bad' | 'muted'; text: string }
-let seq = 0
+type ToastTone = 'good' | 'bad' | 'muted'
 
 function SelectBox({ checked, onChange, label, className }: { checked: boolean; onChange: () => void; label: string; className?: string }) {
   return (
@@ -127,26 +126,17 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
   const [confirm, setConfirm] = useState<{ title: string; body: string; label: string; run: () => void } | null>(null)
   const [viewer, setViewer] = useState<{ items: LightboxItem[]; index: number } | null>(null)
   const [busy, setBusy] = useState(false)
-  const [toasts, setToasts] = useState<Toast[]>([])
-  const seen = useRef(new Set(data.results.map((r) => r.opId)))
+  const toaster = useToast()
 
-  const dismiss = useCallback((id: number) => setToasts((t) => t.filter((x) => x.id !== id)), [])
-  // A problem stays until it is dismissed: it says what to do next, and a few
-  // seconds is easy to miss while looking at a picture.
-  const toast = useCallback((tone: Toast['tone'], text: string, ms = 4500) => {
-    const id = ++seq
-    setToasts((t) => [...t, { id, tone, text }])
-    if (tone !== 'bad') setTimeout(() => dismiss(id), ms)
-  }, [dismiss])
+  // The panel's toasts (components/toast.tsx). A problem stays until it is
+  // dismissed: it says what to do next, and a few seconds is easy to miss
+  // while looking at a picture.
+  const toast = useCallback((tone: ToastTone, text: string, ms = 4500) => {
+    toaster.show({ tone: tone === 'muted' ? 'working' : tone, title: text, duration: tone === 'bad' ? null : ms })
+  }, [toaster])
 
-  // While the worker has requests to apply, keep checking; report each outcome once.
-  useEffect(() => {
-    for (const r of data.results) {
-      if (seen.current.has(r.opId)) continue
-      seen.current.add(r.opId)
-      toast(r.ok ? 'good' : 'bad', r.ok ? `Done: ${r.summary}` : `Not applied: ${r.reason}`, r.ok ? 4500 : 9000)
-    }
-  }, [data.results, toast])
+  // What the worker made of each request arrives as a toast on any page, from
+  // the sidebar's activity feed (components/activity.tsx), not from here.
   const oldestPending = data.pending[0]?.ts
   const [now, setNow] = useState(() => Date.now())
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), 5000); return () => clearInterval(t) }, [])
@@ -596,7 +586,6 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
 
       <ContextMenu at={menu?.at ?? null} entries={menu?.entries ?? []} onClose={() => setMenu(null)} />
 
-      <Toasts toasts={toasts} onDismiss={dismiss} />
     </div>
   )
 }
@@ -949,7 +938,7 @@ function EntityView({
   onLookMenu: (ev: React.MouseEvent, variant: string, selection: { selected: boolean; toggle: () => void }) => void
   onConfirm: (c: { title: string; body: string; label: string; run: () => void }) => void
   onView: (items: LightboxItem[], index: number) => void
-  onToast: (tone: Toast['tone'], text: string, ms?: number) => void
+  onToast: (tone: ToastTone, text: string, ms?: number) => void
 }) {
   const project = useProject()
   const { assetUrl, thumbUrl } = useAssetUrls()
@@ -1137,45 +1126,6 @@ function EntityView({
         )}
       </div>
     </Modal>
-  )
-}
-
-/**
- * Results and problems, portalled above every dialog. Rendered inside the page
- * they sat under the entity window, so a refusal while working there was
- * invisible and the click looked like it did nothing.
- */
-function Toasts({ toasts, onDismiss }: { toasts: Toast[]; onDismiss: (id: number) => void }) {
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
-  if (!mounted) return null
-  return createPortal(
-    <div className="pointer-events-none fixed top-5 right-5 z-130 flex w-full max-w-sm flex-col gap-2">
-      <AnimatePresence initial={false}>
-        {toasts.map((t) => (
-          <motion.div
-            key={t.id}
-            layout
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 16 }}
-            transition={{ duration: 0.2, ease: EASE }}
-            role={t.tone === 'bad' ? 'alert' : 'status'}
-            className={cn(
-              'pointer-events-auto flex items-start gap-2.5 rounded-lg border bg-raise py-3 pr-2 pl-4 text-[13px] text-fg shadow-[0_16px_40px_-12px_rgba(0,0,0,0.85)]',
-              t.tone === 'bad' ? 'border-bad/50' : 'border-edge-strong',
-            )}
-          >
-            {t.tone === 'bad' ? <TriangleAlert aria-hidden className="mt-0.5 size-4 shrink-0 text-bad" /> : t.tone === 'good' ? <Check aria-hidden className="mt-0.5 size-4 shrink-0 text-good" /> : <LoaderCircle aria-hidden className="mt-0.5 size-4 shrink-0 animate-spin text-muted" />}
-            <span className="min-w-0 flex-1 break-words">{t.text}</span>
-            <button type="button" onClick={() => onDismiss(t.id)} aria-label="Dismiss" className="focus-ring -my-1 grid size-6 shrink-0 cursor-pointer place-items-center rounded-md text-muted hover:bg-white/[0.06] hover:text-fg">
-              <X aria-hidden className="size-3.5" />
-            </button>
-          </motion.div>
-        ))}
-      </AnimatePresence>
-    </div>,
-    document.body,
   )
 }
 

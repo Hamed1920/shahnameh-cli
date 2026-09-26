@@ -5,10 +5,12 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion } from 'motion/react'
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
-import { ArrowLeftRight } from 'lucide-react'
+import { ArrowLeftRight, Bell } from 'lucide-react'
+import { ActivitySheet, useActivity } from '@/components/activity'
 import { NAV, SIDEBAR_COOKIE, SIDEBAR_RAIL, SIDEBAR_WIDTH, navHref } from '@/components/nav-items'
 import { useProject } from '@/components/project-context'
 import { EASE, SPRING } from '@/components/ui/motion-tokens'
+import type { ActivityItem } from '@/lib/activity'
 import { cn } from '@/lib/cn'
 
 const fade = {
@@ -33,16 +35,22 @@ const fade = {
 export function Sidebar({
   defaultCollapsed,
   counts = {},
+  activity = [],
 }: {
   defaultCollapsed: boolean
   /** Badge per nav path, e.g. jobs waiting on the Queue. Zero shows nothing. */
   counts?: Partial<Record<string, number>>
+  /** The worker's latest outcomes (lib/activity.ts): toasts as they come, and the Activity list. */
+  activity?: ActivityItem[]
 }) {
   const [collapsed, setCollapsed] = useState(defaultCollapsed)
   const [hovered, setHovered] = useState<string | null>(null)
   const pathname = usePathname()
   const project = useProject()
   const home = navHref(project.slug, '')
+  const { unread, markRead } = useActivity(project.slug, activity, pathname)
+  const [sheet, setSheet] = useState(false)
+  const openActivity = () => { setSheet(true); markRead() }
 
   function toggle() {
     const next = !collapsed
@@ -161,6 +169,62 @@ export function Sidebar({
       </nav>
 
       <div className="mt-auto p-2 pb-3">
+        {/* What the worker did with what was sent, and what it could not do (components/activity.tsx). */}
+        <button
+          type="button"
+          onClick={openActivity}
+          onMouseEnter={() => setHovered('activity')}
+          onMouseLeave={() => setHovered(null)}
+          onFocus={() => setHovered('activity')}
+          onBlur={() => setHovered(null)}
+          aria-label={unread ? `Activity, ${unread} new` : 'Activity'}
+          className={cn(
+            'focus-ring relative flex h-9 w-full cursor-pointer items-center gap-3 overflow-hidden rounded-md px-3',
+            'text-faint transition-colors duration-150 hover:bg-white/[0.03] hover:text-fg',
+          )}
+        >
+          <Bell aria-hidden strokeWidth={1.75} className="size-5 shrink-0" />
+          <AnimatePresence initial={false}>
+            {!collapsed && (
+              <motion.span {...fade} className="text-[13px] whitespace-nowrap">
+                Activity
+              </motion.span>
+            )}
+          </AnimatePresence>
+          {unread > 0 && (
+            <span
+              aria-hidden
+              className={cn(
+                'absolute grid place-items-center rounded-full bg-accent font-mono leading-none font-medium text-ink tabular-nums',
+                'transition-[top,right,height,min-width,font-size] duration-200',
+                collapsed
+                  ? 'top-[5px] right-[5px] h-3.5 min-w-3.5 px-[3px] text-[9px] ring-2 ring-ink'
+                  : 'top-1/2 right-3 h-[18px] min-w-[18px] -translate-y-1/2 px-1.5 text-[10.5px]',
+              )}
+            >
+              {unread > 99 ? '99+' : unread}
+            </span>
+          )}
+          <AnimatePresence>
+            {collapsed && hovered === 'activity' && (
+              <motion.span
+                role="tooltip"
+                initial={{ opacity: 0, x: -4, y: '-50%' }}
+                animate={{ opacity: 1, x: 0, y: '-50%' }}
+                exit={{ opacity: 0, x: -4, y: '-50%' }}
+                transition={{ duration: 0.14, ease: EASE }}
+                className={cn(
+                  'pointer-events-none absolute top-1/2 left-full z-50 ml-3',
+                  'rounded-md border border-edge-strong bg-raise px-2.5 py-1.5',
+                  'text-xs whitespace-nowrap text-fg',
+                )}
+              >
+                Activity
+                {unread > 0 && <span className="ml-1.5 font-mono text-muted">{unread} new</span>}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </button>
         {/* Back to the list of films. The panel runs them all; this one is just the open one. */}
         <Link
           href="/"
@@ -224,6 +288,7 @@ export function Sidebar({
           </AnimatePresence>
         </button>
       </div>
+      <ActivitySheet open={sheet} onClose={() => setSheet(false)} project={project.slug} items={activity} />
     </motion.aside>
   )
 }

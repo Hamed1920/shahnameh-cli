@@ -1,13 +1,11 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
-import { Check, Copy, Film, TriangleAlert, Undo2 } from 'lucide-react'
+import { Copy, Film } from 'lucide-react'
 import { useHoldLiveRefresh } from '@/components/live-refresh'
 import { useProject } from '@/components/project-context'
-import { Button } from '@/components/ui/button'
+import { useToast } from '@/components/toast'
 import { EmptyState } from '@/components/ui/card'
-import { EASE } from '@/components/ui/motion-tokens'
 import { ContextMenu, type MenuEntry } from '@/components/ui/context-menu'
 import { MenuNote } from '@/components/item-menu'
 import { StickyHeader } from '@/components/ui/text'
@@ -24,13 +22,10 @@ interface Held extends QueuedDecision {
   timer: ReturnType<typeof setTimeout>
 }
 
-type Toast =
-  | { id: number; kind: 'held'; heldId: number; text: string }
-  | { id: number; kind: 'saved'; text: string }
-  | { id: number; kind: 'error'; text: string; path: string }
-  | { id: number; kind: 'arrived'; text: string; path: string }
-
 let seq = 0
+
+/** The toast for a decision still inside its Undo window. */
+const heldToast = (heldId: number) => `review-held-${heldId}`
 
 /**
  * The review page: one candidate at a time, a strip to move between them, and
@@ -53,7 +48,7 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
   const [episodeFilter, setEpisodeFilter] = useState('')
   const [held, setHeld] = useState<Held[]>([])
   const [saving, setSaving] = useState<Set<string>>(new Set())
-  const [toasts, setToasts] = useState<Toast[]>([])
+  const toaster = useToast()
   const [menu, setMenu] = useState<{ at: { x: number; y: number }; entries: MenuEntry[] } | null>(null)
   const [copied, setCopied] = useState<string | null>(null)
   const heldRef = useRef(held)
@@ -85,12 +80,6 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
   const shownRef = useRef<string | null>(null)
   shownRef.current = current?.candidate.path ?? null
 
-  const toast = useCallback((t: Toast, ms?: number) => {
-    setToasts((all) => [...all, t])
-    if (ms) setTimeout(() => setToasts((all) => all.filter((x) => x.id !== t.id)), ms)
-  }, [])
-  const dropToast = (id: number) => setToasts((all) => all.filter((x) => x.id !== id))
-
   /** The next candidate after `path` in page order that is still in the queue. */
   const nextAfter = useCallback(
     (path: string, skip: Set<string>) => {
@@ -105,18 +94,23 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
   const commit = useCallback(
     async (h: Held) => {
       setHeld((all) => all.filter((x) => x.id !== h.id))
-      setToasts((all) => all.filter((t) => !(t.kind === 'held' && t.heldId === h.id)))
+      toaster.dismiss(heldToast(h.id))
       setSaving((s) => new Set(s).add(h.path))
       const r = await h.commit().catch((e: Error) => ({ ok: false, error: e.message }))
       if (r.ok) {
-        toast({ id: ++seq, kind: 'saved', text: `${h.title} ${h.verdict === 'accepted' ? 'accepted' : 'denied'}` }, 2500)
+        toaster.show({ tone: 'good', title: `${h.title} ${h.verdict === 'accepted' ? 'accepted' : 'denied'}`, detail: 'Sent to the worker.', duration: 2500 })
         // The server refresh removes it from `items`; until then it stays hidden.
       } else {
         setSaving((s) => { const n = new Set(s); n.delete(h.path); return n })
-        toast({ id: ++seq, kind: 'error', text: `${h.title} was not saved: ${r.error ?? 'unknown error'}`, path: h.path })
+        toaster.show({
+          tone: 'bad',
+          title: `${h.title} was not saved`,
+          detail: r.error ?? 'Something went wrong sending it. Try again.',
+          action: { label: 'Open', onClick: () => setCurrentPath(h.path) },
+        })
       }
     },
-    [toast],
+    [toaster],
   )
 
   const onQueue = useCallback(
@@ -125,11 +119,18 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
       const h: Held = { ...d, id, timer: setTimeout(() => commit(h), UNDO_MS) }
       setHeld((all) => [...all, h])
       const verb = d.verdict === 'accepted' ? 'Accepted' : d.regenerates ? 'Denied, regenerating' : 'Denied'
-      toast({ id: ++seq, kind: 'held', heldId: id, text: `${verb} ${d.title}` })
+      toaster.show({
+        id: heldToast(id),
+        title: `${verb} ${d.title}`,
+        detail: 'Sent when the bar runs out.',
+        action: { label: 'Undo', onClick: () => undo(id) },
+        duration: null,
+        countdown: UNDO_MS,
+      })
       setCurrentPath(nextAfter(d.path, new Set([...hidden, d.path])))
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [commit, toast, nextAfter, held, saving],
+    [commit, toaster, nextAfter, held, saving],
   )
 
   function undo(heldId: number) {
@@ -137,7 +138,7 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
     if (!h) return
     clearTimeout(h.timer)
     setHeld((all) => all.filter((x) => x.id !== heldId))
-    setToasts((all) => all.filter((t) => !(t.kind === 'held' && t.heldId === heldId)))
+    toaster.dismiss(heldToast(heldId))
     setCurrentPath(h.path)
   }
 
@@ -197,8 +198,8 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
       unseen.length > 1
         ? `${unseen.length} new videos to review`
         : `New: ${name}${s.attempt > 1 ? ` · attempt ${s.attempt}` : ''}${s.stage === 'final' ? ' · final' : ''}`
-    toast({ id: ++seq, kind: 'arrived', text, path: first.candidate.path }, 10000)
-  }, [items, toast])
+    toaster.show({ tone: 'new', title: text, action: { label: 'Open', onClick: () => setCurrentPath(first.candidate.path) }, duration: 10000 })
+  }, [items, toaster])
 
   // J / K move through the queue.
   useEffect(() => {
@@ -368,61 +369,6 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
 
       <ContextMenu at={menu?.at ?? null} entries={menu?.entries ?? []} onClose={() => setMenu(null)} />
       {copied && <MenuNote text={copied} bad={copied.startsWith('Could not')} />}
-
-      {/* ------------------------------------------------ toasts */}
-      <div className="pointer-events-none fixed inset-x-0 bottom-6 z-90 flex flex-col items-center gap-2 px-4">
-        <AnimatePresence initial={false}>
-          {toasts.map((t) => (
-            <motion.div
-              key={t.id}
-              layout
-              initial={{ opacity: 0, y: 12, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 8, scale: 0.98 }}
-              transition={{ duration: 0.2, ease: EASE }}
-              role="status"
-              className={cn(
-                'pointer-events-auto relative flex w-full max-w-md items-center gap-3 overflow-hidden rounded-lg border bg-raise py-2.5 pr-2.5 pl-4 text-[13px] shadow-[0_16px_40px_-12px_rgba(0,0,0,0.85)]',
-                t.kind === 'error' ? 'border-bad/50' : 'border-edge-strong',
-              )}
-            >
-              {t.kind === 'error' ? (
-                <TriangleAlert aria-hidden className="size-4 shrink-0 text-bad" />
-              ) : t.kind === 'saved' ? (
-                <Check aria-hidden className="size-4 shrink-0 text-good" />
-              ) : t.kind === 'arrived' ? (
-                <Film aria-hidden className="size-4 shrink-0 text-fg" />
-              ) : null}
-              <span className="min-w-0 flex-1 text-fg" dir="auto">{t.text}</span>
-
-              {t.kind === 'held' && (
-                <>
-                  <Button type="button" size="sm" tone="outline" onClick={() => undo(t.heldId)}>
-                    <Undo2 aria-hidden className="size-3.5" /> Undo
-                  </Button>
-                  <motion.span
-                    aria-hidden
-                    initial={{ scaleX: 1 }}
-                    animate={{ scaleX: 0 }}
-                    transition={{ duration: UNDO_MS / 1000, ease: 'linear' }}
-                    className="absolute inset-x-0 bottom-0 h-px origin-left bg-fg/70"
-                  />
-                </>
-              )}
-              {(t.kind === 'error' || t.kind === 'arrived') && (
-                <>
-                  <Button type="button" size="sm" tone="outline" onClick={() => { setCurrentPath(t.path); dropToast(t.id) }}>
-                    Open
-                  </Button>
-                  <button type="button" aria-label="Dismiss" onClick={() => dropToast(t.id)} className="focus-ring grid size-7 cursor-pointer place-items-center rounded-md text-muted hover:bg-white/[0.05] hover:text-fg">
-                    ×
-                  </button>
-                </>
-              )}
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
     </div>
   )
 }

@@ -119,6 +119,7 @@ export function RegenerateButton({
       <Button type="button" size="sm" tone="outline" disabled={!source} onClick={() => { reset(); setOpen(true) }} title={source ? undefined : 'The queue record for this job is missing'}>
         <RotateCcw aria-hidden className="size-3.5" /> Regenerate
       </Button>
+      {!source && <span className="text-xs text-faint">Can’t regenerate from here: this job’s queue record is missing.</span>}
 
       <Modal
         open={open}
@@ -129,10 +130,17 @@ export function RegenerateButton({
         clip={false}
         footer={
           <>
-            <span className="mr-auto flex items-center gap-1.5 self-center text-xs text-faint">
-              <Coins aria-hidden className="size-3.5" />
-              {priceStillValid && credits != null ? `≈ ${credits} credits` : 'priced by the worker before it runs'}
-            </span>
+            {edits.stale.length > 0 || !prompt.trim() ? (
+              // Regenerate is off: say why, where the price would be.
+              <span className="mr-auto self-center text-xs text-bad">
+                {edits.stale.length > 0 ? 'Fix the references that no longer resolve first.' : 'Write a prompt first.'}
+              </span>
+            ) : (
+              <span className="mr-auto flex items-center gap-1.5 self-center text-xs text-faint">
+                <Coins aria-hidden className="size-3.5" />
+                {priceStillValid && credits != null ? `≈ ${credits} credits` : 'priced by the worker before it runs'}
+              </span>
+            )}
             <Button type="button" tone="ghost" onClick={() => setOpen(false)}>Cancel</Button>
             <Button
               type="button"

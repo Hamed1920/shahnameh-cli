@@ -1,19 +1,18 @@
 'use client'
 
-import { useEffect, useState, type ReactNode } from 'react'
-import { createPortal } from 'react-dom'
+import { useEffect, useId, useState, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import { Archive, Copy, ExternalLink, Film, FolderOpen, ListFilter, LoaderCircle } from 'lucide-react'
 import { revealInFolder } from '@/app/[project]/reveal-action'
 import { archiveShots } from '@/app/[project]/episodes/actions'
 import { assignToEpisode } from '@/app/[project]/shot-actions'
 import { useProject } from '@/components/project-context'
+import { useToast } from '@/components/toast'
 import { EpisodePicker } from '@/components/episode-picker'
 import { Button } from '@/components/ui/button'
 import { ContextMenu, type MenuEntry } from '@/components/ui/context-menu'
 import { Modal } from '@/components/ui/modal'
 import { shortEpisode, type EpisodeChoice, type EpisodeOption } from '@/lib/episodes'
-import { cn } from '@/lib/cn'
 
 /**
  * Right-click anything and get the same few things.
@@ -245,23 +244,16 @@ export function isTextEntry(target: EventTarget | null): boolean {
 }
 
 /**
- * What the menu just did, said once and gone. Portalled to the body: a queue
- * row's menu lives inside a <tbody>, where a loose <div> is invalid HTML.
+ * What a menu or button just did, as a toast (components/toast.tsx). Shown
+ * while the caller renders it; a problem outlives that and stays until it is
+ * dismissed, because a refusal that fades before it is read helps nobody.
  */
 export function MenuNote({ text, bad }: { text: string; bad?: boolean }) {
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
-  if (!mounted) return null
-  return createPortal(
-    <div
-      role="status"
-      className={cn(
-        'pointer-events-none fixed inset-x-0 bottom-6 z-120 mx-auto w-fit max-w-md rounded-lg border bg-raise px-4 py-2.5 text-center text-[13px] shadow-[0_16px_40px_-12px_rgba(0,0,0,0.85)]',
-        bad ? 'border-bad/50 text-bad' : 'border-edge-strong text-fg',
-      )}
-    >
-      {text}
-    </div>,
-    document.body,
-  )
+  const { show, dismiss } = useToast()
+  const id = useId()
+  useEffect(() => {
+    show({ id, tone: bad ? 'bad' : 'good', title: text, duration: null })
+    if (!bad) return () => dismiss(id)
+  }, [id, text, bad, show, dismiss])
+  return null
 }

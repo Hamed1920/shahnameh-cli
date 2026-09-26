@@ -249,7 +249,11 @@ export function ReferenceStudio({
         <>
           <span className="mr-auto text-xs text-faint">
             {session?.picks.length ? `${session.picks.length} filed. ` : ''}
-            {unpicked ? `${unpicked} result${unpicked === 1 ? '' : 's'} not picked go to _rejected when you finish.` : 'Nothing is spent until you press Generate.'}
+            {running
+              ? 'Finish waits for the tries still generating.'
+              : unpicked
+                ? `${unpicked} result${unpicked === 1 ? '' : 's'} you did not pick will be set aside when you finish.`
+                : 'Nothing is spent until you press Generate.'}
           </span>
           <Button type="button" tone="ghost" onClick={onClose}>Keep open for later</Button>
           <Button type="button" tone="outline" pending={busy === 'close'} pendingLabel="Closing" disabled={running} onClick={finish} title={running ? 'Wait for the tries that are still generating' : undefined}>

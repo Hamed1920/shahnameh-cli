@@ -197,17 +197,21 @@ export async function decide(
   return { ok: true }
 }
 
-export async function decideLearning(formData: FormData): Promise<void> {
+/** What the Learnings page shows under a rule after Approve or Reject: nothing, or why it did not save. */
+export interface LearningResult { ok: boolean; error?: string }
+
+/** Approve or reject a proposed rule. Returns why not, rather than throwing, so the page can say so. */
+export async function decideLearning(_prev: LearningResult | null, formData: FormData): Promise<LearningResult> {
   const pr = await requireProject(formData.get('project'))
   const id = String(formData.get('id') ?? '')
   const status = String(formData.get('status') ?? '')
   const edited = String(formData.get('rule') ?? '').trim()
 
-  if (!id) throw new Error('missing id')
-  if (status !== 'approved' && status !== 'rejected') throw new Error('bad status')
+  if (!id) return { ok: false, error: 'This rule has no id, so it cannot be saved. Reload the page.' }
+  if (status !== 'approved' && status !== 'rejected') return { ok: false, error: 'Choose Approve or Reject.' }
 
   const existing = (await getLearnings(pr)).find((l) => l.id === id)
-  if (!existing) throw new Error(`unknown learning: ${id}`)
+  if (!existing) return { ok: false, error: 'This rule is no longer in the list. Reload the page.' }
 
   const updated: Learning = {
     ...existing,
@@ -218,6 +222,11 @@ export async function decideLearning(formData: FormData): Promise<void> {
   }
 
   // Append rather than rewrite; getLearnings folds by id, last write wins.
-  await appendJsonl(pr.P.learnings, updated)
+  try {
+    await appendJsonl(pr.P.learnings, updated)
+  } catch (e) {
+    return { ok: false, error: `Could not save it: ${(e as Error).message}` }
+  }
   revalidatePath(`/${pr.slug}/learnings`)
+  return { ok: true }
 }

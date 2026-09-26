@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono, Instrument_Serif, Vazirmatn } from 'next/font/google'
 import { MotionProvider } from '@/components/motion-provider'
+import { ToastProvider } from '@/components/toast'
 import { cn } from '@/lib/cn'
 import './globals.css'
 
@@ -33,7 +34,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         sideways when a page grows tall enough to need a scrollbar.
       */}
       <body className="relative isolate flex h-dvh overflow-hidden antialiased">
-        <MotionProvider>{children}</MotionProvider>
+        <MotionProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </MotionProvider>
       </body>
     </html>
   )

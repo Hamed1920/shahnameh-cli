@@ -1,8 +1,7 @@
 import { requireProject } from '@/lib/projects'
 import { parseMentions } from '@/lib/mentions'
 import { getDecisions, getLearnings, resolveRefToken } from '@/lib/store'
-import { decideLearning } from '../actions'
-import { Button } from '@/components/ui/button'
+import { LearningForm } from './learning-form'
 import { Card, EmptyState } from '@/components/ui/card'
 import { Disclosure } from '@/components/ui/disclosure'
 import { Textarea } from '@/components/ui/field'
@@ -64,9 +63,7 @@ export default async function LearningsPage({ params }: PageProps<'/[project]/le
             {proposed.map((l, i) => (
               <Reveal key={l.id} index={i}>
                 <Card className="p-6 transition-colors duration-200 hover:border-edge-strong">
-                  <form action={decideLearning}>
-                    <input type="hidden" name="project" value={pr.slug} />
-                    <input type="hidden" name="id" value={l.id} />
+                  <LearningForm project={pr.slug} id={l.id}>
                     <div className="mb-4 flex flex-wrap items-center gap-2.5 text-xs text-muted">
                       <span className="font-mono text-faint">{l.id}</span>
                       <Badge>{scopeLabel(l.scope)}</Badge>
@@ -88,16 +85,7 @@ export default async function LearningsPage({ params }: PageProps<'/[project]/le
                         })}
                       </ul>
                     </Disclosure>
-
-                    <div className="mt-6 flex gap-2">
-                      <Button type="submit" name="status" value="approved" tone="good" size="sm">
-                        Approve
-                      </Button>
-                      <Button type="submit" name="status" value="rejected" size="sm">
-                        Reject
-                      </Button>
-                    </div>
-                  </form>
+                  </LearningForm>
                 </Card>
               </Reveal>
             ))}

@@ -381,6 +381,7 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
 
   const ready = rows.filter((r) => !problems.has(r.key)).length
   const bad = rows.length - ready
+  const firstBad = rows.find((r) => problems.has(r.key)) ?? null
   const videos = rows.filter((r) => isVideoModel(rowModel(r, defaults))).length
   const newCount = rows.filter((r) => r.targetMode === 'new').length
 
@@ -707,6 +708,23 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
                 Submit {rows.length} prompt{rows.length === 1 ? '' : 's'}
               </Button>
             </div>
+            {/* A disabled Submit says why, and takes you to the first prompt that needs fixing. */}
+            {firstBad && (
+              <div role="status" className="mt-3 flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-[13px]">
+                <span className="text-muted">
+                  Submit is off until every prompt is ready. Prompt {rows.indexOf(firstBad) + 1}:{' '}
+                  <span className="text-bad" dir="auto">{problems.get(firstBad.key)?.[0]}</span>
+                </span>
+                <Button
+                  type="button"
+                  size="sm"
+                  tone="outline"
+                  onClick={() => document.getElementById(rowAnchor(firstBad.key))?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                >
+                  Show me
+                </Button>
+              </div>
+            )}
           </section>
         </>
       )}
@@ -776,6 +794,9 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
   )
 }
 
+/** The element id of a prompt's card, so "Show me" can scroll to it. */
+const rowAnchor = (key: string) => `prompt-row-${key}`
+
 function RowCard({
   index, row, catalog, cfg, defaults, knownShots, episodes, episodeTitles, scenePreview, recentRefs, listId, problems, onChange, onRemove, onDuplicate,
   onPickEntity, onPick, uploads, drafts, onFiles, onUploadChange, onUploadDrop, onUploadEntity, onCreate, onContextMenu,
@@ -825,7 +846,7 @@ function RowCard({
   }, [row.refs, recentRefs])
 
   return (
-    <Card className={cn('p-5', problems.length && 'border-bad/40')} onContextMenu={onContextMenu}>
+    <Card id={rowAnchor(row.key)} className={cn('scroll-mt-6 p-5', problems.length && 'border-bad/40')} onContextMenu={onContextMenu}>
       <div className="flex flex-wrap items-center gap-3">
         <span className="font-mono text-[11px] text-faint">{String(index + 1).padStart(2, '0')}</span>
         <Input dir="auto" value={row.label} onChange={(e) => onChange({ label: e.target.value })} placeholder="Label (P01)" className="h-8 w-44 text-[13px]" />
