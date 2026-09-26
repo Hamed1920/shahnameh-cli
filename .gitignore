@@ -50,8 +50,10 @@
 .agents/
 skills-lock.json
 **/.claude/skills/higgsfield-*
-# A person's own Claude Code permissions on one machine.
+# A person's own Claude Code permissions on one machine, and the git worktrees
+# Claude Code makes for parallel work (each is a checkout of this repo).
 **/.claude/settings.local.json
+/.claude/worktrees/
 
 # --- node / next ------------------------------------------------------
 node_modules/
