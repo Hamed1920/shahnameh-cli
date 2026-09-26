@@ -58,7 +58,7 @@ function Heading({ entry, movingTo }: { entry: DecidedEntry; movingTo?: string |
 const FOLLOW_UP: Record<FollowUp['state'], { text: string; tone: 'accent' | 'good' | 'bad' | 'muted' }> = {
   queued: { text: 'queued', tone: 'muted' },
   generating: { text: 'generating now', tone: 'accent' },
-  'not-generated': { text: 'did not generate, see the worker log', tone: 'bad' },
+  'not-generated': { text: 'did not generate: the Queue page says why', tone: 'bad' },
   'to-review': { text: 'waiting for your review', tone: 'accent' },
   accepted: { text: 'accepted', tone: 'good' },
   denied: { text: 'denied', tone: 'bad' },
@@ -77,7 +77,7 @@ function FollowUpLine({ entry }: { entry: DecidedEntry }) {
         ? 'Not regenerated.'
         : entry.status === 'waiting'
           ? 'Regenerates once the worker applies this.'
-          : 'No regeneration was queued (attempt limit reached?), see the worker log.'
+          : 'No regeneration was queued (perhaps the attempt limit); the worker’s log on the Queue page says why.'
     } else if (entry.stage === 'draft' && entry.status === 'waiting') {
       text = 'The 1080p final is queued once the worker applies this.'
     }

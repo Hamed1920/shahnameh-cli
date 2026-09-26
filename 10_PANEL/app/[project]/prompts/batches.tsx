@@ -11,6 +11,7 @@ import { Disclosure } from '@/components/ui/disclosure'
 import { Modal } from '@/components/ui/modal'
 import { Table, Td, Th, Thead, Tr } from '@/components/ui/table'
 import { Badge, SectionHeading } from '@/components/ui/text'
+import { plainReason } from '@/lib/plain'
 import type { BatchStatus, BatchView, WorkerStatus } from '@/lib/types'
 
 const when = (iso: string) => new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
@@ -47,9 +48,9 @@ export function Batches({ batches, worker }: { batches: BatchView[]; worker: Wor
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), 5000); return () => clearInterval(t) }, [])
   const waited = oldest ? now - new Date(oldest).getTime() : 0
   const waitNote = !oldest ? null
-    : !worker.running ? worker.autostartOff ? `The worker isn’t running here (${worker.autostartOff}), so nothing is checked or priced.` : 'The worker is starting…'
-    : worker.outdated && waited > 10000 ? 'Restart the worker: it is running code from before the last update.'
-    : waited > 30000 ? 'Taking longer than usual. The message on the batch, if any, says why; otherwise check the worker log.'
+    : !worker.running ? worker.autostartOff ? `${plainReason(worker.autostartOff)} Nothing is checked or priced here.` : 'The worker is starting…'
+    : worker.outdated && waited > 10000 ? 'The worker restarts on the new code once it is idle; this batch is checked after that.'
+    : waited > 30000 ? 'Taking longer than usual. The message on the batch, if any, says why; otherwise the worker’s log on the Queue page may.'
     : null
 
   async function act(b: BatchView, fn: () => Promise<{ ok: boolean; error?: string }>) {
@@ -103,8 +104,8 @@ export function Batches({ batches, worker }: { batches: BatchView[]; worker: Wor
                             {j.jobId && b.status === 'queued' && <span className="font-mono text-[11px] text-faint">{j.jobId}</span>}
                           </div>
                           <div className="mt-1 line-clamp-2 text-[12.5px] leading-relaxed text-muted" dir="auto">{j.prompt}</div>
-                          {j.reason && <div className="mt-1 text-xs text-bad">{j.reason}</div>}
-                          {j.ok && j.priceReason && <div className="mt-1 text-xs text-bad" dir="auto">Could not be priced: {j.priceReason}</div>}
+                          {j.reason && <div className="mt-1 text-xs text-bad">{plainReason(j.reason)}</div>}
+                          {j.ok && j.priceReason && <div className="mt-1 text-xs text-bad" dir="auto">Could not be priced: {plainReason(j.priceReason)}</div>}
                         </Td>
                         <Td className="font-mono text-xs text-fg">
                           {j.assignedId ?? j.target}
@@ -132,10 +133,10 @@ export function Batches({ batches, worker }: { batches: BatchView[]; worker: Wor
                 )}
 
                 {b.message && (
-                  <p className="rounded-md border border-bad/35 bg-bad/8 px-3.5 py-2.5 text-[13px] leading-relaxed text-bad" dir="auto">{b.message}</p>
+                  <p className="rounded-md border border-bad/35 bg-bad/8 px-3.5 py-2.5 text-[13px] leading-relaxed text-bad" dir="auto">{plainReason(b.message)}</p>
                 )}
                 {b.ceilingNote && (
-                  <p className="text-xs leading-relaxed text-muted">{b.ceilingNote}</p>
+                  <p className="text-xs leading-relaxed text-muted">{plainReason(b.ceilingNote)}</p>
                 )}
 
                 <div className="flex flex-wrap items-center gap-3 border-t border-edge pt-4">

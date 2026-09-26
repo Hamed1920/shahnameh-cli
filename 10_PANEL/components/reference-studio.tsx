@@ -16,6 +16,7 @@ import { Modal } from '@/components/ui/modal'
 import { EASE } from '@/components/ui/motion-tokens'
 import { Badge } from '@/components/ui/text'
 import { cn } from '@/lib/cn'
+import { plainReason } from '@/lib/plain'
 import { KINDS, KIND_LABEL, UPLOAD_ACCEPT, UPLOAD_ROLES, entitySlug, isAscii } from '@/lib/indexing'
 import { aspectRatiosFor, modelLabel, refLimit } from '@/lib/models'
 import { lookPath } from '@/lib/ref-suggest'
@@ -227,8 +228,8 @@ export function ReferenceStudio({
   const w = session?.worker
   const workerNote = !w || w.running ? null
     : w.paused ? 'The workers are stopped (Queue page → Start workers), so nothing is priced or generated.'
-      : w.stopRequested ? 'This project\'s worker is stopped (queue/worker.stop), so nothing is priced or generated.'
-        : w.autostartOff ? `No worker runs on this machine (${w.autostartOff}), so nothing is priced or generated.`
+      : w.stopRequested ? 'This film’s worker is stopped (Queue page → Start workers), so nothing is priced or generated.'
+        : w.autostartOff ? `${plainReason(w.autostartOff)} Nothing is priced or generated here.`
           : 'The worker is starting…'
 
   const priceLabel = !current
@@ -369,7 +370,7 @@ export function ReferenceStudio({
             {workerNote && <p className="text-xs text-bad">{workerNote}</p>}
             {current && current.status !== 'error' && current.reason && (
               // Why pricing is waiting (the CLI not signed in) or came back unknown.
-              <p className="text-xs text-bad" dir="auto">{current.reason}</p>
+              <p className="text-xs text-bad" dir="auto">{plainReason(current.reason)}</p>
             )}
             {session?.refused && <p className="text-xs text-bad">The worker refused: {session.refused}</p>}
           </div>
@@ -474,7 +475,7 @@ function TryHeader({ t, onReuse }: { t: StudioTry; onReuse: () => void }) {
         <RotateCcw aria-hidden className="size-3" /> Reuse this prompt
       </button>
       {t.status === 'failed' && <Badge tone="bad">failed</Badge>}
-      {t.status === 'failed' && t.reason && <span className="w-full text-xs text-bad" dir="auto">{t.reason}</span>}
+      {t.status === 'failed' && t.reason && <span className="w-full text-xs text-bad" dir="auto">{plainReason(t.reason)}</span>}
     </div>
   )
 }

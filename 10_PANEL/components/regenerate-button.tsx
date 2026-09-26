@@ -13,6 +13,7 @@ import { Field } from '@/components/ui/field'
 import { Modal } from '@/components/ui/modal'
 import { Badge } from '@/components/ui/text'
 import { isVideoModel } from '@/lib/batch-rules'
+import { plainReason } from '@/lib/plain'
 import type { CatalogEntity, RegenerateSource, RegenerationView } from '@/lib/types'
 
 const when = (iso: string) => new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
@@ -110,7 +111,7 @@ export function RegenerateButton({
               <span suppressHydrationWarning>Regenerated {when(r.ts)}</span>
               {r.state === 'queued' && <Badge tone="good">queued{r.jobId ? ` · ${r.jobId}` : ''}</Badge>}
               {r.state === 'waiting' && <Badge tone="accent">waiting for the worker</Badge>}
-              {r.state === 'rejected' && <Badge tone="bad">not queued: {r.reason}</Badge>}
+              {r.state === 'rejected' && <Badge tone="bad">not queued: {plainReason(r.reason)}</Badge>}
               {r.note && <span className="text-faint" dir="auto">“{r.note}”</span>}
             </li>
           ))}

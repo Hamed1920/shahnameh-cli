@@ -53,7 +53,7 @@ export function StudioLauncher({ catalog, cfg, sessions }: { catalog: CatalogEnt
           <button
             type="button"
             aria-label={`End the studio session for ${s.label}`}
-            title={s.results > 0 ? 'End this session: its unpicked results go to _rejected' : 'End this session'}
+            title={s.results > 0 ? 'End this session: the results you did not pick are set aside' : 'End this session'}
             onClick={() => end(s.sessionId)}
             className="focus-ring grid h-full cursor-pointer place-items-center rounded-r-md px-1.5 text-faint hover:text-fg"
           >

@@ -31,7 +31,7 @@ export function WorkerSwitch({ paused, running }: { paused: boolean; running: nu
           <span>
             {running > 0
               ? `Stopping: ${running} worker${running === 1 ? '' : 's'} still finishing the job in hand…`
-              : 'All workers stopped. Safe to commit and push.'}
+              : 'All workers stopped. It is safe to sync this computer now (commit and push).'}
           </span>
           <Button type="button" size="sm" tone="ghost" pending={busy} pendingLabel="Starting" onClick={() => flip(startAllWorkers)}>
             <Play aria-hidden className="size-3.5" /> Start workers

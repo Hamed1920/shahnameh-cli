@@ -27,6 +27,8 @@ const RULES: [RegExp, (m: RegExpMatchArray) => string][] = [
     (m) => `Higgsfield did not finish within ${m[1]}. It may still finish, and be charged, on Higgsfield's side.`],
   [/^SHM_WORKER=off on this machine$/,
     () => 'Workers are switched off on this computer.'],
+  [/^SHM_PROJECTS points at a copy without the stub CLI/,
+    () => 'The panel is looking at test copies of the films without the test tool, so no worker runs: it would spend real credits.'],
   [/^SHM_ROOT is set for the panel/,
     () => 'The panel was started with a setting that stops it running workers (SHM_ROOT). Start it the usual way.'],
 ]

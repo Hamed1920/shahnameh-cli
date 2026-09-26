@@ -1,6 +1,8 @@
 import {
-  getCandidates, getDecisions, getEpisodes, getFilings, getGeneratingJobId, getQueue, getWorkerState, getWorkerStatus,
+  getCandidates, getDecisions, getEpisodes, getFilings, getGeneratingJobId, getQueue, getWorkerState, getWorkerStatus, readTail,
 } from '@/lib/store'
+import { jobLabel } from '@/lib/activity'
+import { plainReason } from '@/lib/plain'
 import { listProjects, requireProject } from '@/lib/projects'
 import { workersPaused } from '@/lib/worker-guard'
 import { episodeLabel, episodeOf, groupByEpisode, shortEpisode, NO_EPISODE_LABEL } from '@/lib/episodes'
@@ -33,7 +35,7 @@ function menuFor(q: QueueItem, project: string, code: string): ItemAction[] {
 
 export default async function QueuePage({ params }: PageProps<'/[project]/queue'>) {
   const pr = await requireProject((await params).project)
-  const [queue, decisions, candidates, state, filings, worker, episodeList] = await Promise.all([
+  const [queue, decisions, candidates, state, filings, worker, episodeList, logTail] = await Promise.all([
     getQueue(pr),
     getDecisions(pr),
     getCandidates(pr),
@@ -41,7 +43,11 @@ export default async function QueuePage({ params }: PageProps<'/[project]/queue'
     getFilings(pr),
     getWorkerStatus(pr),
     getEpisodes(pr),
+    // The end of the worker's own log, for the folded section at the foot of the page.
+    readTail(pr.P.workerLog, 24 * 1024),
   ])
+  const logLines = logTail.trimEnd().split('\n').slice(-120).reverse()
+  const jobById = new Map(queue.map((q) => [q.jobId, q]))
   const failedIds = Object.keys((state?.failedDecisions ?? {}) as Record<string, string>)
   const failures = filings.filter((f) => !f.ok && !!f.decisionId && failedIds.includes(f.decisionId)).reverse()
   // Generations that ended without a take, and why (worker.mjs recordFailure). The ten newest.
@@ -103,8 +109,11 @@ export default async function QueuePage({ params }: PageProps<'/[project]/queue'
             <tbody>
               {failedJobs.map(([jobId, f]) => (
                 <Tr key={jobId}>
-                  <Td className="font-mono text-xs text-fg">{jobId}</Td>
-                  <Td className="text-xs text-bad" dir="auto">{f.reason}</Td>
+                  <Td className="text-xs text-fg">
+                    {jobLabel(jobById.get(jobId)?.target)}
+                    <div className="mt-0.5 font-mono text-[11px] text-faint">{jobId}</div>
+                  </Td>
+                  <Td className="text-xs text-bad" dir="auto">{plainReason(f.reason)}</Td>
                   <Td className="font-mono text-xs whitespace-nowrap text-muted">{f.at.slice(0, 16).replace('T', ' ')}</Td>
                 </Tr>
               ))}
@@ -132,7 +141,7 @@ export default async function QueuePage({ params }: PageProps<'/[project]/queue'
               {failures.map((f) => (
                 <Tr key={f.decisionId + f.ts}>
                   <Td className="font-mono text-xs text-fg">{f.decisionId}</Td>
-                  <Td className="text-xs text-bad">{f.reason}</Td>
+                  <Td className="text-xs text-bad" dir="auto">{plainReason(f.reason)}</Td>
                   <Td className="font-mono text-xs whitespace-nowrap text-muted">{f.ts.slice(0, 16).replace('T', ' ')}</Td>
                 </Tr>
               ))}
@@ -185,7 +194,7 @@ export default async function QueuePage({ params }: PageProps<'/[project]/queue'
                             </Badge>
                           )}
                           {q.jobId !== generating && held[q.jobId] && (
-                            <div className="mt-1 max-w-xs font-sans text-bad">{held[q.jobId].reason}</div>
+                            <div className="mt-1 max-w-xs font-sans text-bad">{plainReason(held[q.jobId].reason)}</div>
                           )}
                           {q.parentJobId && (
                             <div className="mt-1 text-faint">from {q.parentJobId}</div>
@@ -216,11 +225,19 @@ export default async function QueuePage({ params }: PageProps<'/[project]/queue'
         )}
       </section>
 
-      {/* The worker's raw record: rarely needed, so last and closed until asked for. */}
-      <section>
+      {/* The worker's own words and raw record: rarely needed, so last and closed until asked for.
+          Other pages that say "see the worker's log" link here (#worker-log). */}
+      <section id="worker-log" className="scroll-mt-8 space-y-3">
         <SectionHeading>Worker</SectionHeading>
+        {logLines.length > 0 && (
+          <Disclosure summary="What the worker has been doing (its log, newest first)">
+            <pre className="scroll-pane max-h-96 rounded-xl border border-edge bg-sunken p-6 font-mono text-xs leading-[1.7] whitespace-pre-wrap text-fg/80">
+              {logLines.join('\n')}
+            </pre>
+          </Disclosure>
+        )}
         {state ? (
-          <Disclosure summary="Show the worker’s state (state.json)">
+          <Disclosure summary="The worker’s raw record, for troubleshooting">
             <pre className="scroll-pane max-h-96 rounded-xl border border-edge bg-sunken p-6 font-mono text-xs leading-[1.7] text-fg/80">
               {JSON.stringify(state, null, 2)}
             </pre>

@@ -145,11 +145,11 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
   const waitedMs = oldestPending ? now - new Date(oldestPending).getTime() : 0
   const waiting = data.pending.length
   const waitNote = !data.worker.running
-    ? `${waiting} waiting: the worker isn't running. Start it to apply ${waiting === 1 ? 'this' : 'these'}.`
+    ? `${waiting} waiting: the worker isn’t running, so ${waiting === 1 ? 'it is' : 'they are'} applied once it starts. The Queue page says why.`
     : data.worker.outdated && waitedMs > 10000
-      ? `${waiting} waiting: restart the worker. It's running code from before the last update.`
+      ? `${waiting} waiting: the worker restarts on the new code once it is idle, then applies ${waiting === 1 ? 'it' : 'them'}.`
       : waitedMs > 20000
-        ? `${waiting} waiting longer than usual. Check the worker window for errors.`
+        ? `${waiting} waiting longer than usual. The worker’s log on the Queue page may say why.`
         : null
 
   const byId = useMemo(() => new Map(data.entities.map((e) => [e.id, e])), [data.entities])
