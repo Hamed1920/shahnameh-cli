@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion } from 'motion/react'
@@ -11,7 +11,12 @@ import { NAV, SIDEBAR_COOKIE, SIDEBAR_RAIL, SIDEBAR_WIDTH, navHref } from '@/com
 import { useProject } from '@/components/project-context'
 import { EASE, SPRING } from '@/components/ui/motion-tokens'
 import type { ActivityItem } from '@/lib/activity'
+import type { WorkerStatus } from '@/lib/types'
+import { NOT_STARTING_MS, TONE_DOT, describeWorker } from '@/lib/worker-words'
 import { cn } from '@/lib/cn'
+
+/** Counts that are information, not something waiting on Hamed: drawn quietly. */
+const QUIET = new Set<string>(['/queue'])
 
 const fade = {
   initial: { opacity: 0, x: -4 },
@@ -36,13 +41,31 @@ export function Sidebar({
   defaultCollapsed,
   counts = {},
   activity = [],
+  worker: status,
+  generating = null,
+  held = 0,
 }: {
   defaultCollapsed: boolean
   /** Badge per nav path, e.g. jobs waiting on the Queue. Zero shows nothing. */
   counts?: Partial<Record<string, number>>
   /** The worker's latest outcomes (lib/activity.ts): toasts as they come, and the Activity list. */
   activity?: ActivityItem[]
+  /** For the dot beside the film's name. */
+  worker: WorkerStatus
+  /** "EP13 · SC001" while a job is generating. */
+  generating?: string | null
+  /** Queued jobs the worker is holding back (over the credit limit, not signed in). */
+  held?: number
 }) {
+  // A worker still "starting" a minute after this page first saw it is not starting.
+  const settling = !status.running && !status.autostartOff && !status.paused && !status.stopRequested
+  const [slow, setSlow] = useState(false)
+  useEffect(() => {
+    if (!settling) { setSlow(false); return }
+    const t = setTimeout(() => setSlow(true), NOT_STARTING_MS)
+    return () => clearTimeout(t)
+  }, [settling])
+  const worker = describeWorker(status, { generating, held, slow })
   const [collapsed, setCollapsed] = useState(defaultCollapsed)
   const [hovered, setHovered] = useState<string | null>(null)
   const pathname = usePathname()
@@ -64,25 +87,66 @@ export function Sidebar({
     <motion.aside
       // Tooltips escape this box, so it must not clip. Each row clips its own
       // label instead.
-      className="relative z-20 flex h-full shrink-0 flex-col border-r border-edge bg-ink"
+      // Above the pages' sticky bars (z-30), so its tooltips are not drawn under them; below dialogs (z-100).
+      className="relative z-40 flex h-full shrink-0 flex-col border-r border-edge bg-ink"
       initial={false}
       animate={{ width: collapsed ? SIDEBAR_RAIL : SIDEBAR_WIDTH }}
       transition={SPRING}
     >
-<div className="flex h-18 shrink-0 items-center gap-3 overflow-hidden pl-[18px]">
-        <span
-          aria-hidden
-          className="grid size-6 shrink-0 place-items-center rounded-md bg-fg font-sans text-[15px] leading-none text-ink"
-        >
-          {project.mark}
-        </span>
-        <AnimatePresence initial={false}>
-          {!collapsed && (
-            <motion.span {...fade} className="min-w-0 truncate font-display text-[22px] leading-none whitespace-nowrap text-fg">
-              {project.name}
-            </motion.span>
+      <div className="relative flex h-18 shrink-0 items-center">
+        {/* The film's name opens its home. */}
+        <Link href={home} className="focus-ring flex min-w-0 flex-1 items-center gap-3 self-stretch overflow-hidden rounded-md pl-[18px]">
+          <span
+            aria-hidden
+            className="grid size-6 shrink-0 place-items-center rounded-md bg-fg font-sans text-[15px] leading-none text-ink"
+          >
+            {project.mark}
+          </span>
+          <AnimatePresence initial={false}>
+            {!collapsed && (
+              <motion.span {...fade} className="min-w-0 truncate font-display text-[22px] leading-none whitespace-nowrap text-fg">
+                {project.name}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </Link>
+        {/* The worker in one dot: beside the name, or on the mark's corner when collapsed. Opens the Queue. */}
+        <Link
+          href={navHref(project.slug, '/queue')}
+          aria-label={`${worker.headline}, ${worker.detail}. Open the queue.`}
+          onMouseEnter={() => setHovered('worker')}
+          onMouseLeave={() => setHovered(null)}
+          onFocus={() => setHovered('worker')}
+          onBlur={() => setHovered(null)}
+          className={cn(
+            'focus-ring absolute grid place-items-center rounded-full',
+            collapsed ? 'top-[40px] left-[34px] size-3.5 bg-ink' : 'top-1/2 right-3 size-6 -translate-y-1/2 hover:bg-white/[0.05]',
           )}
-        </AnimatePresence>
+        >
+          <span aria-hidden className="relative grid size-2 place-items-center">
+            {worker.tone === 'busy' && <span className="absolute inset-0 animate-ping rounded-full bg-good/60" />}
+            <span className={cn('relative size-2 rounded-full', TONE_DOT[worker.tone])} />
+          </span>
+          <AnimatePresence>
+            {hovered === 'worker' && (
+              <motion.span
+                role="tooltip"
+                initial={{ opacity: 0, y: -2 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -2 }}
+                transition={{ duration: 0.14, ease: EASE }}
+                className={cn(
+                  'pointer-events-none absolute top-full z-50 mt-2 w-max max-w-64',
+                  collapsed ? 'left-0' : 'right-0',
+                  'rounded-md border border-edge-strong bg-raise px-2.5 py-1.5 text-left text-xs text-fg',
+                )}
+              >
+                {worker.headline}
+                <span className="block text-muted">{worker.detail}</span>
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </Link>
       </div>
 
       <nav aria-label="Sections" className="pt-2">
@@ -112,7 +176,7 @@ export function Sidebar({
                       aria-hidden
                       layoutId="nav-active"
                       transition={SPRING}
-                      className="absolute inset-0 rounded-md bg-white/[0.07]"
+                      className="lit absolute inset-0 rounded-md bg-white/[0.07]"
                     />
                   )}
                   <Icon aria-hidden strokeWidth={1.75} className="relative size-5 shrink-0" />
@@ -125,15 +189,17 @@ export function Sidebar({
                   </AnimatePresence>
                   {count > 0 && (
                     <>
-                      <span className="sr-only">, {count} waiting</span>
-                      {/* Expanded: a pill at the row's end. Collapsed: pinned to the icon's corner. */}
+                      <span className="sr-only">, {count} {QUIET.has(path) ? 'in the queue' : 'waiting for you'}</span>
+                      {/* Expanded: a pill at the row's end. Collapsed: pinned to the icon's corner.
+                          White means it waits on you; the queue's count is only information, so it is quiet. */}
                       <span
                         aria-hidden
                         className={cn(
-                          'absolute grid place-items-center rounded-full bg-accent font-mono leading-none font-medium text-ink tabular-nums',
+                          'absolute grid place-items-center rounded-full font-mono leading-none font-medium tabular-nums',
                           'transition-[top,right,height,min-width,font-size] duration-200',
+                          QUIET.has(path) ? 'text-faint' : 'bg-accent text-ink',
                           collapsed
-                            ? 'top-[5px] right-[5px] h-3.5 min-w-3.5 px-[3px] text-[9px] ring-2 ring-ink'
+                            ? cn('top-[5px] right-[5px] h-3.5 min-w-3.5 px-[3px] text-[9px] ring-2 ring-ink', QUIET.has(path) && 'bg-raise')
                             : 'top-1/2 right-3 h-[18px] min-w-[18px] -translate-y-1/2 px-1.5 text-[10.5px]',
                         )}
                       >

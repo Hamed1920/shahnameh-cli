@@ -6,11 +6,11 @@ import { LiveRefresh } from '@/components/live-refresh'
 import { SIDEBAR_COOKIE } from '@/components/nav-items'
 import { ProjectProvider } from '@/components/project-context'
 import { Sidebar } from '@/components/sidebar'
-import { getActivity } from '@/lib/activity'
+import { getActivity, jobLabel } from '@/lib/activity'
 import { freshCatalog } from '@/lib/catalog'
 import { getProjectVersion } from '@/lib/live'
 import { getProject, publicInfo } from '@/lib/projects'
-import { getPending, getWaitingJobs } from '@/lib/store'
+import { getGeneratingJobId, getLearnings, getPending, getQueue, getWaitingJobs, getWorkerState, getWorkerStatus } from '@/lib/store'
 
 export async function generateMetadata({ params }: LayoutProps<'/[project]'>): Promise<Metadata> {
   const pr = await getProject((await params).project)
@@ -30,15 +30,34 @@ export default async function ProjectLayout({ children, params }: LayoutProps<'/
 
   const collapsed = (await cookies()).get(SIDEBAR_COOKIE)?.value === '1'
   // Taken with the render, so a change between render and mount is not missed.
-  // queue.jsonl, state.json, the review log and every staging job.json are in the version,
-  // so both badges move with every live refresh.
-  const [version, waiting, pending, activity] = await Promise.all([getProjectVersion(pr), getWaitingJobs(pr), getPending(pr), getActivity(pr)])
+  // queue.jsonl, state.json, the review log, the worker lock and every staging job.json are
+  // in the version, so the badges and the worker dot move with every live refresh. The
+  // reads go through the store's per-render cache: the page below costs no more for them.
+  const [version, waiting, pending, activity, worker, state, learnings, queue] = await Promise.all([
+    getProjectVersion(pr), getWaitingJobs(pr), getPending(pr), getActivity(pr),
+    getWorkerStatus(pr), getWorkerState(pr), getLearnings(pr), getQueue(pr),
+  ])
+  const processed = new Set((state?.processedJobs ?? []) as string[])
+  const heldIds = new Set(Object.keys((state?.held ?? {}) as Record<string, unknown>))
+  const generatingId = await getGeneratingJobId(pr, processed)
+  const generating = generatingId ? jobLabel(queue.find((q) => q.jobId === generatingId)?.target) : null
 
   return (
     <ProjectProvider project={publicInfo(pr)}>
       <CatalogSync catalog={freshCatalog()}>
         <LiveRefresh project={pr.slug} initialVersion={version}>
-          <Sidebar defaultCollapsed={collapsed} counts={{ '/review': pending.length, '/queue': waiting.length }} activity={activity} />
+          <Sidebar
+            defaultCollapsed={collapsed}
+            counts={{
+              '/review': pending.length,
+              '/queue': waiting.length,
+              '/learnings': learnings.filter((l) => l.status === 'proposed').length,
+            }}
+            activity={activity}
+            worker={worker}
+            generating={generating}
+            held={waiting.filter((q) => heldIds.has(q.jobId)).length}
+          />
           {/* A size container, so a page's sticky bar can bleed to its full width (StickyHeader). */}
           <main className="scroll-pane @container flex-1">
             <div className="mx-auto max-w-[1600px] px-6 pt-10 pb-24 lg:px-12">{children}</div>
