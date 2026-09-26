@@ -17,9 +17,23 @@ const files = ({ P }: Project) => [
   P.learnings, P.indexOps, P.indexOpResults, P.jobRequests, P.jobRequestResults,
   // Likes, tags and the Gallery's order, so a second tab follows along.
   P.gallery,
-  // The lock is what "worker running" is read from; Start/Stop must show within a poll.
-  P.workerLock,
 ]
+
+/**
+ * The lock is what "worker running" is read from, so a start or stop must show
+ * within a poll. Compared by content: its holder touches it every 30 s as a
+ * heartbeat (worker/lib/locks.mjs), which by mtime would re-render every page.
+ */
+async function workerLock({ P }: Project): Promise<string> {
+  try {
+    const v = await fs.readFile(P.workerLock, 'utf8')
+    lastGood.set(P.workerLock, v)
+    return v
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === 'ENOENT') return '-'
+    return lastGood.get(P.workerLock) ?? '-'
+  }
+}
 
 /**
  * Last good reading per file. On Windows a stat or read can fail for a moment
@@ -77,6 +91,6 @@ async function staging({ P }: Project): Promise<string[]> {
 
 /** One project's fingerprint. Each tab polls the project it has open. */
 export async function getProjectVersion(pr: Project): Promise<string> {
-  const parts = await Promise.all([...files(pr).map(stamp), workerState(pr), staging(pr).then((s) => s.join(','))])
+  const parts = await Promise.all([...files(pr).map(stamp), workerState(pr), workerLock(pr), staging(pr).then((s) => s.join(','))])
   return createHash('sha1').update(parts.join('\n')).digest('hex').slice(0, 16)
 }

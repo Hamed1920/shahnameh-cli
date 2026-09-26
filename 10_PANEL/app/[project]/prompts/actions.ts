@@ -7,7 +7,7 @@ import { DOCUMENT_EXT, MAX_DOCUMENTS, MAX_DOCUMENT_BYTES, documentToText } from 
 import { REVIEWER, appendJobRequest, newBatchId, newRequestId } from '@/lib/job-requests'
 import { requireProject } from '@/lib/projects'
 import { revalidateProject } from '@/lib/revalidate'
-import { getBatches, getCatalog, getQueue, getWorkerConfig, resolveRefToken } from '@/lib/store'
+import { getBatches, getCatalog, getQueue, getShotMoves, getWorkerConfig, resolveRefToken } from '@/lib/store'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { MAX_ADD_TOTAL_BYTES, MAX_ADD_UPLOADS } from '@/lib/indexing'
@@ -139,14 +139,15 @@ export async function submitBatch(formData: FormData): Promise<{ ok: boolean; ba
 export async function generateFromPrompt(formData: FormData): Promise<{ ok: boolean; batchId?: string; error?: string }> {
   const pr = await requireProject(formData.get('project'))
   const jobId = String(formData.get('jobId') ?? '').trim()
-  const [queue, catalog, cfg] = await Promise.all([getQueue(pr), getCatalog(pr), getWorkerConfig()])
+  const [queue, catalog, cfg, moves] = await Promise.all([getQueue(pr), getCatalog(pr), getWorkerConfig(), getShotMoves(pr)])
   const src = queue.find((q) => q.jobId === jobId) as (QueueItem & { label?: string | null }) | undefined
   if (!src) return { ok: false, error: `Job ${jobId || '(none)'} is not in the queue file.` }
 
   let job: BatchJobInput
   let defaults: BatchDefaults
   try {
-    const target = src.target
+    // Where the footage is now: a shot moved to another episode is generated there, not at its old id.
+    const target = moves.shot[src.target] ?? src.target
     if (!shotRx(pr.code).test(target) && !catalog.some((e) => e.id === target)) {
       throw new Invalid(`${target} is not a live entity or a shot any more, so it cannot be generated for.`)
     }
@@ -219,6 +220,8 @@ export async function approveBatch(project: string, batchId: string, expectedTot
   const batch = (await getBatches(pr)).find((b) => b.batchId === batchId)
   if (!batch) return { ok: false, error: 'Unknown batch.' }
   if (batch.status !== 'priced') return { ok: false, error: `This batch is ${batch.status}, so it cannot be approved now.` }
+  // Nothing spends without a price (the worker refuses it as well).
+  if (batch.unpriced > 0) return { ok: false, error: `${batch.unpriced} row(s) could not be priced. Discard the batch, fix them and submit again.` }
   await appendJobRequest(pr, {
     id: newRequestId(), ts: new Date().toISOString(), reviewer: REVIEWER, type: 'batch.approve', batchId,
     expectedTotal: expectedTotal == null ? null : Number(expectedTotal),

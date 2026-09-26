@@ -2,6 +2,9 @@
   "name": "shahnameh-panel",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22.6"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,7 +13,7 @@
     "worker:once": "node worker/worker.mjs --once",
     "worker:dry": "node worker/worker.mjs --once --dry-run",
     "enqueue": "node worker/enqueue.mjs",
-    "test": "node --test lib/*.test.ts",
+    "test": "node --experimental-strip-types --test lib/*.test.ts worker/*.test.mjs",
     "up": "node scripts/up.mjs"
   },
   "dependencies": {

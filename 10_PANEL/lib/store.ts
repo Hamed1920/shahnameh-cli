@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { idRx } from '../worker/lib/ids.mjs'
+import { lockIsStale, readLock } from '../worker/lib/locks.mjs'
 import { listProjects, type Project } from './projects'
 import { parseCsv } from './csv'
 import { autostartBlockedReason } from './worker-guard'
@@ -574,39 +575,46 @@ export async function getBatches(pr: Project): Promise<BatchView[]> {
     let total: number | null = null
     let unpriced = 0
     const prices = new Map<string, number | null>()
+    const priceErrors = new Map<string, string>()
     const verdicts = new Map<string, { ok: boolean; reason?: string; target: string; jobId: string }>()
     const assigned = new Map<string, string>()
     // Per row as well: every NEXT/EP001 row of a batch shares the proposal but gets its own scene.
     const assignedByKey = new Map<string, string>()
     let validatedNew: { key: string; kind: string; slug: string }[] = []
 
+    // Mirrors foldBatch in worker/lib/job-requests.mjs: an ended batch is not reopened by
+    // a late event, and a problem is cleared once the batch gets past it.
+    const ended = () => status === 'queued' || status === 'discarded' || status === 'rejected'
     for (const e of mine) {
       switch (e.event) {
         case 'validated':
+          if (ended()) break
           status = 'validated'
           for (const j of e.jobs) verdicts.set(j.key, j)
           validatedNew = e.newEntities
           break
         case 'price':
           prices.set(e.key, e.credits)
+          if (e.credits == null && e.reason) priceErrors.set(e.key, e.reason)
+          else priceErrors.delete(e.key)
           if (status === 'validated') status = 'pricing'
           break
         case 'priced':
-          status = 'priced'; total = e.total; unpriced = e.unpriced
+          if (ended()) break
+          status = 'priced'; total = e.total; unpriced = e.unpriced; message = null
           break
         case 'queued':
-          status = 'queued'; total = e.total ?? total; ceilingNote = e.ceilingNote ?? null
+          status = 'queued'; total = e.total ?? total; ceilingNote = e.ceilingNote ?? null; message = null
           for (const a of e.assigned) {
             assigned.set(a.proposal, a.id)
             if (a.key) assignedByKey.set(a.key, a.id)
           }
           break
-        case 'discarded': status = 'discarded'; break
+        case 'discarded': if (status !== 'queued') status = 'discarded'; break
         case 'rejected':
-          message = e.reason
-          if ((e as { scope?: string }).scope === 'batch') status = 'rejected'
+          if ((e as { scope?: string }).scope === 'batch') { status = 'rejected'; message = e.reason } else if (!ended()) message = e.reason
           break
-        case 'error': message = e.reason; break
+        case 'error': if (!ended()) message = e.reason; break
       }
     }
     const pending = requests
@@ -640,6 +648,7 @@ export async function getBatches(pr: Project): Promise<BatchView[]> {
           ok: v ? v.ok : true,
           reason: v?.reason ?? null,
           credits: prices.get(j.key) ?? null,
+          priceReason: priceErrors.get(j.key) ?? null,
           prompt: j.prompt,
         }
       }),
@@ -662,14 +671,19 @@ export async function getRegenerations(pr: Project): Promise<Map<string, Regener
     const ev = events.filter((e) => e.reqId === r.id)
     const queued = ev.find((e) => e.event === 'queued')
     const rejected = ev.find((e) => e.event === 'rejected')
+    // A request the worker keeps retrying (a locked file, say) says why while it waits.
+    const retrying = [...ev].reverse().find((e) => e.event === 'error')
+    const state = queued ? 'queued' : rejected && processed.has(r.id) ? 'rejected' : 'waiting'
     const view: RegenerationView = {
       reqId: r.id,
       ts: r.ts,
       note: r.note ?? '',
       sound: typeof r.sound === 'boolean' ? r.sound : null,
-      state: queued ? 'queued' : rejected && processed.has(r.id) ? 'rejected' : 'waiting',
+      state,
       jobId: queued && queued.event === 'queued' ? queued.jobIds[r.jobId] ?? null : null,
-      reason: rejected && rejected.event === 'rejected' ? rejected.reason : null,
+      reason: rejected && rejected.event === 'rejected'
+        ? rejected.reason
+        : state === 'waiting' && retrying && retrying.event === 'error' ? retrying.reason : null,
     }
     out.set(r.jobId, [...(out.get(r.jobId) ?? []), view])
   }
@@ -840,25 +854,15 @@ async function getLookUsage(
  *
  * The worker loads its code once, at start. A worker started before an update
  * keeps running without it, which looks exactly like "the button does nothing".
- * Its lock file holds the pid and was written as it started, so compare that
- * time with the newest file in worker/.
+ * Its lock file holds the pid and the time it started (worker/lib/locks.mjs), so
+ * compare that time with the newest file in worker/. A lock whose pid is dead, or
+ * whose heartbeat stopped, is a crashed worker, not a running one.
  */
 export async function getWorkerStatus(pr: Project): Promise<WorkerStatus> {
   const autostartOff = autostartBlockedReason()
-  let pid: number
-  let startedMs: number
-  try {
-    const [text, stat] = await Promise.all([fs.readFile(pr.P.workerLock, 'utf8'), fs.stat(pr.P.workerLock)])
-    pid = parseInt(text.trim(), 10)
-    startedMs = stat.mtimeMs
-  } catch {
-    return { running: false, outdated: false, autostartOff }
-  }
-  let alive = false
-  if (Number.isFinite(pid) && pid > 0) {
-    try { process.kill(pid, 0); alive = true } catch (e) { alive = (e as NodeJS.ErrnoException).code === 'EPERM' }
-  }
-  if (!alive) return { running: false, outdated: false, autostartOff }
+  const lock = await readLock(pr.P.workerLock)
+  if (!lock || lockIsStale(lock)) return { running: false, outdated: false, autostartOff }
+  const startedMs = lock.startedMs
 
   const dir = path.join(process.cwd(), 'worker')
   const libs = await fs.readdir(path.join(dir, 'lib')).catch(() => [] as string[])

@@ -496,14 +496,14 @@ export type JobRequestType = JobRequest['type']
 export type JobRequestEvent = { batchId?: string | null; reqId?: string; ts: string } & (
   | { event: 'validated'; jobs: { key: string; ok: boolean; reason?: string; target: string; jobId: string }[]; newEntities: { key: string; kind: string; slug: string }[] }
   | { event: 'rejected'; reason: string }
-  | { event: 'price'; key: string; credits: number | null }
+  | { event: 'price'; key: string; credits: number | null; reason?: string | null }
   | { event: 'priced'; total: number; unpriced: number }
   | { event: 'queued'; jobIds: Record<string, string>; assigned: { key: string; proposal: string; id: string; shortId: string }[]; total: number | null; ceilingNote?: string }
   | { event: 'discarded' }
-  | { event: 'error'; reason: string }
+  | { event: 'error'; reason: string; sessionId?: string; genId?: string }
   | { event: 'models'; count: number; usable: number }
   | { event: 'studio.received'; sessionId: string; genId: string }
-  | { event: 'studio.priced'; sessionId: string; genId: string; credits: number | null; count: number; total: number | null }
+  | { event: 'studio.priced'; sessionId: string; genId: string; credits: number | null; count: number; total: number | null; reason?: string | null }
   | { event: 'studio.error'; sessionId: string; genId: string; reason: string }
   | { event: 'studio.queued'; sessionId: string; genId: string; jobIds: string[]; total: number | null }
   | { event: 'studio.picked'; sessionId: string; hfJobId: string; take: string; token: string; entity: string }
@@ -523,6 +523,8 @@ export interface BatchJobView {
   ok: boolean
   reason: string | null
   credits: number | null
+  /** Why the worker could not price this row, when it could not. */
+  priceReason: string | null
   prompt: string
 }
 

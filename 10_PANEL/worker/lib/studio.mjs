@@ -6,7 +6,7 @@ import {
 import { FOLDER_FOR, FilingError, entitySlug, fileUploadInto, reject } from './promote.mjs'
 import { transaction } from './tx.mjs'
 import { planJob } from './plan.mjs'
-import { estimateCost, isAuthenticated } from './hf.mjs'
+import { cliReady, estimateCost } from './hf.mjs'
 import { newJobId } from './batch.mjs'
 import { loadCatalog } from './models.mjs'
 import { modelKind, modelProblem } from './model-schema.mjs'
@@ -171,11 +171,12 @@ export function studioHandlers({ fail, emit, getCfg }) {
       await emit({ batchId: null, reqId: req.id, sessionId, event: 'studio.picked', hfJobId, take, token: filed.token, entity: filed.entity })
     },
 
-    async 'studio.close'(req, { dry }) {
+    async 'studio.close'(req, { dry, state }) {
       const sessionId = session(req)
       const queue = await readJsonl(P.queue)
-      const state = JSON.parse(await fs.readFile(P.state, 'utf8').catch(() => '{}'))
-      const done = new Set(state.processedJobs ?? [])
+      // The worker's own state, not state.json: a failed or skipped try is only
+      // written to disk at the end of a pass, and would read as still generating.
+      const done = new Set(state?.processedJobs ?? [])
       const pending = queue.filter((q) => q.studio?.sessionId === sessionId && !done.has(q.jobId))
       if (pending.length) fail(`${pending.length} tr${pending.length === 1 ? 'y is' : 'ies are'} still generating; close once they finish`)
       if (dry) { await log(`DRY-RUN would close studio ${sessionId}`); return }
@@ -229,7 +230,8 @@ async function checkTarget(req, fail) {
 }
 
 const inFlight = new Set()
-let authWarned = false
+// The CLI problem each waiting try was last told about, so it is said once, not every few seconds.
+const cliWarned = new Map()
 
 /**
  * Price every studio try that has been received and not yet priced. Like
@@ -252,12 +254,18 @@ export async function priceStudio(state, { emit, cfg, exclusive = (fn) => fn() }
       await emit({ batchId: null, reqId: req.id, sessionId: req.sessionId, genId: req.genId, event: 'studio.error', reason: 'replaced by a later edit' })
       continue
     }
-    if (!(await isAuthenticated())) {
-      if (!authWarned) await log('HOLD studio pricing: not authenticated')
-      authWarned = true
+    const ready = await cliReady()
+    if (!ready.ok) {
+      // Not studio.error: that would settle the try, and it must be priced once the CLI works.
+      // A plain `error` carrying the session is shown in the studio while it waits (lib/studio.ts).
+      if (cliWarned.get(req.id) !== ready.reason) {
+        await emit({ batchId: null, reqId: req.id, sessionId: req.sessionId, genId: req.genId, event: 'error', reason: `${ready.reason}; the try is priced once that is fixed` })
+        await log(`HOLD studio pricing: ${ready.reason}`)
+        cliWarned.set(req.id, ready.reason)
+      }
       return n
     }
-    authWarned = false
+    cliWarned.delete(req.id)
     inFlight.add(req.id)
     try {
       const job = { jobId: 'studio-price', target: req.target?.entity ?? null, model: req.model, prompt: req.prompt, params: req.params ?? {}, refs: req.refs ?? [], stage: null, studio: { sessionId: req.sessionId, proposal: req.proposal } }
@@ -269,12 +277,13 @@ export async function priceStudio(state, { emit, cfg, exclusive = (fn) => fn() }
         await emit({ batchId: null, reqId: req.id, sessionId: req.sessionId, genId: req.genId, event: 'studio.error', reason: plan.skip })
         continue
       }
-      const { credits } = await estimateCost(plan.model, plan.params)
+      const { credits, error } = await estimateCost(plan.model, plan.params)
       await emit({
         batchId: null, reqId: req.id, sessionId: req.sessionId, genId: req.genId, event: 'studio.priced',
         credits, count: req.count, total: credits == null ? null : credits * req.count,
+        ...(credits == null && { reason: error }),
       })
-      await log(`COST studio ${req.sessionId}/${req.genId} ${req.model} = ${credits ?? 'unknown'} x ${req.count}`)
+      await log(`COST studio ${req.sessionId}/${req.genId} ${req.model} = ${credits ?? `unknown (${error})`} x ${req.count}`)
       n++
     } catch (e) {
       await emit({ batchId: null, reqId: req.id, sessionId: req.sessionId, genId: req.genId, event: 'studio.error', reason: `pricing failed: ${e.message}` })

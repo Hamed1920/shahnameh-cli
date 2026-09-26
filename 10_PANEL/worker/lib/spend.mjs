@@ -6,12 +6,19 @@
  *
  * Every project spends from the same Higgsfield account, so callers pass the
  * rows of every project's ledger, not just their own. Pure.
+ *
+ * Counted: GENERATED, and the two outcomes Higgsfield may still have charged for --
+ * NO_RESULT (the job came back without a file: failed, filtered) and TIMED_OUT
+ * (the worker gave up waiting). Guessing high only holds a job a little early;
+ * guessing low could pass the ceiling. FAILED (the CLI refused the job) is not.
  */
+export const CHARGED_STATES = new Set(['GENERATED', 'NO_RESULT', 'TIMED_OUT'])
+
 export function spentInWindow(rows, hours, now = Date.now()) {
   const since = now - hours * 3600_000
   let total = 0
   for (const r of rows) {
-    if (r.state !== 'GENERATED') continue
+    if (!CHARGED_STATES.has(r.state)) continue
     const cost = parseFloat(r.cost)
     const at = Date.parse(r.ingested)
     if (Number.isFinite(cost) && Number.isFinite(at) && at >= since) total += cost

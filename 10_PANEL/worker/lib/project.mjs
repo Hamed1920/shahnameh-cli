@@ -94,8 +94,14 @@ export const P = {
 
 export const rel = (abs) => path.relative(ROOT, abs).split(path.sep).join('/')
 
+/**
+ * A file as text, '' when it does not exist. A leading byte-order mark is dropped:
+ * PowerShell 5.1 writes one, and before the first line of a JSONL file it makes
+ * JSON.parse fail, so readJsonl would skip that line as torn. (The CSV parsers
+ * strip it themselves.)
+ */
 export async function readText(file) {
-  try { return await fs.readFile(file, 'utf8') } catch (e) {
+  try { return (await fs.readFile(file, 'utf8')).replace(/^﻿/, '') } catch (e) {
     if (e.code === 'ENOENT') return ''
     throw e
   }
@@ -204,14 +210,18 @@ export function findEntity(entities, ref) {
  * index and have no entity (the caller gets entity: null and a `label`):
  *   studio:<session>/u1      a picture dropped into the studio (09_OUTPUT/_uploads/<session>/)
  *   staged:<hfJobId>/T01     an earlier try, still in _staging; once picked, the look it was filed as
+ *
+ * And one for the Prompts page: a picture sent with a batch is filed into the index
+ * only when the batch is approved, so until then its rows point at the raw file:
+ *   pending:<request id>/u1  a picture sent with a batch (09_OUTPUT/_uploads/<request id>/)
  */
 export const STUDIO_SESSION_RX = /^ss_[a-z0-9]{4,40}$/
 export async function resolveRef(token, entities, assets) {
   const raw = String(token).trim()
-  const studio = raw.match(/^studio:(ss_[a-z0-9]{4,40})\/(u\d{1,3})$/)
-  if (studio) {
-    const dir = path.join(P.uploads, studio[1])
-    const f = (await fs.readdir(dir).catch(() => [])).find((n) => n.startsWith(`${studio[2]}.`))
+  const loose = raw.match(/^(studio|pending):((?:ss|jr)_[a-z0-9]{4,40})\/(u\d{1,3})$/)
+  if (loose) {
+    const dir = path.join(P.uploads, loose[2])
+    const f = (await fs.readdir(dir).catch(() => [])).find((n) => n.startsWith(`${loose[3]}.`))
     if (!f) return { ok: false, reason: `${raw}: the file is gone` }
     return { ok: true, path: path.join(dir, f), entity: null, variant: null, take: null, label: 'an attached reference picture' }
   }
@@ -304,9 +314,16 @@ export async function currentShotId(id) {
   return at
 }
 
-/** Every shot id in use in this project: queued targets plus shot files on disk. */
+/**
+ * Every shot id in use in this project, so a new scene never takes a number that
+ * was ever given out (INDEXING.md: numbers are never reused): queued targets,
+ * shot files on disk, where footage was moved to (SHOT_MOVES.jsonl), and shots
+ * taken out of an episode into _archive, whose files are no longer in shots/.
+ */
 export async function usedShotIds() {
   const ids = (await readJsonl(P.queue)).map((q) => String(q.target ?? ''))
+  for (const m of await readJsonl(P.shotMoves)) ids.push(String(m?.from ?? ''), String(m?.to ?? ''))
+  for (const a of await readJsonl(path.join(P.archive, 'index.jsonl'))) if (a?.kind === 'shot') ids.push(String(a.shot ?? ''))
   const root = path.join(ROOT, '07_EPISODES')
   let eps = []
   try { eps = await fs.readdir(root, { withFileTypes: true }) } catch { /* no episodes yet */ }

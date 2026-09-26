@@ -27,7 +27,7 @@ import {
   readState, resolveRef, shotFolder, spentWithin, stateStartProblem, writeCsv, writeState,
 } from './lib/project.mjs'
 import { acquireFileLock, releaseFileLock } from './lib/locks.mjs'
-import { estimateCost, extractJobId, extractResultUrls, hfJson, isAuthenticated, paramsToArgs } from './lib/hf.mjs'
+import { cliProblem, cliReady, estimateCost, extractJobId, extractResultUrls, hfJson, paramsToArgs } from './lib/hf.mjs'
 import { FilingError, checkUploads, fileUpload, promote, reject } from './lib/promote.mjs'
 import { runIndexOps } from './lib/index-ops.mjs'
 import { planJob } from './lib/plan.mjs'
@@ -62,7 +62,9 @@ async function stopRequested() {
   try { await fs.access(P.stopFlag); return true } catch { return false }
 }
 async function stopNow(where) {
-  await fs.rm(P.stopFlag, { force: true })
+  // Never between the file moves and the registry write of an index change
+  // (lib/tx.mjs): wait for whatever holds the registry lock to finish.
+  await exclusive(async () => {})
   await log(`worker stopping: panel request (${where})`)
   if (state) await writeState(state)
   await releaseGenerateLock()
@@ -107,6 +109,29 @@ function extFromUrl(url, fallback = '.png') {
 }
 
 const ledgerType = (model) => (isVideoModel(model) ? 'generate.video' : 'generate.image')
+
+/** "25m", "90s", "1h" -> milliseconds; null when unreadable. */
+function durationMs(text) {
+  const m = String(text ?? '').trim().match(/^(\d+(?:\.\d+)?)\s*(ms|s|m|h)?$/i)
+  if (!m) return null
+  const unit = { ms: 1, s: 1000, m: 60_000, h: 3_600_000 }[(m[2] ?? 's').toLowerCase()]
+  return Number(m[1]) * unit
+}
+
+/**
+ * How long the worker lets `generate create --wait` run before killing it. Longer
+ * than the CLI's own --wait-timeout, so the CLI reports its timeout (with the job id)
+ * rather than being killed first and leaving a job that may still be charged unrecorded.
+ */
+const GENERATE_KILL_MS = (durationMs(cfg.waitTimeout) ?? 25 * 60_000) + 5 * 60_000
+
+/**
+ * Why a job ended without a take, kept in state.failedJobs so the Queue page, the
+ * prompt library and the studio can say so instead of just "failed".
+ */
+function recordFailure(state, jobId, reason) {
+  state.failedJobs = { ...(state.failedJobs ?? {}), [jobId]: { reason, at: new Date().toISOString() } }
+}
 
 // ---------------------------------------------------------------- generate
 
@@ -164,13 +189,18 @@ async function drainQueue(state) {
   for (const id of Object.keys(state.held ?? {})) if (done.has(id) || !queue.some((q) => q.jobId === id)) unhold(state, id)
   // Reference-studio tries go first: Hamed is waiting on them in an open dialog.
   // They pass the same price, lock and ceiling checks as everything else.
-  const waiting = queue.filter((q) => !done.has(q.jobId))
+  // Held jobs waiting out their recheck are left out BEFORE the per-run cap, so a
+  // run of held jobs (over the per-job ceiling, say) never starves the ones behind.
+  const waiting = queue.filter((q) => !done.has(q.jobId) && (DRY || (heldUntil.get(q.jobId) ?? 0) <= Date.now()))
   const pending = [...waiting.filter((q) => q.priority), ...waiting.filter((q) => !q.priority)].slice(0, cfg.maxJobsPerRun)
   if (pending.length === 0) return 0
 
-  if (!DRY && !(await isAuthenticated())) {
-    for (const job of pending) await hold(state, job.jobId, 'not authenticated: run higgsfield auth login')
-    return 0
+  if (!DRY) {
+    const ready = await cliReady()
+    if (!ready.ok) {
+      for (const job of pending) await hold(state, job.jobId, ready.reason)
+      return 0
+    }
   }
 
   let count = 0
@@ -196,9 +226,14 @@ async function drainQueue(state) {
     // Sound as the model took it (generate_audio, or Kling's sound on|off); undefined for images.
     const sound = isVideoModel(model) ? soundOf(entry, params) : undefined
 
-    const { credits } = await estimateCost(model, params)
-    await log(`COST ${job.jobId} ${model} = ${credits ?? 'unknown'} credits`)
+    const { credits, error: priceError } = await estimateCost(model, params)
+    await log(`COST ${job.jobId} ${model} = ${credits ?? `unknown (${priceError})`}${credits != null ? ' credits' : ''}`)
 
+    // Never spend without a price: an unpriced job would pass both ceilings unchecked.
+    if (credits == null && !DRY) {
+      await hold(state, job.jobId, `could not be priced, so it will not generate: ${priceError}`)
+      continue
+    }
     if (credits != null && credits > cfg.perJobCostCeilingCredits) {
       await hold(state, job.jobId, `${credits} credits is more than perJobCostCeilingCredits ${cfg.perJobCostCeilingCredits}`, credits)
       continue
@@ -235,18 +270,29 @@ async function drainQueue(state) {
       '--wait', '--wait-timeout', cfg.waitTimeout, '--wait-interval', cfg.waitInterval,
     ]
     await log(`GENERATE ${job.jobId} ${targetId} ${job.variant} model=${model}${sound !== undefined ? ` sound=${sound}` : ''}`)
-    const res = await hfJson(args, { timeoutMs: 25 * 60_000 })
+    const res = await hfJson(args, { timeoutMs: GENERATE_KILL_MS })
+
+    // One ledger row per job that reached Higgsfield, whatever came of it: the
+    // spend ceiling reads the ledger, and a charge missing from it is room that
+    // is not really there (lib/spend.mjs says which states count).
+    const ledgerRow = (ledgerState, hfJobId) => ledgerAppend({
+      job_id: job.jobId, content_hash: '', author: job.enqueuedBy, type: ledgerType(model),
+      target: job.target ?? '', resolved_target: targetId, variant: job.variant ?? '', engine: 'higgsfield',
+      state: ledgerState, ingested: new Date().toISOString(), source_file: 'queue',
+      parent_job_id: job.parentJobId ?? '', hf_job_id: hfJobId ?? '', attempt: String(job.attempt ?? 1),
+      cost: String(credits ?? ''),
+    })
 
     if (res.code !== 0) {
+      const timedOut = /\[worker\] timed out|timed out waiting|wait(?:ing)? timeout (?:reached|exceeded)|deadline exceeded/i.test(res.stderr)
+      const reason = timedOut
+        ? `Higgsfield did not finish within ${cfg.waitTimeout}; it may still complete and be charged`
+        : cliProblem(res.stderr || res.stdout)
       await log(`FAIL ${job.jobId}: exit ${res.code} ${res.stderr.trim().slice(0, 400)}`)
-      await ledgerAppend({
-        job_id: job.jobId, content_hash: '', author: job.enqueuedBy, type: ledgerType(model),
-        target: job.target ?? '', resolved_target: targetId, variant: job.variant ?? '', engine: 'higgsfield',
-        state: 'FAILED', ingested: new Date().toISOString(), source_file: 'queue',
-        parent_job_id: job.parentJobId ?? '', hf_job_id: '', attempt: String(job.attempt ?? 1),
-        cost: String(credits ?? ''),
-      })
+      await ledgerRow(timedOut ? 'TIMED_OUT' : 'FAILED', extractJobId(res.json))
+      recordFailure(state, job.jobId, reason)
       state.processedJobs.push(job.jobId)
+      await writeState(state)
       continue
     }
 
@@ -258,8 +304,12 @@ async function drainQueue(state) {
       await fs.mkdir(dir, { recursive: true })
       await fs.writeFile(path.join(dir, 'raw-response.json'),
         JSON.stringify(res.json ?? res.stdout, null, 2))
-      await log(`WARN ${job.jobId}: no result URLs found. Raw response saved to ${dir}/raw-response.json — update extractResultUrls() in worker/lib/hf.mjs`)
+      const status = [res.json].flat().map((j) => j?.status).filter(Boolean).join(', ')
+      await log(`WARN ${job.jobId}: no result URLs found${status ? ` (status ${status})` : ''}. Raw response saved to ${dir}/raw-response.json`)
+      await ledgerRow('NO_RESULT', hfJobId)
+      recordFailure(state, job.jobId, `Higgsfield returned no file${status ? ` (status: ${status})` : ''}`)
       state.processedJobs.push(job.jobId)
+      await writeState(state)
       continue
     }
 
@@ -601,8 +651,14 @@ async function applyJobRequests() {
 const WATCH_EVERY_MS = 3000
 function watch(name, fn) {
   const tick = async () => {
-    try { await fn() } catch (e) { await log(`${name} ERROR: ${e.stack ?? e.message}`) }
-    setTimeout(tick, WATCH_EVERY_MS)
+    try {
+      await fn()
+    } catch (e) {
+      // A log that cannot be written (worker.log locked) must not end the watcher.
+      try { await log(`${name} ERROR: ${e.stack ?? e.message}`) } catch { /* nothing more to do */ }
+    } finally {
+      setTimeout(tick, WATCH_EVERY_MS)
+    }
   }
   setTimeout(tick, WATCH_EVERY_MS)
 }
@@ -662,7 +718,7 @@ async function main() {
     }
     for (;;) {
       if (await projectGone()) await exitGone()
-      try { await pass() } catch (e) { await log(`PASS ERROR: ${e.stack ?? e.message}`) }
+      try { await pass() } catch (e) { await log(`PASS ERROR: ${e.stack ?? e.message}`).catch(() => {}) }
       if (await stopRequested()) await stopNow('idle')
       await new Promise((r) => setTimeout(r, cfg.pollSeconds * 1000))
     }

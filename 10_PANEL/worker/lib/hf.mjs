@@ -12,12 +12,18 @@ import path from 'node:path'
  * .js entrypoint under the current Node binary avoids the shell entirely.
  */
 let ENTRY = null
+// A CLI that was not found is looked for again after this long, so installing it
+// does not need a worker restart. (npm root -g is too slow to run on every call.)
+const MISSING_RETRY_MS = 60_000
+let missingSince = 0
 function resolveEntry() {
-  if (ENTRY !== null) return ENTRY
+  if (ENTRY) return ENTRY
+  if (ENTRY === false && Date.now() - missingSince < MISSING_RETRY_MS) return false
   // An explicit CLI (the sandbox stub) is the only candidate. Falling back to the
   // real CLI when that path is wrong would spend real credits on test data.
   if (process.env.SHM_HIGGSFIELD_JS) {
     ENTRY = fs.existsSync(process.env.SHM_HIGGSFIELD_JS) ? process.env.SHM_HIGGSFIELD_JS : false
+    if (!ENTRY) missingSince = Date.now()
     return ENTRY
   }
   const candidates = []
@@ -45,7 +51,25 @@ function resolveEntry() {
     try { if (c && fs.existsSync(c)) { ENTRY = c; return ENTRY } } catch { /* next */ }
   }
   ENTRY = false
+  missingSince = Date.now()
   return ENTRY
+}
+
+export const CLI_MISSING = 'Could not locate the Higgsfield CLI entrypoint. Install it with '
+  + '`npm i -g @higgsfield/cli`, or set SHM_HIGGSFIELD_JS to bin/higgsfield.js.'
+
+/**
+ * What a failed CLI call means for a person, in one line: the CLI is missing, it
+ * is not signed in, or (CLI 1.1.26+) no workspace is chosen. Anything else is the
+ * CLI's own first line, so the panel shows the real reason rather than a guess.
+ */
+export function cliProblem(text) {
+  const t = String(text ?? '').trim()
+  if (!t) return 'the Higgsfield CLI failed without saying why'
+  if (t.startsWith('Could not locate the Higgsfield CLI')) return 'the Higgsfield CLI is not installed on this machine: npm i -g @higgsfield/cli'
+  if (/no workspace selected/i.test(t)) return 'no Higgsfield workspace is selected: run higgsfield workspace list, then higgsfield workspace set <id>'
+  if (/not (logged|signed) in|unauthori[sz]ed|auth(entication)? required|token (expired|invalid)|\b401\b/i.test(t)) return 'the Higgsfield CLI is not signed in: run higgsfield auth login'
+  return t.split(/\r?\n/).find((l) => l.trim())?.trim().slice(0, 300) ?? t.slice(0, 300)
 }
 
 /**
@@ -60,11 +84,7 @@ export function hf(args, { timeoutMs = 20 * 60_000 } = {}) {
   return new Promise((resolve) => {
     const entry = resolveEntry()
     if (!entry) {
-      resolve({
-        code: -1, stdout: '',
-        stderr: 'Could not locate the Higgsfield CLI entrypoint. Install it with '
-              + '`npm i -g @higgsfield/cli`, or set SHM_HIGGSFIELD_JS to bin/higgsfield.js.',
-      })
+      resolve({ code: -1, stdout: '', stderr: CLI_MISSING })
       return
     }
     // shell:false — arguments are passed as an argv array and never parsed by a shell.
@@ -108,9 +128,35 @@ export async function hfJson(args, opts) {
   return { ...r, json }
 }
 
+/**
+ * Can this machine's CLI run jobs? { ok, reason }. `auth token` proves the sign-in;
+ * `workspace status` proves a workspace is chosen, without which CLI 1.1.26 refuses
+ * every generate and cost call ("No workspace selected", exit 4). An older CLI with
+ * no workspace command answers with an unknown-command error, which is not a problem.
+ */
+let readyAt = 0
+export async function cliReady() {
+  // A good answer holds for a minute (it is asked every pass); a bad one is never cached.
+  if (Date.now() - readyAt < 60_000) return { ok: true, reason: null }
+  const result = await checkCli()
+  readyAt = result.ok ? Date.now() : 0
+  return result
+}
+
+async function checkCli() {
+  const auth = await hf(['auth', 'token'], { timeoutMs: 30_000 })
+  if (auth.code !== 0 || !auth.stdout.trim()) {
+    return { ok: false, reason: cliProblem(auth.stderr || auth.stdout || 'the Higgsfield CLI is not signed in: run higgsfield auth login') }
+  }
+  const ws = await hf(['workspace', 'status'], { timeoutMs: 30_000 })
+  if (ws.code !== 0 && /no workspace selected/i.test(`${ws.stderr}\n${ws.stdout}`)) {
+    return { ok: false, reason: cliProblem('No workspace selected') }
+  }
+  return { ok: true, reason: null }
+}
+
 export async function isAuthenticated() {
-  const r = await hf(['auth', 'token'], { timeoutMs: 30_000 })
-  return r.code === 0 && r.stdout.trim().length > 0
+  return (await cliReady()).ok
 }
 
 /**
@@ -173,11 +219,14 @@ export function extractJobId(json) {
   return walk(json)
 }
 
-/** Credits for a planned job. Returns null when the figure cannot be read. */
+/**
+ * Credits for a planned job: { credits, raw, error }. `credits` is null when the
+ * figure cannot be read, and then `error` says why, in words a person can act on.
+ */
 export async function estimateCost(model, params) {
   const args = ['generate', 'cost', model, ...paramsToArgs(params)]
   const r = await hfJson(args, { timeoutMs: 120_000 })
-  if (r.code !== 0) return { credits: null, raw: r.stderr || r.stdout }
+  if (r.code !== 0) return { credits: null, raw: r.stderr || r.stdout, error: cliProblem(r.stderr || r.stdout) }
   const find = (node) => {
     if (node == null) return null
     if (typeof node === 'number') return node
@@ -190,7 +239,8 @@ export async function estimateCost(model, params) {
     }
     return null
   }
-  return { credits: find(r.json), raw: r.json ?? r.stdout }
+  const credits = find(r.json)
+  return { credits, raw: r.json ?? r.stdout, error: credits == null ? 'the price came back without a credit figure' : null }
 }
 
 /**

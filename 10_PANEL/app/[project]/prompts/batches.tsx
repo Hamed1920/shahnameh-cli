@@ -40,20 +40,30 @@ export function Batches({ batches, worker }: { batches: BatchView[]; worker: Wor
   const [confirm, setConfirm] = useState<BatchView | null>(null)
 
   const live = batches.some((b) => STATUS[b.status].busy || b.pending.length > 0)
+  // Every 2 s at first, then every 15 s: a batch that is stuck (worker down, CLI not
+  // signed in) must not make the page re-read every file every 2 s for ever.
   useEffect(() => {
     if (!live) return
-    const t = setInterval(() => router.refresh(), 2000)
-    return () => clearInterval(t)
+    const since = Date.now()
+    let t: ReturnType<typeof setTimeout>
+    const tick = () => {
+      router.refresh()
+      t = setTimeout(tick, Date.now() - since < 60_000 ? 2000 : 15_000)
+    }
+    t = setTimeout(tick, 2000)
+    return () => clearTimeout(t)
   }, [live, router])
 
-  const oldest = batches.filter((b) => b.pending.length > 0).map((b) => b.submittedAt).sort()[0]
+  // The oldest batch still waiting on the worker: a request it has not read, or a
+  // batch it has read but not finished checking or pricing.
+  const oldest = batches.filter((b) => b.pending.length > 0 || STATUS[b.status].busy).map((b) => b.submittedAt).sort()[0]
   const [now, setNow] = useState(() => Date.now())
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), 5000); return () => clearInterval(t) }, [])
   const waited = oldest ? now - new Date(oldest).getTime() : 0
   const waitNote = !oldest ? null
     : !worker.running ? worker.autostartOff ? `The worker isn’t running here (${worker.autostartOff}), so nothing is checked or priced.` : 'The worker is starting…'
     : worker.outdated && waited > 10000 ? 'Restart the worker: it is running code from before the last update.'
-    : waited > 30000 ? 'Taking longer than usual. Check the worker log for errors.'
+    : waited > 30000 ? 'Taking longer than usual. The message on the batch, if any, says why; otherwise check the worker log.'
     : null
 
   async function act(b: BatchView, fn: () => Promise<{ ok: boolean; error?: string }>) {
@@ -86,7 +96,7 @@ export function Batches({ batches, worker }: { batches: BatchView[]; worker: Wor
                   <span className="font-display text-2xl leading-none text-fg" dir="auto">{b.name}</span>
                   <span className="font-mono text-xs text-muted">{b.batchId}</span>
                   <Badge tone={s.tone}>{s.busy && <LoaderCircle aria-hidden className="mr-1 size-3 animate-spin" />}{s.text}</Badge>
-                  <span className="ml-auto font-mono text-[11px] text-faint tabular-nums">{when(b.submittedAt)}</span>
+                  <span suppressHydrationWarning className="ml-auto font-mono text-[11px] text-faint tabular-nums">{when(b.submittedAt)}</span>
                 </div>
 
                 <Table>
@@ -109,6 +119,7 @@ export function Batches({ batches, worker }: { batches: BatchView[]; worker: Wor
                           </div>
                           <div className="mt-1 line-clamp-2 text-[12.5px] leading-relaxed text-muted" dir="auto">{j.prompt}</div>
                           {j.reason && <div className="mt-1 text-xs text-bad">{j.reason}</div>}
+                          {j.ok && j.priceReason && <div className="mt-1 text-xs text-bad" dir="auto">Could not be priced: {j.priceReason}</div>}
                         </Td>
                         <Td className="font-mono text-xs text-fg">
                           {j.assignedId ?? j.target}
@@ -158,7 +169,13 @@ export function Batches({ batches, worker }: { batches: BatchView[]; worker: Wor
                     {!['queued', 'discarded', 'rejected'].includes(b.status) && (
                       <Button type="button" size="sm" tone="ghost" disabled={busy === b.batchId} onClick={() => setConfirm(b)}>Discard</Button>
                     )}
-                    {b.status === 'priced' && (
+                    {b.status === 'priced' && b.unpriced > 0 && (
+                      // Nothing spends without a price: the worker refuses this too (job-requests.mjs).
+                      <span className="text-xs text-bad">
+                        {b.unpriced} row{b.unpriced === 1 ? '' : 's'} could not be priced, so this batch can’t be approved. Discard it, fix those rows and submit again.
+                      </span>
+                    )}
+                    {b.status === 'priced' && b.unpriced === 0 && (
                       <Button type="button" size="sm" tone="good" pending={busy === b.batchId} pendingLabel="Approving" onClick={() => act(b, () => approveBatch(project.slug, b.batchId, b.total))}>
                         <Check aria-hidden className="size-3.5" /> Approve{b.total != null ? ` · ${b.total} credits` : ''}
                       </Button>

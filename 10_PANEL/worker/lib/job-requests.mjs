@@ -12,7 +12,7 @@ import { FilingError, checkUploads, fileUpload, reserveEntity } from './promote.
 import { NEXT_SCENE_RX, assignScenes } from './scenes.mjs'
 import { stripCode } from './ids.mjs'
 import { planJob } from './plan.mjs'
-import { estimateCost, isAuthenticated } from './hf.mjs'
+import { cliReady, estimateCost } from './hf.mjs'
 
 /**
  * Requests from the panel's Prompts page and its Regenerate button.
@@ -41,25 +41,37 @@ export function configure(c) { cfg = c }
 
 // ---------------------------------------------------------------- folding
 
+/** A batch that has ended. Late events (a price that lands after a discard) must not reopen it. */
+export const BATCH_FINAL = new Set(['queued', 'discarded', 'rejected'])
+
 /**
  * A batch's state from its events. Mirrored by getBatches() in lib/store.ts,
  * so the page and the worker read the same status from the same lines.
+ *
+ * `message` is the latest problem, and is cleared once the batch gets past it
+ * (priced or queued), so an old "not signed in" does not stay on a batch that
+ * has since been priced. `priceErrors` says why a row could not be priced.
  */
 export function foldBatch(events, batchId) {
-  const st = { status: 'received', validated: null, priced: null, prices: {}, queued: null, message: null }
+  const st = { status: 'received', validated: null, priced: null, prices: {}, priceErrors: {}, queued: null, message: null }
   for (const e of events) {
     if (e.batchId !== batchId) continue
+    const ended = BATCH_FINAL.has(st.status)
     switch (e.event) {
-      case 'validated': st.validated = e; st.status = 'validated'; break
-      case 'price': st.prices[e.key] = e.credits; if (st.status === 'validated') st.status = 'pricing'; break
-      case 'priced': st.priced = e; st.status = 'priced'; break
-      case 'queued': st.queued = e; st.status = 'queued'; break
-      case 'discarded': st.status = 'discarded'; break
-      case 'rejected':
-        st.message = e.reason
-        if (e.scope === 'batch') st.status = 'rejected'
+      case 'validated': if (!ended) { st.validated = e; st.status = 'validated' } break
+      case 'price':
+        st.prices[e.key] = e.credits
+        if (e.credits == null && e.reason) st.priceErrors[e.key] = e.reason
+        else delete st.priceErrors[e.key]
+        if (st.status === 'validated') st.status = 'pricing'
         break
-      case 'error': st.message = e.reason; break
+      case 'priced': if (!ended) { st.priced = e; st.status = 'priced'; st.message = null } break
+      case 'queued': st.queued = e; st.status = 'queued'; st.message = null; break
+      case 'discarded': if (st.status !== 'queued') st.status = 'discarded'; break
+      case 'rejected':
+        if (e.scope === 'batch') { st.status = 'rejected'; st.message = e.reason } else if (!ended) st.message = e.reason
+        break
+      case 'error': if (!ended) st.message = e.reason; break
       default: break
     }
   }
@@ -74,10 +86,12 @@ async function registries() {
 }
 
 /**
- * A batch's rows with every `upload:<id>` swapped for the token that file was
- * filed as. The Prompts page sends files with a batch; they are filed when it
- * is validated (FILINGS.jsonl, keyed by the submit's request id), so pricing
- * and approval read the same rows the validation did.
+ * A batch's rows with every `upload:<id>` swapped for something the worker can
+ * resolve. The Prompts page sends files with a batch; they are filed into the
+ * index only when the batch is approved (FILINGS.jsonl, keyed by the submit's
+ * request id), so a batch that is refused or discarded burns no entity number.
+ * Until then a row points at the raw file (`pending:<request id>/u1`, resolved
+ * by resolveRef), which is enough to validate and price it.
  */
 export async function jobsOf(submit) {
   const jobs = Array.isArray(submit.jobs) ? submit.jobs : []
@@ -88,7 +102,11 @@ export async function jobsOf(submit) {
   }
   return jobs.map((j) => ({
     ...j,
-    refs: (j.refs ?? []).map((t) => (String(t).startsWith('upload:') ? tokens[String(t).slice(7)] ?? t : t)),
+    refs: (j.refs ?? []).map((t) => {
+      if (!String(t).startsWith('upload:')) return t
+      const id = String(t).slice(7)
+      return tokens[id] ?? `pending:${submit.id}/${id}`
+    }),
   }))
 }
 
@@ -134,13 +152,17 @@ async function fileRequestUploads(req, uploads) {
 }
 
 const HANDLERS = {
-  async 'batch.submit'(req, { dry }) {
+  async 'batch.submit'(req) {
     if (!req.batchId) fail('missing batchId')
-    // Files added on the Prompts page go into the index first, like a Regenerate's.
+    // Files added on the Prompts page are checked now and filed at approval.
     const uploads = Array.isArray(req.uploads) ? req.uploads : []
     if (uploads.length) {
-      if (dry) { await log(`DRY-RUN would file ${uploads.length} upload(s) for ${req.batchId}, then validate it`); return }
-      await fileRequestUploads(req, uploads)
+      try {
+        await checkUploads(uploads)
+      } catch (e) {
+        if (e instanceof FilingError) fail(e.message)
+        throw e
+      }
     }
     const { ok, bad, newEntities } = await checkSubmit(req, await registries())
     const jobs = [
@@ -148,6 +170,9 @@ const HANDLERS = {
       ...bad.map(([at, reason, key]) => ({ key: key ?? at, ok: false, reason, target: '', jobId: '' })),
     ]
     if (ok.length === 0) {
+      // Each row's own reason is recorded (the validated event) before the refusal,
+      // so the page can show it on the row rather than one long joined message.
+      await emit({ batchId: req.batchId, reqId: req.id, event: 'validated', jobs, newEntities: [] })
       fail(`no row can run: ${bad.map(([at, why]) => `${at}: ${why}`).join('; ').slice(0, 600)}`)
     }
     await emit({ batchId: req.batchId, reqId: req.id, event: 'validated', jobs, newEntities: newEntities.map((n) => ({ key: n.key, kind: n.kind, slug: n.slug })) })
@@ -158,6 +183,13 @@ const HANDLERS = {
     const events = await readJsonl(P.jobRequestResults)
     const st = foldBatch(events, req.batchId)
     if (st.status !== 'priced') fail(`batch is ${st.status}, not priced`)
+    // Never spend without a price: an unpriced row would reach the queue with no
+    // figure to check against either ceiling.
+    const unpriced = Number(st.priced?.unpriced ?? 0)
+    if (unpriced > 0) {
+      const why = [...new Set(Object.values(st.priceErrors))].join('; ')
+      fail(`${unpriced} row(s) could not be priced${why ? ` (${why})` : ''}; discard the batch, fix them and submit again`)
+    }
     if (req.expectedTotal != null && st.priced && Math.abs(Number(st.priced.total) - Number(req.expectedTotal)) > 0.5) {
       fail(`the price changed to ${st.priced.total} credits since the page was loaded; approve again`)
     }
@@ -165,6 +197,12 @@ const HANDLERS = {
 
     const submit = (await readJsonl(P.jobRequests)).find((r) => r.type === 'batch.submit' && r.batchId === req.batchId)
     if (!submit) fail('the submission for this batch is missing')
+
+    // The pictures sent with the batch go into the index now, the way a Review
+    // upload is filed, before anything is numbered or queued. Filed before (a retry
+    // after a crash) means reused, never filed twice.
+    const uploads = Array.isArray(submit.uploads) ? submit.uploads : []
+    if (uploads.length) await fileRequestUploads(submit, uploads)
 
     // Snapshot the entity registry as text: if anything below fails half-way
     // it is put back byte for byte and the request is retried, never half-applied.
@@ -393,7 +431,6 @@ export async function runJobRequests(state, { dry = false } = {}) {
       // In dry mode an approve or regenerate is only described; leave it for a real run.
       // A dry run only describes what spends or files; leave those for a real run.
       const spendsOrFiles = ['batch.approve', 'regenerate', 'studio.approve', 'studio.pick', 'studio.close'].includes(req.type)
-        || (req.type === 'batch.submit' && req.uploads?.length)
       if (dry && spendsOrFiles) continue
       state.processedRequests.push(req.id)
       retrying.delete(req.id)
@@ -402,7 +439,12 @@ export async function runJobRequests(state, { dry = false } = {}) {
       if (!(e instanceof RequestError)) {
         if (retrying.get(req.id) !== e.message) {
           await log(`ERROR job request ${req.id} (${req.type}), will retry: ${e.message}`)
-          await emit({ batchId: req.batchId ?? null, reqId: req.id, event: 'error', reason: e.message })
+          // A studio request's error names its session and try, so the open studio
+          // shows it instead of waiting on "Pricing..." (lib/studio.ts folds it).
+          await emit({
+            batchId: req.batchId ?? null, reqId: req.id, event: 'error', reason: e.message,
+            ...(req.sessionId && { sessionId: req.sessionId }), ...(req.genId && { genId: req.genId }),
+          })
         }
         retrying.set(req.id, e.message)
         continue
@@ -427,7 +469,14 @@ export function priceStudioTries(state, { exclusive } = {}) {
 
 // Batches being priced right now, so a pass and the watcher never price one twice.
 const inFlight = new Set()
-let authWarned = false
+// The CLI problem each waiting batch was last told about: said once per batch, not
+// once for the whole worker (which left every batch after the first with no reason).
+const cliWarned = new Map()
+
+/** A batch's events as they are now: read fresh, since the page and the other pass append too. */
+async function batchNow(batchId) {
+  return foldBatch(await readJsonl(P.jobRequestResults), batchId)
+}
 
 /**
  * Price every validated batch with `generate cost`, one job at a time, with
@@ -442,20 +491,23 @@ export async function priceBatches(state, { dry = false, exclusive = (fn) => fn(
   let priced = 0
 
   for (const submit of submits) {
-    const st = foldBatch(events, submit.batchId)
-    if (st.status !== 'validated' && st.status !== 'pricing') continue
+    if (!['validated', 'pricing'].includes(foldBatch(events, submit.batchId).status)) continue
     if (inFlight.has(submit.batchId)) continue
     inFlight.add(submit.batchId)
     try {
-      if (!(await isAuthenticated())) {
-        if (!authWarned) {
-          await emit({ batchId: submit.batchId, reqId: submit.id, event: 'error', reason: 'not authenticated: run higgsfield auth login, then the batch is priced' })
-          await log(`HOLD pricing ${submit.batchId}: not authenticated`)
-          authWarned = true
+      // Read again now that this batch is ours: the other pass may have just priced it.
+      const st = await batchNow(submit.batchId)
+      if (st.status !== 'validated' && st.status !== 'pricing') continue
+      const ready = await cliReady()
+      if (!ready.ok) {
+        if (cliWarned.get(submit.batchId) !== ready.reason) {
+          await emit({ batchId: submit.batchId, reqId: submit.id, event: 'error', reason: `${ready.reason}; the batch is priced once that is fixed` })
+          await log(`HOLD pricing ${submit.batchId}: ${ready.reason}`)
+          cliWarned.set(submit.batchId, ready.reason)
         }
         continue
       }
-      authWarned = false
+      cliWarned.delete(submit.batchId)
       const okKeys = new Set((st.validated?.jobs ?? []).filter((j) => j.ok).map((j) => j.key))
       const rows = await jobsOf(submit)
       const { ok } = await exclusive(async () => checkBatch(rows, { ...(await registries()), cfg, allowNew: true }))
@@ -467,13 +519,20 @@ export async function priceBatches(state, { dry = false, exclusive = (fn) => fn(
         if (credits === undefined) {
           const job = makeJob(row, { jobId: 'price', enqueuedBy: 'price' })
           const plan = await exclusive(async () => { const { entities, assets } = await registries(); return planJob(job, entities, assets, { cfg, priceOnly: true }) })
-          credits = plan.skip ? null : (await estimateCost(plan.model, plan.params)).credits
-          await emit({ batchId: submit.batchId, event: 'price', key: row.key, credits })
-          await log(`COST ${submit.batchId}/${row.key} ${row.model} = ${credits ?? 'unknown'} credits`)
+          let reason = null
+          if (plan.skip) { credits = null; reason = plan.skip } else {
+            const cost = await estimateCost(plan.model, plan.params)
+            credits = cost.credits
+            reason = cost.error
+          }
+          await emit({ batchId: submit.batchId, event: 'price', key: row.key, credits, ...(credits == null && { reason }) })
+          await log(`COST ${submit.batchId}/${row.key} ${row.model} = ${credits ?? `unknown (${reason})`}${credits != null ? ' credits' : ''}`)
         }
         if (credits == null) unpriced++
         else total += credits
       }
+      // Discarded while its rows were being priced: it stays discarded.
+      if (BATCH_FINAL.has((await batchNow(submit.batchId)).status)) continue
       await emit({ batchId: submit.batchId, event: 'priced', total, unpriced })
       await log(`BATCH ${submit.batchId} priced: ${total} credits${unpriced ? ` (+${unpriced} unpriced)` : ''}${dry ? ' [dry-run: waiting for approval as usual]' : ''}`)
       priced++
