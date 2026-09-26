@@ -485,7 +485,7 @@ export function GalleryView({
         <span className="font-mono text-[13px] text-fg">draft</span> sits here too, badged, until its final renders.
       </PageHeader>
 
-      <div className="sticky top-0 z-20 -mx-1 space-y-3 bg-ink/85 px-1 py-3 backdrop-blur">
+      <div className="bleed-x sticky top-0 z-20 space-y-3 border-b border-edge bg-ink/90 py-3 backdrop-blur">
         <div className="flex flex-wrap items-center gap-2">
           <div className="relative min-w-52 flex-1">
             <Search aria-hidden className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-faint" />

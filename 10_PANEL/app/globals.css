@@ -113,6 +113,16 @@ body::before {
   box-shadow: inset 0 1px 0 0 --alpha(#ffffff / 5%);
 }
 
+/* Full width of the page area from inside its centred, padded column: the
+   margin reaches out to <main>'s edges and the padding brings the contents
+   back in line with the column. Needs <main> to be a size container
+   (@container, app/[project]/layout.tsx): 100cqw is <main>'s width, 100% the
+   column's. Right on a laptop and on a 4K screen alike. */
+@utility bleed-x {
+  margin-inline: calc((100% - 100cqw) / 2);
+  padding-inline: calc((100cqw - 100%) / 2);
+}
+
 /* Full-screen dim behind dialogs, the picker and the lightbox. Flat: no blur,
    so what is underneath reads as set aside rather than frosted. */
 @utility overlay {

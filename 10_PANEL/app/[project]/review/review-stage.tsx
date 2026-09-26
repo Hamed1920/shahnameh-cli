@@ -287,7 +287,7 @@ export function ReviewStage({
       </div>
 
       {/* ------------------------------------------------ the decision */}
-      <aside className="lg:sticky lg:top-40 lg:self-start">
+      <aside className="lg:sticky lg:top-[calc(var(--sticky-h,9rem)+1.5rem)] lg:self-start">
         <Card className="p-6">
           <div className="mb-5 flex items-center justify-between">
             <span className="eyebrow text-muted">Verdict</span>

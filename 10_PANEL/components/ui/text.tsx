@@ -28,22 +28,7 @@ export function PageHeader({
   )
 }
 
-/**
- * The bar pinned to the top of a working page (Review, References). Bleeds out
- * over the content padding set in app/layout.tsx -- keep the two in step.
- */
-export function StickyHeader({ className, children }: { className?: string; children: ReactNode }) {
-  return (
-    <div
-      className={cn(
-        'sticky top-0 z-30 -mx-6 -mt-10 mb-10 border-b border-edge bg-ink/95 px-6 pt-7 pb-4 lg:-mx-12 lg:px-12',
-        className,
-      )}
-    >
-      {children}
-    </div>
-  )
-}
+export { StickyHeader } from './sticky-header'
 
 const DOT_TONES = {
   accent: 'bg-fg',

@@ -345,7 +345,7 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
 
       <div className="grid gap-10 lg:grid-cols-[200px_minmax(0,1fr)]">
         {/* ------------------------------------------------ categories */}
-        <nav aria-label="Categories" className="lg:sticky lg:top-36 lg:self-start">
+        <nav aria-label="Categories" className="lg:sticky lg:top-[calc(var(--sticky-h,8rem)+1.5rem)] lg:self-start">
           <div className="eyebrow mb-3 hidden px-3 text-faint lg:block">Browse</div>
           <ul className="flex flex-wrap gap-px lg:flex-col">
             {([['ALL', 'All', live.length], ...KINDS.filter((k) => kindCount(k)).map((k) => [k, PLURAL[k], kindCount(k)] as const)] as [View, string, number][]).map(([v, label, n]) => (
