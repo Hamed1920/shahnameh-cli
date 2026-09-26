@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url'
 import { parseCsv, toCsv } from './csv.mjs'
 import { codeProblem, episodeFolderName, idRx, slugProblem } from './ids.mjs'
 import { spentInWindow } from './spend.mjs'
+import { MACHINE } from './machine.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 
@@ -69,7 +70,13 @@ export const P = {
   reviewLog: path.join(ROOT, '00_PROJECT', 'review', 'REVIEW_LOG.jsonl'),
   learnings: path.join(ROOT, '00_PROJECT', 'review', 'LEARNINGS.jsonl'),
   queue: path.join(ROOT, '00_PROJECT', 'queue', 'QUEUE.jsonl'),
-  state: path.join(ROOT, '00_PROJECT', 'queue', 'state.json'),
+  // This machine's worker state: only this machine writes it, so two machines
+  // never conflict over it in git. The panel reads every machine's (store.ts).
+  state: path.join(ROOT, '00_PROJECT', 'queue', `state.${MACHINE}.json`),
+  // The one state file from before each machine had its own. Read once, to seed a
+  // machine's first state, and never written again.
+  legacyState: path.join(ROOT, '00_PROJECT', 'queue', 'state.json'),
+  queueDir: path.join(ROOT, '00_PROJECT', 'queue'),
   log: path.join(ROOT, '00_PROJECT', 'queue', 'worker.log'),
   lock: path.join(ROOT, '00_PROJECT', 'queue', 'worker.lock'),
   staging: path.join(ROOT, '09_OUTPUT', '_staging'),
@@ -120,7 +127,11 @@ export async function readJsonl(file) {
 
 export async function appendJsonl(file, record) {
   await fs.mkdir(path.dirname(file), { recursive: true })
-  await fs.appendFile(file, JSON.stringify(record) + '\n', 'utf8')
+  // A queued job carries the machine that queued it: only that machine's worker
+  // generates it, on its own Higgsfield account (machine.mjs). Every writer of
+  // QUEUE.jsonl comes through here, so none can forget.
+  const line = file === P.queue && record && !record.machine ? { ...record, machine: MACHINE } : record
+  await fs.appendFile(file, JSON.stringify(line) + '\n', 'utf8')
 }
 
 export async function readCsv(file) {
@@ -282,14 +293,15 @@ export function ledgerFiles() {
 }
 
 /**
- * Credits spent on generations in the last `hours`, across EVERY project: they
- * all spend from one Higgsfield account, so the ceiling is the account's. See
- * spend.mjs for why this is a rolling window.
+ * Credits this machine spent on generations in the last `hours`, across EVERY
+ * project: they all spend from the one Higgsfield account this machine's CLI is
+ * signed into, so the ceiling is that account's. Another machine's rows (its own
+ * account) do not count. See spend.mjs for why this is a rolling window.
  */
 export async function spentWithin(hours) {
   const rows = []
   for (const file of ledgerFiles()) rows.push(...(await readCsv(file)).rows)
-  return spentInWindow(rows, hours)
+  return spentInWindow(rows, hours, Date.now(), MACHINE)
 }
 
 /**
@@ -342,25 +354,43 @@ export async function usedShotIds() {
  * credits. Returns null when it is safe to start, else the reason not to.
  */
 export async function stateStartProblem() {
-  const t = await readText(P.state)
+  // This machine's own state: present, it must parse.
+  const own = await readText(P.state)
+  if (own.trim()) {
+    try { JSON.parse(own); return null } catch {
+      return `${rel(P.state)} is not valid JSON. Starting would replay this machine's history and spend credits again. Restore it from git (git checkout -- ${rel(P.state)}) before starting.`
+    }
+  }
+  // A machine's first start: its state is seeded from the legacy state.json (readState),
+  // so that one must be sound whenever there is history for it to cover.
+  const t = await readText(P.legacyState)
   let problem = null
-  if (!t.trim()) problem = 'state.json is missing or empty'
+  if (!t.trim()) problem = 'neither this machine\'s state nor state.json exists'
   else {
     try { JSON.parse(t) } catch { problem = 'state.json is not valid JSON' }
   }
   if (!problem) return null
-  const history = [P.queue, P.reviewLog, P.jobRequests, P.indexOps]
-  for (const file of history) {
-    if ((await readText(file)).trim()) {
-      return `${problem}, but ${rel(file)} has history. Starting would replay it and spend credits again. Restore state.json from git (git checkout -- ${rel(P.state)}) before starting.`
+  // History written by this machine, or by a panel from before machines were named, would replay.
+  for (const file of [P.queue, P.reviewLog, P.jobRequests, P.indexOps]) {
+    const mineOrOld = (await readJsonl(file)).some((r) => !r?.machine || r.machine === MACHINE)
+    if (mineOrOld) {
+      return `${problem}, but ${rel(file)} has history. Starting would replay it and spend credits again. Restore the state from git (git checkout -- ${rel(P.queueDir)}) before starting.`
     }
   }
   return null
 }
 
+const EMPTY_STATE = () => ({ processedJobs: [], processedDecisions: [], spentCredits: 0 })
+
+/**
+ * This machine's state. On its first start there is none yet, and it begins from
+ * the legacy state.json (everything processed before machines were named stays
+ * processed); from then on it is written to state.<machine>.json only.
+ */
 export async function readState() {
-  const t = await readText(P.state)
-  if (!t.trim()) return { processedJobs: [], processedDecisions: [], spentCredits: 0 }
+  const own = await readText(P.state)
+  const t = own.trim() ? own : await readText(P.legacyState)
+  if (!t.trim()) return EMPTY_STATE()
   try {
     const s = JSON.parse(t)
     return {
@@ -370,8 +400,28 @@ export async function readState() {
       ...s,
     }
   } catch {
-    return { processedJobs: [], processedDecisions: [], spentCredits: 0 }
+    return EMPTY_STATE()
   }
+}
+
+/**
+ * Ids processed by any machine, from every state file in the queue folder plus
+ * this worker's live `state`. For checks that ask "is anyone still working on this"
+ * (index-ops refusing to move a file in use), not for what to act on: a worker
+ * acts only on its own records (machine.mjs).
+ */
+export async function processedAnywhere(state) {
+  const out = { jobs: new Set(state?.processedJobs ?? []), decisions: new Set(state?.processedDecisions ?? []) }
+  let names = []
+  try { names = await fs.readdir(P.queueDir) } catch { /* no queue folder yet */ }
+  for (const name of names.filter((n) => /^state(\.[a-z0-9-]+)?\.json$/.test(n))) {
+    try {
+      const s = JSON.parse(await readText(path.join(P.queueDir, name)))
+      for (const id of s.processedJobs ?? []) out.jobs.add(id)
+      for (const id of s.processedDecisions ?? []) out.decisions.add(id)
+    } catch { /* a torn or foreign file: ignore */ }
+  }
+  return out
 }
 
 // One save at a time. The index-op watcher and a pass can both save while a

@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import { MACHINE } from '../worker/lib/machine.mjs'
 import type { Project } from './projects'
 import type { JobRequest } from './types'
 
@@ -28,7 +29,8 @@ let tail: Promise<void> = Promise.resolve()
 export function appendJobRequest({ P }: Project, record: JobRequest): Promise<void> {
   const run = tail.then(async () => {
     await fs.mkdir(path.dirname(P.jobRequests), { recursive: true })
-    await fs.appendFile(P.jobRequests, JSON.stringify(record) + '\n', 'utf8')
+    // The machine that asked: only its worker acts on this line (worker/lib/machine.mjs).
+    await fs.appendFile(P.jobRequests, JSON.stringify({ ...record, machine: MACHINE }) + '\n', 'utf8')
   })
   tail = run.catch(() => {})
   return run

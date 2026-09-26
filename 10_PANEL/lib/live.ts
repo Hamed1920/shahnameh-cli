@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import type { Project } from './projects'
+import { STATE_FILE_RX } from './worker-state'
 
 /**
  * A fingerprint of everything the worker (or a PowerShell tool) writes that a
@@ -59,17 +60,26 @@ async function stamp(file: string): Promise<string> {
   }
 }
 
-/** Compared by content, not mtime: `updatedAt` moves on its own and means nothing here. */
+/**
+ * Every machine's state file (state.json and state.<machine>.json), compared by
+ * content, not mtime: `updatedAt` moves on its own and means nothing here.
+ */
 async function workerState({ P }: Project): Promise<string> {
-  try {
-    const { updatedAt: _, ...rest } = JSON.parse(await fs.readFile(P.workerState, 'utf8'))
-    const v = JSON.stringify(rest)
-    lastGood.set(P.workerState, v)
-    return v
-  } catch (err) {
-    if ((err as NodeJS.ErrnoException).code === 'ENOENT') return '-'
-    return lastGood.get(P.workerState) ?? '-'
+  const dir = path.dirname(P.workerState)
+  const names = (await fs.readdir(dir).catch(() => [] as string[])).filter((n) => STATE_FILE_RX.test(n)).sort()
+  const parts: string[] = []
+  for (const name of names) {
+    const file = path.join(dir, name)
+    try {
+      const { updatedAt: _, ...rest } = JSON.parse(await fs.readFile(file, 'utf8'))
+      const v = `${name}:${JSON.stringify(rest)}`
+      lastGood.set(file, v)
+      parts.push(v)
+    } catch (err) {
+      if ((err as NodeJS.ErrnoException).code !== 'ENOENT') parts.push(lastGood.get(file) ?? '-')
+    }
   }
+  return parts.join('|') || '-'
 }
 
 /**

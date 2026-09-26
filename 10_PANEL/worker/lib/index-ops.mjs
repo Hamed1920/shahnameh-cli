@@ -1,9 +1,10 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import {
-  CODE, P, ROOT, RX, appendJsonl, archivedVariants, findEntity, log, readJsonl, readState, resolveRef,
+  CODE, P, ROOT, RX, appendJsonl, archivedVariants, findEntity, log, processedAnywhere, readJsonl, readState, resolveRef,
   shotFolder, usedShotIds,
 } from './project.mjs'
+import { OLD_PANEL, ownerOf } from './machine.mjs'
 import { episodeFolderName } from './ids.mjs'
 import { entityId as fullEntityId } from './ids.mjs'
 import {
@@ -174,10 +175,10 @@ const withNotes = (summary, notes) => (notes.length ? `${summary}. ${notes.join(
  */
 async function assertNotInUse(tx, ctx, { files = [], ids = [] }) {
   const state = ctx?.state ?? await readState()
-  const done = new Set(state.processedJobs)
-  const pendingJobs = (await readJsonl(P.queue)).filter((j) => !done.has(j.jobId))
-  const decided = new Set(state.processedDecisions)
-  const pendingDecisions = (await readJsonl(P.reviewLog)).filter((d) => !decided.has(d.id))
+  // Done on any machine counts as done; one another machine has not got to yet is still in use.
+  const anywhere = await processedAnywhere(state)
+  const pendingJobs = (await readJsonl(P.queue)).filter((j) => !anywhere.jobs.has(j.jobId))
+  const pendingDecisions = (await readJsonl(P.reviewLog)).filter((d) => !anywhere.decisions.has(d.id))
 
   const users = [
     ...pendingJobs.map((j) => ({ x: j, refs: j.refs, what: `${jobName(j)}, which is queued or generating`, then: 'Try again once it has finished.' })),
@@ -781,6 +782,17 @@ export async function runIndexOps(state, { dry = false } = {}) {
   const seen = new Set(state.processedOps)
   let count = 0
   for (const op of ops.filter((o) => !seen.has(o.id))) {
+    // Another machine's request is its worker's to apply; one from an older panel, nobody's.
+    const owner = ownerOf(op)
+    if (owner === 'other') continue
+    if (owner === 'old') {
+      if (dry) continue
+      await appendJsonl(P.indexOpResults, { opId: op.id, ok: false, reason: OLD_PANEL, ts: new Date().toISOString() })
+      await log(`INDEX OP ${op.id} ${op.type} skipped: ${OLD_PANEL}`)
+      state.processedOps.push(op.id)
+      count++
+      continue
+    }
     const handler = OPS[op.type]
     if (dry) {
       // An add carries the whole batch, so say what each file would become:

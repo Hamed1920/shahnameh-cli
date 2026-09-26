@@ -67,6 +67,8 @@ export interface ReviewDecision {
   id: string
   ts: string
   reviewer: string
+  /** The machine whose panel recorded it; only that machine's worker applies it. Absent on older lines. */
+  machine?: string
   candidate: string
   jobId: string
   hfJobId: string

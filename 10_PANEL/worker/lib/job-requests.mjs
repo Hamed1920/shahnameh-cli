@@ -13,6 +13,8 @@ import { NEXT_SCENE_RX, assignScenes } from './scenes.mjs'
 import { stripCode } from './ids.mjs'
 import { planJob } from './plan.mjs'
 import { cliReady, estimateCost } from './hf.mjs'
+import { OLD_PANEL, ownerOf, requestOwners } from './machine.mjs'
+import { PULL_FIRST, remoteChangedIndex } from './git-guard.mjs'
 
 /**
  * Requests from the panel's Prompts page and its Regenerate button.
@@ -197,6 +199,11 @@ const HANDLERS = {
 
     const submit = (await readJsonl(P.jobRequests)).find((r) => r.type === 'batch.submit' && r.batchId === req.batchId)
     if (!submit) fail('the submission for this batch is missing')
+
+    // New entity and scene numbers are handed out below: never on top of another
+    // machine's unpulled index (git-guard.mjs). A plain Error, so the approve is
+    // held and retried after the pull, not refused.
+    if (await remoteChangedIndex()) throw new Error(PULL_FIRST)
 
     // The pictures sent with the batch go into the index now, the way a Review
     // upload is filed, before anything is numbered or queued. Filed before (a retry
@@ -423,7 +430,23 @@ export async function runJobRequests(state, { dry = false } = {}) {
   state.processedRequests ??= []
   const seen = new Set(state.processedRequests)
   let count = 0
+  const ownerOfReq = requestOwners(reqs)
   for (const req of reqs.filter((r) => r && r.id && !seen.has(r.id))) {
+    // Another machine's request is its worker's to act on; one from an older panel, nobody's.
+    const owner = ownerOfReq(req)
+    if (owner === 'other') continue
+    if (owner === 'old') {
+      if (dry) continue
+      await emit({
+        batchId: req.batchId ?? null, reqId: req.id, event: 'rejected',
+        scope: req.type === 'batch.submit' ? 'batch' : 'request', reason: OLD_PANEL,
+        ...(req.sessionId && { sessionId: req.sessionId }), ...(req.genId && { genId: req.genId }),
+      })
+      await log(`JOB REQUEST ${req.id} ${req.type} skipped: ${OLD_PANEL}`)
+      state.processedRequests.push(req.id)
+      count++
+      continue
+    }
     const handler = HANDLERS[req.type]
     try {
       if (!handler) fail(`unknown request type '${req.type}'`)
@@ -485,7 +508,8 @@ async function batchNow(batchId) {
  */
 export async function priceBatches(state, { dry = false, exclusive = (fn) => fn() } = {}) {
   const processed = new Set(state.processedRequests ?? [])
-  const submits = (await readJsonl(P.jobRequests)).filter((r) => r.type === 'batch.submit' && processed.has(r.id))
+  // Only this machine's batches: another machine's worker prices its own, with its own account.
+  const submits = (await readJsonl(P.jobRequests)).filter((r) => r.type === 'batch.submit' && processed.has(r.id) && ownerOf(r) === 'mine')
   if (submits.length === 0) return 0
   const events = await readJsonl(P.jobRequestResults)
   let priced = 0

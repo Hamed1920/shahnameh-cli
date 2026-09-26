@@ -8,6 +8,7 @@ import { requireProject } from '@/lib/projects'
 import { getAssets, getEntities } from '@/lib/store'
 import { Invalid, readUploads } from '@/lib/uploads'
 import type { Entity, IndexOpType } from '@/lib/types'
+import { MACHINE } from '@/worker/lib/machine.mjs'
 
 /**
  * Write side of the References page: one append to INDEX_OPS.jsonl per request
@@ -139,7 +140,8 @@ export async function requestIndexOp(formData: FormData): Promise<OpRequestResul
       for (const f of files) await fs.writeFile(path.join(pr.root, f.rel), f.bytes)
     }
     await fs.mkdir(path.dirname(pr.P.indexOps), { recursive: true })
-    await fs.appendFile(pr.P.indexOps, JSON.stringify(record) + '\n', 'utf8')
+    // The machine that asked: only its worker applies it (worker/lib/machine.mjs).
+    await fs.appendFile(pr.P.indexOps, JSON.stringify({ ...record, machine: MACHINE }) + '\n', 'utf8')
   } catch (e) {
     await fs.rm(dir, { recursive: true, force: true })
     return { ok: false, error: `Could not save the request: ${(e as Error).message}` }

@@ -3,6 +3,7 @@ import path from 'node:path'
 import { cache } from 'react'
 import { idRx } from '../worker/lib/ids.mjs'
 import { lockIsStale, readLock } from '../worker/lib/locks.mjs'
+import { STATE_FILE_RX, mergeStates } from './worker-state'
 import { listProjects, type Project } from './projects'
 import { parseCsv } from './csv'
 import { autostartBlockedReason, stopFlagKind, workersPaused } from './worker-guard'
@@ -319,10 +320,28 @@ export async function getGeneratingJobId(pr: Project, processed: Set<string>): P
   return null
 }
 
+/**
+ * Every machine's worker state, merged (lib/worker-state.ts): the legacy state.json
+ * and each state.<machine>.json. The legacy spentCredits is left out once a machine
+ * file exists, since machine files start as a copy of it. spentCredits is only a
+ * lifetime figure for display (the ceiling reads the ledgers), so two machines that
+ * both started from the legacy file overstating it is harmless.
+ */
 export async function getWorkerState(pr: Project): Promise<Record<string, unknown> | null> {
-  const t = await readText(pr.P.workerState)
-  if (!t.trim()) return null
-  try { return JSON.parse(t) } catch { return null }
+  const dir = path.dirname(pr.P.workerState)
+  const names = (await fs.readdir(dir).catch(() => [] as string[])).filter((n) => STATE_FILE_RX.test(n)).sort()
+  const states: Record<string, unknown>[] = []
+  for (const name of names) {
+    const t = await readText(path.join(dir, name))
+    if (!t.trim()) continue
+    try {
+      const s = JSON.parse(t) as Record<string, unknown>
+      // A machine file starts as a copy of the legacy one: keep the legacy lists, not its spend twice.
+      if (name === 'state.json' && names.length > 1) delete s.spentCredits
+      states.push(s)
+    } catch { /* a torn or foreign file */ }
+  }
+  return mergeStates(states)
 }
 
 /** Queued jobs the worker has not finished. Its processedJobs is the truth, not what sits in _staging. */

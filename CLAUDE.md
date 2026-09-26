@@ -10,12 +10,13 @@ project template. Every **project** — one film — is a top-level folder besid
 Prompts are authored in the panel's **Prompts** page, or in **Claude Chat** / **Claude Cowork**.
 This CLI **executes** them, owns the filesystem, and owns every ID. See `docs/SYNC_PROTOCOL.md`.
 
-## Pending on the machine that runs the workers (delete this section once done)
+## Pending: a panel that renders but does not respond (delete this section once done)
 
-Since 2026-09-24 the panel on the main machine (the one with the Higgsfield account that has
-credits) renders but does not respond: Submit and "Add these" stay disabled, so nothing reaches the
-queue. The committed code works on another machine, so the cause is on this one. **At the start of
-a session on that machine** (`higgsfield workspace status` shows credits), before anything else:
+Since 2026-09-24 the panel on the main machine (the one whose Higgsfield account has the credits)
+renders but does not respond: Submit and "Add these" stay disabled, so nothing reaches the queue.
+The committed code works on another machine, so the cause is on that one. **At the start of a
+session on the main machine** (`higgsfield workspace status` shows the credits), before anything
+else:
 
 1. With the panel running the usual way (`npm run up`), run
    `powershell.exe -NoProfile -ExecutionPolicy Bypass -File "tools\Check-Panel.ps1"` and read
@@ -121,17 +122,31 @@ Run `/project-log` at the start of a session, or read directly:
   reference limit, and whether references go as a list or a start frame all come from it
   (`worker/lib/model-schema.mjs`), never from a model's name. Defaults: `seedance_2_5` for video,
   `nano_banana_pro` for images; `pinnedModels` in `config.json` only orders the pickers.
-- **The spend ceiling is a rolling window, and it is account-wide.** `costCeilingCredits` per
+- **The spend ceiling is a rolling window, per machine's account.** `costCeilingCredits` per
   `costWindowHours` in `10_PANEL/worker/config.json`, summed from **every** project's
-  `00_PROJECT/sync/JOB_LEDGER.csv`, because all of them spend from the same Higgsfield account
+  `00_PROJECT/sync/JOB_LEDGER.csv` rows that **this machine** spent (the `machine` column), because
+  every project on a machine spends from the one Higgsfield account its CLI is signed into
   (`spentWithin` in `worker/lib/project.mjs`). A job over the ceiling is held (`state.held`, shown
   on the Queue page), never failed.
 - **One generation at a time, machine-wide.** A worker takes `.generate.lock` at the repo root
   from the ceiling check until the ledger records the spend, so two projects can never both spend
   the same remaining room. Decisions and index requests still run in parallel.
-- **A worker refuses to start** if its `queue/state.json` is missing or corrupt while the queue,
-  review log, job requests or index ops have history — starting would replay them and spend again,
-  so restore `state.json` from git first. It also refuses if `SHM_HIGGSFIELD_JS` names a file that
+- **Every machine runs its own workers; each record belongs to one machine.** The panel and the
+  worker stamp `machine` (the host name, or `SHM_MACHINE`) on every request, decision, index op
+  and queued job, and a worker acts only on its own machine's (`worker/lib/machine.mjs`): approving
+  or discarding a batch belongs to the machine that submitted it, a studio session to the machine
+  that started it, a Review decision to the machine that generated the take. So a batch approved on
+  two machines is queued once. A record with no `machine` that was never processed came from a panel
+  older than this and is skipped with a message, never guessed at. Worker state is one file per
+  machine, `queue/state.<machine>.json` (the old `state.json` only seeds a machine's first start);
+  the panel reads them all. Before writing a project's registries a worker checks git for
+  unpulled changes to that index and, if there are some, holds with "pull first"
+  (`worker/lib/git-guard.mjs`). Two machines numbering the same kind within a minute, both
+  unpushed, can still clash — the validator reports it; push after each work session.
+- **A worker refuses to start** if its machine's `queue/state.<machine>.json` is corrupt, or if
+  that file does not exist yet and neither does a sound `queue/state.json` to seed it from, while
+  the queue, review log, job requests or index ops have history — starting would replay them and
+  spend again, so restore the state files from git first. It also refuses if `SHM_HIGGSFIELD_JS` names a file that
   does not exist, rather than falling back to the real CLI.
 
 ## Tools
@@ -210,13 +225,13 @@ download every render.
   until opted in. Do not convert it to a denylist. A new top-level folder must be added to it —
   including a new project, which adds its own line (`!/<slug>/`), written by the panel when it
   creates the project.
-- **One worker per project, and all of them on one machine.** The CSV registries and
-  `queue/state.json` are rewritten whole, so two workers on the same project between syncs
-  conflict. `state.json` is tracked on purpose: without it a worker would replay every past
-  decision and spend credits. The panel's server starts one worker per project and keeps them
-  running (`lib/worker-supervisor.ts`), so on any other machine set `SHM_WORKER=off` in
-  `10_PANEL/.env.local` before running the panel. Pull before starting the panel; commit and push
-  after stopping the workers: **Stop all workers** on the Queue page, then wait until it says
+- **Every machine works; the only difference is the Higgsfield account its CLI is signed into.**
+  The panel's server starts one worker per project on every machine and keeps them running
+  (`lib/worker-supervisor.ts`); see "Every machine runs its own workers" above for why two machines
+  never act on the same thing. The state files (`queue/state.<machine>.json`) are tracked on
+  purpose: without them a worker would replay every past decision and spend credits. Set
+  `SHM_WORKER=off` in `10_PANEL/.env.local` only on a machine that must never price or generate.
+  Pull before starting the panel; commit and push after stopping the workers: **Stop all workers** on the Queue page, then wait until it says
   "All workers stopped" (each finishes the job in hand first). Without the panel running, create
   each project's `queue/worker.stop` instead. Don't drop a `worker.stop` while the panel runs and
   expect it to stick unless it is the Queue page's: the supervisor restarts a worker on new code.

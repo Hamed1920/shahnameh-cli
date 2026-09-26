@@ -74,3 +74,8 @@ test('a failed try carries the worker\'s reason', () => {
   assert.equal(s.tries[0].status, 'failed')
   assert.equal(s.tries[0].reason, 'Higgsfield returned no file')
 })
+test('a session is gone as soon as its close is asked for, and back if the close was refused', () => {
+  const requests = [price('r1', 'g1'), { id: 'r2', ts: '', type: 'studio.close', sessionId: S }]
+  assert.deepEqual(openSessionIds(requests, []), [])
+  assert.deepEqual(openSessionIds(requests, [{ event: 'rejected', reqId: 'r2' }]), [S])
+})

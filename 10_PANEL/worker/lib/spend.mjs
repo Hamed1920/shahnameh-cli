@@ -14,11 +14,20 @@
  */
 export const CHARGED_STATES = new Set(['GENERATED', 'NO_RESULT', 'TIMED_OUT'])
 
-export function spentInWindow(rows, hours, now = Date.now()) {
+/**
+ * @param {Record<string, string>[]} rows
+ * @param {number} hours
+ * @param {number} [now]
+ * @param {string | null} [machine]
+ */
+export function spentInWindow(rows, hours, now = Date.now(), machine = null) {
   const since = now - hours * 3600_000
   let total = 0
   for (const r of rows) {
     if (!CHARGED_STATES.has(r.state)) continue
+    // Each machine spends from its own Higgsfield account, so with `machine` given
+    // only its rows count. A row with no machine predates that and counts for all.
+    if (machine && r.machine && r.machine !== machine) continue
     const cost = parseFloat(r.cost)
     const at = Date.parse(r.ingested)
     if (Number.isFinite(cost) && Number.isFinite(at) && at >= since) total += cost

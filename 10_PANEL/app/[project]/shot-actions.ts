@@ -7,6 +7,7 @@ import { idRx } from '../../worker/lib/ids.mjs'
 import { EPISODE_RX, episodeTitleSlug, shortEpisode } from '@/lib/episodes'
 import { requireProject } from '@/lib/projects'
 import { getShotMoveRequests } from '@/lib/store'
+import { MACHINE } from '@/worker/lib/machine.mjs'
 
 /**
  * Assigning footage to another episode.
@@ -103,7 +104,8 @@ export async function assignToEpisode(
   }
   try {
     await fs.mkdir(path.dirname(pr.P.indexOps), { recursive: true })
-    await fs.appendFile(pr.P.indexOps, JSON.stringify(record) + '\n', 'utf8')
+    // The machine that asked: only its worker applies it (worker/lib/machine.mjs).
+    await fs.appendFile(pr.P.indexOps, JSON.stringify({ ...record, machine: MACHINE }) + '\n', 'utf8')
   } catch (e) {
     return { ok: false, error: `Could not save the request: ${(e as Error).message}` }
   }

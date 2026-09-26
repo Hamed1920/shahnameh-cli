@@ -222,6 +222,15 @@ export function ReferenceStudio({
   }
   const srcOf = (token: string) => previews[token] ?? (pathOf(token) ? thumbUrl(pathOf(token)!, 320) : null)
 
+  // The worker on this machine prices and generates every try. When it is not
+  // running, say so, instead of "Pricing..." that never ends.
+  const w = session?.worker
+  const workerNote = !w || w.running ? null
+    : w.paused ? 'The workers are stopped (Queue page → Start workers), so nothing is priced or generated.'
+      : w.stopRequested ? 'This project\'s worker is stopped (queue/worker.stop), so nothing is priced or generated.'
+        : w.autostartOff ? `No worker runs on this machine (${w.autostartOff}), so nothing is priced or generated.`
+          : 'The worker is starting…'
+
   const priceLabel = !current
     ? inputProblem ?? 'Pricing...'
     : current.status === 'priced'
@@ -353,6 +362,7 @@ export function ReferenceStudio({
               <Sparkles aria-hidden className="size-4" /> {priceLabel}
             </Button>
             {error && <p className="text-xs text-bad">{error}</p>}
+            {workerNote && <p className="text-xs text-bad">{workerNote}</p>}
             {current && current.status !== 'error' && current.reason && (
               // Why pricing is waiting (the CLI not signed in) or came back unknown.
               <p className="text-xs text-bad" dir="auto">{current.reason}</p>

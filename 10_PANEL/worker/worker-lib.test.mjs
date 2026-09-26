@@ -33,6 +33,9 @@ before(async () => {
   process.env.SHM_ROOT = ROOT
   process.env.SHM_PROJECTS = TMP
   process.env.SHM_HIGGSFIELD_JS = CLI
+  process.env.SHM_MACHINE = 'test-a'
+  // The throwaway project is not a git clone; keep the pull-first check from asking anyway.
+  process.env.SHM_GIT_GUARD = 'off'
   lib = {
     locks: await import('./lib/locks.mjs'),
     hf: await import('./lib/hf.mjs'),
@@ -120,11 +123,11 @@ test('a batch with an unpriced row cannot be approved', async () => {
   const { P, appendJsonl } = lib.project
   const { configure, runJobRequests } = lib.requests
   configure({ costCeilingCredits: 1000, costWindowHours: 24 })
-  await appendJsonl(P.jobRequests, { id: 'jr_submit01', type: 'batch.submit', batchId: 'B-2', jobs: [] })
+  await appendJsonl(P.jobRequests, { id: 'jr_submit01', type: 'batch.submit', batchId: 'B-2', jobs: [], machine: 'test-a' })
   await appendJsonl(P.jobRequestResults, { batchId: 'B-2', event: 'validated', jobs: [{ key: 'r1', ok: true, target: 'x', jobId: 'J-1' }], newEntities: [] })
   await appendJsonl(P.jobRequestResults, { batchId: 'B-2', event: 'price', key: 'r1', credits: null, reason: 'no workspace' })
   await appendJsonl(P.jobRequestResults, { batchId: 'B-2', event: 'priced', total: 0, unpriced: 1 })
-  await appendJsonl(P.jobRequests, { id: 'jr_approve01', type: 'batch.approve', batchId: 'B-2', expectedTotal: 0 })
+  await appendJsonl(P.jobRequests, { id: 'jr_approve01', type: 'batch.approve', batchId: 'B-2', expectedTotal: 0, machine: 'test-a' })
   const state = { processedRequests: ['jr_submit01'], processedJobs: [] }
   await runJobRequests(state)
   const results = fs.readFileSync(P.jobRequestResults, 'utf8').trim().split('\n').map((l) => JSON.parse(l))
@@ -163,4 +166,61 @@ test('a reference an approved learning names is attached; one that no longer res
   assert.match(plan.prompt, /Masks as in <<<image_1>>>/)
   assert.doesNotMatch(plan.prompt, /@REF-001\/V02/, 'no raw token for a look that is gone')
   assert.match(plan.prompt, /Castes as in REF-001, Caste Board/)
+})
+test('a worker acts only on its own machine\'s requests; an untagged new one is skipped, never guessed at', async () => {
+  const { P, appendJsonl } = lib.project
+  const { runJobRequests } = lib.requests
+  await appendJsonl(P.jobRequests, { id: 'jr_other01', type: 'models.refresh', machine: 'test-b' })
+  await appendJsonl(P.jobRequests, { id: 'jr_old01', type: 'models.refresh' })
+  const state = { processedRequests: ['jr_submit01', 'jr_approve01'], processedJobs: [] }
+  await runJobRequests(state)
+  assert.ok(!state.processedRequests.includes('jr_other01'), 'another machine\'s request is left to that machine')
+  assert.ok(state.processedRequests.includes('jr_old01'), 'an untagged one is settled, once')
+  const results = fs.readFileSync(P.jobRequestResults, 'utf8').trim().split('\n').map((l) => JSON.parse(l))
+  assert.match(results.find((e) => e.reqId === 'jr_old01')?.reason ?? '', /older version of the panel/)
+  assert.equal(results.some((e) => e.reqId === 'jr_other01'), false)
+})
+
+test('a job queued by a worker carries its machine', async () => {
+  const { P, appendJsonl } = lib.project
+  await appendJsonl(P.queue, { jobId: 'J-M1', target: 'x' })
+  const last = fs.readFileSync(P.queue, 'utf8').trim().split('\n').map((l) => JSON.parse(l)).at(-1)
+  assert.equal(last.machine, 'test-a')
+})
+
+test('a machine\'s first state starts from the legacy state.json, and is its own file', async () => {
+  const { P, readState, writeState, stateStartProblem } = lib.project
+  assert.match(path.basename(P.state), /^state\.test-a\.json$/)
+  fs.writeFileSync(P.legacyState, JSON.stringify({ processedJobs: ['J-OLD'], processedDecisions: [], spentCredits: 5 }))
+  assert.equal(await stateStartProblem(), null)
+  const s = await readState()
+  assert.deepEqual(s.processedJobs, ['J-OLD'])
+  s.processedJobs.push('J-NEW')
+  await writeState(s)
+  assert.deepEqual(JSON.parse(fs.readFileSync(P.state, 'utf8')).processedJobs, ['J-OLD', 'J-NEW'])
+  assert.deepEqual(JSON.parse(fs.readFileSync(P.legacyState, 'utf8')).processedJobs, ['J-OLD'], 'the legacy file is never written')
+})
+
+test('the spend ceiling counts this machine\'s rows and legacy ones, not another machine\'s', () => {
+  const now = Date.parse('2026-09-26T12:00:00Z')
+  const at = '2026-09-26T11:00:00Z'
+  const rows = [
+    { state: 'GENERATED', cost: '10', ingested: at, machine: 'test-a' },
+    { state: 'GENERATED', cost: '20', ingested: at, machine: 'test-b' },
+    { state: 'GENERATED', cost: '40', ingested: at },
+  ]
+  assert.equal(lib.spend.spentInWindow(rows, 24, now, 'test-a'), 50)
+})
+test('a request is acted on by the machine its batch or studio session belongs to', async () => {
+  const { requestOwners } = await import('./lib/machine.mjs')
+  const reqs = [
+    { id: 's', type: 'batch.submit', batchId: 'B-X', machine: 'test-b' },
+    { id: 'p', type: 'studio.price', sessionId: 'ss_x', machine: 'test-b' },
+    { id: 'old', type: 'studio.price', sessionId: 'ss_old' },
+  ]
+  const owner = requestOwners(reqs)
+  assert.equal(owner({ type: 'batch.approve', batchId: 'B-X', machine: 'test-a' }), 'other', 'approving B\'s batch on A is B\'s to do')
+  assert.equal(owner({ type: 'studio.approve', sessionId: 'ss_x', machine: 'test-a' }), 'other')
+  assert.equal(owner({ type: 'studio.close', sessionId: 'ss_old', machine: 'test-a' }), 'mine', 'an old session can be ended by whoever asks')
+  assert.equal(owner({ type: 'studio.price', sessionId: 'ss_old', machine: 'test-a' }), 'old')
 })

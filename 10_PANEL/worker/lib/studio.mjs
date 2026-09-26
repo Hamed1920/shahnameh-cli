@@ -7,6 +7,7 @@ import { FOLDER_FOR, FilingError, entitySlug, fileUploadInto, reject } from './p
 import { transaction } from './tx.mjs'
 import { planJob } from './plan.mjs'
 import { cliReady, estimateCost } from './hf.mjs'
+import { requestOwners } from './machine.mjs'
 import { newJobId } from './batch.mjs'
 import { loadCatalog } from './models.mjs'
 import { modelKind, modelProblem } from './model-schema.mjs'
@@ -178,7 +179,9 @@ export function studioHandlers({ fail, emit, getCfg }) {
       // written to disk at the end of a pass, and would read as still generating.
       const done = new Set(state?.processedJobs ?? [])
       const pending = queue.filter((q) => q.studio?.sessionId === sessionId && !done.has(q.jobId))
-      if (pending.length) fail(`${pending.length} tr${pending.length === 1 ? 'y is' : 'ies are'} still generating; close once they finish`)
+      // Not a refusal: the close waits (runJobRequests retries a plain Error) and
+      // happens as soon as the last try has finished, so the session always ends.
+      if (pending.length) throw new Error(`${pending.length} tr${pending.length === 1 ? 'y is' : 'ies are'} still generating; the session closes once they finish`)
       if (dry) { await log(`DRY-RUN would close studio ${sessionId}`); return }
 
       let put = 0
@@ -239,7 +242,10 @@ const cliWarned = new Map()
  */
 export async function priceStudio(state, { emit, cfg, exclusive = (fn) => fn() }) {
   const processed = new Set(state.processedRequests ?? [])
-  const reqs = (await readJsonl(P.jobRequests)).filter((r) => r.type === 'studio.price' && processed.has(r.id))
+  // Only tries in this machine's sessions: another machine's worker prices its own, with its own account.
+  const all = await readJsonl(P.jobRequests)
+  const owner = requestOwners(all)
+  const reqs = all.filter((r) => r.type === 'studio.price' && processed.has(r.id) && owner(r) === 'mine')
   if (reqs.length === 0) return 0
   const events = await readJsonl(P.jobRequestResults)
   const settled = new Set(events.filter((e) => e.event === 'studio.priced' || e.event === 'studio.error').map((e) => e.reqId))

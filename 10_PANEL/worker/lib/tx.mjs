@@ -2,6 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { P, ROOT, log, readText, restoreText, writeCsv } from './project.mjs'
 import { parseCsv } from './csv.mjs'
+import { PULL_FIRST, remoteChangedIndex } from './git-guard.mjs'
 
 /**
  * One index op, applied as a unit.
@@ -14,7 +15,7 @@ import { parseCsv } from './csv.mjs'
 export const MANIFEST_HEADER = [
   'filename', 'entity_id', 'variant', 'take', 'role', 'status', 'folder',
   'source', 'original_filename', 'added', 'notes',
-]
+]
 
 /** A request that breaks a rule. Retrying cannot help, so it is recorded as failed. */
 export class OpError extends Error {}
@@ -44,6 +45,9 @@ export async function exists(p) {
  * back, and the CSVs restored.
  */
 export async function transaction(fn) {
+  // Never write the index on top of another machine's unpulled changes (git-guard.mjs).
+  // A plain Error, so every caller holds the work and retries it after the pull.
+  if (await remoteChangedIndex()) throw new Error(PULL_FIRST)
   const [entitiesText, manifestText] = await Promise.all([readText(P.entities), readText(P.manifest)])
   const e = parseCsv(entitiesText)
   const m = parseCsv(manifestText)
@@ -93,4 +97,4 @@ export async function transaction(fn) {
   }
 }
 
-export const rel = (abs) => path.relative(ROOT, abs).split(path.sep).join('/')
+export const rel = (abs) => path.relative(ROOT, abs).split(path.sep).join('/')

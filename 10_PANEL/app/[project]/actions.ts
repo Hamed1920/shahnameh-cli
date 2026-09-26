@@ -10,6 +10,7 @@ import { Invalid, parseJsonArray, readUploads, type PendingUpload } from '@/lib/
 import { getCandidates, getLearnings, resolveRefToken } from '@/lib/store'
 import { revalidateProject } from '@/lib/revalidate'
 import type { Project } from '@/lib/projects'
+import { MACHINE } from '@/worker/lib/machine.mjs'
 import type { Candidate, Learning, ReviewDecision, Verdict } from '@/lib/types'
 
 /**
@@ -158,6 +159,8 @@ export async function decide(
     id,
     ts: new Date().toISOString(),
     reviewer: REVIEWER,
+    // The machine that decided: only its worker applies it (worker/lib/machine.mjs).
+    machine: MACHINE,
     candidate: candidatePath,
     jobId: candidate.sidecar.jobId,
     hfJobId: candidate.hfJobId,

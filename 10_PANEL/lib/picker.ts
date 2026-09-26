@@ -3,6 +3,7 @@ import { parseCsv } from './csv'
 import { listProjects, type Project } from './projects'
 import { getAssets, getEntities, getQueue, getWorkerConfig, getWorkerState, getWorkerStatus } from './store'
 import { spentInWindow } from '../worker/lib/spend.mjs'
+import { MACHINE } from '../worker/lib/machine.mjs'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
@@ -143,7 +144,8 @@ async function filmRow(pr: Project, hours: number): Promise<FilmRow> {
     held: waiting.filter((q) => heldIds.has(q.jobId)).length,
     running: worker.running,
     workerOff: worker.autostartOff ?? null,
-    windowSpend: spentInWindow(ledger, hours),
+    // This machine's account: another machine spends from its own.
+    windowSpend: spentInWindow(ledger, hours, Date.now(), MACHINE),
   }
 }
 

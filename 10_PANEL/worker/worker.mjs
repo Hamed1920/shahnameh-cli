@@ -27,6 +27,7 @@ import {
   readState, resolveRef, shotFolder, spentWithin, stateStartProblem, writeCsv, writeState,
 } from './lib/project.mjs'
 import { acquireFileLock, releaseFileLock } from './lib/locks.mjs'
+import { MACHINE, OLD_PANEL, ownerOf } from './lib/machine.mjs'
 import { cliProblem, cliReady, estimateCost, extractJobId, extractResultUrls, hfJson, paramsToArgs } from './lib/hf.mjs'
 import { FilingError, checkUploads, fileUpload, promote, reject } from './lib/promote.mjs'
 import { runIndexOps } from './lib/index-ops.mjs'
@@ -47,6 +48,8 @@ configureRequests(cfg)
 const LEDGER_HEADER = [
   'job_id', 'content_hash', 'author', 'type', 'target', 'resolved_target', 'variant',
   'engine', 'state', 'ingested', 'source_file', 'parent_job_id', 'hf_job_id', 'attempt', 'cost',
+  // Which machine spent it, on its own Higgsfield account: the ceiling counts only its own rows.
+  'machine',
 ]
 
 // ---------------------------------------------------------------- helpers
@@ -183,8 +186,19 @@ async function runQueue(state) {
 }
 
 async function drainQueue(state) {
-  const queue = await readJsonl(P.queue)
+  const all = await readJsonl(P.queue)
   const done = new Set(state.processedJobs)
+  // A job queued by an older panel, before jobs said which machine queued them, and
+  // never generated: no machine may take it, since two could. Recorded, not run.
+  for (const job of all.filter((q) => !done.has(q.jobId) && ownerOf(q) === 'old')) {
+    if (DRY) continue
+    recordFailure(state, job.jobId, OLD_PANEL)
+    state.processedJobs.push(job.jobId)
+    done.add(job.jobId)
+    await log(`SKIP ${job.jobId}: ${OLD_PANEL}`)
+  }
+  // Only this machine's jobs: another machine generates its own, on its own account.
+  const queue = all.filter((q) => ownerOf(q) === 'mine')
   // Holds for jobs that are no longer pending (processed, or gone) are stale.
   for (const id of Object.keys(state.held ?? {})) if (done.has(id) || !queue.some((q) => q.jobId === id)) unhold(state, id)
   // Reference-studio tries go first: Hamed is waiting on them in an open dialog.
@@ -283,7 +297,7 @@ async function drainQueue(state) {
       target: job.target ?? '', resolved_target: targetId, variant: job.variant ?? '', engine: 'higgsfield',
       state: ledgerState, ingested: new Date().toISOString(), source_file: 'queue',
       parent_job_id: job.parentJobId ?? '', hf_job_id: hfJobId ?? '', attempt: String(job.attempt ?? 1),
-      cost: String(credits ?? ''),
+      cost: String(credits ?? ''), machine: MACHINE,
     })
 
     if (res.code !== 0) {
@@ -370,7 +384,7 @@ async function drainQueue(state) {
       target: job.target ?? '', resolved_target: targetId, variant: job.variant ?? '', engine: 'higgsfield',
       state: 'GENERATED', ingested: new Date().toISOString(), source_file: 'queue',
       parent_job_id: job.parentJobId ?? '', hf_job_id: hfJobId,
-      attempt: String(job.attempt ?? 1), cost: String(credits ?? ''),
+      attempt: String(job.attempt ?? 1), cost: String(credits ?? ''), machine: MACHINE,
     })
 
     if (credits != null) state.spentCredits += credits
@@ -388,13 +402,42 @@ async function drainQueue(state) {
 async function runDecisions(state) {
   const decisions = await readJsonl(P.reviewLog)
   const seen = new Set(state.processedDecisions)
-  const fresh = decisions.filter((d) => !seen.has(d.id))
+  const unseen = decisions.filter((d) => !seen.has(d.id))
+  if (unseen.length === 0) return 0
+  // A decision belongs to the machine that generated the take (so the take is
+  // accepted or denied once, whichever machine it was decided on); a take from
+  // before jobs were tagged belongs to the machine that decided it.
+  const jobMachine = new Map((await readJsonl(P.queue)).map((q) => [q.jobId, q.machine]))
+  const ownerOfDecision = (d) => ownerOf(jobMachine.get(d.jobId) ? { machine: jobMachine.get(d.jobId) } : d)
+  // A decision from an older panel that nobody applied: never guessed at (two
+  // machines could both apply it). It fails the usual way, so the take goes back
+  // to Review with the reason, to be decided again.
+  for (const d of unseen.filter((x) => ownerOfDecision(x) === 'old')) {
+    if (DRY) continue
+    state.failedDecisions = { ...(state.failedDecisions ?? {}), [d.id]: OLD_PANEL }
+    state.processedDecisions.push(d.id)
+    await log(`SKIP decision ${d.id}: ${OLD_PANEL}`)
+  }
+  // Only this machine's decisions: another machine applies its own.
+  const fresh = unseen.filter((d) => ownerOfDecision(d) === 'mine')
   if (fresh.length === 0) return 0
+  // A take already decided (on another machine too, before the two synced): the
+  // first decision stands, a second one is recorded and left at that.
+  const failed = state.failedDecisions ?? {}
+  const decidedTakes = new Set(decisions.filter((d) => seen.has(d.id) && !failed[d.id]).map((d) => d.candidate))
 
   const entities = await loadEntities()
   let count = 0
 
   for (const d of fresh) {
+    if (decidedTakes.has(d.candidate)) {
+      if (!DRY) {
+        await log(`SKIP decision ${d.id}: ${d.candidate} was already decided; the first decision stands`)
+        state.processedDecisions.push(d.id)
+        count++
+      }
+      continue
+    }
     try {
       const batchDir = path.join(ROOT, path.dirname(d.candidate))
       let sidecar = null
@@ -454,6 +497,7 @@ async function runDecisions(state) {
         if (d.requeue) await enqueueRevision(d, sidecar, entities, refs, uploadTokens)
       }
       state.processedDecisions.push(d.id)
+      decidedTakes.add(d.candidate)
       count++
     } catch (e) {
       await log(`ERROR handling decision ${d.id}: ${e.message}`)
@@ -710,7 +754,7 @@ async function main() {
     await fs.rm(P.stopFlag, { force: true })
     // Nothing is in flight in a worker that has only just started.
     await fs.rm(P.workerNow, { force: true })
-    await log(`worker started (project=${PROJECT.slug} code=${PROJECT.code} once=${ONCE} dryRun=${DRY} root=${ROOT})`)
+    await log(`worker started (project=${PROJECT.slug} code=${PROJECT.code} machine=${MACHINE} once=${ONCE} dryRun=${DRY} root=${ROOT})`)
     state = await readState()
     // The model list, once a day. A failure keeps the old list; it never stops the worker.
     const cat = await ensureFreshCatalog({ log })

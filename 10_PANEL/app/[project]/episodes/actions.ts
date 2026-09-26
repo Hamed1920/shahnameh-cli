@@ -10,6 +10,7 @@ import { getEpisodes } from '@/lib/store'
 import { getAcceptedTakes } from '@/lib/episode-board'
 import { Invalid, readFootage } from '@/lib/uploads'
 import type { Project } from '@/lib/projects'
+import { MACHINE } from '@/worker/lib/machine.mjs'
 
 /**
  * Write side of the Episodes pages.
@@ -38,7 +39,8 @@ const newOpId = () => `op_${Date.now().toString(36)}${Math.random().toString(36)
 async function append(pr: Project, record: Record<string, unknown>): Promise<EpisodeResult> {
   try {
     await fs.mkdir(path.dirname(pr.P.indexOps), { recursive: true })
-    await fs.appendFile(pr.P.indexOps, JSON.stringify(record) + '\n', 'utf8')
+    // The machine that asked: only its worker applies it (worker/lib/machine.mjs).
+    await fs.appendFile(pr.P.indexOps, JSON.stringify({ ...record, machine: MACHINE }) + '\n', 'utf8')
   } catch (e) {
     return { ok: false, error: `Could not save the request: ${(e as Error).message}` }
   }

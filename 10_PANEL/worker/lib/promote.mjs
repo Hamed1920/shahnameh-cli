@@ -6,6 +6,7 @@ import {
 } from './project.mjs'
 import { FOLDER_FOR, entityId as fullEntityId } from './ids.mjs'
 import { transaction } from './tx.mjs'
+import { PULL_FIRST, remoteChangedIndex } from './git-guard.mjs'
 
 /**
  * Acting on a review verdict. The worker is the ONLY process that moves asset
@@ -66,6 +67,9 @@ async function promoteShot(decision, sidecar) {
 }
 
 export async function promote(decision, sidecar) {
+  // Never write the index on top of another machine's unpulled changes (git-guard.mjs).
+  // A plain Error: runDecisions leaves the decision for the next pass.
+  if (await remoteChangedIndex()) throw new Error(PULL_FIRST)
   if (isShotId(decision.target)) return promoteShot(decision, sidecar)
 
   const entities = await loadEntities()

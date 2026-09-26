@@ -53,6 +53,8 @@ export interface StudioSession {
   startedAt: string | null
   /** Pictures dropped into the session: `studio:<session>/uN` -> project-relative path. Filled by the store. */
   inputs?: Record<string, string>
+  /** This machine's worker for the project, added by the API route: it prices and generates the tries. */
+  worker?: { running: boolean; autostartOff?: string | null; paused?: boolean; stopRequested?: boolean }
 }
 
 interface Req { id: string; ts: string; type: string; sessionId?: string; genId?: string; [k: string]: unknown }
@@ -168,9 +170,18 @@ export function foldStudio(
   }
 }
 
-/** Sessions with requests and no close, newest first. */
+/**
+ * Sessions with requests and no close, newest first. A session is gone from the
+ * moment its close is asked for (Finish, or the × on its chip), not only once the
+ * worker has put its results away: the worker may be busy, or waiting for a try to
+ * finish first (studio.mjs retries the close). A close the worker refused brings it back.
+ */
 export function openSessionIds(requests: Req[], events: Ev[]): string[] {
-  const closed = new Set(events.filter((e) => e.event === 'studio.closed').map((e) => e.sessionId))
+  const refused = new Set(events.filter((e) => e.event === 'rejected').map((e) => e.reqId))
+  const closed = new Set([
+    ...events.filter((e) => e.event === 'studio.closed').map((e) => e.sessionId),
+    ...requests.filter((r) => r.type === 'studio.close' && !refused.has(r.id)).map((r) => r.sessionId),
+  ])
   const seen: string[] = []
   for (const r of [...requests].reverse()) {
     if (!r.type?.startsWith('studio.') || !r.sessionId || closed.has(r.sessionId) || seen.includes(r.sessionId)) continue
