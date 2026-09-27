@@ -157,6 +157,65 @@ test('a heading that does not open the document is still prompt text', () => {
   assert.equal(r.rows[0].prompt, 'A wide shot.\nP01 is the palace gate.')
 })
 
+const fencedPlan = (n: number, note: string[]) => [
+  ...note,
+  'BEGIN PROMPT',
+  `PLAN 0${n} | SHOTS 0${n}-0${n} | THE ROOM`,
+  'Create a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9.',
+  'CHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}',
+  ' ',
+  `SHOT 0${n} | 00:00-00:09 | THE ROOM HOLDS THEM`,
+  '35mm tableau.',
+  'END PROMPT',
+  ' ',
+]
+
+test('BEGIN PROMPT / END PROMPT fences: one row each, the notes around them never sent', () => {
+  const doc = [
+    ...fencedPlan(1, ['سکانس 1  |  نماهای 01 تا 02', PERSIAN]),
+    ...fencedPlan(2, ['پلان 02  پیوند و نزدیک شدن خطر', 'سکانس 1  |  نماهای 03 تا 05']),
+    ...fencedPlan(3, ['پلان 03  هجوم']),
+  ].join('\r\n')
+  const r = parsePromptDocument(doc)
+  assert.equal(r.split, 'fence')
+  assert.equal(r.preamble, null)
+  assert.deepEqual(r.warnings, [])
+  assert.equal(r.rows.length, 3)
+  assert.deepEqual(r.rows.map((x) => x.label), ['PLAN 01', 'PLAN 02', 'PLAN 03'])
+  for (const [i, row] of r.rows.entries()) {
+    assert.match(row.prompt, new RegExp(`^PLAN 0${i + 1} \\| SHOTS`))
+    assert.match(row.prompt, /35mm tableau\.$/)
+    assert.doesNotMatch(row.prompt, /[؀-ۿ]|END PROMPT|BEGIN PROMPT/)
+    assert.deepEqual(row.warnings, [])
+  }
+  assert.equal(r.rows[0].notes, `سکانس 1  |  نماهای 01 تا 02\n${PERSIAN}`)
+  assert.ok(r.rows[0].notes?.includes('‌'))
+  assert.match(r.rows[1].notes ?? '', /^پلان 02/)
+  assert.equal(r.splitOptions.find((o) => o.mode === 'fence')?.count, 3)
+  assert.equal(r.splitOptions.find((o) => o.mode === 'shot')?.count, 3)
+  assert.equal(parsePromptDocument(doc, { split: 'none' }).rows.length, 1)
+})
+
+test('one fenced prompt with an intro sends only the fenced text; metadata after BEGIN PROMPT is read', () => {
+  const r = parsePromptDocument(['Intro for the editor.', 'BEGIN PROMPT', 'target: SHM-EP001-SC001-SH0010', 'A slow wide shot.', 'END PROMPT'].join('\n'))
+  assert.equal(r.split, 'fence')
+  assert.equal(r.rows.length, 1)
+  assert.equal(r.rows[0].label, '#1')
+  assert.equal(r.rows[0].target, 'SHM-EP001-SC001-SH0010')
+  assert.equal(r.rows[0].prompt, 'A slow wide shot.')
+  assert.equal(r.rows[0].notes, 'Intro for the editor.')
+})
+
+test('an unclosed fence runs to the next BEGIN PROMPT; text after the last fence is reported', () => {
+  const r = parsePromptDocument(['BEGIN PROMPT', 'first', 'BEGIN PROMPT', 'second', 'END PROMPT', 'left over'].join('\n'))
+  assert.equal(r.rows.length, 2)
+  assert.equal(r.rows[0].prompt, 'first')
+  assert.deepEqual(r.rows[0].warnings, ['no END PROMPT'])
+  assert.equal(r.rows[1].prompt, 'second')
+  assert.deepEqual(r.rows[1].warnings, [])
+  assert.match(r.warnings[0], /after the last END PROMPT/)
+})
+
 test('a single SHOT heading never cuts a prompt', () => {
   const r = parsePromptDocument('SHOT 1 — CONVERGENCE\nRiders meet on the road.')
   assert.equal(r.split, 'none')

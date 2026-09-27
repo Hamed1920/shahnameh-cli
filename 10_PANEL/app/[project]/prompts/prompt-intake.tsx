@@ -64,6 +64,7 @@ interface Doc {
 
 const SPLIT_LABEL: Record<SplitMode, string> = {
   none: 'One prompt',
+  fence: 'BEGIN / END PROMPT blocks',
   block: 'P01 / PROMPT headings',
   shot: 'SHOT headings',
   numbered: 'Numbered items',
@@ -73,6 +74,7 @@ const SPLIT_LABEL: Record<SplitMode, string> = {
 /** The same cuts as they read inside a sentence: "It also has 5 SHOT headings". */
 const SPLIT_FOUND: Record<SplitMode, string> = {
   none: 'prompt',
+  fence: 'BEGIN / END PROMPT blocks',
   block: 'P01 / PROMPT headings',
   shot: 'SHOT headings',
   numbered: 'numbered items',

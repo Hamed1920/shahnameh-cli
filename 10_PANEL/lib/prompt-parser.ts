@@ -4,7 +4,9 @@
  * Three formats are recognised:
  *   - batch JSON, the array enqueue-batch.mjs has always taken
  *   - SHM-JOB blocks, as Claude Chat / Cowork write them (SYNC_PROTOCOL.md §4)
- *   - free text: one prompt, unless it has P01 / PROMPT 2 / BLOCK 3 headings.
+ *   - free text: one prompt, unless it has BEGIN PROMPT / END PROMPT fences
+ *     (one prompt per fence; the text around them is kept as that prompt's
+ *     notes, never sent) or P01 / PROMPT 2 / BLOCK 3 headings.
  *     SHOT headings, numbered items and blank lines are only offered as splits
  *     (`splitOptions`); a 15-second block written as SHOT 1..5 is one prompt.
  *
@@ -16,8 +18,8 @@
 
 export type ParsedFormat = 'batch-json' | 'shm-job' | 'text'
 
-/** How a free-text document was cut. `auto` means `block` when it has prompt headings, else `none`. */
-export type SplitMode = 'none' | 'block' | 'shot' | 'numbered' | 'blank'
+/** How a free-text document was cut. `auto` means `fence` when it has BEGIN PROMPT fences, else `block` when it has prompt headings, else `none`. */
+export type SplitMode = 'none' | 'fence' | 'block' | 'shot' | 'numbered' | 'blank'
 export interface SplitOption { mode: SplitMode; count: number }
 
 export interface ParsedRow {
@@ -57,6 +59,11 @@ const MENTION_RX = /@((?:CHR|GRP|LOC|PRP|CRT|COS|VEH|FX|REF)-\d{3}(?:\/V\d{2}(?:
 const BLOCK_HEADING_RX = /^\s*(?:#{1,6}\s*)?(?:P|PROMPT|BLOCK|پرامپت|بلاک)\s*[-–:.]?\s*[\d۰-۹]{1,3}(?![\d۰-۹A-Za-z])/i
 /** Shot-level markers. Never a split by default: an EP001 block has SHOT 1..3 inside it. */
 const SHOT_HEADING_RX = /^\s*(?:#{1,6}\s*)?(?:SHOT|SCENE|شات|صحنه)\s*[-–:.]?\s*[\d۰-۹]{1,3}(?![\d۰-۹A-Za-z])/i
+/** A fenced prompt: a line that is just BEGIN PROMPT, then one that is just END PROMPT. */
+const FENCE_OPEN_RX = /^\s*(?:#{1,6}\s*)?BEGIN\s+PROMPT\s*:?\s*$/i
+const FENCE_CLOSE_RX = /^\s*(?:#{1,6}\s*)?END\s+PROMPT\s*$/i
+/** A fenced prompt's first line names it when it reads like a heading: PLAN 01 | SHOTS 01-02 | ... */
+const FENCE_LABEL_RX = /^\s*(?:#{1,6}\s*)?(?:P|PLAN|PROMPT|BLOCK|پلان|پرامپت|بلاک)\s*[-–:.]?\s*[\d۰-۹]{1,3}(?![\d۰-۹A-Za-z])/i
 /** Numbered list items: "1." "2)" "۳." at the start of a line. */
 const NUMBERED_RX = /^\s*[\d۰-۹]{1,3}[.)]\s+\S/
 
@@ -207,7 +214,15 @@ export function parseShmJobs(text: string, file: string | null = null): ParseRes
 
 // ---------------------------------------------------------------- free text
 
-interface Block { label: string | null; body: string; line: number }
+interface Block { label: string | null; body: string; line: number; notes?: string | null; unclosed?: boolean }
+
+// "P02 — the hall" is a fine label; "PROMPT 01 / 15 SECONDS / HORIZONTAL" is not, so a long heading keeps only its marker.
+function labelOf(line: string, rx: RegExp): string {
+  const heading = line.replace(/^\s*#{1,6}\s*/, '').trim()
+  const full = latinDigits(heading.replace(/[\s:/–—-]+$/, ''))
+  const marker = latinDigits((heading.match(rx)?.[0] ?? full).replace(/^\s*#{1,6}\s*/, '').trim())
+  return full.length <= 24 ? full : marker
+}
 
 /**
  * Cut at every line the heading matches. Two headings make blocks; with
@@ -223,14 +238,35 @@ function splitByHeading(lines: string[], rx: RegExp, { single = false } = {}): {
   const preamble = lines.slice(0, starts[0]).join('\n').trim()
   const blocks: Block[] = starts.map((s, n) => {
     const end = n + 1 < starts.length ? starts[n + 1] : lines.length
-    const heading = lines[s].replace(/^\s*#{1,6}\s*/, '').trim()
-    // "P02 — the hall" is a fine label; "PROMPT 01 / 15 SECONDS / HORIZONTAL" is not, so a long heading keeps only its marker.
-    const full = latinDigits(heading.replace(/[\s:/–—-]+$/, ''))
-    const marker = latinDigits((heading.match(rx)?.[0] ?? full).replace(/^\s*#{1,6}\s*/, '').trim())
-    const label = full.length <= 24 ? full : marker
-    return { label, body: lines.slice(s + 1, end).join('\n'), line: s + 1 }
+    return { label: labelOf(lines[s], rx), body: lines.slice(s + 1, end).join('\n'), line: s + 1 }
   })
   return { blocks, preamble }
+}
+
+/**
+ * One block per BEGIN PROMPT ... END PROMPT. Only the text inside a fence is
+ * prompt; what stands before it (a Persian note on the plan, a sequence line)
+ * is that block's notes. A fence left open runs to the next BEGIN PROMPT or
+ * the end. `trailing` is whatever follows the last fence, which belongs to none.
+ */
+function splitByFence(lines: string[]): { blocks: Block[]; preamble: string; trailing: string } | null {
+  const blocks: Block[] = []
+  let outside: string[] = []
+  let i = 0
+  while (i < lines.length) {
+    if (!FENCE_OPEN_RX.test(lines[i])) { outside.push(lines[i]); i++; continue }
+    let end = i + 1
+    while (end < lines.length && !FENCE_CLOSE_RX.test(lines[end]) && !FENCE_OPEN_RX.test(lines[end])) end++
+    const closed = end < lines.length && FENCE_CLOSE_RX.test(lines[end])
+    const body = lines.slice(i + 1, end)
+    const first = body.find((l) => l.trim()) ?? ''
+    const label = FENCE_LABEL_RX.test(first) ? labelOf(first, FENCE_LABEL_RX) : `#${blocks.length + 1}`
+    blocks.push({ label, body: body.join('\n'), line: i + 1, notes: outside.join('\n').trim() || null, unclosed: !closed })
+    outside = []
+    i = closed ? end + 1 : end
+  }
+  if (blocks.length === 0) return null
+  return { blocks, preamble: '', trailing: outside.join('\n').trim() }
 }
 
 function splitByBlankLines(lines: string[], minBlank: number): Block[] | null {
@@ -280,10 +316,12 @@ export function splitTextBlocks(text: string, file: string | null = null, split:
   const lines = src.split('\n')
   const warnings: string[] = []
 
-  // Only prompt headings cut a document on their own. The rest are offered, never assumed:
+  // Only fences and prompt headings cut a document on their own. The rest are offered, never assumed:
   // SHOT 1..5 inside one 15-second block, or blank lines between its sections, are not five prompts.
   const byBlank = splitByBlankLines(lines, 2)
+  const fenced = splitByFence(lines)
   const cuts: Record<Exclude<SplitMode, 'none'>, { blocks: Block[]; preamble: string } | null> = {
+    fence: fenced,
     block: splitByHeading(lines, BLOCK_HEADING_RX, { single: true }),
     shot: splitByHeading(lines, SHOT_HEADING_RX),
     numbered: splitNumbered(lines),
@@ -294,14 +332,17 @@ export function splitTextBlocks(text: string, file: string | null = null, split:
   for (const [mode, cut] of Object.entries(cuts) as [Exclude<SplitMode, 'none'>, typeof cuts.block][]) {
     if (cut) splitOptions.push({ mode, count: cut.blocks.length })
   }
-  const wanted = split === 'auto' ? (cuts.block ? 'block' : 'none') : split
+  const wanted = split === 'auto' ? (cuts.fence ? 'fence' : cuts.block ? 'block' : 'none') : split
   const cut = wanted === 'none' ? null : cuts[wanted]
   const used: SplitMode = cut ? wanted : 'none'
   const { blocks, preamble } = cut ?? { blocks: whole, preamble: '' }
+  if (used === 'fence' && fenced?.trailing) warnings.push('Text after the last END PROMPT was not used.')
 
   const rows: ParsedRow[] = blocks.map((b) => {
     const row = emptyRow(file, b.line)
     row.label = b.label
+    row.notes = b.notes ?? null
+    if (b.unclosed) row.warnings.push('no END PROMPT')
     // Leading `key: value` lines are metadata, not prompt text. Blank lines before
     // them (a heading followed by an empty line or two) do not end the metadata.
     const bodyLines = b.body.split('\n')
