@@ -1,0 +1,113 @@
+{
+  "jobId": "J-20260927-TBG",
+  "parentJobId": null,
+  "hfJobId": "3ffdbb35-ba5f-4a34-a089-4107304381ab",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 05",
+  "target": "SHM-EP014-SC005-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP014-JAMSHID-GIRLS/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 05 | SHOTS 12-13 | THE CORRIDOR\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 2 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_GUARD_A = {{CHAR_GUARD_A}}\nCHAR_GUARD_B = {{CHAR_GUARD_B}}\nCHAR_GUARD_C = {{CHAR_GUARD_C}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_TRANSFER_CORRIDOR = {{LOC_TRANSFER_CORRIDOR}}\nSTART STATE AND BLOCKING\nSTATE_TRANSFER. Five adults and one cat. A leads Shahrnaz by her left upper sleeve, leaving both forearms supporting the cat. B holds Arnavaz’s right upper arm; C holds her left upper arm. Travel is left-to-right toward the hall. The private room is behind them.\n\nSHOT 12 | 00:00-00:08 | THE GROUP IN TRANSIT\n28mm shoulder-height handheld camera retreats in the existing corridor ahead of the group. A and Shahrnaz lead; B and C bring Arnavaz behind. Shahrnaz’s small uneven steps contrast with Arnavaz planting her heels. Keep the cat visible through at least two clear gaps between bodies.\nSHOT 13 | 00:08-00:15 | A SMALL OPENING\nCut to 40mm from the same side of the travel axis. Arnavaz reaches toward Shahrnaz as C briefly adjusts his left-arm grip. She slips that arm free, pivots toward the nearest wall recess and braces one foot. B keeps her right upper arm. A halts Shahrnaz ahead. End on Arnavaz’s resisted pivot, with her head clear of the wall.\nLIGHT AND IMAGE\nHarder localized corridor light alternates with shadow as the group crosses existing openings. Preserve the same wardrobe, masks and wall geometry.\nSOUND\nBoots, dragging soles, garment tension, uneven breathing, short enclosed echoes. Shahrnaz’s voice remains silent; distress is bodily.\nEND STATE AND EDIT\nArnavaz frees her left arm as C adjusts his grip and turns sideways in a brief escape attempt. B retains her right arm. Shahrnaz and A stop one meter ahead; the cat remains in Shahrnaz’s arms.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_2>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_3>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_5>>> is Jamshid Daughters Passage (LOC-021 V01); match it wherever Jamshid Daughters Passage appears.",
+  "basePrompt": "PLAN 05 | SHOTS 12-13 | THE CORRIDOR\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 2 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_GUARD_A = {{CHAR_GUARD_A}}\nCHAR_GUARD_B = {{CHAR_GUARD_B}}\nCHAR_GUARD_C = {{CHAR_GUARD_C}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_TRANSFER_CORRIDOR = {{LOC_TRANSFER_CORRIDOR}}\nSTART STATE AND BLOCKING\nSTATE_TRANSFER. Five adults and one cat. A leads Shahrnaz by her left upper sleeve, leaving both forearms supporting the cat. B holds Arnavaz’s right upper arm; C holds her left upper arm. Travel is left-to-right toward the hall. The private room is behind them.\n\nSHOT 12 | 00:00-00:08 | THE GROUP IN TRANSIT\n28mm shoulder-height handheld camera retreats in the existing corridor ahead of the group. A and Shahrnaz lead; B and C bring Arnavaz behind. Shahrnaz’s small uneven steps contrast with Arnavaz planting her heels. Keep the cat visible through at least two clear gaps between bodies.\nSHOT 13 | 00:08-00:15 | A SMALL OPENING\nCut to 40mm from the same side of the travel axis. Arnavaz reaches toward Shahrnaz as C briefly adjusts his left-arm grip. She slips that arm free, pivots toward the nearest wall recess and braces one foot. B keeps her right upper arm. A halts Shahrnaz ahead. End on Arnavaz’s resisted pivot, with her head clear of the wall.\nLIGHT AND IMAGE\nHarder localized corridor light alternates with shadow as the group crosses existing openings. Preserve the same wardrobe, masks and wall geometry.\nSOUND\nBoots, dragging soles, garment tension, uneven breathing, short enclosed echoes. Shahrnaz’s voice remains silent; distress is bodily.\nEND STATE AND EDIT\nArnavaz frees her left arm as C adjusts his grip and turns sideways in a brief escape attempt. B retains her right arm. Shahrnaz and A stop one meter ahead; the cat remains in Shahrnaz’s arms.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-004/V01",
+    "@CHR-005/V01",
+    "@GRP-005/V01",
+    "@CRT-004/V01",
+    "@LOC-021/V01"
+  ],
+  "createdAt": "2026-09-27T17:26:14.833Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260927_171049_3ffdbb35-ba5f-4a34-a089-4107304381ab.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-27T17:10:49.876535Z",
+      "display_name": "Seedance 2.5",
+      "id": "3ffdbb35-ba5f-4a34-a089-4107304381ab",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "6ccfc49a-c227-4ec1-a053-e0927cf92c3e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/6ccfc49a-c227-4ec1-a053-e0927cf92c3e.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "9c3ca7ec-acc6-4d41-9e59-20853884d290",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/9c3ca7ec-acc6-4d41-9e59-20853884d290.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "4c792638-923e-46b9-895c-abe156a37b31",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/4c792638-923e-46b9-895c-abe156a37b31.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "b853fd1c-9057-4bda-8a67-1ca74a06dfb4",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/b853fd1c-9057-4bda-8a67-1ca74a06dfb4.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "79f2033c-8cf8-41ba-815a-952bdebf78f6",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/79f2033c-8cf8-41ba-815a-952bdebf78f6.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 05 | SHOTS 12-13 | THE CORRIDOR\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 2 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_GUARD_A = {{CHAR_GUARD_A}}\nCHAR_GUARD_B = {{CHAR_GUARD_B}}\nCHAR_GUARD_C = {{CHAR_GUARD_C}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_TRANSFER_CORRIDOR = {{LOC_TRANSFER_CORRIDOR}}\nSTART STATE AND BLOCKING\nSTATE_TRANSFER. Five adults and one cat. A leads Shahrnaz by her left upper sleeve, leaving both forearms supporting the cat. B holds Arnavaz’s right upper arm; C holds her left upper arm. Travel is left-to-right toward the hall. The private room is behind them.\n\nSHOT 12 | 00:00-00:08 | THE GROUP IN TRANSIT\n28mm shoulder-height handheld camera retreats in the existing corridor ahead of the group. A and Shahrnaz lead; B and C bring Arnavaz behind. Shahrnaz’s small uneven steps contrast with Arnavaz planting her heels. Keep the cat visible through at least two clear gaps between bodies.\nSHOT 13 | 00:08-00:15 | A SMALL OPENING\nCut to 40mm from the same side of the travel axis. Arnavaz reaches toward Shahrnaz as C briefly adjusts his left-arm grip. She slips that arm free, pivots toward the nearest wall recess and braces one foot. B keeps her right upper arm. A halts Shahrnaz ahead. End on Arnavaz’s resisted pivot, with her head clear of the wall.\nLIGHT AND IMAGE\nHarder localized corridor light alternates with shadow as the group crosses existing openings. Preserve the same wardrobe, masks and wall geometry.\nSOUND\nBoots, dragging soles, garment tension, uneven breathing, short enclosed echoes. Shahrnaz’s voice remains silent; distress is bodily.\nEND STATE AND EDIT\nArnavaz frees her left arm as C adjusts his grip and turns sideways in a brief escape attempt. B retains her right arm. Shahrnaz and A stop one meter ahead; the cat remains in Shahrnaz’s arms.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_2>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_3>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_5>>> is Jamshid Daughters Passage (LOC-021 V01); match it wherever Jamshid Daughters Passage appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260927_171049_3ffdbb35-ba5f-4a34-a089-4107304381ab.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260927_171049_3ffdbb35-ba5f-4a34-a089-4107304381ab_thumbnail.webp"
+    }
+  ]
+}

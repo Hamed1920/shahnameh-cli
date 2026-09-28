@@ -1,0 +1,140 @@
+{
+  "jobId": "J-20260927-4ZX",
+  "parentJobId": null,
+  "hfJobId": "9c52c334-1b2c-4ebc-b9bc-c844349225f8",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 04",
+  "target": "SHM-EP014-SC004-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP014-JAMSHID-GIRLS/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 04 | SHOTS 09-11 | THE CAPTURE\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 3 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_MUSICIAN = {{CHAR_MUSICIAN}}\nCHAR_GUARD_A = {{CHAR_GUARD_A}}\nCHAR_GUARD_B = {{CHAR_GUARD_B}}\nCHAR_GUARD_C = {{CHAR_GUARD_C}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_PRIVATE_ROOM = {{LOC_PRIVATE_ROOM}}\nPROP REFERENCES\nPROP_INSTRUMENT_BROKEN = {{PROP_INSTRUMENT_BROKEN}}\nSTART STATE AND BLOCKING\nSTATE_CAPTURE. The door is open. Shahrnaz stands left, cat supported by both forearms against her chest. Arnavaz stands nearer the doorway on the right. A takes Shahrnaz’s left upper sleeve; B takes Arnavaz’s right forearm; C approaches her left side. The musician and broken instrument remain by the wall.\n\nSHOT 09 | 00:00-00:05 | SHAHRNAZ CLOSES INWARD\n40mm tight handheld medium shot. A grips Shahrnaz by the fabric of her left upper arm. She takes one backward step and turns her torso to shield the cat, both forearms still supporting it. Her shoulders lock and her head drops; A pulls her toward the exit.\nSHOT 10 | 00:05-00:11 | ARNAVAZ PUSHES BACK\nCut to 28mm hip-height beside Arnavaz. She braces both feet and pushes B’s chest away with her left palm while he holds her right forearm. C reaches her left upper arm from behind. The camera shifts with her attempt to turn toward Shahrnaz, retaining all three bodies in readable overlap.\nSHOT 11 | 00:11-00:15 | THE JAMB\nCut to 50mm at the open doorway. A and Shahrnaz pass first, cat visible against her chest. Arnavaz briefly hooks her left fingers around the jamb; C peels that hand away while B draws her forward. Cut on the hand releasing stone. The musician and broken instrument stay inside.\nLIGHT AND IMAGE\nPreserve warm window light and the narrow cold doorway spill. Focus follows grasping hands and body weight rather than facial expressions.\nSOUND\nSleeves under tension, scraping soles, short breaths, palm against stone, the cat’s quiet breathing. The sound remains close and dry.\nEND STATE AND EDIT\nA escorts Shahrnaz through the doorway first; she still supports the living cat. B and C control Arnavaz’s upper arms behind them. Her left hand has just lost contact with the door jamb.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_2>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_3>>> is Musician (CHR-006 V01); match it wherever Musician appears.\n<<<image_4>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_5>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_6>>> is Jamshid Daughters Chamber (LOC-020 V01); match it wherever Jamshid Daughters Chamber appears.\n<<<image_7>>> is Instrument Saz (PRP-018 V01); match it wherever Instrument Saz appears.\n<<<image_8>>> is Dagger Horse Head (PRP-019 V01); match it wherever Dagger Horse Head appears.",
+  "basePrompt": "PLAN 04 | SHOTS 09-11 | THE CAPTURE\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 3 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_MUSICIAN = {{CHAR_MUSICIAN}}\nCHAR_GUARD_A = {{CHAR_GUARD_A}}\nCHAR_GUARD_B = {{CHAR_GUARD_B}}\nCHAR_GUARD_C = {{CHAR_GUARD_C}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_PRIVATE_ROOM = {{LOC_PRIVATE_ROOM}}\nPROP REFERENCES\nPROP_INSTRUMENT_BROKEN = {{PROP_INSTRUMENT_BROKEN}}\nSTART STATE AND BLOCKING\nSTATE_CAPTURE. The door is open. Shahrnaz stands left, cat supported by both forearms against her chest. Arnavaz stands nearer the doorway on the right. A takes Shahrnaz’s left upper sleeve; B takes Arnavaz’s right forearm; C approaches her left side. The musician and broken instrument remain by the wall.\n\nSHOT 09 | 00:00-00:05 | SHAHRNAZ CLOSES INWARD\n40mm tight handheld medium shot. A grips Shahrnaz by the fabric of her left upper arm. She takes one backward step and turns her torso to shield the cat, both forearms still supporting it. Her shoulders lock and her head drops; A pulls her toward the exit.\nSHOT 10 | 00:05-00:11 | ARNAVAZ PUSHES BACK\nCut to 28mm hip-height beside Arnavaz. She braces both feet and pushes B’s chest away with her left palm while he holds her right forearm. C reaches her left upper arm from behind. The camera shifts with her attempt to turn toward Shahrnaz, retaining all three bodies in readable overlap.\nSHOT 11 | 00:11-00:15 | THE JAMB\nCut to 50mm at the open doorway. A and Shahrnaz pass first, cat visible against her chest. Arnavaz briefly hooks her left fingers around the jamb; C peels that hand away while B draws her forward. Cut on the hand releasing stone. The musician and broken instrument stay inside.\nLIGHT AND IMAGE\nPreserve warm window light and the narrow cold doorway spill. Focus follows grasping hands and body weight rather than facial expressions.\nSOUND\nSleeves under tension, scraping soles, short breaths, palm against stone, the cat’s quiet breathing. The sound remains close and dry.\nEND STATE AND EDIT\nA escorts Shahrnaz through the doorway first; she still supports the living cat. B and C control Arnavaz’s upper arms behind them. Her left hand has just lost contact with the door jamb.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-004/V01",
+    "@CHR-005/V01",
+    "@CHR-006",
+    "@GRP-005/V01",
+    "@CRT-004/V01",
+    "@LOC-020/V01",
+    "@PRP-018/V01",
+    "@PRP-019/V01"
+  ],
+  "createdAt": "2026-09-27T17:10:19.888Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260927_165511_9c52c334-1b2c-4ebc-b9bc-c844349225f8.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-27T16:55:11.87686Z",
+      "display_name": "Seedance 2.5",
+      "id": "9c52c334-1b2c-4ebc-b9bc-c844349225f8",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "df1ca1ec-2d2e-47a9-9994-8c264efd7a4e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/df1ca1ec-2d2e-47a9-9994-8c264efd7a4e.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "059de0c3-f00e-4f57-aea8-733ff364e785",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/059de0c3-f00e-4f57-aea8-733ff364e785.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "cd162d92-7db9-432f-8620-b86ea80dcf34",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/cd162d92-7db9-432f-8620-b86ea80dcf34.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "6527bfad-d03c-4915-9b80-3abdfaf22f6d",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/6527bfad-d03c-4915-9b80-3abdfaf22f6d.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "fc823dc5-2996-40ab-9c30-6ef57ab97ffc",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/fc823dc5-2996-40ab-9c30-6ef57ab97ffc.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "4c719060-1799-45e1-928d-3f189ccac89b",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/4c719060-1799-45e1-928d-3f189ccac89b.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "4796640b-c613-43aa-9f6b-f4d63a8d77a8",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/4796640b-c613-43aa-9f6b-f4d63a8d77a8.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "765fb936-7c37-4fc1-8837-d0d9c3a047eb",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/765fb936-7c37-4fc1-8837-d0d9c3a047eb.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 04 | SHOTS 09-11 | THE CAPTURE\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 3 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_MUSICIAN = {{CHAR_MUSICIAN}}\nCHAR_GUARD_A = {{CHAR_GUARD_A}}\nCHAR_GUARD_B = {{CHAR_GUARD_B}}\nCHAR_GUARD_C = {{CHAR_GUARD_C}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_PRIVATE_ROOM = {{LOC_PRIVATE_ROOM}}\nPROP REFERENCES\nPROP_INSTRUMENT_BROKEN = {{PROP_INSTRUMENT_BROKEN}}\nSTART STATE AND BLOCKING\nSTATE_CAPTURE. The door is open. Shahrnaz stands left, cat supported by both forearms against her chest. Arnavaz stands nearer the doorway on the right. A takes Shahrnaz’s left upper sleeve; B takes Arnavaz’s right forearm; C approaches her left side. The musician and broken instrument remain by the wall.\n\nSHOT 09 | 00:00-00:05 | SHAHRNAZ CLOSES INWARD\n40mm tight handheld medium shot. A grips Shahrnaz by the fabric of her left upper arm. She takes one backward step and turns her torso to shield the cat, both forearms still supporting it. Her shoulders lock and her head drops; A pulls her toward the exit.\nSHOT 10 | 00:05-00:11 | ARNAVAZ PUSHES BACK\nCut to 28mm hip-height beside Arnavaz. She braces both feet and pushes B’s chest away with her left palm while he holds her right forearm. C reaches her left upper arm from behind. The camera shifts with her attempt to turn toward Shahrnaz, retaining all three bodies in readable overlap.\nSHOT 11 | 00:11-00:15 | THE JAMB\nCut to 50mm at the open doorway. A and Shahrnaz pass first, cat visible against her chest. Arnavaz briefly hooks her left fingers around the jamb; C peels that hand away while B draws her forward. Cut on the hand releasing stone. The musician and broken instrument stay inside.\nLIGHT AND IMAGE\nPreserve warm window light and the narrow cold doorway spill. Focus follows grasping hands and body weight rather than facial expressions.\nSOUND\nSleeves under tension, scraping soles, short breaths, palm against stone, the cat’s quiet breathing. The sound remains close and dry.\nEND STATE AND EDIT\nA escorts Shahrnaz through the doorway first; she still supports the living cat. B and C control Arnavaz’s upper arms behind them. Her left hand has just lost contact with the door jamb.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_2>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_3>>> is Musician (CHR-006 V01); match it wherever Musician appears.\n<<<image_4>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_5>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_6>>> is Jamshid Daughters Chamber (LOC-020 V01); match it wherever Jamshid Daughters Chamber appears.\n<<<image_7>>> is Instrument Saz (PRP-018 V01); match it wherever Instrument Saz appears.\n<<<image_8>>> is Dagger Horse Head (PRP-019 V01); match it wherever Dagger Horse Head appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260927_165511_9c52c334-1b2c-4ebc-b9bc-c844349225f8.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260927_165511_9c52c334-1b2c-4ebc-b9bc-c844349225f8_thumbnail.webp"
+    }
+  ]
+}

@@ -33,6 +33,7 @@ import { latestEpisode, previewScenes } from '@/lib/scenes'
 import { cn } from '@/lib/cn'
 import { DOCUMENT_ACCEPT, MAX_DOCUMENTS, TEXT_EXT } from '@/lib/document-types'
 import { parsePromptDocument, type ParseResult, type SplitMode, type SplitOption } from '@/lib/prompt-parser'
+import { clearDraft, loadDraft, pruneDraftFiles, saveDraft, saveDraftFile } from '@/lib/prompt-draft'
 import type { BatchDefaults, CatalogEntity } from '@/lib/types'
 
 export interface IntakeConfig extends RowConfig {
@@ -139,6 +140,55 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
     const m = files.current
     return () => m.forEach((f) => URL.revokeObjectURL(f.preview))
   }, [])
+
+  /**
+   * Unsent work survives leaving the page (lib/prompt-draft.ts): it comes back
+   * here, and is kept until Clear all or a successful send. Nothing is saved
+   * until the old draft has been read, so an empty first render cannot erase it.
+   */
+  const [restored, setRestored] = useState(false)
+  useEffect(() => {
+    let live = true
+    loadDraft<DraftRow, Doc, BatchDefaults>(project.slug).then((saved) => {
+      if (!live) return
+      if (saved) {
+        const { draft } = saved
+        for (const [id, file] of saved.files) files.current.set(id, { file, preview: URL.createObjectURL(file) })
+        // Keys made from now on must not collide with the restored ones.
+        const nums = [...draft.rows.map((r) => r.key), ...draft.docs.map((d) => d.id)].map((k) => Number(k.slice(1)) || 0)
+        seq = Math.max(seq, ...nums)
+        uploadSeq.current = Math.max(0, ...[...saved.files.keys()].map((k) => Number(k.slice(1)) || 0))
+        // A row whose picture did not survive (storage cleared) drops the reference, not the row.
+        const rowsBack = draft.rows.map((r) => {
+          const lost = r.uploads.filter((u) => !saved.files.has(u.id))
+          if (lost.length === 0) return r
+          let left: SlotsChange = { slots: r.slots, loose: r.loose }
+          for (const u of lost) left = removeToken(left.slots, left.loose, `upload:${u.id}`)
+          return { ...r, ...left, refs: refsOf(left.slots, left.loose), uploads: r.uploads.filter((u) => saved.files.has(u.id)) }
+        })
+        setText(draft.text)
+        setDocs(draft.docs)
+        setRows(rowsBack)
+        setDefaults(draft.defaults)
+        setEpisode(draft.episode)
+        setName(draft.name)
+        setPrepend(draft.prepend)
+        if (rowsBack.length) setDone(`Your ${rowsBack.length} unsent prompt${rowsBack.length === 1 ? ' is' : 's are'} back, as you left ${rowsBack.length === 1 ? 'it' : 'them'}. Clear all starts over.`)
+      }
+      setRestored(true)
+    })
+    return () => { live = false }
+  }, [project.slug])
+
+  useEffect(() => {
+    if (!restored) return
+    const t = setTimeout(() => {
+      if (rows.length === 0 && docs.length === 0 && !text.trim() && !name.trim()) { void clearDraft(project.slug); return }
+      void saveDraft(project.slug, { v: 1, text, docs, rows, defaults, episode, name, prepend })
+      void pruneDraftFiles(project.slug, new Set(rows.flatMap((r) => r.uploads.map((u) => u.id))))
+    }, 400)
+    return () => clearTimeout(t)
+  }, [restored, project.slug, text, docs, rows, defaults, episode, name, prepend])
 
   /** Read the prompt again and fold what it names into the row's slots (lib/asset-detect.ts). */
   const detect = useCallback(
@@ -298,6 +348,7 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
     const fresh: RowUpload[] = images.map((file) => {
       const id = `u${++uploadSeq.current}`
       files.current.set(id, { file, preview: URL.createObjectURL(file) })
+      void saveDraftFile(project.slug, id, file)
       return {
         id,
         originalName: file.name,
@@ -379,7 +430,7 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
     ),
     [rows, knownShots, cfg.code],
   )
-  const clearAll = () => { setRows([]); setDocs([]); setServerErrors({}); setError(null) }
+  const clearAll = () => { setRows([]); setDocs([]); setServerErrors({}); setError(null); setDone(null); void clearDraft(project.slug) }
 
   const ready = rows.filter((r) => !problems.has(r.key)).length
   const bad = rows.length - ready

@@ -82,7 +82,8 @@ Run `/project-log` at the start of a session, or read directly:
 - **Never auto-create a missing target entity** to make a job succeed. Reject and ask.
 - **The validator must pass** before you finish any session that touched files or registries.
 - Anything you can't classify goes in the project's `99_INBOX/`, never a project root and never
-  the repo root.
+  the repo root. Loose files Hamed drops in the repo root are an intake, not a home — see
+  **Files dropped in the root** below.
 - **The worker is the only process that moves asset files or edits the CSV registries.** The
   panel appends to JSONL, plus two exceptions. First, it drops raw reviewer uploads into
   `09_OUTPUT/_uploads/<id>/` — a Review decision, a References add, or a Regenerate request —
@@ -105,6 +106,12 @@ Run `/project-log` at the start of a session, or read directly:
   `.gitignore`'s allowlist (`10_PANEL/lib/scaffold.ts`). Creating empty registries is not writing
   to them — a project with no folder has no worker yet — and the panel never edits an existing
   registry. Don't add a third writer.
+- **Claude may append an index-op request, exactly as the panel does.** Writing an `add` record to
+  `00_PROJECT/review/INDEX_OPS.jsonl` with the images staged under `09_OUTPUT/_uploads/<op-id>/`
+  is requesting, not writing: the worker still allocates every number, names every file and writes
+  every registry row. That is the sanctioned way to file something without Hamed clicking through
+  the References dialog. Never hand-edit a CSV registry or move a filed asset to achieve the same
+  thing.
 - **Nothing is deleted from the index.** Retiring keeps an entity's number and files. Archiving a
   look moves it to `09_OUTPUT/_archive/` with its registry row saved, so it can be restored.
   Renaming changes the ID wording and the files, never the number.
@@ -148,6 +155,27 @@ Run `/project-log` at the start of a session, or read directly:
   the queue, review log, job requests or index ops have history — starting would replay them and
   spend again, so restore the state files from git first. It also refuses if `SHM_HIGGSFIELD_JS` names a file that
   does not exist, rather than falling back to the real CLI.
+
+## Files dropped in the root
+
+Hamed drops images in the repo root. That is the intake, and it is the whole ask: **categorize
+them, file them into the right project, and have them show up on the References page.** Don't
+leave them in the root, don't park them in `99_INBOX/` and call it done, and don't hand back a
+list of what he should click.
+
+1. **Which project?** Ask if the pictures don't say. One session's drop never spans two projects.
+2. **Look at every image** before naming it. The filename is a guess; the picture is the fact.
+3. **Decide kind, name, role and descriptor** per `docs/INDEXING.md`. Family word first in a
+   slug when the thing will have siblings (`STUDIO-CONTROL-ROOM`, `STUDIO-VOCAL-BOOTH`).
+4. **Ask about anything that would burn a number.** Two entities or one with two looks? PRP or
+   FX? A wrong guess is permanent — numbers are never reused — and one question costs nothing.
+5. **File it through the worker.** Move the images to `09_OUTPUT/_uploads/<op-id>/` as `u1`, `u2`
+   …, append one `add` op to that project's `00_PROJECT/review/INDEX_OPS.jsonl`
+   (`{id, ts, reviewer, type:"add", uploads:[…]}`, each upload
+   `{id, file, originalName, mode:"new"|"variant", kind, name, description, role, descriptor}`),
+   and let the running worker apply it. `worker/lib/promote.mjs` `checkUploads` is the contract.
+6. **Confirm it landed**: `INDEX_OPS_RESULTS.jsonl` says `ok`, and the IDs are on the References
+   page. Report the IDs, not the effort.
 
 ## Tools
 

@@ -85,6 +85,7 @@ test('CLI failures read as something a person can act on', () => {
   assert.match(cliProblem('Error: No workspace selected.'), /workspace set/)
   assert.match(cliProblem(CLI_MISSING), /npm i -g @higgsfield\/cli/)
   assert.match(cliProblem('Error: 401 Unauthorized'), /auth login/)
+  assert.match(cliProblem('Error: Not authenticated.'), /auth login/)
   assert.equal(cliProblem('Error: model foo does not exist\nmore'), 'Error: model foo does not exist')
 })
 

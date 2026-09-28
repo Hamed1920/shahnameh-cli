@@ -1,10 +1,13 @@
 {
   "processedJobs": [],
   "processedDecisions": [],
-  "processedOps": [],
+  "spentCredits": 0,
+  "processedOps": [
+    "op_mufsx7myji68"
+  ],
   "processedRequests": [],
   "failedDecisions": {},
   "held": {},
   "learnWatermark": "",
-  "spentCredits": 0
+  "updatedAt": "2026-09-24T17:24:12.335Z"
 }

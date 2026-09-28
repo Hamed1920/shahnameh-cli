@@ -1,0 +1,122 @@
+{
+  "jobId": "J-20260927-WNH",
+  "parentJobId": "J-20260927-DOK",
+  "hfJobId": "c7824692-d3ca-4909-8de4-45f780a6ad96",
+  "attempt": 1,
+  "stage": "final",
+  "label": "PLAN 06",
+  "target": "SHM-EP014-SC006-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP014-JAMSHID-GIRLS/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 06 | SHOTS 14-17 | RESISTANCE IS BROKEN\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 4 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_GUARD_A = {{CHAR_GUARD_A}}\nCHAR_GUARD_B = {{CHAR_GUARD_B}}\nCHAR_GUARD_C = {{CHAR_GUARD_C}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_TRANSFER_CORRIDOR = {{LOC_TRANSFER_CORRIDOR}}\nSTART STATE AND BLOCKING\nSTATE_RESISTANCE_TO_INJURED. Continue the pivot: B holds Arnavaz’s right upper arm; C stands at her left rear. A and Shahrnaz wait one meter ahead. Shahrnaz cradles the cat. All characters are adults. Violence is brief, non-graphic and seen through bodies and cloth.\n\nSHOT 14 | 00:00-00:04 | THE WALL\n35mm side medium, camera at chest height. B redirects Arnavaz’s pivot; her left shoulder and upper back strike the wall. Her knees buckle and she slides onto her right hip. The camera dips with her fall, keeping her head clear of contact.\nSHOT 15 | 00:04-00:07 | TWO IMPACTS\nCut to a 50mm low oblique view partly screened by B’s stationary leg. C delivers exactly two short kicks toward Arnavaz’s clothed outer thigh and flank. Her body folds protectively; the contact area is largely occluded. The two impacts occupy this brief shot only.\nSHOT 16 | 00:07-00:10 | SHAHRNAZ WITNESSES\n65mm close medium on Shahrnaz ahead. She turns toward Arnavaz; her forearms tighten around the supported cat, then her body freezes. A holds her upper sleeve. Keep the cat unharmed and breathing.\nSHOT 17 | 00:10-00:15 | FORCED UPRIGHT\n35mm same corridor side. B and C lift Arnavaz by her upper arms. Her feet search for purchase before she bears weight; her left shoulder remains low. They move her toward frame-right as A and Shahrnaz resume ahead. Cut on the first dragging step.\nLIGHT AND IMAGE\nOne established corridor practical rakes the wall. Keep skin and clothing intact; reveal force through body displacement, breath and fabric compression.\nSOUND\nShoulder-to-wall thud, cloth sliding down stone, two brief muffled impacts, Arnavaz’s expelled breath and boots resuming. Keep impact sound restrained and physical.\nEND STATE AND EDIT\nB and C support Arnavaz upright by both upper arms; her left shoulder stays lowered and knees unsteady. Her left sleeve and skirt hem carry fresh stone dust. A resumes leading Shahrnaz toward the hall; the cat is alive and held securely.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_2>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_3>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_5>>> is Stair Transition Passage (LOC-022 V01); match it wherever Stair Transition Passage appears.\n<<<image_6>>> is Dagger Horse Head (PRP-019 V02); match it wherever Dagger Horse Head appears.",
+  "basePrompt": "PLAN 06 | SHOTS 14-17 | RESISTANCE IS BROKEN\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 4 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_GUARD_A = {{CHAR_GUARD_A}}\nCHAR_GUARD_B = {{CHAR_GUARD_B}}\nCHAR_GUARD_C = {{CHAR_GUARD_C}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_TRANSFER_CORRIDOR = {{LOC_TRANSFER_CORRIDOR}}\nSTART STATE AND BLOCKING\nSTATE_RESISTANCE_TO_INJURED. Continue the pivot: B holds Arnavaz’s right upper arm; C stands at her left rear. A and Shahrnaz wait one meter ahead. Shahrnaz cradles the cat. All characters are adults. Violence is brief, non-graphic and seen through bodies and cloth.\n\nSHOT 14 | 00:00-00:04 | THE WALL\n35mm side medium, camera at chest height. B redirects Arnavaz’s pivot; her left shoulder and upper back strike the wall. Her knees buckle and she slides onto her right hip. The camera dips with her fall, keeping her head clear of contact.\nSHOT 15 | 00:04-00:07 | TWO IMPACTS\nCut to a 50mm low oblique view partly screened by B’s stationary leg. C delivers exactly two short kicks toward Arnavaz’s clothed outer thigh and flank. Her body folds protectively; the contact area is largely occluded. The two impacts occupy this brief shot only.\nSHOT 16 | 00:07-00:10 | SHAHRNAZ WITNESSES\n65mm close medium on Shahrnaz ahead. She turns toward Arnavaz; her forearms tighten around the supported cat, then her body freezes. A holds her upper sleeve. Keep the cat unharmed and breathing.\nSHOT 17 | 00:10-00:15 | FORCED UPRIGHT\n35mm same corridor side. B and C lift Arnavaz by her upper arms. Her feet search for purchase before she bears weight; her left shoulder remains low. They move her toward frame-right as A and Shahrnaz resume ahead. Cut on the first dragging step.\nLIGHT AND IMAGE\nOne established corridor practical rakes the wall. Keep skin and clothing intact; reveal force through body displacement, breath and fabric compression.\nSOUND\nShoulder-to-wall thud, cloth sliding down stone, two brief muffled impacts, Arnavaz’s expelled breath and boots resuming. Keep impact sound restrained and physical.\nEND STATE AND EDIT\nB and C support Arnavaz upright by both upper arms; her left shoulder stays lowered and knees unsteady. Her left sleeve and skirt hem carry fresh stone dust. A resumes leading Shahrnaz toward the hall; the cat is alive and held securely.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@CHR-004/V01",
+    "@CHR-005/V01",
+    "@GRP-005/V01",
+    "@CRT-004/V01",
+    "@LOC-022/V01",
+    "@PRP-019"
+  ],
+  "createdAt": "2026-09-27T20:59:04.783Z",
+  "costCredits": 180,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260927_205413_c7824692-d3ca-4909-8de4-45f780a6ad96.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-27T20:54:13.63958Z",
+      "display_name": "Seedance 2.5",
+      "id": "c7824692-d3ca-4909-8de4-45f780a6ad96",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "1a8c8d01-303c-48f8-937d-b8c946e5aa49",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/1a8c8d01-303c-48f8-937d-b8c946e5aa49.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "56f029f7-39bb-460a-98a8-fbaa0523c213",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/56f029f7-39bb-460a-98a8-fbaa0523c213.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "8d2cc4ca-cfc0-4a5c-812b-a8a717c1a23c",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/8d2cc4ca-cfc0-4a5c-812b-a8a717c1a23c.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "34e3c476-4e2d-4e46-9105-1c3e2354f0fe",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/34e3c476-4e2d-4e46-9105-1c3e2354f0fe.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "33b038b4-aec5-44b3-a4f1-1a3269994e79",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/33b038b4-aec5-44b3-a4f1-1a3269994e79.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "370c9b3b-bd6c-4619-8f43-75f09a6fb039",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/370c9b3b-bd6c-4619-8f43-75f09a6fb039.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 06 | SHOTS 14-17 | RESISTANCE IS BROKEN\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 4 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_GUARD_A = {{CHAR_GUARD_A}}\nCHAR_GUARD_B = {{CHAR_GUARD_B}}\nCHAR_GUARD_C = {{CHAR_GUARD_C}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_TRANSFER_CORRIDOR = {{LOC_TRANSFER_CORRIDOR}}\nSTART STATE AND BLOCKING\nSTATE_RESISTANCE_TO_INJURED. Continue the pivot: B holds Arnavaz’s right upper arm; C stands at her left rear. A and Shahrnaz wait one meter ahead. Shahrnaz cradles the cat. All characters are adults. Violence is brief, non-graphic and seen through bodies and cloth.\n\nSHOT 14 | 00:00-00:04 | THE WALL\n35mm side medium, camera at chest height. B redirects Arnavaz’s pivot; her left shoulder and upper back strike the wall. Her knees buckle and she slides onto her right hip. The camera dips with her fall, keeping her head clear of contact.\nSHOT 15 | 00:04-00:07 | TWO IMPACTS\nCut to a 50mm low oblique view partly screened by B’s stationary leg. C delivers exactly two short kicks toward Arnavaz’s clothed outer thigh and flank. Her body folds protectively; the contact area is largely occluded. The two impacts occupy this brief shot only.\nSHOT 16 | 00:07-00:10 | SHAHRNAZ WITNESSES\n65mm close medium on Shahrnaz ahead. She turns toward Arnavaz; her forearms tighten around the supported cat, then her body freezes. A holds her upper sleeve. Keep the cat unharmed and breathing.\nSHOT 17 | 00:10-00:15 | FORCED UPRIGHT\n35mm same corridor side. B and C lift Arnavaz by her upper arms. Her feet search for purchase before she bears weight; her left shoulder remains low. They move her toward frame-right as A and Shahrnaz resume ahead. Cut on the first dragging step.\nLIGHT AND IMAGE\nOne established corridor practical rakes the wall. Keep skin and clothing intact; reveal force through body displacement, breath and fabric compression.\nSOUND\nShoulder-to-wall thud, cloth sliding down stone, two brief muffled impacts, Arnavaz’s expelled breath and boots resuming. Keep impact sound restrained and physical.\nEND STATE AND EDIT\nB and C support Arnavaz upright by both upper arms; her left shoulder stays lowered and knees unsteady. Her left sleeve and skirt hem carry fresh stone dust. A resumes leading Shahrnaz toward the hall; the cat is alive and held securely.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_2>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_3>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_5>>> is Stair Transition Passage (LOC-022 V01); match it wherever Stair Transition Passage appears.\n<<<image_6>>> is Dagger Horse Head (PRP-019 V02); match it wherever Dagger Horse Head appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260927_205413_c7824692-d3ca-4909-8de4-45f780a6ad96.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260927_205413_c7824692-d3ca-4909-8de4-45f780a6ad96_thumbnail.webp"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
  "_comment": "Written by the worker from `higgsfield model list` / `model get` (worker/lib/models.mjs). Do not edit by hand; refresh from the Prompts page or restart a worker once it is a day old.",
- "fetchedAt": "2026-09-24T13:10:17.874Z",
+ "fetchedAt": "2026-09-27T23:51:50.249Z",
  "models": {
   "ad_multiplier": {
    "job_type": "ad_multiplier",
@@ -359,6 +359,83 @@
    "sound": null,
    "stages": null
   },
+  "depth_anything_video": {
+   "job_type": "depth_anything_video",
+   "display_name": "Depth Anything Video",
+   "type": "video",
+   "usable": false,
+   "why": "takes no prompt (a tool, not a generator)",
+   "params": [
+    {
+     "name": "colormap",
+     "type": "string",
+     "default": "grayscale",
+     "required": false,
+     "enum": [
+      "grayscale",
+      "turbo",
+      "inferno",
+      "magma",
+      "viridis"
+     ]
+    },
+    {
+     "name": "max_frames",
+     "type": "integer|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "resolution",
+     "type": "string",
+     "default": "auto",
+     "required": false,
+     "enum": [
+      "auto",
+      "360p",
+      "480p",
+      "720p",
+      "1080p"
+     ]
+    },
+    {
+     "name": "side_by_side",
+     "type": "boolean",
+     "default": false,
+     "required": false
+    },
+    {
+     "name": "variant",
+     "type": "string",
+     "default": "VDA-Large",
+     "required": false,
+     "enum": [
+      "VDA-Small",
+      "VDA-Base",
+      "VDA-Large"
+     ]
+    },
+    {
+     "name": "video_references",
+     "type": "array",
+     "default": null,
+     "required": true
+    }
+   ],
+   "rules": [],
+   "refs": null,
+   "sound": null,
+   "stages": {
+    "draft": "360p",
+    "final": "1080p",
+    "options": [
+     "360p",
+     "480p",
+     "720p",
+     "1080p"
+    ]
+   }
+  },
   "flux_2": {
    "job_type": "flux_2",
    "display_name": "FLUX.2",
@@ -646,6 +723,43 @@
     "max": 4,
     "min": 0
    },
+   "sound": null,
+   "stages": null
+  },
+  "fps_boost": {
+   "job_type": "fps_boost",
+   "display_name": "FPS Boost",
+   "type": "video",
+   "usable": false,
+   "why": "takes no prompt (a tool, not a generator)",
+   "params": [
+    {
+     "name": "fps",
+     "type": "integer",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "variant",
+     "type": "string",
+     "default": null,
+     "required": true,
+     "enum": [
+      "bytedance",
+      "topaz"
+     ]
+    },
+    {
+     "name": "video_references",
+     "type": "array",
+     "default": null,
+     "required": true
+    }
+   ],
+   "rules": [
+    "params.variant != \"bytedance\" || params.fps >= 24"
+   ],
+   "refs": null,
    "sound": null,
    "stages": null
   },

@@ -1,0 +1,140 @@
+{
+  "jobId": "J-20260927-9XC",
+  "parentJobId": null,
+  "hfJobId": "d8d8f0ae-9155-4e51-a62d-074f566c7740",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 11",
+  "target": "SHM-EP014-SC011-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP014-JAMSHID-GIRLS/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 11 | SHOTS 26-27 | AFTER THE TAKING\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 2 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_ZAHHAK = {{CHAR_ZAHHAK}}\nCHAR_GUARD_A = {{CHAR_GUARD_A}}\nCHAR_GUARD_B = {{CHAR_GUARD_B}}\nCHAR_GUARD_C = {{CHAR_GUARD_C}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_ZAHHAK_HALL = {{LOC_ZAHHAK_HALL}}\nPROP REFERENCES\nPROP_STAFF = {{PROP_STAFF}}\nPROP_BLADE = {{PROP_BLADE}}\nSTART STATE AND BLOCKING\nSTATE_EMPTIED. Shadow extraction is complete. Shahrnaz still holds the cat at the left mark; Arnavaz stands at the right mark, dusty and lowered at her left shoulder. Guards remain behind and hands-off. The low ledge sits two short steps left of Shahrnaz; the blade rests at its near end. Zahhak stays supported by his right-hand staff.\n\nSHOT 26 | 00:00-00:06 | WAITING INSIDE THE BODY\n50mm near-still medium two-shot. The sisters remain in their last positions. Hold long enough to see breathing without purposeful response. Shahrnaz’s fingers are loose against the cat’s fur. Arnavaz stares in its direction through her fixed mask; only breathing moves her body.\nSHOT 27 | 00:06-00:15 | CARE WITHOUT AFFECTION\nCut to 40mm side composition that includes Shahrnaz, the ledge and Arnavaz deeper right. Shahrnaz takes two short steps toward the ledge, supports the cat with both hands and sets it on the far half. The blade stays at the near end. She withdraws her hands without the earlier caress. The cat remains settled and looks toward her. End with her empty right hand hanging beside the visible handle.\nLIGHT AND IMAGE\nPreserve the reduced hall exposure and fixed rear-left light. A small existing reflected highlight makes the blade’s location readable. The cat keeps its ordinary small shadow.\nSOUND\nSix seconds of sparse breathing and hall air, then two soft footsteps, paws settling on stone and a sleeve withdrawing. Keep all gestures unvoiced.\nEND STATE AND EDIT\nThe cat sits alive on the far half of the ledge; blade remains flat at the near end, at least seventy centimeters from it. Shahrnaz stands beside the ledge with empty hands. Arnavaz watches from her original mark. Zahhak’s left hand is lowered.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V06); match it wherever Zahhak appears.\n<<<image_2>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_3>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_4>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_5>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_6>>> is Zahhak Hall (LOC-024 V01); match it wherever Zahhak Hall appears.\n<<<image_7>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.\n<<<image_8>>> is Dagger Horse Head (PRP-019 V01); match it wherever Dagger Horse Head appears.",
+  "basePrompt": "PLAN 11 | SHOTS 26-27 | AFTER THE TAKING\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 2 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_ZAHHAK = {{CHAR_ZAHHAK}}\nCHAR_GUARD_A = {{CHAR_GUARD_A}}\nCHAR_GUARD_B = {{CHAR_GUARD_B}}\nCHAR_GUARD_C = {{CHAR_GUARD_C}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_ZAHHAK_HALL = {{LOC_ZAHHAK_HALL}}\nPROP REFERENCES\nPROP_STAFF = {{PROP_STAFF}}\nPROP_BLADE = {{PROP_BLADE}}\nSTART STATE AND BLOCKING\nSTATE_EMPTIED. Shadow extraction is complete. Shahrnaz still holds the cat at the left mark; Arnavaz stands at the right mark, dusty and lowered at her left shoulder. Guards remain behind and hands-off. The low ledge sits two short steps left of Shahrnaz; the blade rests at its near end. Zahhak stays supported by his right-hand staff.\n\nSHOT 26 | 00:00-00:06 | WAITING INSIDE THE BODY\n50mm near-still medium two-shot. The sisters remain in their last positions. Hold long enough to see breathing without purposeful response. Shahrnaz’s fingers are loose against the cat’s fur. Arnavaz stares in its direction through her fixed mask; only breathing moves her body.\nSHOT 27 | 00:06-00:15 | CARE WITHOUT AFFECTION\nCut to 40mm side composition that includes Shahrnaz, the ledge and Arnavaz deeper right. Shahrnaz takes two short steps toward the ledge, supports the cat with both hands and sets it on the far half. The blade stays at the near end. She withdraws her hands without the earlier caress. The cat remains settled and looks toward her. End with her empty right hand hanging beside the visible handle.\nLIGHT AND IMAGE\nPreserve the reduced hall exposure and fixed rear-left light. A small existing reflected highlight makes the blade’s location readable. The cat keeps its ordinary small shadow.\nSOUND\nSix seconds of sparse breathing and hall air, then two soft footsteps, paws settling on stone and a sleeve withdrawing. Keep all gestures unvoiced.\nEND STATE AND EDIT\nThe cat sits alive on the far half of the ledge; blade remains flat at the near end, at least seventy centimeters from it. Shahrnaz stands beside the ledge with empty hands. Arnavaz watches from her original mark. Zahhak’s left hand is lowered.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001",
+    "@CHR-004/V01",
+    "@CHR-005/V01",
+    "@GRP-005/V01",
+    "@CRT-004/V01",
+    "@LOC-024/V01",
+    "@PRP-001",
+    "@PRP-019"
+  ],
+  "createdAt": "2026-09-27T19:11:36.761Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260927_184849_d8d8f0ae-9155-4e51-a62d-074f566c7740.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-27T18:48:49.116959Z",
+      "display_name": "Seedance 2.5",
+      "id": "d8d8f0ae-9155-4e51-a62d-074f566c7740",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "3b838155-dcaf-40eb-9464-ba0d45976307",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/3b838155-dcaf-40eb-9464-ba0d45976307.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "b11d2614-0e70-4b03-9f93-ec5fe09bf668",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/b11d2614-0e70-4b03-9f93-ec5fe09bf668.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "17c32b99-eeed-40bf-9c40-5e0c07e6a90f",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/17c32b99-eeed-40bf-9c40-5e0c07e6a90f.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "c0cdb245-5d33-40f1-8b78-7ae15fbb65a1",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/c0cdb245-5d33-40f1-8b78-7ae15fbb65a1.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "41ba5143-8e4a-448a-b35d-ff1963a931ed",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/41ba5143-8e4a-448a-b35d-ff1963a931ed.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "6edf14a8-92fb-4734-b4bb-d1ed4277c634",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/6edf14a8-92fb-4734-b4bb-d1ed4277c634.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "6c05f72a-ff73-4707-9734-1a0f82348828",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/6c05f72a-ff73-4707-9734-1a0f82348828.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "4b8d349f-b4e7-44bb-9bc4-1f6e281eb394",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/4b8d349f-b4e7-44bb-9bc4-1f6e281eb394.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 11 | SHOTS 26-27 | AFTER THE TAKING\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 2 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_ZAHHAK = {{CHAR_ZAHHAK}}\nCHAR_GUARD_A = {{CHAR_GUARD_A}}\nCHAR_GUARD_B = {{CHAR_GUARD_B}}\nCHAR_GUARD_C = {{CHAR_GUARD_C}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_ZAHHAK_HALL = {{LOC_ZAHHAK_HALL}}\nPROP REFERENCES\nPROP_STAFF = {{PROP_STAFF}}\nPROP_BLADE = {{PROP_BLADE}}\nSTART STATE AND BLOCKING\nSTATE_EMPTIED. Shadow extraction is complete. Shahrnaz still holds the cat at the left mark; Arnavaz stands at the right mark, dusty and lowered at her left shoulder. Guards remain behind and hands-off. The low ledge sits two short steps left of Shahrnaz; the blade rests at its near end. Zahhak stays supported by his right-hand staff.\n\nSHOT 26 | 00:00-00:06 | WAITING INSIDE THE BODY\n50mm near-still medium two-shot. The sisters remain in their last positions. Hold long enough to see breathing without purposeful response. Shahrnaz’s fingers are loose against the cat’s fur. Arnavaz stares in its direction through her fixed mask; only breathing moves her body.\nSHOT 27 | 00:06-00:15 | CARE WITHOUT AFFECTION\nCut to 40mm side composition that includes Shahrnaz, the ledge and Arnavaz deeper right. Shahrnaz takes two short steps toward the ledge, supports the cat with both hands and sets it on the far half. The blade stays at the near end. She withdraws her hands without the earlier caress. The cat remains settled and looks toward her. End with her empty right hand hanging beside the visible handle.\nLIGHT AND IMAGE\nPreserve the reduced hall exposure and fixed rear-left light. A small existing reflected highlight makes the blade’s location readable. The cat keeps its ordinary small shadow.\nSOUND\nSix seconds of sparse breathing and hall air, then two soft footsteps, paws settling on stone and a sleeve withdrawing. Keep all gestures unvoiced.\nEND STATE AND EDIT\nThe cat sits alive on the far half of the ledge; blade remains flat at the near end, at least seventy centimeters from it. Shahrnaz stands beside the ledge with empty hands. Arnavaz watches from her original mark. Zahhak’s left hand is lowered.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V06); match it wherever Zahhak appears.\n<<<image_2>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_3>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_4>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_5>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_6>>> is Zahhak Hall (LOC-024 V01); match it wherever Zahhak Hall appears.\n<<<image_7>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.\n<<<image_8>>> is Dagger Horse Head (PRP-019 V01); match it wherever Dagger Horse Head appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260927_184849_d8d8f0ae-9155-4e51-a62d-074f566c7740.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260927_184849_d8d8f0ae-9155-4e51-a62d-074f566c7740_thumbnail.webp"
+    }
+  ]
+}

@@ -68,7 +68,7 @@ export function cliProblem(text) {
   if (!t) return 'the Higgsfield CLI failed without saying why'
   if (t.startsWith('Could not locate the Higgsfield CLI')) return 'the Higgsfield CLI is not installed on this machine: npm i -g @higgsfield/cli'
   if (/no workspace selected/i.test(t)) return 'no Higgsfield workspace is selected: run higgsfield workspace list, then higgsfield workspace set <id>'
-  if (/not (logged|signed) in|unauthori[sz]ed|auth(entication)? required|token (expired|invalid)|\b401\b/i.test(t)) return 'the Higgsfield CLI is not signed in: run higgsfield auth login'
+  if (/not (logged|signed) in|not authenticated|unauthori[sz]ed|auth(entication)? required|token (expired|invalid)|\b401\b/i.test(t)) return 'the Higgsfield CLI is not signed in: run higgsfield auth login'
   return t.split(/\r?\n/).find((l) => l.trim())?.trim().slice(0, 300) ?? t.slice(0, 300)
 }
 

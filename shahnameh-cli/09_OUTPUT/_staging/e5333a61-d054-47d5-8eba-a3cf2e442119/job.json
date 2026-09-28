@@ -1,0 +1,140 @@
+{
+  "jobId": "J-20260927-8C2",
+  "parentJobId": null,
+  "hfJobId": "e5333a61-d054-47d5-8eba-a3cf2e442119",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 12",
+  "target": "SHM-EP014-SC012-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP014-JAMSHID-GIRLS/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 12 | SHOTS 28-31 | THE FINAL COMMAND\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 4 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_ZAHHAK = {{CHAR_ZAHHAK}}\nCHAR_GUARD_A = {{CHAR_GUARD_A}}\nCHAR_GUARD_B = {{CHAR_GUARD_B}}\nCHAR_GUARD_C = {{CHAR_GUARD_C}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_ZAHHAK_HALL = {{LOC_ZAHHAK_HALL}}\nPROP REFERENCES\nPROP_STAFF = {{PROP_STAFF}}\nPROP_BLADE = {{PROP_BLADE}}\nSTART STATE AND BLOCKING\nSTATE_OBEDIENCE. Cat sits alive at the far half of the left ledge. Blade lies at the near end, handle beside Shahrnaz’s right hand, at least seventy centimeters from the cat. Arnavaz remains on her original right-hand mark, watching the ledge. Guards stay behind. Zahhak supports himself on the right-hand staff.\n\nSHOT 28 | 00:00-00:03 | THE GESTURE\n50mm medium view of Zahhak from the sisters’ side. Right hand remains on the staff; his left index finger indicates the blade and then the cat in one economical motion. His body stays still and weighted. The gesture is the entire command.\nSHOT 29 | 00:03-00:07 | THE HAND OBEYS\nCut to 65mm on Shahrnaz’s right hand at the ledge. She closes her fingers around the handle and lifts the single blade. Continue the movement into her wrist and forearm; retain the cat at the opposite end in soft background. Her left hand hangs empty.\nSHOT 30 | 00:07-00:10 | THE WITNESS\nCut to 65mm close medium on Arnavaz. Her head follows the blade; she takes one shallow breath. Her lowered hands remain loose. The dusty left sleeve and collapsed shoulder preserve the aftermath of violence. Hold the absence of intervention.\nSHOT 31 | 00:10-00:15 | THE UNFINISHED ACT\nCut to 40mm side medium framing Shahrnaz, her right forearm and the cat on the ledge. She takes a half-step closer and raises the blade slowly to waist height, its tip held away from the cat. Her left hand begins reaching toward it. At 14.5 seconds, while the cat is alive and the blade remains separated from its body, hard cut to black. Hold black and absolute silence for the remaining half-second.\nLIGHT AND IMAGE\nSame reduced hall light and fixed shadows. Keep the cat readable in soft light, the lifted blade a restrained edge highlight, masks unchanged. Exposure stays steady until the hard cut.\nSOUND\nZahhak’s sleeve, fingers closing on a handle, light metal scraping stone, a quiet cat breath and Arnavaz’s small inhalation. Sound stops at 14.5 seconds with the cut.\nEND STATE AND EDIT\nAt local 14.5 seconds, cut to black while the blade is held stationary and separated from the living cat. The final half-second is black and silent. The episode ends at intention, before contact.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V06); match it wherever Zahhak appears.\n<<<image_2>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_3>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_4>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_5>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_6>>> is Zahhak Hall (LOC-024 V01); match it wherever Zahhak Hall appears.\n<<<image_7>>> is Dagger Horse Head (PRP-019 V01); match it wherever Dagger Horse Head appears.\n<<<image_8>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+  "basePrompt": "PLAN 12 | SHOTS 28-31 | THE FINAL COMMAND\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 4 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_ZAHHAK = {{CHAR_ZAHHAK}}\nCHAR_GUARD_A = {{CHAR_GUARD_A}}\nCHAR_GUARD_B = {{CHAR_GUARD_B}}\nCHAR_GUARD_C = {{CHAR_GUARD_C}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_ZAHHAK_HALL = {{LOC_ZAHHAK_HALL}}\nPROP REFERENCES\nPROP_STAFF = {{PROP_STAFF}}\nPROP_BLADE = {{PROP_BLADE}}\nSTART STATE AND BLOCKING\nSTATE_OBEDIENCE. Cat sits alive at the far half of the left ledge. Blade lies at the near end, handle beside Shahrnaz’s right hand, at least seventy centimeters from the cat. Arnavaz remains on her original right-hand mark, watching the ledge. Guards stay behind. Zahhak supports himself on the right-hand staff.\n\nSHOT 28 | 00:00-00:03 | THE GESTURE\n50mm medium view of Zahhak from the sisters’ side. Right hand remains on the staff; his left index finger indicates the blade and then the cat in one economical motion. His body stays still and weighted. The gesture is the entire command.\nSHOT 29 | 00:03-00:07 | THE HAND OBEYS\nCut to 65mm on Shahrnaz’s right hand at the ledge. She closes her fingers around the handle and lifts the single blade. Continue the movement into her wrist and forearm; retain the cat at the opposite end in soft background. Her left hand hangs empty.\nSHOT 30 | 00:07-00:10 | THE WITNESS\nCut to 65mm close medium on Arnavaz. Her head follows the blade; she takes one shallow breath. Her lowered hands remain loose. The dusty left sleeve and collapsed shoulder preserve the aftermath of violence. Hold the absence of intervention.\nSHOT 31 | 00:10-00:15 | THE UNFINISHED ACT\nCut to 40mm side medium framing Shahrnaz, her right forearm and the cat on the ledge. She takes a half-step closer and raises the blade slowly to waist height, its tip held away from the cat. Her left hand begins reaching toward it. At 14.5 seconds, while the cat is alive and the blade remains separated from its body, hard cut to black. Hold black and absolute silence for the remaining half-second.\nLIGHT AND IMAGE\nSame reduced hall light and fixed shadows. Keep the cat readable in soft light, the lifted blade a restrained edge highlight, masks unchanged. Exposure stays steady until the hard cut.\nSOUND\nZahhak’s sleeve, fingers closing on a handle, light metal scraping stone, a quiet cat breath and Arnavaz’s small inhalation. Sound stops at 14.5 seconds with the cut.\nEND STATE AND EDIT\nAt local 14.5 seconds, cut to black while the blade is held stationary and separated from the living cat. The final half-second is black and silent. The episode ends at intention, before contact.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001",
+    "@CHR-004/V01",
+    "@CHR-005/V01",
+    "@GRP-005/V01",
+    "@CRT-004/V01",
+    "@LOC-024/V01",
+    "@PRP-019",
+    "@PRP-001"
+  ],
+  "createdAt": "2026-09-27T19:28:44.898Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260927_191221_e5333a61-d054-47d5-8eba-a3cf2e442119.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-27T19:12:21.076606Z",
+      "display_name": "Seedance 2.5",
+      "id": "e5333a61-d054-47d5-8eba-a3cf2e442119",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "201d9f40-c0e9-4e1f-995a-f6f7e7f9ced3",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/201d9f40-c0e9-4e1f-995a-f6f7e7f9ced3.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "0f2c4b03-3fe9-414e-a48d-2bbd88c45fd9",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/0f2c4b03-3fe9-414e-a48d-2bbd88c45fd9.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "6679cc30-4f77-4b81-98c2-14deca4ca268",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/6679cc30-4f77-4b81-98c2-14deca4ca268.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "2b6cf614-884a-4c96-bdf3-187094f7b175",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/2b6cf614-884a-4c96-bdf3-187094f7b175.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "36dbcb21-ba03-4383-a24a-062f68da6536",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/36dbcb21-ba03-4383-a24a-062f68da6536.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "74c08bcd-67b5-4886-b13a-0eb673ab6de8",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/74c08bcd-67b5-4886-b13a-0eb673ab6de8.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "adc1c08a-ee38-402b-a42e-2aa54a62a21b",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/adc1c08a-ee38-402b-a42e-2aa54a62a21b.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "b6f82f14-21a5-488b-940a-dc8e2208040f",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/b6f82f14-21a5-488b-940a-dc8e2208040f.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 12 | SHOTS 28-31 | THE FINAL COMMAND\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 4 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_ZAHHAK = {{CHAR_ZAHHAK}}\nCHAR_GUARD_A = {{CHAR_GUARD_A}}\nCHAR_GUARD_B = {{CHAR_GUARD_B}}\nCHAR_GUARD_C = {{CHAR_GUARD_C}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_ZAHHAK_HALL = {{LOC_ZAHHAK_HALL}}\nPROP REFERENCES\nPROP_STAFF = {{PROP_STAFF}}\nPROP_BLADE = {{PROP_BLADE}}\nSTART STATE AND BLOCKING\nSTATE_OBEDIENCE. Cat sits alive at the far half of the left ledge. Blade lies at the near end, handle beside Shahrnaz’s right hand, at least seventy centimeters from the cat. Arnavaz remains on her original right-hand mark, watching the ledge. Guards stay behind. Zahhak supports himself on the right-hand staff.\n\nSHOT 28 | 00:00-00:03 | THE GESTURE\n50mm medium view of Zahhak from the sisters’ side. Right hand remains on the staff; his left index finger indicates the blade and then the cat in one economical motion. His body stays still and weighted. The gesture is the entire command.\nSHOT 29 | 00:03-00:07 | THE HAND OBEYS\nCut to 65mm on Shahrnaz’s right hand at the ledge. She closes her fingers around the handle and lifts the single blade. Continue the movement into her wrist and forearm; retain the cat at the opposite end in soft background. Her left hand hangs empty.\nSHOT 30 | 00:07-00:10 | THE WITNESS\nCut to 65mm close medium on Arnavaz. Her head follows the blade; she takes one shallow breath. Her lowered hands remain loose. The dusty left sleeve and collapsed shoulder preserve the aftermath of violence. Hold the absence of intervention.\nSHOT 31 | 00:10-00:15 | THE UNFINISHED ACT\nCut to 40mm side medium framing Shahrnaz, her right forearm and the cat on the ledge. She takes a half-step closer and raises the blade slowly to waist height, its tip held away from the cat. Her left hand begins reaching toward it. At 14.5 seconds, while the cat is alive and the blade remains separated from its body, hard cut to black. Hold black and absolute silence for the remaining half-second.\nLIGHT AND IMAGE\nSame reduced hall light and fixed shadows. Keep the cat readable in soft light, the lifted blade a restrained edge highlight, masks unchanged. Exposure stays steady until the hard cut.\nSOUND\nZahhak’s sleeve, fingers closing on a handle, light metal scraping stone, a quiet cat breath and Arnavaz’s small inhalation. Sound stops at 14.5 seconds with the cut.\nEND STATE AND EDIT\nAt local 14.5 seconds, cut to black while the blade is held stationary and separated from the living cat. The final half-second is black and silent. The episode ends at intention, before contact.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V06); match it wherever Zahhak appears.\n<<<image_2>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_3>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_4>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_5>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_6>>> is Zahhak Hall (LOC-024 V01); match it wherever Zahhak Hall appears.\n<<<image_7>>> is Dagger Horse Head (PRP-019 V01); match it wherever Dagger Horse Head appears.\n<<<image_8>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260927_191221_e5333a61-d054-47d5-8eba-a3cf2e442119.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260927_191221_e5333a61-d054-47d5-8eba-a3cf2e442119_thumbnail.webp"
+    }
+  ]
+}
