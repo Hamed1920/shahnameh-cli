@@ -79,7 +79,12 @@
     "J-20260927-H92",
     "J-20260927-1E0",
     "J-20260927-9BR",
-    "J-20260927-7QJ"
+    "J-20260927-7QJ",
+    "J-20260928-52V",
+    "J-20260928-R70",
+    "J-20260928-ICC",
+    "J-20260928-A4Q",
+    "J-20260928-OI5"
   ],
   "processedDecisions": [
     "rev_mtljtubxafk9",
@@ -147,10 +152,15 @@
     "rev_mukc4fvve7r8",
     "rev_mukc4xyzpxgp",
     "rev_mukc67ute35e",
-    "rev_mukcbrs35j95"
+    "rev_mukcbrs35j95",
+    "rev_mul0pz27kdcg",
+    "rev_mul0s7rd0wzd",
+    "rev_mul0sfnpbx12",
+    "rev_mul9635lnaww",
+    "rev_mulaow6wwtg8"
   ],
   "spentCredits": 6000,
-  "updatedAt": "2026-09-27T22:32:12.794Z",
+  "updatedAt": "2026-09-28T14:46:12.172Z",
   "failedDecisions": {},
   "processedOps": [
     "op_mu18d6axozqm",
@@ -227,6 +237,26 @@
     "J-20260927-YQA": {
       "reason": "Error: request failed (no response received)",
       "at": "2026-09-27T18:14:22.139Z"
+    },
+    "J-20260928-52V": {
+      "reason": "Error: {\"billing_period\":\"monthly\",\"error_type\":\"not_enough_credits\",\"plan_type\":\"ultra\",\"workspace\":{\"role\":\"owner\",\"type\":\"private\"}}",
+      "at": "2026-09-28T14:41:43.593Z"
+    },
+    "J-20260928-R70": {
+      "reason": "Error: {\"billing_period\":\"monthly\",\"error_type\":\"not_enough_credits\",\"plan_type\":\"ultra\",\"workspace\":{\"role\":\"owner\",\"type\":\"private\"}}",
+      "at": "2026-09-28T14:42:05.323Z"
+    },
+    "J-20260928-ICC": {
+      "reason": "Error: {\"billing_period\":\"monthly\",\"error_type\":\"not_enough_credits\",\"plan_type\":\"ultra\",\"workspace\":{\"role\":\"owner\",\"type\":\"private\"}}",
+      "at": "2026-09-28T14:42:09.305Z"
+    },
+    "J-20260928-A4Q": {
+      "reason": "Error: {\"billing_period\":\"monthly\",\"error_type\":\"not_enough_credits\",\"plan_type\":\"ultra\",\"workspace\":{\"role\":\"owner\",\"type\":\"private\"}}",
+      "at": "2026-09-28T14:43:10.871Z"
+    },
+    "J-20260928-OI5": {
+      "reason": "Error: higgsfield: request failed (no response received)",
+      "at": "2026-09-28T14:46:12.056Z"
     }
   }
 }

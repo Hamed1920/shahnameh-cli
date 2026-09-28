@@ -1,6 +1,6 @@
 ---
 name: higgsfield-login
-description: Log this machine into Higgsfield (or switch to another Higgsfield account) and open the sign-in page in the browser automatically, then select the account's workspace and confirm the plan and credits. Use when the user says "/higgsfield-login", "log into higgsfield", "connect higgsfield", "sign in to higgsfield", "switch higgsfield account", "it's a different account", or when a generation fails with "Not authenticated", "No workspace selected" or "workspace_membership_required".
+description: Log this machine into Higgsfield when it is not signed in, opening the sign-in page in the browser automatically, then select the account's workspace and confirm the plan and credits. Stops early if a login already works; switching accounts is /higgsfield-switch. Use when the user says "/higgsfield-login", "log into higgsfield", "connect higgsfield", "sign in to higgsfield", or when a generation fails with "Not authenticated", "No workspace selected" or "workspace_membership_required".
 ---
 
 # Higgsfield login
