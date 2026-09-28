@@ -1,4 +1,5 @@
-export type Verdict = 'accepted' | 'denied'
+/** discarded: out of Review and kept in 09_OUTPUT/_discarded -- nothing filed or generated, no note. */
+export type Verdict = 'accepted' | 'denied' | 'discarded'
 
 export interface Entity {
   id: string
@@ -159,6 +160,62 @@ export interface Learning {
   created: string
   decidedBy?: string
   decidedAt?: string
+}
+
+/** A reference named in a rule or a note, resolved to the picture it stands for. */
+export interface RefView {
+  /** As written, e.g. @CHR-002/V02. */
+  token: string
+  /** Project-relative; null when it does not resolve today. */
+  path: string | null
+  /** The entity's name, when it is in the index. */
+  name: string | null
+  kind: string | null
+  /** Why it does not resolve, when it does not. */
+  stale?: string
+}
+
+/** Rule or note text, with each @-reference split out so it can be drawn as its picture. */
+export type TextSegment = { text: string } | { ref: RefView }
+
+/** Who a rule applies to, in words and, for one entity, its current look. */
+export interface ScopeView {
+  level: 'entity' | 'family' | 'kind' | 'global'
+  /** Groups rules on the page: the entity id, family, kind, or "global". */
+  key: string
+  label: string
+  sublabel: string | null
+  /** The entity's canonical look. */
+  path: string | null
+}
+
+/** One review decision a rule was distilled from, with the take it was about. */
+export interface EvidenceView {
+  id: string
+  /** False when the decision is no longer in the review log. */
+  found: boolean
+  verdict: Verdict | null
+  title: string
+  where: string
+  /** Project-relative, when the take is on disk. */
+  file: string | null
+  missing: string | null
+  notes: TextSegment[]
+  notesEn: string | null
+  ts: string | null
+}
+
+export interface LearningView {
+  id: string
+  status: LearningStatus
+  rule: string
+  segments: TextSegment[]
+  /** Every distinct reference the rule names: the pictures a prompt under it is sent. */
+  refs: RefView[]
+  scope: ScopeView
+  evidence: EvidenceView[]
+  created: string
+  decidedAt: string | null
 }
 
 export interface QueueItem {
@@ -468,6 +525,12 @@ export type JobRequest =
     })
   /** Fetch the Higgsfield model list again (worker/lib/models.mjs). */
   | (JobRequestBase & { type: 'models.refresh' })
+  /** A generation that failed: run it again as queued, on the machine that asks... */
+  | (JobRequestBase & { type: 'job.retry'; jobId: string })
+  /** ...or take it off the Queue page. */
+  | (JobRequestBase & { type: 'job.dismiss'; jobId: string })
+  /** A failed job's take that Higgsfield made anyway: fetched, not generated again. */
+  | (JobRequestBase & { type: 'job.adopt'; jobId: string; hfJobId: string })
   // The reference studio (worker/lib/studio.mjs).
   | (JobRequestBase & {
       type: 'studio.price'
@@ -592,7 +655,7 @@ export interface PromptLibraryItem {
   params: Record<string, string | number | boolean>
   /** Notes the latest attempt carried. A fresh run does not inherit them. */
   revisionNotes: string[]
-  state: 'queued' | 'generating' | 'failed' | 'to-review' | 'accepted' | 'denied'
+  state: 'queued' | 'generating' | 'failed' | 'to-review' | 'accepted' | 'denied' | 'discarded'
   /** Why it failed, or why a queued one is held (not signed in, over a ceiling). */
   note: string | null
 }
@@ -621,7 +684,7 @@ export interface ShotOutput {
   /** T01, T02 ... -- the take, from the filename when it is filed. */
   take: string
   /** What was decided about it, when anything was. */
-  verdict: 'accepted' | 'denied' | null
+  verdict: Verdict | null
   stage: 'draft' | 'final' | null
   attempt: number
   ts: string

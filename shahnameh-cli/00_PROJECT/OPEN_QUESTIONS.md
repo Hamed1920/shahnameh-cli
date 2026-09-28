@@ -68,6 +68,10 @@ context pack but never an EP001 revision. One option: also inject a rule when it
 the shot's attached references. That needs a change to `applicableLearnings` in
 `10_PANEL/worker/worker.mjs`.
 
+*2026-09-28:* still open, and now covers eleven rules: `L-0001` to `L-0005` are approved and
+`L-0006` to `L-0011` (Zahhak's beast and framing, the flag, the sisters, Zahhak's hall) are
+proposed. All are entity-scoped, so none reaches an EP014 shot prompt today.
+
 ---
 
 *Resolved 2026-09-03 by the EP001 script:*

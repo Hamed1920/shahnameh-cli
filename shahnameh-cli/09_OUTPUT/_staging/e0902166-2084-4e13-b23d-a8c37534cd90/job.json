@@ -1,0 +1,122 @@
+{
+  "jobId": "J-20260928-OIH",
+  "parentJobId": "J-20260928-A2X",
+  "hfJobId": "e0902166-2084-4e13-b23d-a8c37534cd90",
+  "attempt": 1,
+  "stage": "final",
+  "label": null,
+  "target": "SHM-EP014-SC015-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP014-JAMSHID-GIRLS/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 12 | THE OFFERING | 15 SECONDS\n\nCreate a horizontal 16:9 cinematic sequence for Seedance 2.5.\nTwo shots lasting five and ten seconds.\nCut to black at 14.5 seconds and hold the final half-second in silence.\n\nCHARACTER REFERENCES:\nShahrnaz = {{CHAR_SHAHRNAZ}}\nArnavaz = {{CHAR_ARNAVAZ}}\nZahhak and his living shoulder serpents = {{CHAR_ZAHHAK}}\n\nANIMAL REFERENCE:\nCat = {{ANIMAL_CAT}}\n\nPROP REFERENCES:\nBlade = {{PROP_BLADE}}\nStaff = {{PROP_STAFF}}\n\nREFERENCE INTERPRETATION:\nPreserve all character identities, masks, costumes, animal anatomy and prop designs. Apply the lighting below to every subject.\n\nLOCATION AND LIGHTING:\nA chamber concealed entirely by blackness.\n\nOne fixed hard overhead spotlight illuminates the closely grouped characters.\n\nCold-neutral light falls on their upper masks, shoulders, hands, the supported cat and the blade. Deep shadows shape the lower faces and clothing.\n\nThe background and all space beyond their bodies remain solid black. Architecture and floor stay unexposed.\n\nUse waist-up and chest-up framing. Keep exposure fixed and the overhead spotlight constant.\n\nBLOCKING:\nShahrnaz stands WEST, facing EAST.\nArnavaz stands EAST, facing WEST.\nThey begin seventy centimeters apart.\n\nThe camera remains SOUTH of their shared axis:\nShahrnaz is always SCREEN-LEFT, facing right.\nArnavaz is always SCREEN-RIGHT, facing left.\n\nZahhak stands NORTH, sixty centimeters behind the midpoint between them, facing SOUTH toward their actions. His mask is visible through the upper gap between their profiles.\n\nShahrnaz carries the cat in both hands.\nArnavaz holds the blade low in her RIGHT hand.\nHer LEFT hand is empty.\n\nThe cat remains in Shahrnaz’s hands for the entire sequence.\n\nSHOT 28A | 00:00–00:05 | RAISING THE CAT\n\n50mm close composition from SOUTH, framing Shahrnaz’s upper torso and the cat, with Arnavaz’s near shoulder at the right edge.\n\nShahrnaz appears screen-left, facing screen-right.\n\nShe supports the cat’s chest with one hand and its hindquarters with the other.\n\nSlowly raise the cat from mid-chest to upper-chest height, keeping it close enough for secure support. Its body remains naturally horizontal in her hands.\n\nHer masked head inclines toward the animal, but her hands remain still rather than stroking it.\n\nArnavaz watches from screen-right.\n\nSHOT 28B | 00:05–00:15 | THE FINAL TABLEAU\n\nCut to a 40mm waist-up three-person composition from SOUTH, remaining on the same side of the axis.\n\nShahrnaz occupies the LEFT third in profile, facing right.\nArnavaz occupies the RIGHT third in profile, facing left.\n\nThe cat is supported between them at upper-chest height, just below the center of the frame.\n\nZahhak stands farther back, his frontal mask visible in the upper central gap. His dark torso falls away behind the women.\n\nArrange the image around three points:\nShahrnaz’s mask at upper-left,\nArnavaz’s mask at upper-right,\nthe supported cat below and between them.\n\nZahhak’s higher, more distant mask watches over this arrangement.\n\nArnavaz takes one small step closer.\n\nMake a very slow twenty-centimeter push-in, retaining both sisters, the cat and Zahhak’s mask within the composition.\n\nShahrnaz presents the cat slightly toward Arnavaz while maintaining full support with both hands.\n\nArnavaz extends her empty LEFT hand toward it.\nHer RIGHT hand gradually lifts the blade from her hip into the lower-right portion of the composition.\n\nThe blade remains separated from the animal.\nBoth sisters remain calm and cooperative.\n\nBehind them, one of Zahhak’s living serpents slowly lifts and turns its head beside his mask. Another makes a small muscular adjustment across his shoulder.\n\nHold the composition long enough for the relationship between all three characters to become clear.\n\nAt 14.5 seconds, before blade contact, cut directly to black.\nHold black and silence for the remaining half-second.\n\nPERFORMANCE AND SOUND:\nSteady breathing, quiet fabric, one soft footstep and a small natural movement from the cat.\n\nThe animal remains alive, continuously supported in Shahrnaz’s hands.\n\nNO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_3>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_4>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_5>>> is Dagger Horse Head (PRP-019 V02); match it wherever Dagger Horse Head appears.\n<<<image_6>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+  "basePrompt": "PLAN 12 | THE OFFERING | 15 SECONDS\n\nCreate a horizontal 16:9 cinematic sequence for Seedance 2.5.\nTwo shots lasting five and ten seconds.\nCut to black at 14.5 seconds and hold the final half-second in silence.\n\nCHARACTER REFERENCES:\nShahrnaz = {{CHAR_SHAHRNAZ}}\nArnavaz = {{CHAR_ARNAVAZ}}\nZahhak and his living shoulder serpents = {{CHAR_ZAHHAK}}\n\nANIMAL REFERENCE:\nCat = {{ANIMAL_CAT}}\n\nPROP REFERENCES:\nBlade = {{PROP_BLADE}}\nStaff = {{PROP_STAFF}}\n\nREFERENCE INTERPRETATION:\nPreserve all character identities, masks, costumes, animal anatomy and prop designs. Apply the lighting below to every subject.\n\nLOCATION AND LIGHTING:\nA chamber concealed entirely by blackness.\n\nOne fixed hard overhead spotlight illuminates the closely grouped characters.\n\nCold-neutral light falls on their upper masks, shoulders, hands, the supported cat and the blade. Deep shadows shape the lower faces and clothing.\n\nThe background and all space beyond their bodies remain solid black. Architecture and floor stay unexposed.\n\nUse waist-up and chest-up framing. Keep exposure fixed and the overhead spotlight constant.\n\nBLOCKING:\nShahrnaz stands WEST, facing EAST.\nArnavaz stands EAST, facing WEST.\nThey begin seventy centimeters apart.\n\nThe camera remains SOUTH of their shared axis:\nShahrnaz is always SCREEN-LEFT, facing right.\nArnavaz is always SCREEN-RIGHT, facing left.\n\nZahhak stands NORTH, sixty centimeters behind the midpoint between them, facing SOUTH toward their actions. His mask is visible through the upper gap between their profiles.\n\nShahrnaz carries the cat in both hands.\nArnavaz holds the blade low in her RIGHT hand.\nHer LEFT hand is empty.\n\nThe cat remains in Shahrnaz’s hands for the entire sequence.\n\nSHOT 28A | 00:00–00:05 | RAISING THE CAT\n\n50mm close composition from SOUTH, framing Shahrnaz’s upper torso and the cat, with Arnavaz’s near shoulder at the right edge.\n\nShahrnaz appears screen-left, facing screen-right.\n\nShe supports the cat’s chest with one hand and its hindquarters with the other.\n\nSlowly raise the cat from mid-chest to upper-chest height, keeping it close enough for secure support. Its body remains naturally horizontal in her hands.\n\nHer masked head inclines toward the animal, but her hands remain still rather than stroking it.\n\nArnavaz watches from screen-right.\n\nSHOT 28B | 00:05–00:15 | THE FINAL TABLEAU\n\nCut to a 40mm waist-up three-person composition from SOUTH, remaining on the same side of the axis.\n\nShahrnaz occupies the LEFT third in profile, facing right.\nArnavaz occupies the RIGHT third in profile, facing left.\n\nThe cat is supported between them at upper-chest height, just below the center of the frame.\n\nZahhak stands farther back, his frontal mask visible in the upper central gap. His dark torso falls away behind the women.\n\nArrange the image around three points:\nShahrnaz’s mask at upper-left,\nArnavaz’s mask at upper-right,\nthe supported cat below and between them.\n\nZahhak’s higher, more distant mask watches over this arrangement.\n\nArnavaz takes one small step closer.\n\nMake a very slow twenty-centimeter push-in, retaining both sisters, the cat and Zahhak’s mask within the composition.\n\nShahrnaz presents the cat slightly toward Arnavaz while maintaining full support with both hands.\n\nArnavaz extends her empty LEFT hand toward it.\nHer RIGHT hand gradually lifts the blade from her hip into the lower-right portion of the composition.\n\nThe blade remains separated from the animal.\nBoth sisters remain calm and cooperative.\n\nBehind them, one of Zahhak’s living serpents slowly lifts and turns its head beside his mask. Another makes a small muscular adjustment across his shoulder.\n\nHold the composition long enough for the relationship between all three characters to become clear.\n\nAt 14.5 seconds, before blade contact, cut directly to black.\nHold black and silence for the remaining half-second.\n\nPERFORMANCE AND SOUND:\nSteady breathing, quiet fabric, one soft footstep and a small natural movement from the cat.\n\nThe animal remains alive, continuously supported in Shahrnaz’s hands.\n\nNO MUSIC, NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@CHR-001",
+    "@CHR-004/V01",
+    "@CHR-005/V01",
+    "@CRT-004/V01",
+    "@PRP-019",
+    "@PRP-001"
+  ],
+  "createdAt": "2026-09-28T12:22:27.824Z",
+  "costCredits": 180,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260928_121737_e0902166-2084-4e13-b23d-a8c37534cd90.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-28T12:17:37.028108Z",
+      "display_name": "Seedance 2.5",
+      "id": "e0902166-2084-4e13-b23d-a8c37534cd90",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "1378ef83-0f2b-4045-913c-fc54d924b39a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/1378ef83-0f2b-4045-913c-fc54d924b39a.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "17191f9d-c794-4d44-ac8c-192132a8057f",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/17191f9d-c794-4d44-ac8c-192132a8057f.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "9a83936e-e9a3-4fc5-a6db-a2ede66fc969",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/9a83936e-e9a3-4fc5-a6db-a2ede66fc969.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "84bcab80-81de-44a2-bbcc-16b6c23f81db",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/84bcab80-81de-44a2-bbcc-16b6c23f81db.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "f18e3df5-447a-4ad5-ac3b-cca7bf8af60c",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/f18e3df5-447a-4ad5-ac3b-cca7bf8af60c.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "0eb0cda2-30e9-4e67-abc9-b3cb6d8b211a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/0eb0cda2-30e9-4e67-abc9-b3cb6d8b211a.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 12 | THE OFFERING | 15 SECONDS\n\nCreate a horizontal 16:9 cinematic sequence for Seedance 2.5.\nTwo shots lasting five and ten seconds.\nCut to black at 14.5 seconds and hold the final half-second in silence.\n\nCHARACTER REFERENCES:\nShahrnaz = {{CHAR_SHAHRNAZ}}\nArnavaz = {{CHAR_ARNAVAZ}}\nZahhak and his living shoulder serpents = {{CHAR_ZAHHAK}}\n\nANIMAL REFERENCE:\nCat = {{ANIMAL_CAT}}\n\nPROP REFERENCES:\nBlade = {{PROP_BLADE}}\nStaff = {{PROP_STAFF}}\n\nREFERENCE INTERPRETATION:\nPreserve all character identities, masks, costumes, animal anatomy and prop designs. Apply the lighting below to every subject.\n\nLOCATION AND LIGHTING:\nA chamber concealed entirely by blackness.\n\nOne fixed hard overhead spotlight illuminates the closely grouped characters.\n\nCold-neutral light falls on their upper masks, shoulders, hands, the supported cat and the blade. Deep shadows shape the lower faces and clothing.\n\nThe background and all space beyond their bodies remain solid black. Architecture and floor stay unexposed.\n\nUse waist-up and chest-up framing. Keep exposure fixed and the overhead spotlight constant.\n\nBLOCKING:\nShahrnaz stands WEST, facing EAST.\nArnavaz stands EAST, facing WEST.\nThey begin seventy centimeters apart.\n\nThe camera remains SOUTH of their shared axis:\nShahrnaz is always SCREEN-LEFT, facing right.\nArnavaz is always SCREEN-RIGHT, facing left.\n\nZahhak stands NORTH, sixty centimeters behind the midpoint between them, facing SOUTH toward their actions. His mask is visible through the upper gap between their profiles.\n\nShahrnaz carries the cat in both hands.\nArnavaz holds the blade low in her RIGHT hand.\nHer LEFT hand is empty.\n\nThe cat remains in Shahrnaz’s hands for the entire sequence.\n\nSHOT 28A | 00:00–00:05 | RAISING THE CAT\n\n50mm close composition from SOUTH, framing Shahrnaz’s upper torso and the cat, with Arnavaz’s near shoulder at the right edge.\n\nShahrnaz appears screen-left, facing screen-right.\n\nShe supports the cat’s chest with one hand and its hindquarters with the other.\n\nSlowly raise the cat from mid-chest to upper-chest height, keeping it close enough for secure support. Its body remains naturally horizontal in her hands.\n\nHer masked head inclines toward the animal, but her hands remain still rather than stroking it.\n\nArnavaz watches from screen-right.\n\nSHOT 28B | 00:05–00:15 | THE FINAL TABLEAU\n\nCut to a 40mm waist-up three-person composition from SOUTH, remaining on the same side of the axis.\n\nShahrnaz occupies the LEFT third in profile, facing right.\nArnavaz occupies the RIGHT third in profile, facing left.\n\nThe cat is supported between them at upper-chest height, just below the center of the frame.\n\nZahhak stands farther back, his frontal mask visible in the upper central gap. His dark torso falls away behind the women.\n\nArrange the image around three points:\nShahrnaz’s mask at upper-left,\nArnavaz’s mask at upper-right,\nthe supported cat below and between them.\n\nZahhak’s higher, more distant mask watches over this arrangement.\n\nArnavaz takes one small step closer.\n\nMake a very slow twenty-centimeter push-in, retaining both sisters, the cat and Zahhak’s mask within the composition.\n\nShahrnaz presents the cat slightly toward Arnavaz while maintaining full support with both hands.\n\nArnavaz extends her empty LEFT hand toward it.\nHer RIGHT hand gradually lifts the blade from her hip into the lower-right portion of the composition.\n\nThe blade remains separated from the animal.\nBoth sisters remain calm and cooperative.\n\nBehind them, one of Zahhak’s living serpents slowly lifts and turns its head beside his mask. Another makes a small muscular adjustment across his shoulder.\n\nHold the composition long enough for the relationship between all three characters to become clear.\n\nAt 14.5 seconds, before blade contact, cut directly to black.\nHold black and silence for the remaining half-second.\n\nPERFORMANCE AND SOUND:\nSteady breathing, quiet fabric, one soft footstep and a small natural movement from the cat.\n\nThe animal remains alive, continuously supported in Shahrnaz’s hands.\n\nNO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_3>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_4>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_5>>> is Dagger Horse Head (PRP-019 V02); match it wherever Dagger Horse Head appears.\n<<<image_6>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260928_121737_e0902166-2084-4e13-b23d-a8c37534cd90.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260928_121737_e0902166-2084-4e13-b23d-a8c37534cd90_thumbnail.webp"
+    }
+  ]
+}

@@ -4,7 +4,7 @@ import fsp from 'node:fs/promises'
 import path from 'node:path'
 import { listProjects, projectsDir, type Project } from './projects'
 import { RESTART_FLAG, autostartBlockedReason, stopFlagKind, workersPaused } from './worker-guard'
-import { getGeneratingJobId, getWorkerState, getWorkerStatus } from './store'
+import { getGeneratingJobIds, getWorkerState, getWorkerStatus } from './store'
 
 /**
  * Keeps one generation worker running per project, for as long as the panel's
@@ -76,8 +76,8 @@ async function superviseOne(pr: Project, backoff: Map<string, { ms: number; next
   }
   if (!status.outdated) return
   const state = await getWorkerState(pr)
-  const generating = await getGeneratingJobId(pr, new Set((state?.processedJobs ?? []) as string[]))
-  if (!generating && !fs.existsSync(pr.P.stopFlag)) {
+  const generating = await getGeneratingJobIds(pr, new Set((state?.processedJobs ?? []) as string[]))
+  if (generating.size === 0 && !fs.existsSync(pr.P.stopFlag)) {
     await fsp.writeFile(pr.P.stopFlag, `${RESTART_FLAG} for new code ${new Date().toISOString()}`, 'utf8')
   }
 }

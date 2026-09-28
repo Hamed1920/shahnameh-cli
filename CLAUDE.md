@@ -135,9 +135,14 @@ Run `/project-log` at the start of a session, or read directly:
   every project on a machine spends from the one Higgsfield account its CLI is signed into
   (`spentWithin` in `worker/lib/project.mjs`). A job over the ceiling is held (`state.held`, shown
   on the Queue page), never failed.
-- **One generation at a time, machine-wide.** A worker takes `.generate.lock` at the repo root
-  from the ceiling check until the ledger records the spend, so two projects can never both spend
-  the same remaining room. Decisions and index requests still run in parallel.
+- **Generations run in parallel, up to the account's limit, machine-wide.**
+  `maxConcurrentGenerations` in `10_PANEL/worker/config.json` (8, Higgsfield's Ultra-plan limit)
+  caps how many run at once across every project. Each running generation holds a slot file in
+  `.generate-slots/` whose note reserves its credits until its ledger row is written, and the
+  spend ceiling counts those reservations as spent. `.generate.lock` at the repo root is held
+  only while a worker checks the ceiling and takes a slot, so two projects can never both reserve
+  the same remaining room. A job Higgsfield refuses for being over its parallel limit is held and
+  tried again, never failed. A stop lets running generations finish; it only stops new ones.
 - **Every machine runs its own workers; each record belongs to one machine.** The panel and the
   worker stamp `machine` (the host name, or `SHM_MACHINE`) on every request, decision, index op
   and queued job, and a worker acts only on its own machine's (`worker/lib/machine.mjs`): approving
@@ -213,7 +218,8 @@ Hamed's normal path for new prompts is the panel's **Prompts** page (paste or dr
 targets, submit, approve the priced total). `/run-prompts` and `/sync-in` remain for documents that
 need judgement or non-generation SHM-JOB types.
 
-Skills: `/project-log`, `/sync-out`, `/sync-in`, `/sync-check`, `/learn`, `/run-prompts`.
+Skills: `/project-log`, `/sync-out`, `/sync-in`, `/sync-check`, `/learn`, `/run-prompts`,
+`/higgsfield-login`.
 
 ## Layout
 
@@ -223,7 +229,8 @@ tools/          Validate-Project, Build-ContextPack, Ingest-Jobs, Move-ToProject
 docs/           INDEXING.md, SYNC_PROTOCOL.md, VISION-BATCH-ADD.md (parked), reference/HIGGSFIELD-CLI.md
 templates/      project/ — the skeleton the panel copies to start a new film
 shahnameh-cli/  a project (code SHM). Any top-level folder with a project.json is one.
-.generate.lock  machine-wide: one generation at a time. Never committed.
+.generate.lock  machine-wide: held while a worker reserves spend and a slot. Never committed.
+.generate-slots/ machine-wide: one lock per generation running. Never committed.
 .workers-paused "Stop all workers" on the Queue page is in force. Never committed.
 ```
 
@@ -235,7 +242,7 @@ project.json    schema, name, slug, code, description, mark, created
 01_CHARACTERS/  CHR      02_GROUPS/    GRP      03_LOCATIONS/  LOC
 04_PROPS/       PRP VEH  05_CREATURES/ CRT      06_COSTUMES/   COS
 07_EPISODES/    EP SQ SC SH             08_REFERENCE/ REF FX
-09_OUTPUT/      renders; _staging, _drafts, _rejected, _uploads and _archive are working space
+09_OUTPUT/      renders; _staging, _drafts, _rejected, _discarded, _uploads and _archive are working space
 99_INBOX/       unindexed drop zone
 ```
 

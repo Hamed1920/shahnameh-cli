@@ -5,7 +5,7 @@ import { isFiledShot } from './asset'
 import { parseCsv } from './csv'
 import { getDecidedEntries } from './decided'
 import {
-  getCandidates, getEpisodes, getGeneratingJobId, getQueue, getShotMoveRequests, getShotMoves, getWorkerState,
+  getCandidates, getEpisodes, getGeneratingJobIds, getQueue, getShotMoveRequests, getShotMoves, getWorkerState,
   readJsonl,
 } from './store'
 import type { Project } from './projects'
@@ -40,7 +40,7 @@ export async function getEpisodeBoard(pr: Project): Promise<EpisodeBoard[]> {
   const rx = idRx(pr.code)
   const now = (id: string) => moves.shot[id] ?? id
   const processed = new Set((state?.processedJobs ?? []) as string[])
-  const generating = await getGeneratingJobId(pr, processed)
+  const generating = await getGeneratingJobIds(pr, processed)
 
   /** One row per shot, filled in by whichever source knows most about it. */
   const rows = new Map<string, EpisodeScene>()
@@ -75,7 +75,7 @@ export async function getEpisodeBoard(pr: Project): Promise<EpisodeBoard[]> {
     const r = row(q.target)
     if (!r) continue
     r.label ??= (q as QueueItem & { label?: string | null }).label ?? null
-    if (!processed.has(q.jobId)) r.state = q.jobId === generating ? 'generating' : 'queued'
+    if (!processed.has(q.jobId)) r.state = generating.has(q.jobId) ? 'generating' : 'queued'
   }
   for (const c of candidates) {
     if (c.decided) continue
@@ -89,6 +89,8 @@ export async function getEpisodeBoard(pr: Project): Promise<EpisodeBoard[]> {
     const r = row(e.target)
     if (!r) continue
     r.label ??= e.title
+    // Set aside: says nothing about where the shot stands.
+    if (e.decision.verdict === 'discarded') continue
     if (e.decision.verdict === 'denied') {
       if (r.state === 'planned') r.state = 'denied'
       continue
@@ -113,7 +115,7 @@ export async function getEpisodeBoard(pr: Project): Promise<EpisodeBoard[]> {
     r.outputs.push({
       file: e.file,
       take: takeOf(e.file, now(e.target)),
-      verdict: e.decision.verdict === 'accepted' ? 'accepted' : 'denied',
+      verdict: e.decision.verdict,
       stage: e.stage,
       attempt: e.attempt,
       ts: e.decision.ts,

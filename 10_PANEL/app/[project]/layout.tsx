@@ -10,7 +10,7 @@ import { getActivity, jobLabel } from '@/lib/activity'
 import { freshCatalog } from '@/lib/catalog'
 import { getProjectVersion } from '@/lib/live'
 import { getProject, publicInfo } from '@/lib/projects'
-import { getGeneratingJobId, getLearnings, getPending, getQueue, getWaitingJobs, getWorkerState, getWorkerStatus } from '@/lib/store'
+import { getGeneratingJobIds, getLearnings, getPending, getQueue, getWaitingJobs, getWorkerState, getWorkerStatus } from '@/lib/store'
 
 export async function generateMetadata({ params }: LayoutProps<'/[project]'>): Promise<Metadata> {
   const pr = await getProject((await params).project)
@@ -39,8 +39,10 @@ export default async function ProjectLayout({ children, params }: LayoutProps<'/
   ])
   const processed = new Set((state?.processedJobs ?? []) as string[])
   const heldIds = new Set(Object.keys((state?.held ?? {}) as Record<string, unknown>))
-  const generatingId = await getGeneratingJobId(pr, processed)
-  const generating = generatingId ? jobLabel(queue.find((q) => q.jobId === generatingId)?.target) : null
+  // Several generate at once: name the first, count the rest.
+  const generatingIds = [...(await getGeneratingJobIds(pr, processed))]
+  const firstLabel = generatingIds.length ? jobLabel(queue.find((q) => q.jobId === generatingIds[0])?.target) : null
+  const generating = firstLabel && generatingIds.length > 1 ? `${firstLabel} +${generatingIds.length - 1}` : firstLabel
 
   return (
     <ProjectProvider project={publicInfo(pr)}>

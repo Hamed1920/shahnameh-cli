@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { Coins, Pause, Play, RotateCcw, X } from 'lucide-react'
+import { Coins, Pause, Play, RotateCcw, Trash2, X } from 'lucide-react'
 import { decide, type ActionResult } from '../actions'
 import { AttemptHistory } from '@/components/attempt-history'
 import { MentionTextarea } from '@/components/mention-textarea'
@@ -117,13 +117,15 @@ export function ReviewStage({
   const edits = useReferenceEdits(item.editable)
 
   const title = ctx.label ?? ctx.scene ?? s.target
-  const regenerates = verdict === 'denied' ? requeue : s.stage === 'draft'
+  const regenerates = verdict === 'denied' ? requeue : verdict === 'discarded' ? false : s.stage === 'draft'
   // Before a verdict, assume the list may still matter.
   const refsEditable = verdict === null ? true : regenerates
   const lockedReason =
-    verdict === 'denied'
-      ? 'Nothing is regenerated, so the references stay as they are. An uploaded image is still filed for later.'
-      : 'This is a final render, so nothing else is generated. An uploaded image is filed for later.'
+    verdict === 'discarded'
+      ? 'Discarding files nothing, so references and uploads here are ignored.'
+      : verdict === 'denied'
+        ? 'Nothing is regenerated, so the references stay as they are. An uploaded image is still filed for later.'
+        : 'This is a final render, so nothing else is generated. An uploaded image is filed for later.'
 
   // What "@" offers: exactly the references in use, in the order the model gets them.
   const mentionOptions = useMentionOptions(edits, catalog)
@@ -183,6 +185,7 @@ export function ReviewStage({
       if (isTyping(e.target) || e.ctrlKey || e.metaKey || e.altKey) return
       if (e.key === 'a' || e.key === 'A') { e.preventDefault(); choose('accepted') }
       if (e.key === 'd' || e.key === 'D') { e.preventDefault(); choose('denied') }
+      if (e.key === 'x' || e.key === 'X') { e.preventDefault(); choose('discarded') }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -200,6 +203,7 @@ export function ReviewStage({
 
   const costLine = (() => {
     if (!verdict) return null
+    if (verdict === 'discarded') return 'Out of Review, kept in _discarded. Nothing is filed or generated. No credits.'
     if (verdict === 'denied' && !requeue) return 'Nothing is generated. No credits.'
     if (verdict === 'denied') {
       const c = ctx.cost.regenerate
@@ -338,6 +342,20 @@ export function ReviewStage({
               })}
             </div>
 
+            {/* The quiet third way out: no note, nothing filed, nothing generated. */}
+            <button
+              type="button"
+              aria-pressed={verdict === 'discarded'}
+              onClick={() => choose('discarded')}
+              className={cn(
+                'focus-ring mx-auto mt-3 flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-xs transition-colors duration-150',
+                verdict === 'discarded' ? 'text-fg' : 'text-faint hover:text-fg',
+              )}
+            >
+              <Trash2 aria-hidden className="size-3" /> Discard
+              <Kbd className="h-4 min-w-4 text-[9px]">X</Kbd>
+            </button>
+
             <AnimatePresence initial={false}>
               {verdict ? (
                 <motion.div
@@ -348,6 +366,7 @@ export function ReviewStage({
                   transition={{ duration: 0.22, ease: EASE }}
                 >
                   <div className="space-y-5 pt-6">
+                    {verdict !== 'discarded' && (<>
                     <Field label={verdict === 'denied' ? 'What is wrong? This becomes the fix.' : 'Why did this one work? (optional)'}>
                       <MentionTextarea
                         name="notes"
@@ -369,6 +388,7 @@ export function ReviewStage({
                     <Field label="Tags">
                       <Input name="tags" dir="auto" value={tags} onChange={(e) => setTags(e.target.value)} className="text-start" placeholder="lighting, wrong location, silhouette" />
                     </Field>
+                    </>)}
 
                     {verdict === 'denied' && (
                       <Checkbox name="requeue" checked={requeue} onChange={(e) => setRequeue(e.target.checked)} label="Regenerate with this note applied" />
@@ -423,9 +443,9 @@ export function ReviewStage({
               pendingLabel="Checking"
               className="mt-6 h-11 w-full"
             >
-              {verdict === 'accepted' ? 'Accept' : verdict === 'denied' ? 'Deny' : 'Choose Accept or Deny'}
+              {verdict === 'accepted' ? 'Accept' : verdict === 'denied' ? 'Deny' : verdict === 'discarded' ? 'Discard' : 'Choose Accept or Deny'}
               {verdict && (
-                <Kbd className={cn('ml-1.5', verdict === 'accepted' ? 'border-ink/20 text-ink/55' : 'border-bad/30 text-bad/70')}>
+                <Kbd className={cn('ml-1.5', verdict === 'accepted' ? 'border-ink/20 text-ink/55' : verdict === 'denied' && 'border-bad/30 text-bad/70')}>
                   Ctrl ↵
                 </Kbd>
               )}
@@ -446,6 +466,7 @@ export function ReviewStage({
         <p className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] text-faint">
           <span><Kbd>A</Kbd> accept</span>
           <span><Kbd>D</Kbd> deny</span>
+          <span><Kbd>X</Kbd> discard</span>
           <span><Kbd>J</Kbd> <Kbd>K</Kbd> next / previous</span>
           <span><Kbd>Ctrl ↵</Kbd> submit</span>
         </p>

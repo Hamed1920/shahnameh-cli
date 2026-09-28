@@ -2,9 +2,11 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 
 /**
- * A lock file holding the owner's pid. Two uses: queue/worker.lock (one worker
- * per project) and projects/.generate.lock (one generation at a time across
- * every project, since they all spend from the same Higgsfield account).
+ * A lock file holding the owner's pid. Three uses: queue/worker.lock (one worker
+ * per project), projects/.generate.lock (one worker at a time checks the spend
+ * ceiling and takes a slot) and projects/.generate-slots/slot-N.lock (one per
+ * generation running, up to the account's parallel limit, its note reserving
+ * the credits).
  *
  * The file is two lines:
  *   <pid> [note]                         who holds it (the note is for a person)

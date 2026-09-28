@@ -1,1 +1,2 @@
 {"opId":"op_mufsx7myji68","ok":true,"summary":"added @CHR-001/V01, @LOC-001/V01, @LOC-002/V01, @PRP-001/V01, @PRP-002/V01, @PRP-003/V01, @PRP-004/V01, @PRP-005/V01","ts":"2026-09-24T17:24:12.334Z"}
+{"opId":"op_mufsx7myji68","ok":false,"reason":"made by an older version of the panel, before each machine ran its own worker; nothing was done with it. Do it again.","ts":"2026-09-28T07:46:41.006Z"}

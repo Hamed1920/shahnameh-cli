@@ -3,7 +3,7 @@ import path from 'node:path'
 import { idRx } from '../worker/lib/ids.mjs'
 import type { Project } from './projects'
 import {
-  getAssets, getDecisions, getFilings, getGeneratingJobId, getPriceTable, getQueue, getRegenerations, getShotMoves,
+  getAssets, getDecisions, getFilings, getGeneratingJobIds, getPriceTable, getQueue, getRegenerations, getShotMoves,
   getWorkerState, priceKey, readText as readStoreText, referenceResolver,
 } from './store'
 import type { Filing, QueueItem, RegenerateSource, RegenerationView, ReviewDecision, StagingSidecar } from './types'
@@ -22,7 +22,7 @@ export interface FollowUp {
   jobId: string
   attempt: number
   stage: 'draft' | 'final' | null
-  state: 'queued' | 'generating' | 'not-generated' | 'to-review' | 'accepted' | 'denied'
+  state: 'queued' | 'generating' | 'not-generated' | 'to-review' | 'accepted' | 'denied' | 'discarded'
 }
 
 export interface DecidedEntry {
@@ -101,7 +101,7 @@ export async function getDecidedEntries(pr: Project): Promise<DecidedEntry[]> {
   const failed = (state?.failedDecisions ?? {}) as Record<string, string>
   const processedDecisions = new Set((state?.processedDecisions ?? []) as string[])
   const processedJobs = new Set((state?.processedJobs ?? []) as string[])
-  const generating = await getGeneratingJobId(pr, processedJobs)
+  const generating = await getGeneratingJobIds(pr, processedJobs)
 
   const sidecarByJob = new Map([...byBatch.values()].map((s) => [s.jobId, s]))
   const queueById = new Map((queue as (QueueItem & { label?: string | null })[]).map((q) => [q.jobId, q]))
@@ -154,6 +154,8 @@ export async function getDecidedEntries(pr: Project): Promise<DecidedEntry[]> {
         file = nowFile(moves.get(d.candidate)!)
       } else if (d.verdict === 'denied') {
         file = `09_OUTPUT/_rejected/${d.hfJobId}/${base}`
+      } else if (d.verdict === 'discarded') {
+        file = `09_OUTPUT/_discarded/${d.hfJobId}/${base}`
       } else if (stage === 'draft') {
         file = `09_OUTPUT/_drafts/${d.hfJobId}/${base}`
       } else {
@@ -190,7 +192,7 @@ export async function getDecidedEntries(pr: Project): Promise<DecidedEntry[]> {
           attempt: child.attempt ?? cs?.attempt ?? 1,
           stage: child.stage ?? null,
           state: !processedJobs.has(child.jobId)
-            ? child.jobId === generating ? 'generating' : 'queued'
+            ? generating.has(child.jobId) ? 'generating' : 'queued'
             : !cs ? 'not-generated'
             : v ? v.verdict : 'to-review',
         }

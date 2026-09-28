@@ -98,7 +98,7 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
       setSaving((s) => new Set(s).add(h.path))
       const r = await h.commit().catch((e: Error) => ({ ok: false, error: e.message }))
       if (r.ok) {
-        toaster.show({ tone: 'good', title: `${h.title} ${h.verdict === 'accepted' ? 'accepted' : 'denied'}`, detail: 'Sent to the worker.', duration: 2500 })
+        toaster.show({ tone: 'good', title: `${h.title} ${h.verdict}`, detail: 'Sent to the worker.', duration: 2500 })
         // The server refresh removes it from `items`; until then it stays hidden.
       } else {
         setSaving((s) => { const n = new Set(s); n.delete(h.path); return n })
@@ -118,7 +118,7 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
       const id = ++seq
       const h: Held = { ...d, id, timer: setTimeout(() => commit(h), UNDO_MS) }
       setHeld((all) => [...all, h])
-      const verb = d.verdict === 'accepted' ? 'Accepted' : d.regenerates ? 'Denied, regenerating' : 'Denied'
+      const verb = d.verdict === 'accepted' ? 'Accepted' : d.verdict === 'discarded' ? 'Discarded' : d.regenerates ? 'Denied, regenerating' : 'Denied'
       toaster.show({
         id: heldToast(id),
         title: `${verb} ${d.title}`,

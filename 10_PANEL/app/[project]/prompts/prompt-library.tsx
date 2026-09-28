@@ -24,6 +24,7 @@ const STATE: Record<PromptLibraryItem['state'], { text: string; tone: 'accent' |
   'to-review': { text: 'to review', tone: 'accent' },
   accepted: { text: 'accepted', tone: 'good' },
   denied: { text: 'denied', tone: 'bad' },
+  discarded: { text: 'discarded', tone: 'muted' },
 }
 
 const PAGE = 25

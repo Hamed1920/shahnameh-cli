@@ -52,3 +52,43 @@
 {"batchId":"B-20260927-HQ9","event":"price","key":"r12","credits":45,"ts":"2026-09-27T16:27:24.940Z"}
 {"batchId":"B-20260927-HQ9","event":"priced","total":540,"unpriced":0,"ts":"2026-09-27T16:27:24.942Z"}
 {"batchId":"B-20260927-HQ9","reqId":"jr_muk18r2dpq7s","event":"queued","jobIds":{"r1":"J-20260927-EVG","r2":"J-20260927-IAP","r3":"J-20260927-QTO","r4":"J-20260927-4ZX","r5":"J-20260927-TBG","r6":"J-20260927-DOK","r7":"J-20260927-E99","r8":"J-20260927-YQA","r9":"J-20260927-4JR","r10":"J-20260927-JHY","r11":"J-20260927-9XC","r12":"J-20260927-8C2"},"assigned":[{"key":"r1","proposal":"NEXT/EP014","id":"SHM-EP014-SC001-SH0010","shortId":"EP014-SC001-SH0010"},{"key":"r2","proposal":"NEXT/EP014","id":"SHM-EP014-SC002-SH0010","shortId":"EP014-SC002-SH0010"},{"key":"r3","proposal":"NEXT/EP014","id":"SHM-EP014-SC003-SH0010","shortId":"EP014-SC003-SH0010"},{"key":"r4","proposal":"NEXT/EP014","id":"SHM-EP014-SC004-SH0010","shortId":"EP014-SC004-SH0010"},{"key":"r5","proposal":"NEXT/EP014","id":"SHM-EP014-SC005-SH0010","shortId":"EP014-SC005-SH0010"},{"key":"r6","proposal":"NEXT/EP014","id":"SHM-EP014-SC006-SH0010","shortId":"EP014-SC006-SH0010"},{"key":"r7","proposal":"NEXT/EP014","id":"SHM-EP014-SC007-SH0010","shortId":"EP014-SC007-SH0010"},{"key":"r8","proposal":"NEXT/EP014","id":"SHM-EP014-SC008-SH0010","shortId":"EP014-SC008-SH0010"},{"key":"r9","proposal":"NEXT/EP014","id":"SHM-EP014-SC009-SH0010","shortId":"EP014-SC009-SH0010"},{"key":"r10","proposal":"NEXT/EP014","id":"SHM-EP014-SC010-SH0010","shortId":"EP014-SC010-SH0010"},{"key":"r11","proposal":"NEXT/EP014","id":"SHM-EP014-SC011-SH0010","shortId":"EP014-SC011-SH0010"},{"key":"r12","proposal":"NEXT/EP014","id":"SHM-EP014-SC012-SH0010","shortId":"EP014-SC012-SH0010"}],"total":540,"ts":"2026-09-27T16:28:15.429Z"}
+{"batchId":null,"reqId":"jr_muircklwfs4p","sessionId":"ss_muirc8w5lknvx","genId":"gmuirckjrbiz","event":"studio.received","ts":"2026-09-28T07:37:37.082Z"}
+{"batchId":null,"reqId":"jr_muircpv1aqpe","sessionId":"ss_muirc8w5lknvx","genId":"gmuircpttbz7","event":"studio.received","ts":"2026-09-28T07:37:37.085Z"}
+{"batchId":null,"reqId":"jr_muircsjhuixi","sessionId":"ss_muirc8w5lknvx","genId":"gmuircsil77i","event":"studio.received","ts":"2026-09-28T07:37:37.086Z"}
+{"batchId":null,"reqId":"jr_muird6zfzrd1","sessionId":"ss_muirc8w5lknvx","genId":"gmuird6ynrbg","event":"studio.received","ts":"2026-09-28T07:37:37.091Z"}
+{"batchId":null,"reqId":"jr_muird9djuett","sessionId":"ss_muirc8w5lknvx","genId":"gmuird9cno8s","event":"studio.received","ts":"2026-09-28T07:37:37.093Z"}
+{"batchId":null,"reqId":"jr_muirdaso36g2","sessionId":"ss_muirc8w5lknvx","genId":"gmuirdas35wx","event":"studio.received","ts":"2026-09-28T07:37:37.097Z"}
+{"batchId":null,"reqId":"jr_muirdfba00rr","sessionId":"ss_muirc8w5lknvx","genId":"gmuirdfaewaf","event":"studio.received","ts":"2026-09-28T07:37:37.101Z"}
+{"batchId":null,"reqId":"jr_muirdrq0j6hq","sessionId":"ss_muirc8w5lknvx","genId":"gmuirdrpbuaj","event":"studio.received","ts":"2026-09-28T07:37:37.105Z"}
+{"batchId":null,"reqId":"jr_muirdw1fregk","sessionId":"ss_muirc8w5lknvx","genId":"gmuirdw0n2c3","event":"studio.received","ts":"2026-09-28T07:37:37.108Z"}
+{"batchId":null,"reqId":"jr_muirfhicfm3x","sessionId":"ss_muirc8w5lknvx","genId":"gmuirfhhkvqt","event":"studio.received","ts":"2026-09-28T07:37:37.112Z"}
+{"batchId":null,"reqId":"jr_muirfiouasoe","sessionId":"ss_muirc8w5lknvx","genId":"gmuirfio42ot","event":"studio.received","ts":"2026-09-28T07:37:37.115Z"}
+{"batchId":null,"reqId":"jr_muirfsqzv55p","sessionId":"ss_muirc8w5lknvx","genId":"gmuirfsqaa2p","event":"studio.received","ts":"2026-09-28T07:37:37.119Z"}
+{"batchId":null,"reqId":"jr_muis3gtna6vy","sessionId":"ss_muirc8w5lknvx","event":"studio.closed","putAway":0,"ts":"2026-09-28T07:37:37.710Z"}
+{"batchId":null,"reqId":"jr_muircklwfs4p","sessionId":"ss_muirc8w5lknvx","genId":"gmuirckjrbiz","event":"studio.error","reason":"replaced by a later edit","ts":"2026-09-28T07:37:38.458Z"}
+{"batchId":null,"reqId":"jr_muircpv1aqpe","sessionId":"ss_muirc8w5lknvx","genId":"gmuircpttbz7","event":"studio.error","reason":"replaced by a later edit","ts":"2026-09-28T07:37:38.460Z"}
+{"batchId":null,"reqId":"jr_muircsjhuixi","sessionId":"ss_muirc8w5lknvx","genId":"gmuircsil77i","event":"studio.error","reason":"replaced by a later edit","ts":"2026-09-28T07:37:38.461Z"}
+{"batchId":null,"reqId":"jr_muird6zfzrd1","sessionId":"ss_muirc8w5lknvx","genId":"gmuird6ynrbg","event":"studio.error","reason":"replaced by a later edit","ts":"2026-09-28T07:37:38.462Z"}
+{"batchId":null,"reqId":"jr_muird9djuett","sessionId":"ss_muirc8w5lknvx","genId":"gmuird9cno8s","event":"studio.error","reason":"replaced by a later edit","ts":"2026-09-28T07:37:38.464Z"}
+{"batchId":null,"reqId":"jr_muirdaso36g2","sessionId":"ss_muirc8w5lknvx","genId":"gmuirdas35wx","event":"studio.error","reason":"replaced by a later edit","ts":"2026-09-28T07:37:38.465Z"}
+{"batchId":null,"reqId":"jr_muirdfba00rr","sessionId":"ss_muirc8w5lknvx","genId":"gmuirdfaewaf","event":"studio.error","reason":"replaced by a later edit","ts":"2026-09-28T07:37:38.466Z"}
+{"batchId":null,"reqId":"jr_muirdrq0j6hq","sessionId":"ss_muirc8w5lknvx","genId":"gmuirdrpbuaj","event":"studio.error","reason":"replaced by a later edit","ts":"2026-09-28T07:37:38.468Z"}
+{"batchId":null,"reqId":"jr_muirdw1fregk","sessionId":"ss_muirc8w5lknvx","genId":"gmuirdw0n2c3","event":"studio.error","reason":"replaced by a later edit","ts":"2026-09-28T07:37:38.469Z"}
+{"batchId":null,"reqId":"jr_muirfhicfm3x","sessionId":"ss_muirc8w5lknvx","genId":"gmuirfhhkvqt","event":"studio.error","reason":"replaced by a later edit","ts":"2026-09-28T07:37:38.470Z"}
+{"batchId":null,"reqId":"jr_muirfiouasoe","sessionId":"ss_muirc8w5lknvx","genId":"gmuirfio42ot","event":"studio.error","reason":"replaced by a later edit","ts":"2026-09-28T07:37:38.471Z"}
+{"batchId":null,"reqId":"jr_muirfsqzv55p","sessionId":"ss_muirc8w5lknvx","genId":"gmuirfsqaa2p","event":"studio.priced","credits":1,"count":2,"total":2,"ts":"2026-09-28T07:37:44.733Z"}
+{"batchId":null,"reqId":"jr_muirfsqzv55p","sessionId":"ss_muirc8w5lknvx","genId":"gmuirfsqaa2p","event":"studio.priced","credits":1,"count":2,"total":2,"ts":"2026-09-28T07:37:44.851Z"}
+{"batchId":"B-20260928-UFD","reqId":"jr_mul68mji6pjr","event":"validated","jobs":[{"key":"r1","ok":true,"target":"NEXT/EP014","jobId":"J-20260928-5SK"}],"newEntities":[],"ts":"2026-09-28T11:35:52.340Z"}
+{"batchId":"B-20260928-UFD","event":"price","key":"r1","credits":45,"ts":"2026-09-28T11:36:11.873Z"}
+{"batchId":"B-20260928-UFD","event":"priced","total":45,"unpriced":0,"ts":"2026-09-28T11:36:11.881Z"}
+{"batchId":"B-20260928-UFD","reqId":"jr_mul6bssrd31v","event":"queued","jobIds":{"r1":"J-20260928-5SK"},"assigned":[{"key":"r1","proposal":"NEXT/EP014","id":"SHM-EP014-SC013-SH0010","shortId":"EP014-SC013-SH0010"}],"total":45,"ts":"2026-09-28T11:38:21.407Z"}
+{"batchId":"B-20260928-5MZ","reqId":"jr_mul707qqhggt","event":"validated","jobs":[{"key":"r1","ok":true,"target":"NEXT/EP014","jobId":"J-20260928-WJR"}],"newEntities":[],"ts":"2026-09-28T11:57:18.635Z"}
+{"batchId":"B-20260928-5MZ","event":"price","key":"r1","credits":45,"ts":"2026-09-28T11:57:35.579Z"}
+{"batchId":"B-20260928-5MZ","event":"priced","total":45,"unpriced":0,"ts":"2026-09-28T11:57:35.584Z"}
+{"batchId":"B-20260928-5MZ","reqId":"jr_mul70oxoqzmu","event":"queued","jobIds":{"r1":"J-20260928-WJR"},"assigned":[{"key":"r1","proposal":"NEXT/EP014","id":"SHM-EP014-SC014-SH0010","shortId":"EP014-SC014-SH0010"}],"total":45,"ts":"2026-09-28T11:57:43.547Z"}
+{"batchId":"B-20260928-FN9","reqId":"jr_mul71j24q5au","event":"validated","jobs":[{"key":"r3","ok":true,"target":"NEXT/EP014","jobId":"J-20260928-A2X"}],"newEntities":[],"ts":"2026-09-28T11:58:19.059Z"}
+{"batchId":"B-20260928-FN9","event":"price","key":"r3","credits":45,"ts":"2026-09-28T11:58:49.909Z"}
+{"batchId":"B-20260928-FN9","event":"priced","total":45,"unpriced":0,"ts":"2026-09-28T11:58:49.917Z"}
+{"batchId":"B-20260928-FN9","reqId":"jr_mul72mkatl9i","event":"queued","jobIds":{"r3":"J-20260928-A2X"},"assigned":[{"key":"r3","proposal":"NEXT/EP014","id":"SHM-EP014-SC015-SH0010","shortId":"EP014-SC015-SH0010"}],"total":45,"ts":"2026-09-28T11:59:13.303Z"}
+{"batchId":null,"reqId":"jr_mul75000g05u","event":"queued","jobIds":{"J-20260928-WJR":"J-20260928-X9P"},"assigned":[],"total":null,"ts":"2026-09-28T12:01:02.265Z"}
+{"batchId":null,"reqId":"jr_mul7x8js29u2","event":"queued","jobIds":{"J-20260928-WJR":"J-20260928-HS0"},"assigned":[],"total":null,"ts":"2026-09-28T12:23:01.401Z"}

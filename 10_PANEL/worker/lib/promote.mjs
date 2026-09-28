@@ -428,3 +428,24 @@ export async function reject(decision) {
   await log(`REJECTED ${decision.candidate} -> ${rel(dest)}`)
   return rel(dest)
 }
+
+/**
+ * Discard: take a candidate out of Review and do nothing else. Kept, like a
+ * rejected take, but apart from _rejected so /learn never reads it as a
+ * failure -- a discard carries no note and teaches nothing. Never files,
+ * never queues.
+ */
+export async function discard(decision) {
+  const src = path.join(ROOT, decision.candidate)
+  const destDir = path.join(P.discarded, decision.hfJobId)
+  await fs.mkdir(destDir, { recursive: true })
+  const dest = path.join(destDir, path.basename(src))
+  try {
+    await fs.copyFile(src, dest)
+    await fs.rm(src, { force: true })
+  } catch (e) {
+    if (e.code !== 'ENOENT') throw e
+  }
+  await log(`DISCARDED ${decision.candidate} -> ${rel(dest)}`)
+  return rel(dest)
+}

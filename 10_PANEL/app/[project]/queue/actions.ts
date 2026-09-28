@@ -1,9 +1,40 @@
 'use server'
 
 import fsp from 'node:fs/promises'
-import { listProjects } from '@/lib/projects'
+import { REVIEWER, appendJobRequest, newRequestId } from '@/lib/job-requests'
+import { listProjects, requireProject } from '@/lib/projects'
 import { revalidateProject } from '@/lib/revalidate'
+import { getQueue, getWorkerState } from '@/lib/store'
 import { pauseFlagPath, stopFlagKind } from '@/lib/worker-guard'
+
+/**
+ * Retry or remove a generation that failed. One append to JOB_REQUESTS.jsonl;
+ * the worker queues a retry (worker/lib/job-requests.mjs, job.retry) and a
+ * removal only hides the failure here. Checked first so a stale page says so.
+ */
+export async function actOnFailedJob(
+  project: string,
+  jobId: string,
+  action: 'retry' | 'dismiss',
+): Promise<{ ok: boolean; error?: string }> {
+  const pr = await requireProject(project)
+  const [queue, state] = await Promise.all([getQueue(pr), getWorkerState(pr)])
+  if (!queue.some((q) => q.jobId === jobId)) return { ok: false, error: 'That job is not in the queue any more.' }
+  if (!((state?.failedJobs ?? {}) as Record<string, unknown>)[jobId]) return { ok: false, error: 'That job did not fail.' }
+  if (action === 'retry' && queue.some((q) => (q as { retryOf?: string }).retryOf === jobId)) {
+    return { ok: false, error: 'It has already been retried.' }
+  }
+  try {
+    await appendJobRequest(pr, {
+      id: newRequestId(), ts: new Date().toISOString(), reviewer: REVIEWER,
+      type: action === 'retry' ? 'job.retry' : 'job.dismiss', jobId,
+    })
+  } catch (e) {
+    return { ok: false, error: `Could not send it: ${(e as Error).message}` }
+  }
+  revalidateProject(pr.slug)
+  return { ok: true }
+}
 
 /**
  * Stop every project's worker, and keep them stopped: the way to stop them before

@@ -1,0 +1,122 @@
+{
+  "jobId": "J-20260928-PDT",
+  "parentJobId": "J-20260927-EVG",
+  "hfJobId": "033399d6-21eb-4d47-b98b-c9eab8846a03",
+  "attempt": 1,
+  "stage": "final",
+  "label": "PLAN 01",
+  "target": "SHM-EP014-SC001-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP014-JAMSHID-GIRLS/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 01 | SHOTS 01-02 | THE PRIVATE ROOM\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 2 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_MUSICIAN = {{CHAR_MUSICIAN}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_PRIVATE_ROOM = {{LOC_PRIVATE_ROOM}}\nPROP REFERENCES\nPROP_INSTRUMENT = {{PROP_INSTRUMENT}}\nSTART STATE AND BLOCKING\nSTATE_SAFE. Shahrnaz sits frame-left with the cat beside her on the seat. Arnavaz sits frame-right, one arm’s reach away. The musician sits deeper left with the intact instrument. The closed doorway remains in the right background. Cast: exactly three adults and one cat.\n\nSHOT 01 | 00:00-00:09 | THE ROOM HOLDS THEM\n35mm seated-eye-level medium-wide tableau. Begin with all three adults and the cat readable in separate depth layers. Drift sideways only twenty centimeters as Shahrnaz slowly strokes the cat. The musician’s hands execute restrained playing gestures on the referenced instrument. Arnavaz rests upright and listens through a slight head inclination. Keep the doorway in soft background focus.\nSHOT 02 | 00:09-00:15 | A FAMILIAR TOUCH\nCut to a 65mm close composition at Shahrnaz’s lap height. Her right fingertips stop at the cat’s cheek; it leans into them. Arnavaz’s relaxed hand remains at the far edge of frame. Focus stays on hand and fur. Hold the completed touch for two seconds; cut while everyone is still secure.\nLIGHT AND IMAGE\nSoft warm daylight from the room’s approved opening, gentle reflected fill, tactile fabric and clear shadow texture. Preserve the approved furnishings and architecture.\nSOUND\nQuiet room air, cat breathing, fingertips against fur, cloth and unpitched finger contact on the instrument. Musical notes are reserved for later editing; the generated audio is diegetic texture only.\nEND STATE AND EDIT\nShahrnaz’s right hand rests on the cat; Arnavaz stays seated; the instrument is intact; the door remains closed.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_2>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_3>>> is Musician (CHR-006 V02); match it wherever Musician appears.\n<<<image_4>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_5>>> is Jamshid Daughters Chamber (LOC-020 V01); match it wherever Jamshid Daughters Chamber appears.\n<<<image_6>>> is Instrument Saz (PRP-018 V01); match it wherever Instrument Saz appears.",
+  "basePrompt": "PLAN 01 | SHOTS 01-02 | THE PRIVATE ROOM\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 2 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_MUSICIAN = {{CHAR_MUSICIAN}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_PRIVATE_ROOM = {{LOC_PRIVATE_ROOM}}\nPROP REFERENCES\nPROP_INSTRUMENT = {{PROP_INSTRUMENT}}\nSTART STATE AND BLOCKING\nSTATE_SAFE. Shahrnaz sits frame-left with the cat beside her on the seat. Arnavaz sits frame-right, one arm’s reach away. The musician sits deeper left with the intact instrument. The closed doorway remains in the right background. Cast: exactly three adults and one cat.\n\nSHOT 01 | 00:00-00:09 | THE ROOM HOLDS THEM\n35mm seated-eye-level medium-wide tableau. Begin with all three adults and the cat readable in separate depth layers. Drift sideways only twenty centimeters as Shahrnaz slowly strokes the cat. The musician’s hands execute restrained playing gestures on the referenced instrument. Arnavaz rests upright and listens through a slight head inclination. Keep the doorway in soft background focus.\nSHOT 02 | 00:09-00:15 | A FAMILIAR TOUCH\nCut to a 65mm close composition at Shahrnaz’s lap height. Her right fingertips stop at the cat’s cheek; it leans into them. Arnavaz’s relaxed hand remains at the far edge of frame. Focus stays on hand and fur. Hold the completed touch for two seconds; cut while everyone is still secure.\nLIGHT AND IMAGE\nSoft warm daylight from the room’s approved opening, gentle reflected fill, tactile fabric and clear shadow texture. Preserve the approved furnishings and architecture.\nSOUND\nQuiet room air, cat breathing, fingertips against fur, cloth and unpitched finger contact on the instrument. Musical notes are reserved for later editing; the generated audio is diegetic texture only.\nEND STATE AND EDIT\nShahrnaz’s right hand rests on the cat; Arnavaz stays seated; the instrument is intact; the door remains closed.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@CHR-004/V01",
+    "@CHR-005/V01",
+    "@CHR-006",
+    "@CRT-004/V01",
+    "@LOC-020/V01",
+    "@PRP-018/V01"
+  ],
+  "createdAt": "2026-09-28T13:09:21.073Z",
+  "costCredits": 180,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260928_125845_033399d6-21eb-4d47-b98b-c9eab8846a03.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-28T12:58:45.110295Z",
+      "display_name": "Seedance 2.5",
+      "id": "033399d6-21eb-4d47-b98b-c9eab8846a03",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "3a45a0ab-38ad-42ee-8298-4b0047eaf52e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/3a45a0ab-38ad-42ee-8298-4b0047eaf52e.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a5f82e1a-e1b1-4e25-a850-d466965b9a13",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/a5f82e1a-e1b1-4e25-a850-d466965b9a13.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "8ba11748-9b34-48e7-b3a3-46418bbe1f49",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/8ba11748-9b34-48e7-b3a3-46418bbe1f49.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "0fb2a78f-7a59-454d-b4a8-e5b53350c180",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/0fb2a78f-7a59-454d-b4a8-e5b53350c180.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "4a37dd57-0bf3-4e12-9057-6eee4e6fcfdb",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/4a37dd57-0bf3-4e12-9057-6eee4e6fcfdb.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a05a8103-f57e-45be-a330-f77fa7163518",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/a05a8103-f57e-45be-a330-f77fa7163518.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 01 | SHOTS 01-02 | THE PRIVATE ROOM\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 2 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_MUSICIAN = {{CHAR_MUSICIAN}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_PRIVATE_ROOM = {{LOC_PRIVATE_ROOM}}\nPROP REFERENCES\nPROP_INSTRUMENT = {{PROP_INSTRUMENT}}\nSTART STATE AND BLOCKING\nSTATE_SAFE. Shahrnaz sits frame-left with the cat beside her on the seat. Arnavaz sits frame-right, one arm’s reach away. The musician sits deeper left with the intact instrument. The closed doorway remains in the right background. Cast: exactly three adults and one cat.\n\nSHOT 01 | 00:00-00:09 | THE ROOM HOLDS THEM\n35mm seated-eye-level medium-wide tableau. Begin with all three adults and the cat readable in separate depth layers. Drift sideways only twenty centimeters as Shahrnaz slowly strokes the cat. The musician’s hands execute restrained playing gestures on the referenced instrument. Arnavaz rests upright and listens through a slight head inclination. Keep the doorway in soft background focus.\nSHOT 02 | 00:09-00:15 | A FAMILIAR TOUCH\nCut to a 65mm close composition at Shahrnaz’s lap height. Her right fingertips stop at the cat’s cheek; it leans into them. Arnavaz’s relaxed hand remains at the far edge of frame. Focus stays on hand and fur. Hold the completed touch for two seconds; cut while everyone is still secure.\nLIGHT AND IMAGE\nSoft warm daylight from the room’s approved opening, gentle reflected fill, tactile fabric and clear shadow texture. Preserve the approved furnishings and architecture.\nSOUND\nQuiet room air, cat breathing, fingertips against fur, cloth and unpitched finger contact on the instrument. Musical notes are reserved for later editing; the generated audio is diegetic texture only.\nEND STATE AND EDIT\nShahrnaz’s right hand rests on the cat; Arnavaz stays seated; the instrument is intact; the door remains closed.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_2>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_3>>> is Musician (CHR-006 V02); match it wherever Musician appears.\n<<<image_4>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_5>>> is Jamshid Daughters Chamber (LOC-020 V01); match it wherever Jamshid Daughters Chamber appears.\n<<<image_6>>> is Instrument Saz (PRP-018 V01); match it wherever Instrument Saz appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260928_125845_033399d6-21eb-4d47-b98b-c9eab8846a03.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260928_125845_033399d6-21eb-4d47-b98b-c9eab8846a03_thumbnail.webp"
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "jobId": "J-20260928-X9P",
+  "parentJobId": "J-20260928-WJR",
+  "hfJobId": "fe6cb2ae-24cf-4816-844d-3b5f6c3e3be1",
+  "attempt": 1,
+  "stage": "draft",
+  "label": null,
+  "target": "SHM-EP014-SC014-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP014-JAMSHID-GIRLS/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 11 | THE BLADE AND THE COMMAND | 15 SECONDS\n\nCreate a horizontal 16:9 cinematic sequence for Seedance 2.5.\nThree shots lasting four, six and five seconds.\n\nCHARACTER REFERENCES:\nShahrnaz = {{CHAR_SHAHRNAZ}}\nArnavaz = {{CHAR_ARNAVAZ}}\nZahhak and his living shoulder serpents = {{CHAR_ZAHHAK}}\n\nANIMAL REFERENCE:\nCat = {{ANIMAL_CAT}}\n\nPROP REFERENCES:\nStaff = {{PROP_STAFF}}\nBlade = {{PROP_BLADE}}\n\nREFERENCE INTERPRETATION:\nPreserve identities, masks, costumes and object designs. Relight the subjects as described here.\n\nLOCATION AND LIGHTING:\nThe characters stand inside a chamber entirely concealed by darkness.\n\nExactly one hard overhead spotlight illuminates the compact group from directly above.\n\nCold-neutral highlights define upper mask planes, shoulders, hands, the cat and sections of the living serpents. Shadows beneath faces and arms remain deep.\n\nThe surrounding image is solid black. Walls, columns and floor remain unexposed. Frame the action from the waist upward.\n\nMaintain fixed exposure and constant spotlight intensity throughout. Every cut retains the same black surroundings.\n\nSTART STATE:\nShahrnaz stands WEST and Arnavaz EAST, both facing NORTH.\nBoth are calm and possessed.\nShahrnaz holds the cat against her chest.\n\nZahhak stands NORTH of their midpoint, facing SOUTH.\nHis RIGHT hand holds the staff.\nA single blade is concealed beneath the rear-left layer of his garment.\n\nSHOT 26A | 00:00–00:04 | EXTRACTION\n\n50mm waist-up view from EAST, looking WEST.\n\nArnavaz is screen-left in profile, facing screen-right.\nZahhak is screen-right, facing screen-left.\nShahrnaz stands farther away, partly screened by Arnavaz.\n\nZahhak shifts slightly to stand directly before Arnavaz.\n\nKeeping the staff in his right hand, he reaches beneath the rear-left garment layer with his LEFT hand and draws out the blade by its handle.\n\nKeep the hand and displaced fabric visible so the object’s origin is clear.\n\nThe blade catches the overhead light as he brings it forward.\n\nSHOT 26B | 00:04–00:10 | HANDOVER\n\n65mm closer view from the SAME EASTERN side.\n\nArnavaz remains screen-left, facing right.\nZahhak remains screen-right, facing left.\n\nShow their opposing mask profiles and hands together.\n\nZahhak holds the pommel end in his LEFT fingers, leaving the main grip exposed. The blade points downward.\n\nArnavaz closes her RIGHT hand around the grip.\nZahhak releases it only after her fingers are secure.\n\nShe lowers the blade toward her right hip.\nHer LEFT hand remains empty.\n\nHold the entire transfer in one continuous shot with a slight forward camera drift.\n\nSHOT 26C | 00:10–00:15 | DIRECTION\n\n40mm waist-up view from SOUTH, looking NORTH.\n\nShahrnaz’s BACK occupies screen-left.\nArnavaz’s BACK occupies screen-right.\nZahhak’s FRONT is visible beyond them.\n\nZahhak raises the staff head into Arnavaz’s sightline, then directs it toward the cat in Shahrnaz’s arms on screen-left.\n\nArnavaz’s head follows. She turns WEST toward Shahrnaz.\nShahrnaz turns EAST toward Arnavaz, still carrying the cat.\n\nZahhak lowers the staff.\n\nEnd with the sisters facing each other and the blade held low in Arnavaz’s right hand.\n\nLIVING SERPENTS:\nVisible serpents continuously make subtle independent neck turns, muscular adjustments and slow slides across the garment. Preserve their referenced single-headed anatomy.\n\nSOUND:\nClothing opening, fingers adjusting around the handle, calm breathing, staff movement and quiet scales.\n\nNO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_3>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_4>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_5>>> is Dagger Horse Head (PRP-019 V02); match it wherever Dagger Horse Head appears.\n<<<image_6>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+  "basePrompt": "PLAN 11 | THE BLADE AND THE COMMAND | 15 SECONDS\n\nCreate a horizontal 16:9 cinematic sequence for Seedance 2.5.\nThree shots lasting four, six and five seconds.\n\nCHARACTER REFERENCES:\nShahrnaz = {{CHAR_SHAHRNAZ}}\nArnavaz = {{CHAR_ARNAVAZ}}\nZahhak and his living shoulder serpents = {{CHAR_ZAHHAK}}\n\nANIMAL REFERENCE:\nCat = {{ANIMAL_CAT}}\n\nPROP REFERENCES:\nStaff = {{PROP_STAFF}}\nBlade = {{PROP_BLADE}}\n\nREFERENCE INTERPRETATION:\nPreserve identities, masks, costumes and object designs. Relight the subjects as described here.\n\nLOCATION AND LIGHTING:\nThe characters stand inside a chamber entirely concealed by darkness.\n\nExactly one hard overhead spotlight illuminates the compact group from directly above.\n\nCold-neutral highlights define upper mask planes, shoulders, hands, the cat and sections of the living serpents. Shadows beneath faces and arms remain deep.\n\nThe surrounding image is solid black. Walls, columns and floor remain unexposed. Frame the action from the waist upward.\n\nMaintain fixed exposure and constant spotlight intensity throughout. Every cut retains the same black surroundings.\n\nSTART STATE:\nShahrnaz stands WEST and Arnavaz EAST, both facing NORTH.\nBoth are calm and possessed.\nShahrnaz holds the cat against her chest.\n\nZahhak stands NORTH of their midpoint, facing SOUTH.\nHis RIGHT hand holds the staff.\nA single blade is concealed beneath the rear-left layer of his garment.\n\nSHOT 26A | 00:00–00:04 | EXTRACTION\n\n50mm waist-up view from EAST, looking WEST.\n\nArnavaz is screen-left in profile, facing screen-right.\nZahhak is screen-right, facing screen-left.\nShahrnaz stands farther away, partly screened by Arnavaz.\n\nZahhak shifts slightly to stand directly before Arnavaz.\n\nKeeping the staff in his right hand, he reaches beneath the rear-left garment layer with his LEFT hand and draws out the blade by its handle.\n\nKeep the hand and displaced fabric visible so the object’s origin is clear.\n\nThe blade catches the overhead light as he brings it forward.\n\nSHOT 26B | 00:04–00:10 | HANDOVER\n\n65mm closer view from the SAME EASTERN side.\n\nArnavaz remains screen-left, facing right.\nZahhak remains screen-right, facing left.\n\nShow their opposing mask profiles and hands together.\n\nZahhak holds the pommel end in his LEFT fingers, leaving the main grip exposed. The blade points downward.\n\nArnavaz closes her RIGHT hand around the grip.\nZahhak releases it only after her fingers are secure.\n\nShe lowers the blade toward her right hip.\nHer LEFT hand remains empty.\n\nHold the entire transfer in one continuous shot with a slight forward camera drift.\n\nSHOT 26C | 00:10–00:15 | DIRECTION\n\n40mm waist-up view from SOUTH, looking NORTH.\n\nShahrnaz’s BACK occupies screen-left.\nArnavaz’s BACK occupies screen-right.\nZahhak’s FRONT is visible beyond them.\n\nZahhak raises the staff head into Arnavaz’s sightline, then directs it toward the cat in Shahrnaz’s arms on screen-left.\n\nArnavaz’s head follows. She turns WEST toward Shahrnaz.\nShahrnaz turns EAST toward Arnavaz, still carrying the cat.\n\nZahhak lowers the staff.\n\nEnd with the sisters facing each other and the blade held low in Arnavaz’s right hand.\n\nLIVING SERPENTS:\nVisible serpents continuously make subtle independent neck turns, muscular adjustments and slow slides across the garment. Preserve their referenced single-headed anatomy.\n\nSOUND:\nClothing opening, fingers adjusting around the handle, calm breathing, staff movement and quiet scales.\n\nNO MUSIC, NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001",
+    "@CHR-004/V01",
+    "@CHR-005/V01",
+    "@CRT-004/V01",
+    "@PRP-019",
+    "@PRP-001"
+  ],
+  "createdAt": "2026-09-28T12:16:51.315Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260928_120451_fe6cb2ae-24cf-4816-844d-3b5f6c3e3be1.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-28T12:04:51.070964Z",
+      "display_name": "Seedance 2.5",
+      "id": "fe6cb2ae-24cf-4816-844d-3b5f6c3e3be1",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "8a2a7123-025c-465f-8f8d-b368450b10ec",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/8a2a7123-025c-465f-8f8d-b368450b10ec.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "4b0a5859-25aa-4c0b-ac94-9fba51c1916e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/4b0a5859-25aa-4c0b-ac94-9fba51c1916e.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "cf98b62d-e8d6-4584-a0fb-a9d96ecb538f",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/cf98b62d-e8d6-4584-a0fb-a9d96ecb538f.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "76bd0127-01d1-4227-995b-54adcc6c4fc1",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/76bd0127-01d1-4227-995b-54adcc6c4fc1.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "fef14eb1-0f7b-48e3-b85d-bf0c677d96d4",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/fef14eb1-0f7b-48e3-b85d-bf0c677d96d4.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "18926524-3936-4429-bcbe-4becb1499923",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/18926524-3936-4429-bcbe-4becb1499923.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 11 | THE BLADE AND THE COMMAND | 15 SECONDS\n\nCreate a horizontal 16:9 cinematic sequence for Seedance 2.5.\nThree shots lasting four, six and five seconds.\n\nCHARACTER REFERENCES:\nShahrnaz = {{CHAR_SHAHRNAZ}}\nArnavaz = {{CHAR_ARNAVAZ}}\nZahhak and his living shoulder serpents = {{CHAR_ZAHHAK}}\n\nANIMAL REFERENCE:\nCat = {{ANIMAL_CAT}}\n\nPROP REFERENCES:\nStaff = {{PROP_STAFF}}\nBlade = {{PROP_BLADE}}\n\nREFERENCE INTERPRETATION:\nPreserve identities, masks, costumes and object designs. Relight the subjects as described here.\n\nLOCATION AND LIGHTING:\nThe characters stand inside a chamber entirely concealed by darkness.\n\nExactly one hard overhead spotlight illuminates the compact group from directly above.\n\nCold-neutral highlights define upper mask planes, shoulders, hands, the cat and sections of the living serpents. Shadows beneath faces and arms remain deep.\n\nThe surrounding image is solid black. Walls, columns and floor remain unexposed. Frame the action from the waist upward.\n\nMaintain fixed exposure and constant spotlight intensity throughout. Every cut retains the same black surroundings.\n\nSTART STATE:\nShahrnaz stands WEST and Arnavaz EAST, both facing NORTH.\nBoth are calm and possessed.\nShahrnaz holds the cat against her chest.\n\nZahhak stands NORTH of their midpoint, facing SOUTH.\nHis RIGHT hand holds the staff.\nA single blade is concealed beneath the rear-left layer of his garment.\n\nSHOT 26A | 00:00–00:04 | EXTRACTION\n\n50mm waist-up view from EAST, looking WEST.\n\nArnavaz is screen-left in profile, facing screen-right.\nZahhak is screen-right, facing screen-left.\nShahrnaz stands farther away, partly screened by Arnavaz.\n\nZahhak shifts slightly to stand directly before Arnavaz.\n\nKeeping the staff in his right hand, he reaches beneath the rear-left garment layer with his LEFT hand and draws out the blade by its handle.\n\nKeep the hand and displaced fabric visible so the object’s origin is clear.\n\nThe blade catches the overhead light as he brings it forward.\n\nSHOT 26B | 00:04–00:10 | HANDOVER\n\n65mm closer view from the SAME EASTERN side.\n\nArnavaz remains screen-left, facing right.\nZahhak remains screen-right, facing left.\n\nShow their opposing mask profiles and hands together.\n\nZahhak holds the pommel end in his LEFT fingers, leaving the main grip exposed. The blade points downward.\n\nArnavaz closes her RIGHT hand around the grip.\nZahhak releases it only after her fingers are secure.\n\nShe lowers the blade toward her right hip.\nHer LEFT hand remains empty.\n\nHold the entire transfer in one continuous shot with a slight forward camera drift.\n\nSHOT 26C | 00:10–00:15 | DIRECTION\n\n40mm waist-up view from SOUTH, looking NORTH.\n\nShahrnaz’s BACK occupies screen-left.\nArnavaz’s BACK occupies screen-right.\nZahhak’s FRONT is visible beyond them.\n\nZahhak raises the staff head into Arnavaz’s sightline, then directs it toward the cat in Shahrnaz’s arms on screen-left.\n\nArnavaz’s head follows. She turns WEST toward Shahrnaz.\nShahrnaz turns EAST toward Arnavaz, still carrying the cat.\n\nZahhak lowers the staff.\n\nEnd with the sisters facing each other and the blade held low in Arnavaz’s right hand.\n\nLIVING SERPENTS:\nVisible serpents continuously make subtle independent neck turns, muscular adjustments and slow slides across the garment. Preserve their referenced single-headed anatomy.\n\nSOUND:\nClothing opening, fingers adjusting around the handle, calm breathing, staff movement and quiet scales.\n\nNO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_3>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_4>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_5>>> is Dagger Horse Head (PRP-019 V02); match it wherever Dagger Horse Head appears.\n<<<image_6>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260928_120451_fe6cb2ae-24cf-4816-844d-3b5f6c3e3be1.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20260928_120451_fe6cb2ae-24cf-4816-844d-3b5f6c3e3be1_thumbnail.webp"
+    }
+  ]
+}

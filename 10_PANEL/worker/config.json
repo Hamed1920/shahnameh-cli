@@ -8,6 +8,7 @@
   "videoDurations": [5, 10, 15],
   "concurrency": 1,
   "maxJobsPerRun": 12,
+  "maxConcurrentGenerations": 8,
   "perJobCostCeilingCredits": 250,
   "costCeilingCredits": 3000,
   "costWindowHours": 24,

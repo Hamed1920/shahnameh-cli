@@ -23,16 +23,16 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
-  GENERATE_LOCK, P, PROJECT, ROOT, appendJsonl, currentShotId, loadEntities, log, readCsv, readJsonl, rel,
+  GENERATE_LOCK, GENERATE_SLOTS_DIR, P, PROJECT, ROOT, appendJsonl, currentShotId, loadEntities, log, processedAnywhere, readCsv, readJsonl, rel,
   readState, resolveRef, shotFolder, spentWithin, stateStartProblem, writeCsv, writeState,
 } from './lib/project.mjs'
-import { acquireFileLock, releaseFileLock } from './lib/locks.mjs'
+import { acquireFileLock, lockIsStale, readLock, releaseFileLock } from './lib/locks.mjs'
 import { MACHINE, OLD_PANEL, ownerOf } from './lib/machine.mjs'
 import { cliProblem, cliReady, estimateCost, extractJobId, extractResultUrls, hfJson, paramsToArgs } from './lib/hf.mjs'
-import { FilingError, checkUploads, fileUpload, promote, reject } from './lib/promote.mjs'
+import { FilingError, checkUploads, discard, fileUpload, promote, reject } from './lib/promote.mjs'
 import { runIndexOps } from './lib/index-ops.mjs'
 import { planJob } from './lib/plan.mjs'
-import { isVideoModel, stageResolution } from './lib/batch.mjs'
+import { isVideoModel, newJobId, stageResolution } from './lib/batch.mjs'
 import { soundOf } from './lib/model-schema.mjs'
 import { ensureFreshCatalog } from './lib/models.mjs'
 import { configure as configureRequests, priceBatches, priceStudioTries, runJobRequests } from './lib/job-requests.mjs'
@@ -65,12 +65,15 @@ async function stopRequested() {
   try { await fs.access(P.stopFlag); return true } catch { return false }
 }
 async function stopNow(where) {
+  // Generations in flight are paid for: let them finish and be filed first.
+  await settleInFlight()
   // Never between the file moves and the registry write of an index change
   // (lib/tx.mjs): wait for whatever holds the registry lock to finish.
   await exclusive(async () => {})
   await log(`worker stopping: panel request (${where})`)
   if (state) await writeState(state)
   await releaseGenerateLock()
+  await releaseAllSlots()
   await releaseLock()
   process.exit(0)
 }
@@ -87,6 +90,7 @@ async function projectGone() {
 async function exitGone() {
   console.error(`project.json is gone from ${ROOT}; worker exiting`)
   await releaseGenerateLock()
+  await releaseAllSlots()
   await releaseLock()
   process.exit(0)
 }
@@ -136,6 +140,34 @@ function recordFailure(state, jobId, reason) {
   state.failedJobs = { ...(state.failedJobs ?? {}), [jobId]: { reason, at: new Date().toISOString() } }
 }
 
+/**
+ * A create that errored can still have reached Higgsfield: a 503 or a dropped
+ * response after the job was accepted leaves a job made and charged that the
+ * worker never heard about (2026-09-28, EP014 SC014). Look for it: the same
+ * model, the exact prompt sent, created since the attempt began, and in no
+ * ledger row yet. Returns the Higgsfield job, or null.
+ */
+async function findLanded(model, prompt, sinceMs) {
+  const list = await hfJson(['generate', 'list'], { timeoutMs: 60_000 })
+  if (list.code !== 0) return null
+  const raw = list.json
+  const items = Array.isArray(raw) ? raw : (raw?.items ?? raw?.jobs ?? raw?.data ?? [])
+  const { rows } = await readCsv(P.ledger)
+  const known = new Set(rows.map((r) => r.hf_job_id).filter(Boolean))
+  const want = String(prompt ?? '').trim()
+  return items.find((j) => j?.id && !known.has(j.id) && j.job_type === model
+    && Date.parse(j.created_at) >= sinceMs - 15_000
+    && String(j.params?.prompt ?? '').trim() === want) ?? null
+}
+
+/** A Higgsfield job the worker did not create itself this time (adopted): its result, waiting if it is still running. */
+async function fetchLanded(hfJobId) {
+  const got = await hfJson(['generate', 'get', hfJobId], { timeoutMs: 60_000 })
+  const status = String(got.json?.status ?? '').toLowerCase()
+  if (got.code !== 0 || ['completed', 'failed', 'nsfw', 'canceled', 'cancelled'].includes(status)) return got
+  return hfJson(['generate', 'wait', hfJobId, '--timeout', cfg.waitTimeout, '--interval', cfg.waitInterval], { timeoutMs: GENERATE_KILL_MS })
+}
+
 // ---------------------------------------------------------------- generate
 
 // Accumulated across a dry run so we can report one total before any spend.
@@ -168,23 +200,100 @@ function unhold(state, jobId) {
 }
 
 /**
- * The machine-wide generation lock (GENERATE_LOCK in project.mjs), held by this
- * worker from the spend ceiling check until the ledger records the spend, so two
- * projects' workers can never both spend the same remaining room. Taken per job
- * and released between jobs, so the other projects get their turn.
+ * Several generations at once, machine-wide: up to cfg.maxConcurrentGenerations
+ * (the account's parallel limit; Higgsfield's Ultra plan runs 8), shared by every
+ * project's worker on this machine, since they all spend from one account.
+ *
+ * Each running generation holds one slot file in GENERATE_SLOTS_DIR, and its note
+ * says what it will cost. The spend ceiling counts those reservations as spent:
+ * ledger rows are only written when a generation ends, so without them several
+ * jobs started together could each see the same remaining room. GENERATE_LOCK is
+ * now held only for the moment of checking the ceiling and taking a slot, so the
+ * check and the reservation are one step across every project's worker.
  */
+const MAX_PARALLEL = Math.max(1, Number(cfg.maxConcurrentGenerations ?? 8))
 let holdingGenerateLock = false
-let waitingForGenerateLock = false
+let waitingForSlot = false
 async function releaseGenerateLock() {
   if (!holdingGenerateLock) return
   holdingGenerateLock = false
   await releaseFileLock(GENERATE_LOCK)
 }
 
+/** This worker's generations in flight: jobId -> { promise, since }. */
+const inFlight = new Map()
+/** Slot files this worker holds, released on the way out whatever happens. */
+const heldSlots = new Set()
+
+const slotFile = (i) => path.join(GENERATE_SLOTS_DIR, `slot-${i}.lock`)
+
+/** Credits reserved by every live slot on this machine: generations started and not yet in a ledger. */
+async function reservedCredits() {
+  let total = 0
+  for (let i = 1; i <= MAX_PARALLEL; i++) {
+    const lock = await readLock(slotFile(i))
+    if (!lock || lockIsStale(lock)) continue
+    const credits = Number(lock.text.split('\n')[0].trim().split(/\s+/)[3])
+    if (Number.isFinite(credits)) total += credits
+  }
+  return total
+}
+
+/** Take a free slot for this job. Returns the slot file, or null when all are taken. */
+async function takeSlot(jobId, credits) {
+  for (let i = 1; i <= MAX_PARALLEL; i++) {
+    const file = slotFile(i)
+    if (await acquireFileLock(file, { note: `${PROJECT.slug} ${jobId} ${credits ?? 0}` })) {
+      heldSlots.add(file)
+      return file
+    }
+  }
+  return null
+}
+
+async function releaseSlot(file) {
+  heldSlots.delete(file)
+  await releaseFileLock(file)
+}
+
+async function releaseAllSlots() {
+  for (const file of [...heldSlots]) await releaseSlot(file)
+}
+
+/** What the panel shows as generating: every job in flight (lib/store.ts getGeneratingJobIds). */
+async function writeNow() {
+  const jobs = [...inFlight].map(([jobId, f]) => ({ jobId, since: f.since }))
+  // `jobId` stays for a panel from before several ran at once.
+  await fs.writeFile(P.workerNow, JSON.stringify({ jobId: jobs[0]?.jobId ?? null, jobs })).catch(() => {})
+}
+
+/** Wait for every generation in flight to finish. Never cut one off: it is paid for. */
+async function settleInFlight() {
+  if (inFlight.size === 0) return
+  await log(`waiting for ${inFlight.size} generation(s) in flight to finish`)
+  await Promise.allSettled([...inFlight.values()].map((f) => f.promise))
+}
+
+// The ledger is read and written whole; generations ending together must take turns.
+let ledgerTurn = Promise.resolve()
+function ledgerAppendQueued(entry) {
+  const run = ledgerTurn.then(() => ledgerAppend(entry))
+  ledgerTurn = run.catch(() => {})
+  return run
+}
+
+/** Higgsfield refused because this account is already at its parallel limit: nothing was made. */
+const AT_LIMIT_RX = /concurren|too many (?:requests|jobs|generations|tasks)|rate.?limit|\b429\b|parallel/i
+
 async function runQueue(state) {
   try { return await drainQueue(state) } finally { await releaseGenerateLock() }
 }
 
+/**
+ * Start what can start. Returns without waiting for the generations it began:
+ * each runs on (runGeneration) while the loop carries on applying decisions and
+ * requests, and the next pass starts more as slots free up.
+ */
 async function drainQueue(state) {
   const all = await readJsonl(P.queue)
   const done = new Set(state.processedJobs)
@@ -205,7 +314,7 @@ async function drainQueue(state) {
   // They pass the same price, lock and ceiling checks as everything else.
   // Held jobs waiting out their recheck are left out BEFORE the per-run cap, so a
   // run of held jobs (over the per-job ceiling, say) never starves the ones behind.
-  const waiting = queue.filter((q) => !done.has(q.jobId) && (DRY || (heldUntil.get(q.jobId) ?? 0) <= Date.now()))
+  const waiting = queue.filter((q) => !done.has(q.jobId) && !inFlight.has(q.jobId) && (DRY || (heldUntil.get(q.jobId) ?? 0) <= Date.now()))
   const pending = [...waiting.filter((q) => q.priority), ...waiting.filter((q) => !q.priority)].slice(0, cfg.maxJobsPerRun)
   if (pending.length === 0) return 0
 
@@ -221,8 +330,10 @@ async function drainQueue(state) {
 
   for (const job of pending) {
     await releaseGenerateLock()
-    if (await stopRequested()) await stopNow('before ' + job.jobId)
+    // A stop lets what is in flight finish (main loop), but starts nothing new.
+    if (await stopRequested()) break
     if (!DRY && (heldUntil.get(job.jobId) ?? 0) > Date.now()) continue
+    if (!DRY && inFlight.size >= MAX_PARALLEL) break
 
     // Read the registries per job, under the registry lock: index requests are
     // applied while earlier jobs generate, so a copy from the start of the run
@@ -236,39 +347,25 @@ async function drainQueue(state) {
       state.processedJobs.push(job.jobId)
       continue
     }
-    const { shot, entity, targetId, refPaths, prompt, model, params, entry } = plan
+    const { targetId, refPaths, model, params, entry } = plan
     // Sound as the model took it (generate_audio, or Kling's sound on|off); undefined for images.
     const sound = isVideoModel(model) ? soundOf(entry, params) : undefined
 
     const { credits, error: priceError } = await estimateCost(model, params)
     await log(`COST ${job.jobId} ${model} = ${credits ?? `unknown (${priceError})`}${credits != null ? ' credits' : ''}`)
+    // A job Higgsfield already made and charged for (findLanded, job.adopt): only fetched,
+    // so nothing is spent here and no ceiling applies. The price is for the ledger row.
+    const adopting = job.adoptHfJobId ?? null
 
     // Never spend without a price: an unpriced job would pass both ceilings unchecked.
-    if (credits == null && !DRY) {
+    if (credits == null && !DRY && !adopting) {
       await hold(state, job.jobId, `could not be priced, so it will not generate: ${priceError}`)
       continue
     }
-    if (credits != null && credits > cfg.perJobCostCeilingCredits) {
+    if (credits != null && credits > cfg.perJobCostCeilingCredits && !adopting) {
       await hold(state, job.jobId, `${credits} credits is more than perJobCostCeilingCredits ${cfg.perJobCostCeilingCredits}`, credits)
       continue
     }
-    // Busy means another project is generating right now: stop here and try
-    // again next pass. Decisions and index requests carry on meanwhile.
-    if (!DRY) {
-      if (!(await acquireFileLock(GENERATE_LOCK, { note: PROJECT.slug }))) {
-        if (!waitingForGenerateLock) await log(`WAIT another project is generating (lock ${GENERATE_LOCK}); ${job.jobId} goes next`)
-        waitingForGenerateLock = true
-        break
-      }
-      holdingGenerateLock = true
-      waitingForGenerateLock = false
-    }
-    const recent = await spentWithin(COST_WINDOW_HOURS)
-    if (credits != null && recent + credits > cfg.costCeilingCredits) {
-      await hold(state, job.jobId, `${credits} credits would pass costCeilingCredits ${cfg.costCeilingCredits} for the last ${COST_WINDOW_HOURS} h (${recent} spent across all projects); it runs once older spend leaves the window`, credits)
-      continue
-    }
-    unhold(state, job.jobId)
 
     if (DRY) {
       dryTotal.jobs++
@@ -278,123 +375,177 @@ async function drainQueue(state) {
       continue
     }
 
-    const args = [
-      'generate', 'create', model,
-      ...paramsToArgs(params),
-      '--wait', '--wait-timeout', cfg.waitTimeout, '--wait-interval', cfg.waitInterval,
-    ]
-    await log(`GENERATE ${job.jobId} ${targetId} ${job.variant} model=${model}${sound !== undefined ? ` sound=${sound}` : ''}`)
-    // What the panel shows as "generating", and what its live refresh watches
-    // instead of the whole log. The job's end moves state.json, so no clear-up.
-    await fs.writeFile(P.workerNow, JSON.stringify({ jobId: job.jobId, since: new Date().toISOString() })).catch(() => {})
-    const res = await hfJson(args, { timeoutMs: GENERATE_KILL_MS })
-
-    // One ledger row per job that reached Higgsfield, whatever came of it: the
-    // spend ceiling reads the ledger, and a charge missing from it is room that
-    // is not really there (lib/spend.mjs says which states count).
-    const ledgerRow = (ledgerState, hfJobId) => ledgerAppend({
-      job_id: job.jobId, content_hash: '', author: job.enqueuedBy, type: ledgerType(model),
-      target: job.target ?? '', resolved_target: targetId, variant: job.variant ?? '', engine: 'higgsfield',
-      state: ledgerState, ingested: new Date().toISOString(), source_file: 'queue',
-      parent_job_id: job.parentJobId ?? '', hf_job_id: hfJobId ?? '', attempt: String(job.attempt ?? 1),
-      cost: String(credits ?? ''), machine: MACHINE,
-    })
-
-    if (res.code !== 0) {
-      const timedOut = /\[worker\] timed out|timed out waiting|wait(?:ing)? timeout (?:reached|exceeded)|deadline exceeded/i.test(res.stderr)
-      const reason = timedOut
-        ? `Higgsfield did not finish within ${cfg.waitTimeout}; it may still complete and be charged`
-        : cliProblem(res.stderr || res.stdout)
-      await log(`FAIL ${job.jobId}: exit ${res.code} ${res.stderr.trim().slice(0, 400)}`)
-      await ledgerRow(timedOut ? 'TIMED_OUT' : 'FAILED', extractJobId(res.json))
-      recordFailure(state, job.jobId, reason)
-      state.processedJobs.push(job.jobId)
-      await writeState(state)
+    // The ceiling check and the slot are one step, under the machine-wide lock:
+    // two projects' workers must not both reserve the same remaining room.
+    if (!(await acquireFileLock(GENERATE_LOCK, { note: PROJECT.slug }))) break // another worker is reserving; next pass
+    holdingGenerateLock = true
+    const recent = (await spentWithin(COST_WINDOW_HOURS)) + (await reservedCredits())
+    if (credits != null && recent + credits > cfg.costCeilingCredits && !adopting) {
+      await releaseGenerateLock()
+      await hold(state, job.jobId, `${credits} credits would pass costCeilingCredits ${cfg.costCeilingCredits} for the last ${COST_WINDOW_HOURS} h (${recent} spent or running across all projects); it runs once older spend leaves the window`, credits)
       continue
     }
-
-    const hfJobId = extractJobId(res.json) ?? `local_${Date.now().toString(36)}`
-    const urls = extractResultUrls(res.json)
-    if (urls.length === 0) {
-      // Do not guess. Keep the raw response so the schema can be pinned down.
-      const dir = path.join(P.staging, hfJobId)
-      await fs.mkdir(dir, { recursive: true })
-      await fs.writeFile(path.join(dir, 'raw-response.json'),
-        JSON.stringify(res.json ?? res.stdout, null, 2))
-      const status = [res.json].flat().map((j) => j?.status).filter(Boolean).join(', ')
-      await log(`WARN ${job.jobId}: no result URLs found${status ? ` (status ${status})` : ''}. Raw response saved to ${dir}/raw-response.json`)
-      await ledgerRow('NO_RESULT', hfJobId)
-      recordFailure(state, job.jobId, `Higgsfield returned no file${status ? ` (status: ${status})` : ''}`)
-      state.processedJobs.push(job.jobId)
-      await writeState(state)
-      continue
+    const slot = await takeSlot(job.jobId, adopting ? 0 : credits)
+    await releaseGenerateLock()
+    if (!slot) {
+      if (!waitingForSlot) await log(`WAIT all ${MAX_PARALLEL} generation slots on this machine are in use; ${job.jobId} starts when one frees`)
+      waitingForSlot = true
+      break
     }
+    waitingForSlot = false
+    unhold(state, job.jobId)
 
-    const dir = path.join(P.staging, hfJobId)
-    await fs.mkdir(dir, { recursive: true })
-    const candidates = []
-    for (let i = 0; i < urls.length; i++) {
-      const take = 'T' + String(i + 1).padStart(2, '0')
-      const file = `${take}${extFromUrl(urls[i])}`
-      try {
-        const bytes = await download(urls[i], path.join(dir, file))
-        candidates.push({ file, take, resultUrl: urls[i] })
-        await log(`DOWNLOADED ${hfJobId}/${file} (${bytes} bytes)`)
-      } catch (e) {
-        await log(`WARN download failed for ${urls[i]}: ${e.message}`)
-      }
-    }
-
-    // The sidecar keeps the normalised params (a real boolean for sound), so a
-    // revision or final inherits what was actually sent.
-    const sentParams = { ...(job.params ?? {}) }
-    // Kept as generate_audio whatever the model calls it: that is the job's intent, which planJob maps.
-    if (sound !== undefined) sentParams.generate_audio = sound
-    else delete sentParams.generate_audio
-
-    await fs.writeFile(path.join(dir, 'job.json'), JSON.stringify({
-      jobId: job.jobId,
-      parentJobId: job.parentJobId ?? null,
-      hfJobId,
-      attempt: job.attempt ?? 1,
-      stage: job.stage ?? null,
-      label: job.label ?? null,
-      target: targetId,
-      isShot: Boolean(shot),
-      outputFolder: shot ? await shotFolder(shot) : entity?.folder ?? null,
-      variant: job.variant || entity?.canonical_variant || 'V01',
-      // A reference-studio try: decided in the studio, not on the Review page.
-      ...(job.studio && { studio: job.studio }),
-      model,
-      prompt,
-      // The un-augmented prompt and the notes so far. Revisions rebuild from
-      // these; without them attempt 3 stacks a second revision block on the first.
-      basePrompt: job.basePrompt ?? job.prompt,
-      revisionNotes: job.revisionNotes ?? [],
-      params: sentParams,
-      refs: job.refs ?? [],
-      createdAt: new Date().toISOString(),
-      costCredits: credits ?? null,
-      candidates,
-      rawResponse: res.json ?? null,
-    }, null, 2))
-
-    await ledgerAppend({
-      job_id: job.jobId, content_hash: '', author: job.enqueuedBy, type: ledgerType(model),
-      target: job.target ?? '', resolved_target: targetId, variant: job.variant ?? '', engine: 'higgsfield',
-      state: 'GENERATED', ingested: new Date().toISOString(), source_file: 'queue',
-      parent_job_id: job.parentJobId ?? '', hf_job_id: hfJobId,
-      attempt: String(job.attempt ?? 1), cost: String(credits ?? ''), machine: MACHINE,
-    })
-
-    if (credits != null) state.spentCredits += credits
-    state.processedJobs.push(job.jobId)
-    // Persist after EVERY job. A kill between jobs would otherwise lose the
-    // record of work already paid for, and the next run would buy it again.
-    await writeState(state)
+    const since = new Date().toISOString()
+    const promise = runGeneration(state, job, plan, { credits, sound, adopting })
+      .catch((e) => log(`ERROR generating ${job.jobId}: ${e.stack ?? e.message}`))
+      .finally(async () => {
+        inFlight.delete(job.jobId)
+        await releaseSlot(slot)
+        await writeNow()
+      })
+    inFlight.set(job.jobId, { promise, since })
+    await writeNow()
     count++
   }
   return count
+}
+
+/**
+ * One generation, start to finish: create (or fetch an adopted job), then file
+ * the take, the sidecar and the ledger row. Runs alongside others; everything
+ * it writes is per job, except the ledger and state, which take turns.
+ */
+async function runGeneration(state, job, plan, { credits, sound, adopting }) {
+  const { shot, entity, targetId, prompt, model, params } = plan
+  const args = [
+    'generate', 'create', model,
+    ...paramsToArgs(params),
+    '--wait', '--wait-timeout', cfg.waitTimeout, '--wait-interval', cfg.waitInterval,
+  ]
+  await log(adopting
+    ? `ADOPT ${job.jobId} ${targetId}: Higgsfield job ${adopting}, already made and charged; fetching it`
+    : `GENERATE ${job.jobId} ${targetId} ${job.variant} model=${model}${sound !== undefined ? ` sound=${sound}` : ''} (${inFlight.size + 1} running)`)
+  const startedAt = Date.now()
+  const res = adopting ? await fetchLanded(adopting) : await hfJson(args, { timeoutMs: GENERATE_KILL_MS })
+
+  // One ledger row per job that reached Higgsfield, whatever came of it: the
+  // spend ceiling reads the ledger, and a charge missing from it is room that
+  // is not really there (lib/spend.mjs says which states count).
+  const ledgerRow = (ledgerState, hfJobId) => ledgerAppendQueued({
+    job_id: job.jobId, content_hash: '', author: job.enqueuedBy, type: ledgerType(model),
+    target: job.target ?? '', resolved_target: targetId, variant: job.variant ?? '', engine: 'higgsfield',
+    state: ledgerState, ingested: new Date().toISOString(), source_file: 'queue',
+    parent_job_id: job.parentJobId ?? '', hf_job_id: hfJobId ?? '', attempt: String(job.attempt ?? 1),
+    cost: String(credits ?? ''), machine: MACHINE,
+  })
+
+  if (res.code !== 0) {
+    const said = `${res.stderr ?? ''} ${res.stdout ?? ''}`
+    // At the account's parallel limit: Higgsfield made nothing. Not a failure: wait and try again.
+    if (!adopting && !extractJobId(res.json) && AT_LIMIT_RX.test(said)) {
+      await log(`LIMIT ${job.jobId}: Higgsfield is at this account's parallel limit; it goes again shortly`)
+      await hold(state, job.jobId, 'Higgsfield is running as many generations as this account allows; it starts when one finishes')
+      return
+    }
+    const timedOut = /\[worker\] timed out|timed out waiting|wait(?:ing)? timeout (?:reached|exceeded)|deadline exceeded/i.test(res.stderr)
+    const reason = timedOut
+      ? `Higgsfield did not finish within ${cfg.waitTimeout}; it may still complete and be charged`
+      : cliProblem(res.stderr || res.stdout)
+    await log(`FAIL ${job.jobId}: exit ${res.code} ${res.stderr.trim().slice(0, 400)}`)
+    await ledgerRow(timedOut ? 'TIMED_OUT' : 'FAILED', extractJobId(res.json))
+    recordFailure(state, job.jobId, reason)
+    state.processedJobs.push(job.jobId)
+    // Did it land anyway? Then it is adopted as the next job instead of being lost
+    // (and Retry is refused for it: retryOf). Never for an adoption that failed.
+    if (!adopting && !extractJobId(res.json)) {
+      const landed = await findLanded(model, prompt, startedAt).catch(() => null)
+      if (landed) {
+        const { machine: _m, enqueuedAt: _e, enqueuedBy: _b, ...rest } = job
+        const adoptId = newJobId()
+        await appendJsonl(P.queue, {
+          ...rest, jobId: adoptId, parentJobId: job.jobId, retryOf: job.jobId, adoptHfJobId: landed.id,
+          enqueuedAt: new Date().toISOString(), enqueuedBy: 'worker:landed',
+        })
+        await log(`LANDED ${job.jobId}: the CLI reported an error, but Higgsfield made ${landed.id}; adopting it as ${adoptId}`)
+      }
+    }
+    await writeState(state)
+    return
+  }
+
+  const hfJobId = extractJobId(res.json) ?? `local_${Date.now().toString(36)}`
+  const urls = extractResultUrls(res.json)
+  if (urls.length === 0) {
+    // Do not guess. Keep the raw response so the schema can be pinned down.
+    const dir = path.join(P.staging, hfJobId)
+    await fs.mkdir(dir, { recursive: true })
+    await fs.writeFile(path.join(dir, 'raw-response.json'),
+      JSON.stringify(res.json ?? res.stdout, null, 2))
+    const status = [res.json].flat().map((j) => j?.status).filter(Boolean).join(', ')
+    await log(`WARN ${job.jobId}: no result URLs found${status ? ` (status ${status})` : ''}. Raw response saved to ${dir}/raw-response.json`)
+    await ledgerRow('NO_RESULT', hfJobId)
+    recordFailure(state, job.jobId, `Higgsfield returned no file${status ? ` (status: ${status})` : ''}`)
+    state.processedJobs.push(job.jobId)
+    await writeState(state)
+    return
+  }
+
+  const dir = path.join(P.staging, hfJobId)
+  await fs.mkdir(dir, { recursive: true })
+  const candidates = []
+  for (let i = 0; i < urls.length; i++) {
+    const take = 'T' + String(i + 1).padStart(2, '0')
+    const file = `${take}${extFromUrl(urls[i])}`
+    try {
+      const bytes = await download(urls[i], path.join(dir, file))
+      candidates.push({ file, take, resultUrl: urls[i] })
+      await log(`DOWNLOADED ${hfJobId}/${file} (${bytes} bytes)`)
+    } catch (e) {
+      await log(`WARN download failed for ${urls[i]}: ${e.message}`)
+    }
+  }
+
+  // The sidecar keeps the normalised params (a real boolean for sound), so a
+  // revision or final inherits what was actually sent.
+  const sentParams = { ...(job.params ?? {}) }
+  // Kept as generate_audio whatever the model calls it: that is the job's intent, which planJob maps.
+  if (sound !== undefined) sentParams.generate_audio = sound
+  else delete sentParams.generate_audio
+
+  await fs.writeFile(path.join(dir, 'job.json'), JSON.stringify({
+    jobId: job.jobId,
+    parentJobId: job.parentJobId ?? null,
+    hfJobId,
+    attempt: job.attempt ?? 1,
+    stage: job.stage ?? null,
+    label: job.label ?? null,
+    target: targetId,
+    isShot: Boolean(shot),
+    outputFolder: shot ? await shotFolder(shot) : entity?.folder ?? null,
+    variant: job.variant || entity?.canonical_variant || 'V01',
+    // A reference-studio try: decided in the studio, not on the Review page.
+    ...(job.studio && { studio: job.studio }),
+    model,
+    prompt,
+    // The un-augmented prompt and the notes so far. Revisions rebuild from
+    // these; without them attempt 3 stacks a second revision block on the first.
+    basePrompt: job.basePrompt ?? job.prompt,
+    revisionNotes: job.revisionNotes ?? [],
+    params: sentParams,
+    refs: job.refs ?? [],
+    createdAt: new Date().toISOString(),
+    costCredits: credits ?? null,
+    candidates,
+    rawResponse: res.json ?? null,
+  }, null, 2))
+
+  await ledgerRow('GENERATED', hfJobId)
+
+  if (credits != null) state.spentCredits += credits
+  state.processedJobs.push(job.jobId)
+  // Persist after EVERY job. A kill between jobs would otherwise lose the
+  // record of work already paid for, and the next run would buy it again.
+  await writeState(state)
 }
 
 // ---------------------------------------------------------------- verdicts
@@ -404,11 +555,15 @@ async function runDecisions(state) {
   const seen = new Set(state.processedDecisions)
   const unseen = decisions.filter((d) => !seen.has(d.id))
   if (unseen.length === 0) return 0
-  // A decision belongs to the machine that generated the take (so the take is
-  // accepted or denied once, whichever machine it was decided on); a take from
-  // before jobs were tagged belongs to the machine that decided it.
+  // A decision belongs to the machine it was made on: the reviewer is at that
+  // machine, and its worker is the one running. (It used to belong to the machine
+  // that generated the take, which left a decision made here on a take from a
+  // machine that was switched off applied by nobody: gone from Review, never
+  // regenerated.) A decision from before panels tagged their machine belongs to
+  // the machine that generated the take. The same take decided on two machines
+  // before they synced is applied once: see decidedTakes below.
   const jobMachine = new Map((await readJsonl(P.queue)).map((q) => [q.jobId, q.machine]))
-  const ownerOfDecision = (d) => ownerOf(jobMachine.get(d.jobId) ? { machine: jobMachine.get(d.jobId) } : d)
+  const ownerOfDecision = (d) => ownerOf(d.machine ? d : jobMachine.get(d.jobId) ? { machine: jobMachine.get(d.jobId) } : d)
   // A decision from an older panel that nobody applied: never guessed at (two
   // machines could both apply it). It fails the usual way, so the take goes back
   // to Review with the reason, to be decided again.
@@ -422,9 +577,11 @@ async function runDecisions(state) {
   const fresh = unseen.filter((d) => ownerOfDecision(d) === 'mine')
   if (fresh.length === 0) return 0
   // A take already decided (on another machine too, before the two synced): the
-  // first decision stands, a second one is recorded and left at that.
+  // first decision stands, a second one is recorded and left at that. Every
+  // machine's applied decisions count, read from their state files.
   const failed = state.failedDecisions ?? {}
-  const decidedTakes = new Set(decisions.filter((d) => seen.has(d.id) && !failed[d.id]).map((d) => d.candidate))
+  const appliedAnywhere = (await processedAnywhere(state)).decisions
+  const decidedTakes = new Set(decisions.filter((d) => appliedAnywhere.has(d.id) && !failed[d.id]).map((d) => d.candidate))
 
   const entities = await loadEntities()
   let count = 0
@@ -461,6 +618,15 @@ async function runDecisions(state) {
         continue
       }
 
+      // A discard only moves the take out of the way: no uploads filed, nothing queued.
+      if (d.verdict === 'discarded') {
+        await discard(d)
+        state.processedDecisions.push(d.id)
+        decidedTakes.add(d.candidate)
+        count++
+        continue
+      }
+
       // Uploads are filed, and the new reference list proven resolvable, BEFORE
       // the candidate is moved or anything is queued. A decision either applies
       // whole or not at all -- never a half-applied change that then spends.
@@ -492,9 +658,12 @@ async function runDecisions(state) {
         } else {
           await promote(d, sidecar)
         }
-      } else {
+      } else if (d.verdict === 'denied') {
         await reject(d)
         if (d.requeue) await enqueueRevision(d, sidecar, entities, refs, uploadTokens)
+      } else {
+        // Left unprocessed and logged, like any other error: a newer panel's verdict waits for a newer worker.
+        throw new Error(`unknown verdict "${d.verdict}"`)
       }
       state.processedDecisions.push(d.id)
       decidedTakes.add(d.candidate)
@@ -745,7 +914,7 @@ async function main() {
     console.error(`A worker is already running (lock: ${P.lock}). Delete it if that is stale.`)
     process.exit(1)
   }
-  const cleanup = async () => { await releaseGenerateLock(); await releaseLock(); process.exit(0) }
+  const cleanup = async () => { await releaseGenerateLock(); await releaseAllSlots(); await releaseLock(); process.exit(0) }
   process.on('SIGINT', cleanup)
   process.on('SIGTERM', cleanup)
 
@@ -760,7 +929,7 @@ async function main() {
     const cat = await ensureFreshCatalog({ log })
     if (!cat.ok) await log(`MODELS not refreshed: ${cat.error}`)
 
-    if (ONCE) { await pass(); return }
+    if (ONCE) { await pass(); await settleInFlight(); return }
     if (!DRY) {
       watch('INDEX OPS', applyIndexOps)
       watch('JOB REQUESTS', applyJobRequests)
@@ -779,6 +948,7 @@ async function main() {
 main().catch(async (e) => {
   await log(`FATAL: ${e.stack ?? e.message}`)
   await releaseGenerateLock()
+  await releaseAllSlots()
   await releaseLock()
   process.exit(1)
 })

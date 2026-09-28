@@ -115,6 +115,7 @@ function TakeList({ outputs }: { outputs: ShotOutput[] }) {
                   </Badge>
                 )}
                 {o.verdict === 'accepted' && !o.filed && <Badge tone="muted">accepted</Badge>}
+                {o.verdict === 'discarded' && <Badge tone="muted">discarded</Badge>}
                 {o.stage === 'draft' && <Badge tone="muted">draft</Badge>}
                 {o.attempt > 1 && <Badge tone="muted">attempt {o.attempt}</Badge>}
                 {o.ts && <span className="ml-auto font-mono text-[10.5px] text-faint tabular-nums">{when(o.ts)}</span>}

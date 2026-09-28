@@ -73,7 +73,8 @@ export function foldStudio(
     /** Sidecars in _staging with the files still present, keyed by hfJobId. */
     staged: { sidecar: Sidecar; present: string[] }[]
     /** The job id Higgsfield is working on right now, if any. */
-    generating: string | null
+    /** Every job generating now: several run at once. */
+    generating: string[]
     /** hfJobId per job id, from the ledger, for tries whose staging folder is gone. */
     ledgerHf?: Record<string, { hfJobId: string; state: string }>
     /** Why a job ended without a take (state.failedJobs, worker.mjs recordFailure). */
@@ -126,7 +127,7 @@ export function foldStudio(
       const finished = jobIds.filter((j) => done.has(j))
       status = finished.length === jobIds.length
         ? (failed.length === jobIds.length ? 'failed' : 'done')
-        : jobIds.includes(input.generating ?? '') ? 'generating' : 'queued'
+        : jobIds.some((id) => input.generating.includes(id)) ? 'generating' : 'queued'
     } else if (error) status = error.reason === 'replaced by a later edit' ? 'replaced' : 'error'
     else if (priced) status = 'priced'
 

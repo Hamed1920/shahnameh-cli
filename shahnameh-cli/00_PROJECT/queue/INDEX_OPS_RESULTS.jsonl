@@ -40,3 +40,6 @@
 {"opId":"op_mukbyf2cnog9","ok":true,"summary":"added @CHR-001/V08","ts":"2026-09-27T21:28:07.737Z"}
 {"opId":"op_mukbynxmeaiq","ok":true,"summary":"archived CHR-001/V06, CHR-001/V07. PLAN 07 (waiting for review) uses @CHR-001 instead of @CHR-001/V06; PLAN 10 (waiting for review) uses @CHR-001 instead of @CHR-001/V06; PLAN 09 (waiting for review) uses @CHR-001 instead of @CHR-001/V06; PLAN 11 (waiting for review) uses @CHR-001 instead of @CHR-001/V06; PLAN 12 (waiting for review) uses @CHR-001 instead of @CHR-001/V06","ts":"2026-09-27T21:28:19.816Z"}
 {"opId":"op_mukc20rkkdim","ok":true,"summary":"CHR-001 main look -> V08","ts":"2026-09-27T21:30:57.496Z"}
+{"opId":"op_mujwh9xri43q","ok":false,"reason":"made by an older version of the panel, before each machine ran its own worker; nothing was done with it. Do it again.","ts":"2026-09-28T07:46:40.792Z"}
+{"opId":"op_mukyo8es1m5a","ok":true,"summary":"role HERO on 1 file(s)","ts":"2026-09-28T08:04:05.794Z"}
+{"opId":"op_mukyor8ijvqf","ok":true,"summary":"role HERO on 1 file(s)","ts":"2026-09-28T08:04:26.268Z"}

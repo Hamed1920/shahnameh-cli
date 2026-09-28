@@ -23,6 +23,8 @@ export function projectPaths(root: string) {
     staging: path.join(root, '09_OUTPUT', '_staging'),
     rejected: path.join(root, '09_OUTPUT', '_rejected'),
     drafts: path.join(root, '09_OUTPUT', '_drafts'),
+    /** Takes discarded in Review: kept, but not filed and not a learning signal. */
+    discarded: path.join(root, '09_OUTPUT', '_discarded'),
     /** Raw reviewer uploads, waiting for the worker to file them. Working space. */
     uploads: path.join(root, '09_OUTPUT', '_uploads'),
     /** Worker-written record of what each upload became. */

@@ -1,0 +1,140 @@
+{
+  "jobId": "J-20260928-9U3",
+  "parentJobId": "J-20260927-IAP",
+  "hfJobId": "d5f5985c-35cc-4290-b9a3-755b6c241642",
+  "attempt": 1,
+  "stage": "final",
+  "label": "PLAN 02",
+  "target": "SHM-EP014-SC002-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP014-JAMSHID-GIRLS/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 02 | SHOTS 03-05 | THE APPROACH\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 3 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_MUSICIAN = {{CHAR_MUSICIAN}}\nCHAR_GUARD_A = {{CHAR_GUARD_A}}\nCHAR_GUARD_B = {{CHAR_GUARD_B}}\nCHAR_GUARD_C = {{CHAR_GUARD_C}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_PRIVATE_ROOM = {{LOC_PRIVATE_ROOM}}\nLOC_TRANSFER_CORRIDOR = {{LOC_TRANSFER_CORRIDOR}}\nPROP REFERENCES\nPROP_INSTRUMENT = {{PROP_INSTRUMENT}}\nSTART STATE AND BLOCKING\nSTATE_SAFE_TO_ALERT. Room positions match the previous block. Exactly three guards approach outside: A leads, B follows, C is last. Indoor and corridor shots depict simultaneous adjacent spaces. The cat remains beside Shahrnaz.\n\nSHOT 03 | 00:00-00:06 | THE SISTERS\n50mm calm two-shot. Shahrnaz keeps her right palm on the cat and touches Arnavaz’s wrist with her left hand. Arnavaz briefly covers it. Distant footfalls draw Arnavaz’s masked head toward the doorway. Her posture becomes upright; Shahrnaz brings both hands around the cat.\nSHOT 04 | 00:06-00:12 | THREE GUARDS\nCut outside to a 28mm shoulder-height retreating handheld shot. A, B and C advance through the referenced corridor toward the room, traveling left-to-right. Their uneven spacing and forward shoulders suggest predatory purpose. End as A reaches the door; the camera steps into the existing side recess.\nSHOT 05 | 00:12-00:15 | THE THRESHOLD\nCut to a 50mm side detail: A’s right palm plants against the door; B and C remain staggered behind him. Hold pressure for one beat. End with the door still closed, immediately before it is forced inward.\nLIGHT AND IMAGE\nPreserve the room’s warm window direction. Corridor shots use the approved colder localized practical light. Each space retains its own exposure.\nSOUND\nSoft sleeve contact inside; approaching boots outside, initially muffled and then close. Finger and garment contact from the musician remains unpitched. Keep all voices unspoken.\nEND STATE AND EDIT\nA’s right hand touches the closed door. Inside, Shahrnaz cups the cat with both hands, ready to lift it; Arnavaz has turned toward the entrance.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_2>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_3>>> is Musician (CHR-006 V02); match it wherever Musician appears.\n<<<image_4>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_5>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_6>>> is Jamshid Daughters Chamber (LOC-020 V01); match it wherever Jamshid Daughters Chamber appears.\n<<<image_7>>> is Jamshid Daughters Passage (LOC-021 V01); match it wherever Jamshid Daughters Passage appears.\n<<<image_8>>> is Instrument Saz (PRP-018 V01); match it wherever Instrument Saz appears.",
+  "basePrompt": "PLAN 02 | SHOTS 03-05 | THE APPROACH\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 3 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_MUSICIAN = {{CHAR_MUSICIAN}}\nCHAR_GUARD_A = {{CHAR_GUARD_A}}\nCHAR_GUARD_B = {{CHAR_GUARD_B}}\nCHAR_GUARD_C = {{CHAR_GUARD_C}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_PRIVATE_ROOM = {{LOC_PRIVATE_ROOM}}\nLOC_TRANSFER_CORRIDOR = {{LOC_TRANSFER_CORRIDOR}}\nPROP REFERENCES\nPROP_INSTRUMENT = {{PROP_INSTRUMENT}}\nSTART STATE AND BLOCKING\nSTATE_SAFE_TO_ALERT. Room positions match the previous block. Exactly three guards approach outside: A leads, B follows, C is last. Indoor and corridor shots depict simultaneous adjacent spaces. The cat remains beside Shahrnaz.\n\nSHOT 03 | 00:00-00:06 | THE SISTERS\n50mm calm two-shot. Shahrnaz keeps her right palm on the cat and touches Arnavaz’s wrist with her left hand. Arnavaz briefly covers it. Distant footfalls draw Arnavaz’s masked head toward the doorway. Her posture becomes upright; Shahrnaz brings both hands around the cat.\nSHOT 04 | 00:06-00:12 | THREE GUARDS\nCut outside to a 28mm shoulder-height retreating handheld shot. A, B and C advance through the referenced corridor toward the room, traveling left-to-right. Their uneven spacing and forward shoulders suggest predatory purpose. End as A reaches the door; the camera steps into the existing side recess.\nSHOT 05 | 00:12-00:15 | THE THRESHOLD\nCut to a 50mm side detail: A’s right palm plants against the door; B and C remain staggered behind him. Hold pressure for one beat. End with the door still closed, immediately before it is forced inward.\nLIGHT AND IMAGE\nPreserve the room’s warm window direction. Corridor shots use the approved colder localized practical light. Each space retains its own exposure.\nSOUND\nSoft sleeve contact inside; approaching boots outside, initially muffled and then close. Finger and garment contact from the musician remains unpitched. Keep all voices unspoken.\nEND STATE AND EDIT\nA’s right hand touches the closed door. Inside, Shahrnaz cups the cat with both hands, ready to lift it; Arnavaz has turned toward the entrance.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@CHR-004/V01",
+    "@CHR-005/V01",
+    "@CHR-006",
+    "@GRP-005/V01",
+    "@CRT-004/V01",
+    "@LOC-020/V01",
+    "@LOC-021/V01",
+    "@PRP-018/V01"
+  ],
+  "createdAt": "2026-09-28T13:50:53.375Z",
+  "costCredits": 180,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260928_134211_d5f5985c-35cc-4290-b9a3-755b6c241642.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-28T13:42:11.65164Z",
+      "display_name": "Seedance 2.5",
+      "id": "d5f5985c-35cc-4290-b9a3-755b6c241642",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "63f75cc4-3146-4baa-aa7b-3801d4f3721a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/63f75cc4-3146-4baa-aa7b-3801d4f3721a.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "7035c9ba-b1de-44e9-b1d4-c41f838e4a16",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/7035c9ba-b1de-44e9-b1d4-c41f838e4a16.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "2027c80a-df28-43fc-a731-c4e86af1cdd6",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/2027c80a-df28-43fc-a731-c4e86af1cdd6.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a675c086-c666-4615-b1cc-4555d28e1a80",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/a675c086-c666-4615-b1cc-4555d28e1a80.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "f4a5c645-3ecc-4039-a5da-ed3a03196228",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/f4a5c645-3ecc-4039-a5da-ed3a03196228.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "4e710143-4e47-4c10-bbcc-5edb5f2fcca2",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/4e710143-4e47-4c10-bbcc-5edb5f2fcca2.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "6ada51b0-6d37-41ca-96dd-7170c41008aa",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/6ada51b0-6d37-41ca-96dd-7170c41008aa.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "1053ef6c-578d-47d0-9ad2-2eb9cffa4046",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/1053ef6c-578d-47d0-9ad2-2eb9cffa4046.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 02 | SHOTS 03-05 | THE APPROACH\nCreate a 15-second Seedance 2.5 cinematic sequence, horizontal 16:9. Exactly 3 shots with the local timing below. Preserve the assigned identities, masks, wardrobe, animal design and location geometry. Performance is expressed through posture, hands, breathing and weight. Render at natural speed with tactile analog texture.\nCHARACTER REFERENCES\nCHAR_SHAHRNAZ = {{CHAR_SHAHRNAZ}}\nCHAR_ARNAVAZ = {{CHAR_ARNAVAZ}}\nCHAR_MUSICIAN = {{CHAR_MUSICIAN}}\nCHAR_GUARD_A = {{CHAR_GUARD_A}}\nCHAR_GUARD_B = {{CHAR_GUARD_B}}\nCHAR_GUARD_C = {{CHAR_GUARD_C}}\nANIMAL REFERENCES\nANIMAL_CAT = {{ANIMAL_CAT}}\nLOCATION REFERENCES\nLOC_PRIVATE_ROOM = {{LOC_PRIVATE_ROOM}}\nLOC_TRANSFER_CORRIDOR = {{LOC_TRANSFER_CORRIDOR}}\nPROP REFERENCES\nPROP_INSTRUMENT = {{PROP_INSTRUMENT}}\nSTART STATE AND BLOCKING\nSTATE_SAFE_TO_ALERT. Room positions match the previous block. Exactly three guards approach outside: A leads, B follows, C is last. Indoor and corridor shots depict simultaneous adjacent spaces. The cat remains beside Shahrnaz.\n\nSHOT 03 | 00:00-00:06 | THE SISTERS\n50mm calm two-shot. Shahrnaz keeps her right palm on the cat and touches Arnavaz’s wrist with her left hand. Arnavaz briefly covers it. Distant footfalls draw Arnavaz’s masked head toward the doorway. Her posture becomes upright; Shahrnaz brings both hands around the cat.\nSHOT 04 | 00:06-00:12 | THREE GUARDS\nCut outside to a 28mm shoulder-height retreating handheld shot. A, B and C advance through the referenced corridor toward the room, traveling left-to-right. Their uneven spacing and forward shoulders suggest predatory purpose. End as A reaches the door; the camera steps into the existing side recess.\nSHOT 05 | 00:12-00:15 | THE THRESHOLD\nCut to a 50mm side detail: A’s right palm plants against the door; B and C remain staggered behind him. Hold pressure for one beat. End with the door still closed, immediately before it is forced inward.\nLIGHT AND IMAGE\nPreserve the room’s warm window direction. Corridor shots use the approved colder localized practical light. Each space retains its own exposure.\nSOUND\nSoft sleeve contact inside; approaching boots outside, initially muffled and then close. Finger and garment contact from the musician remains unpitched. Keep all voices unspoken.\nEND STATE AND EDIT\nA’s right hand touches the closed door. Inside, Shahrnaz cups the cat with both hands, ready to lift it; Arnavaz has turned toward the entrance.\nKeep all character designs and prop ownership consistent across cuts. Use the camera paths stated for each shot and retain readable spatial relationships. Primitive ritual fashion cinema, analog realism. NO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_2>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_3>>> is Musician (CHR-006 V02); match it wherever Musician appears.\n<<<image_4>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_5>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_6>>> is Jamshid Daughters Chamber (LOC-020 V01); match it wherever Jamshid Daughters Chamber appears.\n<<<image_7>>> is Jamshid Daughters Passage (LOC-021 V01); match it wherever Jamshid Daughters Passage appears.\n<<<image_8>>> is Instrument Saz (PRP-018 V01); match it wherever Instrument Saz appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260928_134211_d5f5985c-35cc-4290-b9a3-755b6c241642.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260928_134211_d5f5985c-35cc-4290-b9a3-755b6c241642_thumbnail.webp"
+    }
+  ]
+}

@@ -298,26 +298,34 @@ export async function getReferenceFor(
 }
 
 /**
- * The job the worker is generating right now, if any: the job in worker.now
- * (written as a generation starts, removed when a worker starts), unless the
- * worker has since recorded it as processed. A worker from before worker.now
- * existed is read from the last GENERATE line of its log instead.
+ * The jobs the worker is generating right now -- several run at once -- from
+ * worker.now (rewritten as each starts and ends, removed when a worker starts),
+ * leaving out any the worker has since recorded as processed. Read from the
+ * GENERATE lines of its log when worker.now is torn or missing.
  */
-export async function getGeneratingJobId(pr: Project, processed: Set<string>): Promise<string | null> {
+export async function getGeneratingJobIds(pr: Project, processed: Set<string>): Promise<Set<string>> {
+  const out = new Set<string>()
   const now = await readText(pr.P.workerNow)
   if (now.trim()) {
     try {
-      const { jobId } = JSON.parse(now) as { jobId?: string }
-      return jobId && !processed.has(jobId) ? jobId : null
+      const n = JSON.parse(now) as { jobId?: string | null; jobs?: { jobId: string }[] }
+      // A worker from before several ran at once writes only jobId.
+      for (const id of n.jobs ? n.jobs.map((j) => j.jobId) : [n.jobId]) if (id && !processed.has(id)) out.add(id)
+      return out
     } catch { /* torn write: read the log instead */ }
   }
-  const lines = (await readTail(pr.P.workerLog)).trimEnd().split('\n').slice(-200)
+  const lines = (await readTail(pr.P.workerLog)).trimEnd().split('\n').slice(-400)
   for (let i = lines.length - 1; i >= 0; i--) {
-    const m = lines[i].match(/\sGENERATE (\S+)/)
-    if (m) return processed.has(m[1]) ? null : m[1]
-    if (/\sworker started /.test(lines[i])) return null // restarted since: nothing in flight
+    if (/\sworker started /.test(lines[i])) break // restarted since: nothing earlier is in flight
+    const m = lines[i].match(/\s(?:GENERATE|ADOPT) (J-\S+)/)
+    if (m && !processed.has(m[1])) out.add(m[1])
   }
-  return null
+  return out
+}
+
+/** One job generating now, for places that name a single one. Null when none. */
+export async function getGeneratingJobId(pr: Project, processed: Set<string>): Promise<string | null> {
+  return [...(await getGeneratingJobIds(pr, processed))][0] ?? null
 }
 
 /**
@@ -374,6 +382,8 @@ async function locateDecided(pr: Project, d: ReviewDecision, stage: string | nul
   const guesses =
     d.verdict === 'denied'
       ? [`09_OUTPUT/_rejected/${d.hfJobId}/${base}`]
+      : d.verdict === 'discarded'
+        ? [`09_OUTPUT/_discarded/${d.hfJobId}/${base}`]
       : stage === 'draft'
         ? [`09_OUTPUT/_drafts/${d.hfJobId}/${base}`]
         : []
@@ -785,7 +795,7 @@ export async function getPromptLibrary(pr: Project): Promise<PromptLibraryItem[]
   const failedDecisions = (state?.failedDecisions ?? {}) as Record<string, string>
   const failedJobs = (state?.failedJobs ?? {}) as Record<string, { reason: string }>
   const held = (state?.held ?? {}) as Record<string, { reason: string }>
-  const generating = await getGeneratingJobId(pr, processed)
+  const generating = await getGeneratingJobIds(pr, processed)
   const ledger = new Map<string, string>()
   for (const row of parseCsv(ledgerText) as unknown as Record<string, string>[]) ledger.set(row.job_id, row.state)
   const verdict = new Map<string, ReviewDecision['verdict']>()
@@ -825,7 +835,7 @@ export async function getPromptLibrary(pr: Project): Promise<PromptLibraryItem[]
       params: (last.params ?? {}) as PromptLibraryItem['params'],
       revisionNotes: last.revisionNotes ?? [],
       state: !processed.has(last.jobId)
-        ? last.jobId === generating ? 'generating' : 'queued'
+        ? generating.has(last.jobId) ? 'generating' : 'queued'
         : v ?? (ledger.get(last.jobId) === 'GENERATED' ? 'to-review' : 'failed'),
       // Why it failed (worker.mjs recordFailure), or why a queued one is held.
       note: failedJobs[last.jobId]?.reason ?? (!processed.has(last.jobId) ? held[last.jobId]?.reason ?? null : null),
@@ -909,7 +919,7 @@ async function getLookUsage(
   candidates: Candidate[],
 ): Promise<Map<string, LookUse[]>> {
   const processed = new Set((state?.processedJobs ?? []) as string[])
-  const [queue, generating] = await Promise.all([readJsonl<QueueJob>(pr.P.queue), getGeneratingJobId(pr, processed)])
+  const [queue, generating] = await Promise.all([readJsonl<QueueJob>(pr.P.queue), getGeneratingJobIds(pr, processed)])
   const out = new Map<string, LookUse[]>()
   const add = (token: string, use: LookUse) => {
     const [ref, variantIn] = String(token).replace(/^@/, '').split('/')
@@ -923,7 +933,7 @@ async function getLookUsage(
   }
   for (const j of queue) {
     if (processed.has(j.jobId)) continue
-    for (const t of j.refs ?? []) add(t, { label: j.label ?? j.jobId, state: j.jobId === generating ? 'generating' : 'queued' })
+    for (const t of j.refs ?? []) add(t, { label: j.label ?? j.jobId, state: generating.has(j.jobId) ? 'generating' : 'queued' })
   }
   for (const c of candidates) {
     for (const t of c.sidecar.refs ?? []) add(t, { label: c.sidecar.label ?? c.sidecar.jobId, state: 'review' })
@@ -1017,7 +1027,7 @@ export async function getStudioSession(pr: Project, sessionId: string): Promise<
     held: (state?.held ?? {}) as Record<string, { reason: string }>,
     failedJobs: (state?.failedJobs ?? {}) as Record<string, { reason: string }>,
     staged, ledgerHf,
-    generating: await getGeneratingJobId(pr, new Set(processed)),
+    generating: [...(await getGeneratingJobIds(pr, new Set(processed)))],
   })
   const inputs: Record<string, string> = {}
   for (const f of await fs.readdir(path.join(pr.P.uploads, sessionId)).catch(() => [] as string[])) {

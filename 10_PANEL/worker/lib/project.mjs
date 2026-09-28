@@ -82,6 +82,7 @@ export const P = {
   staging: path.join(ROOT, '09_OUTPUT', '_staging'),
   rejected: path.join(ROOT, '09_OUTPUT', '_rejected'),
   drafts: path.join(ROOT, '09_OUTPUT', '_drafts'),
+  discarded: path.join(ROOT, '09_OUTPUT', '_discarded'),
   uploads: path.join(ROOT, '09_OUTPUT', '_uploads'),
   filings: path.join(ROOT, '00_PROJECT', 'queue', 'FILINGS.jsonl'),
   /** Footage that changed episode: old shot id -> new, and every file it took with it. */
@@ -305,12 +306,18 @@ export async function spentWithin(hours) {
 }
 
 /**
- * The machine-wide generation lock: one generation at a time across every
- * project's worker, so two workers cannot both pass the spend ceiling check
- * with the same remaining room. Held from that check until the ledger records
- * the spend.
+ * The machine-wide generation lock, held only while a worker checks the spend
+ * ceiling and takes a generation slot, so two workers cannot both reserve the
+ * same remaining room. Generations themselves run in parallel, one per slot.
  */
 export const GENERATE_LOCK = path.join(PROJECTS_DIR, '.generate.lock')
+
+/**
+ * One lock file per generation running on this machine (slot-1.lock ... up to
+ * cfg.maxConcurrentGenerations), across every project. Each file's note says the
+ * project, the job and the credits it reserves until its ledger row is written.
+ */
+export const GENERATE_SLOTS_DIR = path.join(PROJECTS_DIR, '.generate-slots')
 
 /**
  * Where a shot is now, following every episode move it has been through
@@ -419,6 +426,24 @@ export async function processedAnywhere(state) {
       const s = JSON.parse(await readText(path.join(P.queueDir, name)))
       for (const id of s.processedJobs ?? []) out.jobs.add(id)
       for (const id of s.processedDecisions ?? []) out.decisions.add(id)
+    } catch { /* a torn or foreign file: ignore */ }
+  }
+  return out
+}
+
+/**
+ * Generations that failed on any machine: jobId -> reason. A failure is retried
+ * from whichever machine's panel asked (job.retry in job-requests.mjs), so the
+ * check has to see every machine's state, not only this one's.
+ */
+export async function failedAnywhere(state) {
+  const out = new Map(Object.entries(state?.failedJobs ?? {}).map(([id, f]) => [id, f?.reason ?? '']))
+  let names = []
+  try { names = await fs.readdir(P.queueDir) } catch { /* no queue folder yet */ }
+  for (const name of names.filter((n) => /^state(\.[a-z0-9-]+)?\.json$/.test(n))) {
+    try {
+      const s = JSON.parse(await readText(path.join(P.queueDir, name)))
+      for (const [id, f] of Object.entries(s.failedJobs ?? {})) if (!out.has(id)) out.set(id, f?.reason ?? '')
     } catch { /* a torn or foreign file: ignore */ }
   }
   return out

@@ -1,6 +1,8 @@
 import {
-  getCandidates, getDecisions, getEpisodes, getFilings, getGeneratingJobId, getQueue, getWorkerState, getWorkerStatus, readTail,
+  getCandidates, getDecisions, getEpisodes, getFilings, getGeneratingJobIds, getPriceTable, getQueue, getWorkerState, getWorkerStatus,
+  priceKey, readJsonl, readTail,
 } from '@/lib/store'
+import { FailedActions } from './failed-actions'
 import { jobLabel } from '@/lib/activity'
 import { plainReason } from '@/lib/plain'
 import { listProjects, requireProject } from '@/lib/projects'
@@ -14,7 +16,7 @@ import { Reveal } from '@/components/ui/reveal'
 import { ItemMenu, type ItemAction } from '@/components/item-menu'
 import { Table, TR_CLASS, Td, Th, Thead, Tr } from '@/components/ui/table'
 import { Badge, PageHeader, SectionHeading } from '@/components/ui/text'
-import type { QueueItem } from '@/lib/types'
+import type { JobRequest, JobRequestEvent, QueueItem } from '@/lib/types'
 
 export const dynamic = 'force-dynamic'
 
@@ -51,7 +53,21 @@ export default async function QueuePage({ params }: PageProps<'/[project]/queue'
   const failedIds = Object.keys((state?.failedDecisions ?? {}) as Record<string, string>)
   const failures = filings.filter((f) => !f.ok && !!f.decisionId && failedIds.includes(f.decisionId)).reverse()
   // Generations that ended without a take, and why (worker.mjs recordFailure). The ten newest.
+  // Removed ones are gone; a retried one leaves once its retry is queued (it is then
+  // with the waiting jobs), and comes back with the reason if the worker refused it.
+  const [jobRequests, jobResults, prices] = await Promise.all([
+    readJsonl<JobRequest>(pr.P.jobRequests), readJsonl<JobRequestEvent>(pr.P.jobRequestResults), getPriceTable(),
+  ])
+  const dismissed = new Set(jobRequests.flatMap((r) => (r.type === 'job.dismiss' ? [r.jobId] : [])))
+  const retriedAs = new Set(queue.flatMap((q) => ((q as { retryOf?: string }).retryOf ? [(q as { retryOf?: string }).retryOf!] : [])))
+  const retryState = new Map<string, { sent: boolean; refused: string | null }>()
+  for (const r of jobRequests) {
+    if (r.type !== 'job.retry') continue
+    const refused = jobResults.find((e) => e.reqId === r.id && e.event === 'rejected')
+    retryState.set(r.jobId, { sent: !refused, refused: refused && refused.event === 'rejected' ? refused.reason : null })
+  }
   const failedJobs = Object.entries((state?.failedJobs ?? {}) as Record<string, { reason: string; at: string }>)
+    .filter(([jobId]) => !dismissed.has(jobId) && !retriedAs.has(jobId))
     .sort(([, a], [, b]) => b.at.localeCompare(a.at))
     .slice(0, 10)
   // Stop/Start covers every project's worker, so it needs all of them.
@@ -63,7 +79,9 @@ export default async function QueuePage({ params }: PageProps<'/[project]/queue'
   // reappear here as if they were still waiting.
   const processed = new Set((state?.processedJobs ?? []) as string[])
   const waiting = queue.filter((q) => !processed.has(q.jobId))
-  const generating = await getGeneratingJobId(pr, processed)
+  // Several run at once.
+  const generatingIds = await getGeneratingJobIds(pr, processed)
+  const generating = generatingIds.size ? `${[...generatingIds][0]}${generatingIds.size > 1 ? ` and ${generatingIds.size - 1} more` : ''}` : null
   // Jobs the worker will not start yet, and why (a spend ceiling, not logged in).
   const held = (state?.held ?? {}) as Record<string, { reason: string; credits: number | null; since: string }>
   const accepted = decisions.filter((d) => d.verdict === 'accepted').length
@@ -104,19 +122,42 @@ export default async function QueuePage({ params }: PageProps<'/[project]/queue'
                 <Th>Job</Th>
                 <Th>Reason</Th>
                 <Th>When</Th>
+                <Th className="text-right">Next</Th>
               </tr>
             </Thead>
             <tbody>
-              {failedJobs.map(([jobId, f]) => (
-                <Tr key={jobId}>
-                  <Td className="text-xs text-fg">
-                    {jobLabel(jobById.get(jobId)?.target)}
-                    <div className="mt-0.5 font-mono text-[11px] text-faint">{jobId}</div>
-                  </Td>
-                  <Td className="text-xs text-bad" dir="auto">{plainReason(f.reason)}</Td>
-                  <Td className="font-mono text-xs whitespace-nowrap text-muted">{f.at.slice(0, 16).replace('T', ' ')}</Td>
-                </Tr>
-              ))}
+              {failedJobs.map(([jobId, f]) => {
+                const q = jobById.get(jobId)
+                const retry = retryState.get(jobId)
+                const machine = (q as { machine?: string } | undefined)?.machine
+                return (
+                  <Tr key={jobId}>
+                    <Td className="text-xs text-fg">
+                      {jobLabel(q?.target)}
+                      <div className="mt-0.5 font-mono text-[11px] text-faint">
+                        {jobId}{machine && ` · on ${machine}`}
+                      </div>
+                    </Td>
+                    <Td className="text-xs text-bad" dir="auto">
+                      {plainReason(f.reason)}
+                      {retry?.refused && <div className="mt-1 text-muted">Retry refused: {plainReason(retry.refused)}</div>}
+                    </Td>
+                    <Td className="font-mono text-xs whitespace-nowrap text-muted">{f.at.slice(0, 16).replace('T', ' ')}</Td>
+                    <Td className="text-right">
+                      {q ? (
+                        <FailedActions
+                          project={pr.slug}
+                          jobId={jobId}
+                          credits={prices.get(priceKey(q.model, q.params)) ?? null}
+                          sent={retry?.sent ?? false}
+                        />
+                      ) : (
+                        <span className="text-xs text-faint">not in the queue file</span>
+                      )}
+                    </Td>
+                  </Tr>
+                )
+              })}
             </tbody>
           </Table>
         </section>
@@ -183,17 +224,17 @@ export default async function QueuePage({ params }: PageProps<'/[project]/queue'
                       <ItemMenu key={q.jobId} as="tr" className={TR_CLASS} actions={menuFor(q, pr.slug, pr.code)}>
                         <Td className="font-mono text-xs">
                           <span className="font-medium text-fg">{q.jobId}</span>
-                          {q.jobId === generating && (
+                          {generatingIds.has(q.jobId) && (
                             <Badge tone="accent" className="ml-2">
                               generating now
                             </Badge>
                           )}
-                          {q.jobId !== generating && held[q.jobId] && (
+                          {!generatingIds.has(q.jobId) && held[q.jobId] && (
                             <Badge tone="bad" className="ml-2">
                               held
                             </Badge>
                           )}
-                          {q.jobId !== generating && held[q.jobId] && (
+                          {!generatingIds.has(q.jobId) && held[q.jobId] && (
                             <div className="mt-1 max-w-xs font-sans text-bad">{plainReason(held[q.jobId].reason)}</div>
                           )}
                           {q.parentJobId && (

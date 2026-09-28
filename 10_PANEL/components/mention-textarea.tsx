@@ -12,7 +12,7 @@ import { parseMentions } from '@/lib/mentions'
 export interface MentionOption {
   /** Inserted into the note, e.g. @LOC-007/V02 or @upload:u3. */
   token: string
-  /** Position in the attachment order, as the model will receive it. */
+  /** Position in the attachment order, as the model will receive it. 0 when there is no order (a rule picks from the whole index). */
   position: number
   title: string
   subtitle: string
@@ -32,11 +32,14 @@ export function MentionTextarea({
   onChange,
   options,
   sameRef,
+  missingLabel = 'is not in the references for this job',
   ...props
 }: Omit<React.ComponentProps<'textarea'>, 'value' | 'onChange'> & {
   value: string
   onChange: (value: string) => void
   options: MentionOption[]
+  /** Said after a mention that matches no option. */
+  missingLabel?: string
   /** True when a mention written in the note refers to this option. */
   sameRef: (mention: string, option: MentionOption) => boolean
 }) {
@@ -135,7 +138,7 @@ export function MentionTextarea({
             >
               <span className="font-mono">{m.token}</span>{' '}
               <span className="text-muted">
-                #{m.option.position} {m.option.title}
+                {m.option.position > 0 && `#${m.option.position} `}{m.option.title}
               </span>
             </span>
           ) : (
@@ -144,7 +147,7 @@ export function MentionTextarea({
               className="inline-flex h-6 items-center gap-1 rounded-[5px] bg-bad/10 px-2 text-[11px] text-bad"
             >
               <TriangleAlert aria-hidden className="size-3" />
-              <span className="font-mono">{m.token}</span> is not in the references for this job
+              <span className="font-mono">{m.token}</span> {missingLabel}
             </span>
           ),
         )}
@@ -200,7 +203,7 @@ export function MentionTextarea({
                         i === active ? 'bg-white/[0.08]' : 'hover:bg-white/[0.04]',
                       )}
                     >
-                      <span className="w-5 shrink-0 text-center font-mono text-[11px] text-muted">#{o.position}</span>
+                      {o.position > 0 && <span className="w-5 shrink-0 text-center font-mono text-[11px] text-muted">#{o.position}</span>}
                       {o.thumb ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={o.thumb} alt="" className="checker size-10 shrink-0 rounded-md border border-edge object-cover" />

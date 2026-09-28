@@ -30,6 +30,7 @@ beginning). Both verdicts matter:
 - **accepted** notes say what went right — the rule is what to preserve
 
 An accept with no note carries no signal. Don't invent one; count it and move on.
+A **discarded** decision is the reviewer setting a take aside with no judgement — skip it.
 
 Notes may be in **Farsi**. Some older decisions also carry `notesEn`, the reviewer's own English
 version — prefer it when present. Notes can contain @-mentions such as `@LOC-007/V02`: that is

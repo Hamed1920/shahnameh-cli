@@ -119,9 +119,10 @@ export async function decide(
   const requeue = formData.get('requeue') === 'on'
 
   if (!candidatePath) return { ok: false, error: 'Missing candidate.' }
-  if (verdict !== 'accepted' && verdict !== 'denied') {
-    return { ok: false, error: 'Choose Accept or Deny first.' }
+  if (verdict !== 'accepted' && verdict !== 'denied' && verdict !== 'discarded') {
+    return { ok: false, error: 'Choose Accept, Deny or Discard first.' }
   }
+  const discarding = verdict === 'discarded'
 
   // A denial with no note teaches nothing and cannot build a revision prompt.
   if (verdict === 'denied' && !notes) {
@@ -137,11 +138,12 @@ export async function decide(
   if (candidate.decided) return { ok: true } // idempotent: already reviewed
 
   const id = newId('rev')
-  const regenerates = verdict === 'denied' ? requeue : candidate.sidecar.stage === 'draft'
+  const regenerates = discarding ? false : verdict === 'denied' ? requeue : candidate.sidecar.stage === 'draft'
 
-  let uploads: PendingUpload[]
+  // A discard files nothing: uploads and reference edits on the form are ignored.
+  let uploads: PendingUpload[] = []
   let refs: string[] | undefined
-  try {
+  if (!discarding) try {
     uploads = await readUploads(pr, formData, id)
     const uploadIds = new Set(uploads.map((u) => u.meta.id))
     refs = await readRefs(pr, formData, candidate, regenerates, uploadIds)

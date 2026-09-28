@@ -62,6 +62,7 @@ const FOLLOW_UP: Record<FollowUp['state'], { text: string; tone: 'accent' | 'goo
   'to-review': { text: 'waiting for your review', tone: 'accent' },
   accepted: { text: 'accepted', tone: 'good' },
   denied: { text: 'denied', tone: 'bad' },
+  discarded: { text: 'discarded', tone: 'muted' },
 }
 
 /** What the decision set off, and where that stands now. */
@@ -215,6 +216,7 @@ export default async function DecidedPage({ params, searchParams }: PageProps<'/
   const prices = Object.fromEntries(priceTable)
   const accepted = entries.filter((e) => e.decision.verdict === 'accepted')
   const denied = entries.filter((e) => e.decision.verdict === 'denied')
+  const discarded = entries.filter((e) => e.decision.verdict === 'discarded')
 
   return (
     <div className="space-y-16">
@@ -312,6 +314,24 @@ export default async function DecidedPage({ params, searchParams }: PageProps<'/
           </div>
         )}
       </section>
+
+      {/* Only when there are any: a discard is set aside, not a result worth a standing section. */}
+      {discarded.length > 0 && (
+        <section>
+          <SectionHeading tone="muted" count={discarded.length}>Discarded</SectionHeading>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {discarded.map((e, i) => (
+              <Reveal key={e.decision.id} index={i}>
+                <Card className="space-y-3 p-4">
+                  <Media entry={e} project={pr.slug} />
+                  <Heading entry={e} />
+                  <Location entry={e} />
+                </Card>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   )
 }

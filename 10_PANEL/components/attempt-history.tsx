@@ -1,6 +1,7 @@
 'use client'
 
-import { Columns2, History } from 'lucide-react'
+import { useLayoutEffect, useRef, useState } from 'react'
+import { ChevronDown, Columns2, History } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/text'
 import { TakeMedia } from '@/components/take-media'
@@ -11,6 +12,58 @@ import type { AttemptEntry } from '@/lib/types'
 // write the same date differently, and React would redraw the whole list to reconcile.
 const when = (iso: string | null) =>
   iso ? new Date(iso).toLocaleString('en-GB', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : null
+
+/**
+ * An attempt's note, three lines tall: with the heading above it, about the
+ * height of the preview (sm:w-48, 16:9 = 108px), so a note that carries a whole
+ * revision prompt does not make one row a page long. When it runs over, it
+ * fades out and "Show all" opens the rest. Tags and references stay in view.
+ */
+const NOTE_H = 68
+
+function ClampedNote({ text }: { text: string }) {
+  const body = useRef<HTMLParagraphElement>(null)
+  const [open, setOpen] = useState(false)
+  const [over, setOver] = useState(false)
+
+  useLayoutEffect(() => {
+    const el = body.current
+    if (!el) return
+    const check = () => setOver(el.scrollHeight > NOTE_H + 2)
+    check()
+    // The stage mounts hidden (display: none) until it is the one on screen; measure again when it shows.
+    const ro = new ResizeObserver(check)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
+  return (
+    <div>
+      <p
+        ref={body}
+        dir="auto"
+        style={open ? undefined : { maxHeight: NOTE_H }}
+        className={cn(
+          'overflow-hidden text-start text-sm leading-relaxed whitespace-pre-line text-fg/90',
+          !open && over && '[mask-image:linear-gradient(to_bottom,black_45%,transparent)]',
+        )}
+      >
+        {text}
+      </p>
+      {over && (
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-expanded={open}
+          className="focus-ring mt-1.5 inline-flex cursor-pointer items-center gap-1 rounded text-xs text-muted transition-colors duration-150 hover:text-fg"
+        >
+          <ChevronDown aria-hidden className={cn('size-3.5 transition-transform duration-200', open && 'rotate-180')} />
+          {open ? 'Show less' : 'Show all'}
+        </button>
+      )}
+    </div>
+  )
+}
 
 /**
  * Every earlier attempt at this shot, oldest first: the video, what was
@@ -69,6 +122,7 @@ export function AttemptHistory({
                   {h.stage && <span className="ml-1 font-mono text-[11px] text-muted">{h.stage}</span>}
                   {h.verdict === 'denied' && <Badge tone="bad">denied</Badge>}
                   {h.verdict === 'accepted' && <Badge tone="good">{h.stage === 'draft' ? 'draft approved' : 'accepted'}</Badge>}
+                  {h.verdict === 'discarded' && <Badge tone="muted">discarded</Badge>}
                   {!h.verdict && <Badge tone="muted">not reviewed</Badge>}
                   {when(h.decidedAt) && <span suppressHydrationWarning className="font-mono text-[11px] text-faint">{when(h.decidedAt)}</span>}
                   {h.video && (
@@ -79,9 +133,7 @@ export function AttemptHistory({
                   )}
                 </div>
                 {h.notes ? (
-                  <p dir="auto" className="text-start text-sm leading-relaxed whitespace-pre-line text-fg/90">
-                    {h.notes}
-                  </p>
+                  <ClampedNote text={h.notes} />
                 ) : (
                   <p className="text-xs text-faint">No note.</p>
                 )}

@@ -39,6 +39,7 @@
 # generation lock, and "Stop all workers" (Queue page). Never travel.
 /.new-*
 /.generate.lock
+/.generate-slots/
 /.workers-paused
 # The model-list refresh lock, and a sandbox's own copy of the model list.
 .catalog.lock
@@ -50,6 +51,8 @@
 .agents/
 skills-lock.json
 **/.claude/skills/higgsfield-*
+# Ours, not vendored: travels with the repo.
+!/.claude/skills/higgsfield-login/
 # A person's own Claude Code permissions on one machine, and the git worktrees
 # Claude Code makes for parallel work (each is a checkout of this repo).
 **/.claude/settings.local.json

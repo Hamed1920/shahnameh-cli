@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import {
-  CODE, P, appendJsonl, currentShotId, loadEntities, log, readCsv, readJsonl, readText, resolveRef, restoreText,
+  CODE, P, appendJsonl, currentShotId, failedAnywhere, loadEntities, log, readCsv, readJsonl, readText, resolveRef, restoreText,
   spentWithin, usedShotIds, writeCsv,
 } from './project.mjs'
 import { parseCsv } from './csv.mjs'
@@ -12,7 +12,7 @@ import { FilingError, checkUploads, fileUpload, reserveEntity } from './promote.
 import { NEXT_SCENE_RX, assignScenes } from './scenes.mjs'
 import { stripCode } from './ids.mjs'
 import { planJob } from './plan.mjs'
-import { cliReady, estimateCost } from './hf.mjs'
+import { cliReady, estimateCost, hfJson } from './hf.mjs'
 import { OLD_PANEL, ownerOf, requestOwners } from './machine.mjs'
 import { PULL_FIRST, remoteChangedIndex } from './git-guard.mjs'
 
@@ -415,6 +415,79 @@ const HANDLERS = {
     await emit({ batchId: null, reqId: req.id, event: 'queued', jobIds: { [req.jobId]: jobId }, assigned: [], total: null })
     await log(`REGENERATE ${req.jobId} -> ${jobId} (attempt ${(src.attempt ?? 1) + 1})${changed.length ? ` changed: ${changed.join(', ')}` : ''}${note ? ` note: ${note}` : ''}`)
   },
+
+  /**
+   * Run a generation that failed (no take came back) again, exactly as queued,
+   * on this machine. The same attempt, since the failed one produced nothing to
+   * judge; chained to it through parentJobId so its history reads through. Priced
+   * before it is created, like every job (worker.mjs). Once per failure: a second
+   * Retry, from here or another machine's panel after a sync, is refused.
+   */
+  async 'job.retry'(req, { state, dry }) {
+    const queue = await readJsonl(P.queue)
+    const src = queue.find((q) => q.jobId === req.jobId)
+    if (!src) fail(`job ${req.jobId} is not in the queue file`)
+    if (!(await failedAnywhere(state)).has(req.jobId)) fail(`job ${req.jobId} did not fail, so there is nothing to retry`)
+    const again = queue.find((q) => q.retryOf === req.jobId)
+    if (again) fail(`job ${req.jobId} was already retried as ${again.jobId}`)
+    if (dry) { await log(`DRY-RUN would retry ${req.jobId}`); return }
+
+    const jobId = newJobId()
+    const { machine: _m, enqueuedAt: _e, enqueuedBy: _b, ...rest } = src
+    await appendJsonl(P.queue, {
+      ...rest,
+      jobId,
+      parentJobId: src.jobId,
+      retryOf: src.jobId,
+      attempt: src.attempt ?? 1,
+      target: await currentShotId(src.target),
+      enqueuedAt: new Date().toISOString(),
+      enqueuedBy: 'panel:retry',
+    })
+    await emit({ batchId: null, reqId: req.id, event: 'queued', jobIds: { [req.jobId]: jobId }, assigned: [], total: null })
+    await log(`RETRY ${req.jobId} -> ${jobId}`)
+  },
+
+  /**
+   * Bring in a take Higgsfield made for a job the worker recorded as failed (the
+   * CLI reported an error after the job had been accepted). Queued as an adoption:
+   * the worker fetches that Higgsfield job instead of creating one, so nothing is
+   * spent, and files it like any take. Refused unless the job failed, the
+   * Higgsfield job is the same model, and no ledger row or queued adoption has it yet.
+   */
+  async 'job.adopt'(req, { state, dry }) {
+    const queue = await readJsonl(P.queue)
+    const src = queue.find((q) => q.jobId === req.jobId)
+    if (!src) fail(`job ${req.jobId} is not in the queue file`)
+    if (!(await failedAnywhere(state)).has(req.jobId)) fail(`job ${req.jobId} did not fail; its take is already here`)
+    const hfJobId = String(req.hfJobId ?? '').trim()
+    if (!/^[0-9a-f-]{16,}$/i.test(hfJobId)) fail(`'${hfJobId}' is not a Higgsfield job id`)
+    if (queue.some((q) => q.adoptHfJobId === hfJobId)) fail(`Higgsfield job ${hfJobId} is already being brought in`)
+    const { rows } = await readCsv(P.ledger)
+    if (rows.some((r) => r.hf_job_id === hfJobId)) fail(`Higgsfield job ${hfJobId} is already in the ledger`)
+    const got = await hfJson(['generate', 'get', hfJobId], { timeoutMs: 60_000 })
+    if (got.code !== 0) fail(`Higgsfield does not know job ${hfJobId}: ${(got.stderr || got.stdout).trim().slice(0, 200)}`)
+    if (got.json?.job_type && got.json.job_type !== src.model) fail(`Higgsfield job ${hfJobId} is ${got.json.job_type}, not ${src.model}`)
+    if (dry) { await log(`DRY-RUN would adopt ${hfJobId} for ${req.jobId}`); return }
+
+    const jobId = newJobId()
+    const { machine: _m, enqueuedAt: _e, enqueuedBy: _b, ...rest } = src
+    await appendJsonl(P.queue, {
+      ...rest, jobId, parentJobId: src.jobId, adoptHfJobId: hfJobId,
+      target: await currentShotId(src.target), enqueuedAt: new Date().toISOString(), enqueuedBy: 'panel:adopt',
+    })
+    await emit({ batchId: null, reqId: req.id, event: 'queued', jobIds: { [req.jobId]: jobId }, assigned: [], total: null })
+    await log(`ADOPT QUEUED ${req.jobId}: Higgsfield job ${hfJobId} -> ${jobId}`)
+  },
+
+  /**
+   * Take a failed generation off the Queue page. Nothing to do here: the panel
+   * hides a failure once this request is in the log, on every machine. Kept as
+   * a handler so it is settled, not retried as an unknown type.
+   */
+  async 'job.dismiss'(req) {
+    await log(`REMOVED failed job ${req.jobId} from the Queue page`)
+  },
 }
 
 // Last retryable error per request, so a locked file is logged once, not every few seconds.
@@ -453,7 +526,7 @@ export async function runJobRequests(state, { dry = false } = {}) {
       await handler(req, { state, dry })
       // In dry mode an approve or regenerate is only described; leave it for a real run.
       // A dry run only describes what spends or files; leave those for a real run.
-      const spendsOrFiles = ['batch.approve', 'regenerate', 'studio.approve', 'studio.pick', 'studio.close'].includes(req.type)
+      const spendsOrFiles = ['batch.approve', 'regenerate', 'job.retry', 'job.adopt', 'studio.approve', 'studio.pick', 'studio.close'].includes(req.type)
       if (dry && spendsOrFiles) continue
       state.processedRequests.push(req.id)
       retrying.delete(req.id)

@@ -40,3 +40,5 @@
 {"id":"op_mukbyf2cnog9","ts":"2026-09-27T21:28:05.318Z","reviewer":"hamed","type":"add","uploads":[{"id":"u1","file":"09_OUTPUT/_uploads/op_mukbyf2cnog9/u1.png","originalName":"ChatGPT Image Sep 28, 2026, 12_26_55 AM.png","mode":"variant","role":"HERO","descriptor":"Zahhak Black snakes","entity":"SHM-CHR-001-ZAHHAK"}],"machine":"superpays-macbook-pro-local"}
 {"id":"op_mukbynxmeaiq","ts":"2026-09-27T21:28:16.811Z","reviewer":"hamed","type":"archive","looks":[{"entity":"SHM-CHR-001-ZAHHAK","variant":"V06"},{"entity":"SHM-CHR-001-ZAHHAK","variant":"V07"}],"machine":"superpays-macbook-pro-local"}
 {"id":"op_mukc20rkkdim","ts":"2026-09-27T21:30:53.410Z","reviewer":"hamed","type":"canonical","entity":"SHM-CHR-001-ZAHHAK","variant":"V08","machine":"superpays-macbook-pro-local"}
+{"id":"op_mukyo8es1m5a","ts":"2026-09-28T08:04:01.303Z","reviewer":"hamed","type":"role","looks":[{"entity":"SHM-CHR-005-SHAHRNAZ","variant":"V01"}],"role":"HERO","machine":"hamed-pc"}
+{"id":"op_mukyor8ijvqf","ts":"2026-09-28T08:04:25.703Z","reviewer":"hamed","type":"role","looks":[{"entity":"SHM-CHR-004-ARNAVAZ","variant":"V01"}],"role":"HERO","machine":"hamed-pc"}
