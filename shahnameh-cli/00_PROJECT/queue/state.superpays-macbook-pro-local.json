@@ -84,7 +84,16 @@
     "J-20260928-R70",
     "J-20260928-ICC",
     "J-20260928-A4Q",
-    "J-20260928-OI5"
+    "J-20260928-OI5",
+    "J-20260928-DCT",
+    "J-20260928-R7B",
+    "J-20260928-LNL",
+    "J-20260928-1KN",
+    "J-20260928-AUH",
+    "J-20260928-31E",
+    "J-20260928-77M",
+    "J-20260928-2NG",
+    "J-20260928-FE5"
   ],
   "processedDecisions": [
     "rev_mtljtubxafk9",
@@ -157,10 +166,11 @@
     "rev_mul0s7rd0wzd",
     "rev_mul0sfnpbx12",
     "rev_mul9635lnaww",
-    "rev_mulaow6wwtg8"
+    "rev_mulaow6wwtg8",
+    "rev_mulljvtcqlwu"
   ],
-  "spentCredits": 6000,
-  "updatedAt": "2026-09-28T14:46:12.172Z",
+  "spentCredits": 6495,
+  "updatedAt": "2026-09-28T18:51:50.415Z",
   "failedDecisions": {},
   "processedOps": [
     "op_mu18d6axozqm",
@@ -230,7 +240,21 @@
     "jr_muk0j93k6a1j",
     "jr_muk12zmluodf",
     "jr_muk12zmlyn9ax",
-    "jr_muk18r2dpq7s"
+    "jr_muk18r2dpq7s",
+    "jr_mulj986fhih4",
+    "jr_mulj9r0s78g1",
+    "jr_muljdiv3nng2",
+    "jr_muljn3vv5qox",
+    "jr_mulkbyrnskak",
+    "jr_mulkc8k5fy7f",
+    "jr_mulkc9q0671z",
+    "jr_mulkcaqj6oai",
+    "jr_mulkcbr4dxo2",
+    "jr_mulki7su0cdh",
+    "jr_mulkiljt9v3m",
+    "jr_mulkjv3rflc9",
+    "jr_mull95fsq6no",
+    "jr_mullcxzd067z"
   ],
   "held": {},
   "failedJobs": {
@@ -257,6 +281,22 @@
     "J-20260928-OI5": {
       "reason": "Error: higgsfield: request failed (no response received)",
       "at": "2026-09-28T14:46:12.056Z"
+    },
+    "J-20260928-DCT": {
+      "reason": "Error: {\"billing_period\":\"monthly\",\"error_type\":\"not_enough_credits\",\"plan_type\":\"ultra\",\"workspace\":{\"role\":\"owner\",\"type\":\"private\"}}",
+      "at": "2026-09-28T17:41:31.484Z"
+    },
+    "J-20260928-R7B": {
+      "reason": "Error: {\"billing_period\":\"monthly\",\"error_type\":\"not_enough_credits\",\"plan_type\":\"ultra\",\"workspace\":{\"role\":\"owner\",\"type\":\"private\"}}",
+      "at": "2026-09-28T17:44:14.376Z"
+    },
+    "J-20260928-LNL": {
+      "reason": "Error: Higgsfield API error (HTTP 503). request failed with status 503 Service Unavailable",
+      "at": "2026-09-28T18:03:53.732Z"
+    },
+    "J-20260928-1KN": {
+      "reason": "Error: Higgsfield API error (HTTP 503). request failed with status 503 Service Unavailable",
+      "at": "2026-09-28T18:06:04.542Z"
     }
   }
 }

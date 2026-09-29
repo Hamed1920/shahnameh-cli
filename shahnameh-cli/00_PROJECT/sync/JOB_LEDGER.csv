@@ -119,3 +119,12 @@ J-20260928-R70,,worker:revision,generate.video,SHM-EP014-SC012-SH0010,SHM-EP014-
 J-20260928-ICC,,worker:final,generate.video,SHM-EP014-SC001-SH0010,SHM-EP014-SC001-SH0010,V01,higgsfield,FAILED,2026-09-28T14:42:09.303Z,queue,J-20260927-EVG,,1,180,superpays-macbook-pro-local
 J-20260928-A4Q,,worker:final,generate.video,SHM-EP014-SC002-SH0010,SHM-EP014-SC002-SH0010,V01,higgsfield,FAILED,2026-09-28T14:43:10.869Z,queue,J-20260927-IAP,,1,180,superpays-macbook-pro-local
 J-20260928-OI5,,worker:revision,generate.video,SHM-EP014-SC011-SH0010,SHM-EP014-SC011-SH0010,V01,higgsfield,FAILED,2026-09-28T14:46:12.053Z,queue,J-20260927-H92,,3,45,superpays-macbook-pro-local
+J-20260928-DCT,,panel:batch,generate.video,SHM-EP014-SC016-SH0010,SHM-EP014-SC016-SH0010,V01,higgsfield,FAILED,2026-09-28T17:41:31.481Z,queue,,,1,180,superpays-macbook-pro-local
+J-20260928-R7B,,panel:retry,generate.video,SHM-EP014-SC016-SH0010,SHM-EP014-SC016-SH0010,V01,higgsfield,FAILED,2026-09-28T17:44:14.372Z,queue,J-20260928-DCT,,1,180,superpays-macbook-pro-local
+J-20260928-LNL,,panel:retry,generate.video,SHM-EP014-SC016-SH0010,SHM-EP014-SC016-SH0010,V01,higgsfield,FAILED,2026-09-28T18:03:53.729Z,queue,J-20260928-R7B,,1,180,superpays-macbook-pro-local
+J-20260928-1KN,,worker:landed,generate.video,SHM-EP014-SC016-SH0010,SHM-EP014-SC016-SH0010,V01,higgsfield,FAILED,2026-09-28T18:06:04.540Z,queue,J-20260928-LNL,,1,180,superpays-macbook-pro-local
+J-20260928-AUH,,panel:retry,generate.video,SHM-EP014-SC016-SH0010,SHM-EP014-SC016-SH0010,V01,higgsfield,GENERATED,2026-09-28T18:14:35.657Z,queue,J-20260928-1KN,621d26de-a994-4474-b56d-dd47a1e595e7,1,180,superpays-macbook-pro-local
+J-20260928-31E,,panel:retry,generate.video,SHM-EP014-SC011-SH0010,SHM-EP014-SC011-SH0010,V01,higgsfield,GENERATED,2026-09-28T18:21:49.850Z,queue,J-20260928-OI5,2e101333-8390-427e-a3c6-e6bc0e4937cb,3,45,superpays-macbook-pro-local
+J-20260928-77M,,panel:batch,generate.video,SHM-EP014-SC017-SH0010,SHM-EP014-SC017-SH0010,V01,higgsfield,GENERATED,2026-09-28T18:23:33.800Z,queue,,d40263b3-f0c6-43a4-9b0f-fa96838d6224,1,45,superpays-macbook-pro-local
+J-20260928-2NG,,panel:batch,generate.video,SHM-EP014-SC018-SH0010,SHM-EP014-SC018-SH0010,V01,higgsfield,GENERATED,2026-09-28T18:43:04.946Z,queue,,3d666779-95f5-4017-bcf1-0e2ea85b8d90,1,45,superpays-macbook-pro-local
+J-20260928-FE5,,worker:final,generate.video,SHM-EP014-SC018-SH0010,SHM-EP014-SC018-SH0010,V01,higgsfield,GENERATED,2026-09-28T18:51:50.412Z,queue,J-20260928-2NG,c7b04b2f-c75d-4561-bcea-1c35a6d4a7a1,1,180,superpays-macbook-pro-local

@@ -1,0 +1,113 @@
+{
+  "jobId": "J-20260928-2NG",
+  "parentJobId": null,
+  "hfJobId": "3d666779-95f5-4017-bcf1-0e2ea85b8d90",
+  "attempt": 1,
+  "stage": "draft",
+  "label": null,
+  "target": "SHM-EP014-SC018-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP014-JAMSHID-GIRLS/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 13 | SHOTS 13A–13D | POSSESSION — CORRECTED EYE INSERTS\n\nCreate a 15-second cinematic sequence for Seedance 2.5.\nHorizontal 16:9.\nFour shots lasting four, four, three and four seconds.\n\nCHARACTER REFERENCES:\nZahhak and his living shoulder serpents = {{CHAR_ZAHHAK}}\nShahrnaz = {{CHAR_SHAHRNAZ}}\nArnavaz = {{CHAR_ARNAVAZ}}\n\nPROP REFERENCE:\nSerpent-headed staff = {{PROP_STAFF}}\n\nPreserve the exact referenced identities, costumes and mask designs.\n\nMASK CONSTRUCTION AND MOTION:\n\nEach woman wears a rigid sculptural mask with existing eye openings. Her real eyeballs are visible behind those openings.\n\nTreat the mask as a solid, inanimate object firmly secured to her head.\n\nDuring both eye close-ups, the camera, head and mask remain completely stationary. Every contour, opening, carved eyelid shape and surface detail stays registered in exactly the same screen position.\n\nAnimation is confined to the real eyeballs behind the fixed openings.\n\nThe blackening effect belongs exclusively to the visible surfaces of the eyeballs. Surrounding skin and mask material retain their original appearance.\n\nLOCATION AND LIGHTING:\n\nThe chamber is concealed by complete darkness.\n\nOne fixed hard overhead spotlight casts cold-neutral light vertically onto the subjects. Highlights reveal upper mask edges, small portions of the eyes, the staff carving and the hand.\n\nThe surrounding image remains black. Architecture and floor remain unexposed.\n\nKeep lighting and exposure constant. Preserve a tiny overhead catchlight on the eyes so their curved surfaces remain readable during the black phase.\n\nSPATIAL STATE:\n\nShahrnaz stands WEST and Arnavaz EAST, both facing NORTH.\nZahhak stands NORTH of their midpoint, facing SOUTH toward them.\n\nHis RIGHT hand holds the staff, its head centered between their sightlines at eye level.\n\nThe inserts depict details of one simultaneous possession event.\n\nSHOT 13A | 00:00–00:04 | THE STAFF UNDER TENSION\n\n100mm macro lens, approximately f/2.8, with a narrow plane of sharp focus.\n\nCamera EAST of the staff head, looking WEST. Its carved snout points SCREEN-LEFT toward the sisters.\n\nThe rigid carving fills most of the frame. Focus on its nearest ridge and carved eye; the remaining contours soften into darkness.\n\nA minute tremor from Zahhak’s grip travels through the staff. Its shape and material remain unchanged.\n\nMake a slow three-centimeter approach, maintaining focus on the carving.\n\nPower is suggested through tension, vibration and sound.\n\nSHOT 13B | 00:04–00:08 | SHAHRNAZ — BLACK EYES\n\n100mm macro frontal close-up from NORTH of Shahrnaz, looking SOUTH.\n\nFrame both existing eye openings and the bridge of the mask between them. Keep both exposed eyeballs in focus.\n\nThe camera is locked off.\nShahrnaz’s head and mask remain motionless.\nThe eye-opening edges stay identical in shape, size and screen position throughout.\n\n00:04–00:05:\nOnly her eyeballs rotate upward behind the stationary mask openings.\n\n00:05–00:06:\nAs they reach the upward position, a uniform black coloration spreads across the visible eyeball surfaces, covering iris and sclera.\n\nBoth openings now reveal completely black eyeball surfaces, retaining their curved volume and a tiny reflected overhead highlight.\n\n00:06–00:07:\nHold both eyes fully black. Her head and mask remain perfectly still.\n\n00:07–00:08:\nThe black coloration recedes. Her original iris color and natural white sclera return as the eyeballs rotate down into their initial position.\n\nEnd on a calm, fixed natural gaze.\n\nSHOT 13C | 00:08–00:11 | ARNAVAZ’S HAND\n\n85mm close detail of Arnavaz’s empty RIGHT hand beside her right thigh, photographed from slightly NORTH-EAST.\n\nHer fingers curl inward and gather a small fold of her own clothing.\n\nA fine tremor passes through her fingertips and wrist, making the fabric quiver.\n\nHer fingers then release together. The fold drops and her hand hangs loose.\n\nHold the relaxed hand for the final half-second.\n\nThe overhead light defines the hand against black.\n\nSHOT 13D | 00:11–00:15 | ARNAVAZ — BLACK EYES\n\n100mm macro frontal close-up from NORTH of Arnavaz, looking SOUTH.\n\nFrame both existing eye openings and the surrounding mask surface.\n\nThe camera, head and rigid mask stay locked in place. Preserve every edge of the openings as a stationary boundary.\n\n00:11–00:12:\nHer real eyeballs rotate upward behind the fixed openings.\n\n00:12–00:13:\nA uniform black coloration covers the entire visible surface of both eyeballs, including iris and sclera.\n\n00:13–00:14:\nHold the fully black eyes. Tiny overhead catchlights preserve the appearance of solid, curved eyeballs behind the mask.\n\n00:14–00:15:\nRestore the original iris color and white sclera while the eyeballs rotate down to their initial position.\n\nEnd with natural eyes and an unnaturally calm gaze. Her head and mask remain stationary through the final frame.\n\nVISUAL CONTINUITY:\n\nThe mask is a fixed physical shell.\nEye rotation and eye coloration occur behind its unchanged openings.\nThe black phase covers the eyeballs completely, then fully reverses.\n\nWhenever Zahhak’s living serpents enter a frame edge, retain subtle muscular movement and their established single-headed anatomy.\n\nSOUND:\n\nFaint grip tension around the staff.\nA caught breath during each upward eye movement.\nSoft fabric tension and release during the hand insert.\nSlow exhalations as the eyes return to normal.\n\nNO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_3>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_4>>> is Dagger Horse Head (PRP-019 V02); match it wherever Dagger Horse Head appears.\n<<<image_5>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+  "basePrompt": "PLAN 13 | SHOTS 13A–13D | POSSESSION — CORRECTED EYE INSERTS\n\nCreate a 15-second cinematic sequence for Seedance 2.5.\nHorizontal 16:9.\nFour shots lasting four, four, three and four seconds.\n\nCHARACTER REFERENCES:\nZahhak and his living shoulder serpents = {{CHAR_ZAHHAK}}\nShahrnaz = {{CHAR_SHAHRNAZ}}\nArnavaz = {{CHAR_ARNAVAZ}}\n\nPROP REFERENCE:\nSerpent-headed staff = {{PROP_STAFF}}\n\nPreserve the exact referenced identities, costumes and mask designs.\n\nMASK CONSTRUCTION AND MOTION:\n\nEach woman wears a rigid sculptural mask with existing eye openings. Her real eyeballs are visible behind those openings.\n\nTreat the mask as a solid, inanimate object firmly secured to her head.\n\nDuring both eye close-ups, the camera, head and mask remain completely stationary. Every contour, opening, carved eyelid shape and surface detail stays registered in exactly the same screen position.\n\nAnimation is confined to the real eyeballs behind the fixed openings.\n\nThe blackening effect belongs exclusively to the visible surfaces of the eyeballs. Surrounding skin and mask material retain their original appearance.\n\nLOCATION AND LIGHTING:\n\nThe chamber is concealed by complete darkness.\n\nOne fixed hard overhead spotlight casts cold-neutral light vertically onto the subjects. Highlights reveal upper mask edges, small portions of the eyes, the staff carving and the hand.\n\nThe surrounding image remains black. Architecture and floor remain unexposed.\n\nKeep lighting and exposure constant. Preserve a tiny overhead catchlight on the eyes so their curved surfaces remain readable during the black phase.\n\nSPATIAL STATE:\n\nShahrnaz stands WEST and Arnavaz EAST, both facing NORTH.\nZahhak stands NORTH of their midpoint, facing SOUTH toward them.\n\nHis RIGHT hand holds the staff, its head centered between their sightlines at eye level.\n\nThe inserts depict details of one simultaneous possession event.\n\nSHOT 13A | 00:00–00:04 | THE STAFF UNDER TENSION\n\n100mm macro lens, approximately f/2.8, with a narrow plane of sharp focus.\n\nCamera EAST of the staff head, looking WEST. Its carved snout points SCREEN-LEFT toward the sisters.\n\nThe rigid carving fills most of the frame. Focus on its nearest ridge and carved eye; the remaining contours soften into darkness.\n\nA minute tremor from Zahhak’s grip travels through the staff. Its shape and material remain unchanged.\n\nMake a slow three-centimeter approach, maintaining focus on the carving.\n\nPower is suggested through tension, vibration and sound.\n\nSHOT 13B | 00:04–00:08 | SHAHRNAZ — BLACK EYES\n\n100mm macro frontal close-up from NORTH of Shahrnaz, looking SOUTH.\n\nFrame both existing eye openings and the bridge of the mask between them. Keep both exposed eyeballs in focus.\n\nThe camera is locked off.\nShahrnaz’s head and mask remain motionless.\nThe eye-opening edges stay identical in shape, size and screen position throughout.\n\n00:04–00:05:\nOnly her eyeballs rotate upward behind the stationary mask openings.\n\n00:05–00:06:\nAs they reach the upward position, a uniform black coloration spreads across the visible eyeball surfaces, covering iris and sclera.\n\nBoth openings now reveal completely black eyeball surfaces, retaining their curved volume and a tiny reflected overhead highlight.\n\n00:06–00:07:\nHold both eyes fully black. Her head and mask remain perfectly still.\n\n00:07–00:08:\nThe black coloration recedes. Her original iris color and natural white sclera return as the eyeballs rotate down into their initial position.\n\nEnd on a calm, fixed natural gaze.\n\nSHOT 13C | 00:08–00:11 | ARNAVAZ’S HAND\n\n85mm close detail of Arnavaz’s empty RIGHT hand beside her right thigh, photographed from slightly NORTH-EAST.\n\nHer fingers curl inward and gather a small fold of her own clothing.\n\nA fine tremor passes through her fingertips and wrist, making the fabric quiver.\n\nHer fingers then release together. The fold drops and her hand hangs loose.\n\nHold the relaxed hand for the final half-second.\n\nThe overhead light defines the hand against black.\n\nSHOT 13D | 00:11–00:15 | ARNAVAZ — BLACK EYES\n\n100mm macro frontal close-up from NORTH of Arnavaz, looking SOUTH.\n\nFrame both existing eye openings and the surrounding mask surface.\n\nThe camera, head and rigid mask stay locked in place. Preserve every edge of the openings as a stationary boundary.\n\n00:11–00:12:\nHer real eyeballs rotate upward behind the fixed openings.\n\n00:12–00:13:\nA uniform black coloration covers the entire visible surface of both eyeballs, including iris and sclera.\n\n00:13–00:14:\nHold the fully black eyes. Tiny overhead catchlights preserve the appearance of solid, curved eyeballs behind the mask.\n\n00:14–00:15:\nRestore the original iris color and white sclera while the eyeballs rotate down to their initial position.\n\nEnd with natural eyes and an unnaturally calm gaze. Her head and mask remain stationary through the final frame.\n\nVISUAL CONTINUITY:\n\nThe mask is a fixed physical shell.\nEye rotation and eye coloration occur behind its unchanged openings.\nThe black phase covers the eyeballs completely, then fully reverses.\n\nWhenever Zahhak’s living serpents enter a frame edge, retain subtle muscular movement and their established single-headed anatomy.\n\nSOUND:\n\nFaint grip tension around the staff.\nA caught breath during each upward eye movement.\nSoft fabric tension and release during the hand insert.\nSlow exhalations as the eyes return to normal.\n\nNO MUSIC, NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001",
+    "@CHR-004/V01",
+    "@CHR-005/V01",
+    "@PRP-019",
+    "@PRP-001"
+  ],
+  "createdAt": "2026-09-28T18:43:04.946Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260928_183938_3d666779-95f5-4017-bcf1-0e2ea85b8d90.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-28T18:39:38.923828Z",
+      "display_name": "Seedance 2.5",
+      "id": "3d666779-95f5-4017-bcf1-0e2ea85b8d90",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "4d381eb5-757b-42e3-bf21-d3e3ef0dee27",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/4d381eb5-757b-42e3-bf21-d3e3ef0dee27.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "99b06d3b-9f71-4a99-b081-52fe4ebd7d57",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/99b06d3b-9f71-4a99-b081-52fe4ebd7d57.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "f4ef50d5-3169-4088-827c-ecde5b43f445",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/f4ef50d5-3169-4088-827c-ecde5b43f445.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "e28afed0-275c-4748-8eed-b41bf0d7b72f",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/e28afed0-275c-4748-8eed-b41bf0d7b72f.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "055bce53-ab36-44dd-903b-8aa0ed455a15",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/055bce53-ab36-44dd-903b-8aa0ed455a15.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 13 | SHOTS 13A–13D | POSSESSION — CORRECTED EYE INSERTS\n\nCreate a 15-second cinematic sequence for Seedance 2.5.\nHorizontal 16:9.\nFour shots lasting four, four, three and four seconds.\n\nCHARACTER REFERENCES:\nZahhak and his living shoulder serpents = {{CHAR_ZAHHAK}}\nShahrnaz = {{CHAR_SHAHRNAZ}}\nArnavaz = {{CHAR_ARNAVAZ}}\n\nPROP REFERENCE:\nSerpent-headed staff = {{PROP_STAFF}}\n\nPreserve the exact referenced identities, costumes and mask designs.\n\nMASK CONSTRUCTION AND MOTION:\n\nEach woman wears a rigid sculptural mask with existing eye openings. Her real eyeballs are visible behind those openings.\n\nTreat the mask as a solid, inanimate object firmly secured to her head.\n\nDuring both eye close-ups, the camera, head and mask remain completely stationary. Every contour, opening, carved eyelid shape and surface detail stays registered in exactly the same screen position.\n\nAnimation is confined to the real eyeballs behind the fixed openings.\n\nThe blackening effect belongs exclusively to the visible surfaces of the eyeballs. Surrounding skin and mask material retain their original appearance.\n\nLOCATION AND LIGHTING:\n\nThe chamber is concealed by complete darkness.\n\nOne fixed hard overhead spotlight casts cold-neutral light vertically onto the subjects. Highlights reveal upper mask edges, small portions of the eyes, the staff carving and the hand.\n\nThe surrounding image remains black. Architecture and floor remain unexposed.\n\nKeep lighting and exposure constant. Preserve a tiny overhead catchlight on the eyes so their curved surfaces remain readable during the black phase.\n\nSPATIAL STATE:\n\nShahrnaz stands WEST and Arnavaz EAST, both facing NORTH.\nZahhak stands NORTH of their midpoint, facing SOUTH toward them.\n\nHis RIGHT hand holds the staff, its head centered between their sightlines at eye level.\n\nThe inserts depict details of one simultaneous possession event.\n\nSHOT 13A | 00:00–00:04 | THE STAFF UNDER TENSION\n\n100mm macro lens, approximately f/2.8, with a narrow plane of sharp focus.\n\nCamera EAST of the staff head, looking WEST. Its carved snout points SCREEN-LEFT toward the sisters.\n\nThe rigid carving fills most of the frame. Focus on its nearest ridge and carved eye; the remaining contours soften into darkness.\n\nA minute tremor from Zahhak’s grip travels through the staff. Its shape and material remain unchanged.\n\nMake a slow three-centimeter approach, maintaining focus on the carving.\n\nPower is suggested through tension, vibration and sound.\n\nSHOT 13B | 00:04–00:08 | SHAHRNAZ — BLACK EYES\n\n100mm macro frontal close-up from NORTH of Shahrnaz, looking SOUTH.\n\nFrame both existing eye openings and the bridge of the mask between them. Keep both exposed eyeballs in focus.\n\nThe camera is locked off.\nShahrnaz’s head and mask remain motionless.\nThe eye-opening edges stay identical in shape, size and screen position throughout.\n\n00:04–00:05:\nOnly her eyeballs rotate upward behind the stationary mask openings.\n\n00:05–00:06:\nAs they reach the upward position, a uniform black coloration spreads across the visible eyeball surfaces, covering iris and sclera.\n\nBoth openings now reveal completely black eyeball surfaces, retaining their curved volume and a tiny reflected overhead highlight.\n\n00:06–00:07:\nHold both eyes fully black. Her head and mask remain perfectly still.\n\n00:07–00:08:\nThe black coloration recedes. Her original iris color and natural white sclera return as the eyeballs rotate down into their initial position.\n\nEnd on a calm, fixed natural gaze.\n\nSHOT 13C | 00:08–00:11 | ARNAVAZ’S HAND\n\n85mm close detail of Arnavaz’s empty RIGHT hand beside her right thigh, photographed from slightly NORTH-EAST.\n\nHer fingers curl inward and gather a small fold of her own clothing.\n\nA fine tremor passes through her fingertips and wrist, making the fabric quiver.\n\nHer fingers then release together. The fold drops and her hand hangs loose.\n\nHold the relaxed hand for the final half-second.\n\nThe overhead light defines the hand against black.\n\nSHOT 13D | 00:11–00:15 | ARNAVAZ — BLACK EYES\n\n100mm macro frontal close-up from NORTH of Arnavaz, looking SOUTH.\n\nFrame both existing eye openings and the surrounding mask surface.\n\nThe camera, head and rigid mask stay locked in place. Preserve every edge of the openings as a stationary boundary.\n\n00:11–00:12:\nHer real eyeballs rotate upward behind the fixed openings.\n\n00:12–00:13:\nA uniform black coloration covers the entire visible surface of both eyeballs, including iris and sclera.\n\n00:13–00:14:\nHold the fully black eyes. Tiny overhead catchlights preserve the appearance of solid, curved eyeballs behind the mask.\n\n00:14–00:15:\nRestore the original iris color and white sclera while the eyeballs rotate down to their initial position.\n\nEnd with natural eyes and an unnaturally calm gaze. Her head and mask remain stationary through the final frame.\n\nVISUAL CONTINUITY:\n\nThe mask is a fixed physical shell.\nEye rotation and eye coloration occur behind its unchanged openings.\nThe black phase covers the eyeballs completely, then fully reverses.\n\nWhenever Zahhak’s living serpents enter a frame edge, retain subtle muscular movement and their established single-headed anatomy.\n\nSOUND:\n\nFaint grip tension around the staff.\nA caught breath during each upward eye movement.\nSoft fabric tension and release during the hand insert.\nSlow exhalations as the eyes return to normal.\n\nNO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_3>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_4>>> is Dagger Horse Head (PRP-019 V02); match it wherever Dagger Horse Head appears.\n<<<image_5>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260928_183938_3d666779-95f5-4017-bcf1-0e2ea85b8d90.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260928_183938_3d666779-95f5-4017-bcf1-0e2ea85b8d90_thumbnail.webp"
+    }
+  ]
+}

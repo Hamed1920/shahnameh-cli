@@ -1,0 +1,119 @@
+{
+  "jobId": "J-20260928-AUH",
+  "parentJobId": "J-20260928-1KN",
+  "hfJobId": "621d26de-a994-4474-b56d-dd47a1e595e7",
+  "attempt": 1,
+  "stage": "final",
+  "label": null,
+  "target": "SHM-EP014-SC016-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP014-JAMSHID-GIRLS/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 01 — ALTERNATE COVERAGE | THE HOUSE BEFORE THE INTRUSION\n\nCreate a 15-second cinematic sequence for Seedance 2.5.\nHorizontal 16:9.\nExactly three shots lasting six, five and four seconds.\n\nCHARACTER REFERENCES:\nShahrnaz = {{CHAR_SHAHRNAZ}}\nArnavaz = {{CHAR_ARNAVAZ}}\nMusician = {{CHAR_MUSICIAN}}\n\nANIMAL REFERENCE:\nCat = {{ANIMAL_CAT}}\n\nLOCATION REFERENCE:\nThe sisters’ furnished home interior = {{LOC_PRIVATE_ROOM}}\n\nPROP REFERENCE:\nIntact instrument = {{PROP_INSTRUMENT}}\n\nPreserve the referenced architecture, furnishings, plants, masks, costumes, hairstyles and instrument design.\n\nSTART STATE AND BLOCKING:\n\nA quiet domestic moment inside the sisters’ home.\n\nShahrnaz and Arnavaz sit beside each other on the existing referenced seating, their bodies angled slightly toward one another.\n\nViewed from the front:\nShahrnaz occupies SCREEN-LEFT.\nArnavaz occupies SCREEN-RIGHT.\n\nThe cat rests beside Shahrnaz on the outer, screen-left end of the seat.\n\nThe musician sits several meters behind them, deeper SCREEN-RIGHT, holding the intact instrument.\n\nThe camera remains on the same front side of the sisters throughout all three shots.\n\nSHOT 01A | 00:00–00:06 | THE HOME HOLDS THEM\n\n18mm extreme-wide interior long shot from the far side of the room, at standing eye level, framed through an existing doorway.\n\nReveal the full breadth of the referenced home: its ceiling height, floor, furnishings and established plants.\n\nThe doorway edges create a dark foreground frame. The sisters appear small together in the middle distance, slightly left of center. The musician occupies a separate deeper layer on the right.\n\nUse a slow handheld advance of half a meter through the doorway. The movement gradually opens the view of the room while retaining its generous scale.\n\nShahrnaz turns her masked head slightly toward Arnavaz. Arnavaz shifts her weight closer to her sister.\n\nThe cat remains settled beside Shahrnaz. The musician makes small playing movements with the instrument.\n\nSHOT 01B | 00:06–00:11 | AN ORDINARY INTIMACY\n\nCut to a 40mm medium two-shot from the same front side, at the sisters’ seated eye level.\n\nShahrnaz remains SCREEN-LEFT, facing slightly right.\nArnavaz remains SCREEN-RIGHT, facing slightly left.\n\nInclude both masks, shoulders and hands. The cat is visible beside Shahrnaz at the left edge. The musician remains softly present in the right background.\n\nArnavaz notices a loose strand of Shahrnaz’s hair resting against the edge of her mask.\n\nShe raises her right hand and gently moves the strand back into its existing arrangement.\n\nShahrnaz inclines her head toward her sister to make the small adjustment easier.\n\nThe camera drifts slightly closer with quiet handheld breathing.\n\nSHOT 01C | 00:11–00:15 | THE MOMENT AFTER\n\nCut to a 65mm intimate two-shot from the same side of their shared axis, slightly closer to Shahrnaz while retaining both women.\n\nShahrnaz’s mask occupies the left third in three-quarter view, turned toward Arnavaz.\nArnavaz’s opposing three-quarter profile occupies the right third, turned toward Shahrnaz.\n\nContinue Arnavaz’s hand withdrawing from the completed hair adjustment. Her hand settles into her own lap.\n\nShahrnaz keeps her head inclined toward her for a brief beat, then both women turn their attention slightly toward the musician off-screen right.\n\nHold their relaxed shoulders and unhurried breathing.\n\nEnd within the quiet moment, with the cat still resting beside Shahrnaz.\n\nLIGHT AND IMAGE:\n\nWarm available daylight enters through the referenced window opening. Soft reflected light reveals fabric, hair, mask texture and the cat’s fur.\n\nKeep the home warm and inhabited. Preserve the established furnishings and plants in their original positions.\n\nNatural exposure, tactile materials, restrained analog texture and gentle organic camera movement.\n\nSOUND:\n\nQuiet interior air, soft clothing movement, fingertips brushing hair, the cat’s breathing and unpitched finger contact against the instrument.\n\nNO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_2>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_3>>> is Musician (CHR-006 V02); match it wherever Musician appears.\n<<<image_4>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_5>>> is Jamshid Daughters Chamber (LOC-020 V01); match it wherever Jamshid Daughters Chamber appears.\n<<<image_6>>> is Instrument Saz (PRP-018 V01); match it wherever Instrument Saz appears.",
+  "basePrompt": "PLAN 01 — ALTERNATE COVERAGE | THE HOUSE BEFORE THE INTRUSION\n\nCreate a 15-second cinematic sequence for Seedance 2.5.\nHorizontal 16:9.\nExactly three shots lasting six, five and four seconds.\n\nCHARACTER REFERENCES:\nShahrnaz = {{CHAR_SHAHRNAZ}}\nArnavaz = {{CHAR_ARNAVAZ}}\nMusician = {{CHAR_MUSICIAN}}\n\nANIMAL REFERENCE:\nCat = {{ANIMAL_CAT}}\n\nLOCATION REFERENCE:\nThe sisters’ furnished home interior = {{LOC_PRIVATE_ROOM}}\n\nPROP REFERENCE:\nIntact instrument = {{PROP_INSTRUMENT}}\n\nPreserve the referenced architecture, furnishings, plants, masks, costumes, hairstyles and instrument design.\n\nSTART STATE AND BLOCKING:\n\nA quiet domestic moment inside the sisters’ home.\n\nShahrnaz and Arnavaz sit beside each other on the existing referenced seating, their bodies angled slightly toward one another.\n\nViewed from the front:\nShahrnaz occupies SCREEN-LEFT.\nArnavaz occupies SCREEN-RIGHT.\n\nThe cat rests beside Shahrnaz on the outer, screen-left end of the seat.\n\nThe musician sits several meters behind them, deeper SCREEN-RIGHT, holding the intact instrument.\n\nThe camera remains on the same front side of the sisters throughout all three shots.\n\nSHOT 01A | 00:00–00:06 | THE HOME HOLDS THEM\n\n18mm extreme-wide interior long shot from the far side of the room, at standing eye level, framed through an existing doorway.\n\nReveal the full breadth of the referenced home: its ceiling height, floor, furnishings and established plants.\n\nThe doorway edges create a dark foreground frame. The sisters appear small together in the middle distance, slightly left of center. The musician occupies a separate deeper layer on the right.\n\nUse a slow handheld advance of half a meter through the doorway. The movement gradually opens the view of the room while retaining its generous scale.\n\nShahrnaz turns her masked head slightly toward Arnavaz. Arnavaz shifts her weight closer to her sister.\n\nThe cat remains settled beside Shahrnaz. The musician makes small playing movements with the instrument.\n\nSHOT 01B | 00:06–00:11 | AN ORDINARY INTIMACY\n\nCut to a 40mm medium two-shot from the same front side, at the sisters’ seated eye level.\n\nShahrnaz remains SCREEN-LEFT, facing slightly right.\nArnavaz remains SCREEN-RIGHT, facing slightly left.\n\nInclude both masks, shoulders and hands. The cat is visible beside Shahrnaz at the left edge. The musician remains softly present in the right background.\n\nArnavaz notices a loose strand of Shahrnaz’s hair resting against the edge of her mask.\n\nShe raises her right hand and gently moves the strand back into its existing arrangement.\n\nShahrnaz inclines her head toward her sister to make the small adjustment easier.\n\nThe camera drifts slightly closer with quiet handheld breathing.\n\nSHOT 01C | 00:11–00:15 | THE MOMENT AFTER\n\nCut to a 65mm intimate two-shot from the same side of their shared axis, slightly closer to Shahrnaz while retaining both women.\n\nShahrnaz’s mask occupies the left third in three-quarter view, turned toward Arnavaz.\nArnavaz’s opposing three-quarter profile occupies the right third, turned toward Shahrnaz.\n\nContinue Arnavaz’s hand withdrawing from the completed hair adjustment. Her hand settles into her own lap.\n\nShahrnaz keeps her head inclined toward her for a brief beat, then both women turn their attention slightly toward the musician off-screen right.\n\nHold their relaxed shoulders and unhurried breathing.\n\nEnd within the quiet moment, with the cat still resting beside Shahrnaz.\n\nLIGHT AND IMAGE:\n\nWarm available daylight enters through the referenced window opening. Soft reflected light reveals fabric, hair, mask texture and the cat’s fur.\n\nKeep the home warm and inhabited. Preserve the established furnishings and plants in their original positions.\n\nNatural exposure, tactile materials, restrained analog texture and gentle organic camera movement.\n\nSOUND:\n\nQuiet interior air, soft clothing movement, fingertips brushing hair, the cat’s breathing and unpitched finger contact against the instrument.\n\nNO MUSIC, NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true
+  },
+  "refs": [
+    "@CHR-004/V01",
+    "@CHR-005/V01",
+    "@CHR-006",
+    "@CRT-004/V01",
+    "@LOC-020/V01",
+    "@PRP-018/V01"
+  ],
+  "createdAt": "2026-09-28T18:14:35.656Z",
+  "costCredits": 180,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260928_175142_621d26de-a994-4474-b56d-dd47a1e595e7.mp4"
+    }
+  ],
+  "rawResponse": {
+    "created_at": "2026-09-28T17:51:42.84672Z",
+    "display_name": "Seedance 2.5",
+    "id": "621d26de-a994-4474-b56d-dd47a1e595e7",
+    "job_type": "seedance_2_5",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "bitrate_mode": "standard",
+      "draft": false,
+      "draft_job_id": null,
+      "duration": 15,
+      "extension_mode": null,
+      "generate_audio": true,
+      "genre": "auto",
+      "height": 1080,
+      "medias": [
+        {
+          "data": {
+            "id": "9d944660-27d6-474c-ab7a-ffd6186f99ed",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/9d944660-27d6-474c-ab7a-ffd6186f99ed.jpg"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "cdfdfb04-40b8-435f-8f4b-4edfe9413377",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/cdfdfb04-40b8-435f-8f4b-4edfe9413377.png"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "8c5f159e-d856-4bf9-a84c-5a687882d4f7",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/8c5f159e-d856-4bf9-a84c-5a687882d4f7.jpg"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "70a057bc-e44c-47d2-a285-42bedf2688fe",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/70a057bc-e44c-47d2-a285-42bedf2688fe.png"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "32e97351-2c6d-492d-b847-079f760eef94",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/32e97351-2c6d-492d-b847-079f760eef94.png"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "33521c7a-f3a4-4a87-a66f-0769eb78052c",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/33521c7a-f3a4-4a87-a66f-0769eb78052c.png"
+          },
+          "role": "image"
+        }
+      ],
+      "model": "default",
+      "multi_prompt": [],
+      "multi_shot_mode": "custom",
+      "multi_shots": false,
+      "prompt": "PLAN 01 — ALTERNATE COVERAGE | THE HOUSE BEFORE THE INTRUSION\n\nCreate a 15-second cinematic sequence for Seedance 2.5.\nHorizontal 16:9.\nExactly three shots lasting six, five and four seconds.\n\nCHARACTER REFERENCES:\nShahrnaz = {{CHAR_SHAHRNAZ}}\nArnavaz = {{CHAR_ARNAVAZ}}\nMusician = {{CHAR_MUSICIAN}}\n\nANIMAL REFERENCE:\nCat = {{ANIMAL_CAT}}\n\nLOCATION REFERENCE:\nThe sisters’ furnished home interior = {{LOC_PRIVATE_ROOM}}\n\nPROP REFERENCE:\nIntact instrument = {{PROP_INSTRUMENT}}\n\nPreserve the referenced architecture, furnishings, plants, masks, costumes, hairstyles and instrument design.\n\nSTART STATE AND BLOCKING:\n\nA quiet domestic moment inside the sisters’ home.\n\nShahrnaz and Arnavaz sit beside each other on the existing referenced seating, their bodies angled slightly toward one another.\n\nViewed from the front:\nShahrnaz occupies SCREEN-LEFT.\nArnavaz occupies SCREEN-RIGHT.\n\nThe cat rests beside Shahrnaz on the outer, screen-left end of the seat.\n\nThe musician sits several meters behind them, deeper SCREEN-RIGHT, holding the intact instrument.\n\nThe camera remains on the same front side of the sisters throughout all three shots.\n\nSHOT 01A | 00:00–00:06 | THE HOME HOLDS THEM\n\n18mm extreme-wide interior long shot from the far side of the room, at standing eye level, framed through an existing doorway.\n\nReveal the full breadth of the referenced home: its ceiling height, floor, furnishings and established plants.\n\nThe doorway edges create a dark foreground frame. The sisters appear small together in the middle distance, slightly left of center. The musician occupies a separate deeper layer on the right.\n\nUse a slow handheld advance of half a meter through the doorway. The movement gradually opens the view of the room while retaining its generous scale.\n\nShahrnaz turns her masked head slightly toward Arnavaz. Arnavaz shifts her weight closer to her sister.\n\nThe cat remains settled beside Shahrnaz. The musician makes small playing movements with the instrument.\n\nSHOT 01B | 00:06–00:11 | AN ORDINARY INTIMACY\n\nCut to a 40mm medium two-shot from the same front side, at the sisters’ seated eye level.\n\nShahrnaz remains SCREEN-LEFT, facing slightly right.\nArnavaz remains SCREEN-RIGHT, facing slightly left.\n\nInclude both masks, shoulders and hands. The cat is visible beside Shahrnaz at the left edge. The musician remains softly present in the right background.\n\nArnavaz notices a loose strand of Shahrnaz’s hair resting against the edge of her mask.\n\nShe raises her right hand and gently moves the strand back into its existing arrangement.\n\nShahrnaz inclines her head toward her sister to make the small adjustment easier.\n\nThe camera drifts slightly closer with quiet handheld breathing.\n\nSHOT 01C | 00:11–00:15 | THE MOMENT AFTER\n\nCut to a 65mm intimate two-shot from the same side of their shared axis, slightly closer to Shahrnaz while retaining both women.\n\nShahrnaz’s mask occupies the left third in three-quarter view, turned toward Arnavaz.\nArnavaz’s opposing three-quarter profile occupies the right third, turned toward Shahrnaz.\n\nContinue Arnavaz’s hand withdrawing from the completed hair adjustment. Her hand settles into her own lap.\n\nShahrnaz keeps her head inclined toward her for a brief beat, then both women turn their attention slightly toward the musician off-screen right.\n\nHold their relaxed shoulders and unhurried breathing.\n\nEnd within the quiet moment, with the cat still resting beside Shahrnaz.\n\nLIGHT AND IMAGE:\n\nWarm available daylight enters through the referenced window opening. Soft reflected light reveals fabric, hair, mask texture and the cat’s fur.\n\nKeep the home warm and inhabited. Preserve the established furnishings and plants in their original positions.\n\nNatural exposure, tactile materials, restrained analog texture and gentle organic camera movement.\n\nSOUND:\n\nQuiet interior air, soft clothing movement, fingertips brushing hair, the cat’s breathing and unpitched finger contact against the instrument.\n\nNO MUSIC, NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_2>>> is Shahrnaz (CHR-005 V01); match it wherever Shahrnaz appears.\n<<<image_3>>> is Musician (CHR-006 V02); match it wherever Musician appears.\n<<<image_4>>> is Cat Persian Longhair (CRT-004 V01); match it wherever Cat Persian Longhair appears.\n<<<image_5>>> is Jamshid Daughters Chamber (LOC-020 V01); match it wherever Jamshid Daughters Chamber appears.\n<<<image_6>>> is Instrument Saz (PRP-018 V01); match it wherever Instrument Saz appears.",
+      "prompt_language": "en",
+      "reference_elements": [],
+      "resolution": "1080p",
+      "speedramp": "auto",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260928_175142_621d26de-a994-4474-b56d-dd47a1e595e7.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260928_175142_621d26de-a994-4474-b56d-dd47a1e595e7_thumbnail.webp"
+  }
+}
