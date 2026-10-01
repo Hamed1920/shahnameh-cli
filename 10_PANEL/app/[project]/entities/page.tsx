@@ -17,6 +17,7 @@ const KIND_LABEL: Record<string, string> = {
   VEH: 'Vehicles',
   FX: 'Effects',
   REF: 'Reference',
+  VOX: 'Voices',
 }
 
 export default async function EntitiesPage({ params }: PageProps<'/[project]/entities'>) {

@@ -1,0 +1,144 @@
+{
+  "jobId": "J-20260929-5XM",
+  "parentJobId": null,
+  "hfJobId": "83685047-bd64-4f76-b6d2-15bafc205895",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "P02",
+  "target": "SHA-EP001-SC002-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHA-EP001/shots",
+  "variant": "V01",
+  "model": "seedance_2_0_mini",
+  "prompt": "PLAN 02 — THE FIRST LINE | THE VOICE ARRIVES\n\nCreate a 15-second cinematic sequence for Seedance 2.5.\nHorizontal 16:9.\nExactly three shots lasting four, eight and three seconds.\n\nCHARACTER REFERENCES:\nYoung Homayoun = {{CHAR_HOMAYOUN_YOUNG}}\nComposer = {{CHAR_COMPOSER}}\nFather = {{CHAR_FATHER}}\n\nLOCATION REFERENCE:\nEarly-2000s recording studio, vocal booth and connected control room = {{LOC_RECORDING_STUDIO}}\n\nPROP REFERENCES:\nMixing console = {{PROP_MIXING_CONSOLE}}\nStudio microphone and pop filter = {{PROP_MIC}}\nStudio headphones = {{PROP_HEADPHONES}}\nLyric sheet = {{PROP_LYRIC_SHEET}}\n\nAUDIO REFERENCE:\nOriginal vocal performance of “می‌تراود مهتاب” = {{AUDIO_MITARAVAD_MAHTAB}}\n\nPreserve the exact character appearance, studio geography, wardrobe, microphone placement, headphone design, lighting direction and blocking established in PLAN 01.\n\nCONTINUITY START STATE:\n\nDirect continuation from PLAN 01.\n\nHomayoun remains inside the vocal booth at the microphone.\n\nThe headphones remain firmly over both ears.\n\nHe has just received the composer’s professional cue and his father’s quiet acknowledgement.\n\nThe composer remains seated behind the mixing console inside the control room.\n\nThe father remains standing separately in the control room.\n\nHomayoun now turns inward toward the act of singing.\n\nSHOT 02A | 00:15–00:19 | PREPARATION\n\nCut to a 65mm intimate detail sequence from the front side of the microphone.\n\nBegin on Homayoun’s hand gently stabilizing the lyric sheet.\n\nShift focus to the headphone cup enclosing his ear.\n\nContinue toward his mouth positioned naturally behind the pop filter.\n\nFinish on his eyes becoming still and focused.\n\nThese details communicate preparation and concentration rather than anxiety.\n\nHomayoun takes one calm controlled breath.\n\nHis body becomes quiet.\n\nSHOT 02B | 00:19–00:27 | “می‌تراود مهتاب”\n\nCut to a 40mm frontal medium shot directly facing Homayoun.\n\nThe microphone and pop filter remain centered naturally between camera and singer without covering his full face.\n\nThe headphones remain clearly visible on his head.\n\nBegin a single slow, physically smooth forward camera move.\n\nTravel gradually from medium framing toward an intimate close-up over the full eight seconds.\n\nFor the first three seconds, Homayoun lets the breath settle and prepares his mouth naturally.\n\nThen he begins performing the supplied vocal recording of “می‌تراود مهتاب”.\n\nUse the supplied audio as the exact performance source.\n\nMatch lip movement precisely to the original vocal timing, mouth shapes, syllable articulation, breath placement and phrasing.\n\nThe opening “می...” emerges softly and without theatrical emphasis.\n\nAs the phrase develops, his face opens almost imperceptibly.\n\nThe emotional transition is from concentrated readiness into quiet certainty.\n\nHe realizes through the act of singing that the room is truly listening to him.\n\nMaintain the frontal camera path throughout the performance.\n\nKeep Homayoun as the uninterrupted emotional center.\n\nSHOT 02C | 00:27–00:30 | THE ROOM LISTENS\n\nCut briefly to a 65mm control-room composition through layered foreground equipment.\n\nA VU meter responds clearly to Homayoun’s continuing voice in the foreground or near foreground.\n\nBehind it, the composer remains seated at the console, partially obscured by equipment, shallow focus and glass reflection.\n\nHis face remains indistinct, but his still attentive posture makes it clear that he is listening closely.\n\nThe father occupies a separate deeper position elsewhere in the control room.\n\nHe watches quietly.\n\nNeither man performs an exaggerated reaction.\n\nThe moment belongs to Homayoun’s voice.\n\nEnd while the singing continues.\n\nPERFORMANCE AND LIP-SYNC:\n\nThe supplied vocal recording is the absolute timing reference for Homayoun’s performance.\n\nPreserve natural facial anatomy.\n\nLip articulation follows the exact Persian phonemes of the supplied performance.\n\nFacial movement remains subtle and physically realistic.\n\nThe emotional change happens gradually through breath, focus, eyes and posture.\n\nCOMPOSER VISIBILITY:\n\nThe composer is never presented in a clean hero portrait.\n\nUse console hardware, foreground objects, studio-glass reflections, three-quarter orientation, partial silhouette and controlled shallow focus to limit facial detail.\n\nHis professional presence must remain unmistakable even when precise facial likeness is understated.\n\nLIGHT AND IMAGE:\n\nContinue the same warm practical lighting from PLAN 01.\n\nSoft highlights on microphone metal, headphone material, glass and console controls.\n\nNatural exposure and restrained contrast.\n\nThe frontal singing shot becomes progressively more intimate as the camera approaches.\n\nKeep the visual texture tactile, human and understated.\n\nSOUND:\n\nThe supplied vocal recording enters during SHOT 02B and remains the dominant sound through the end.\n\nSubtle studio room tone continues underneath.\n\nSmall breath detail before the first syllable.\nGentle electrical hum.\nNatural console ambience.\n\nADDITIONAL MUSIC: none.\nADDITIONAL DIALOGUE: none.\n\n<<<image_1>>> is Homayoun Shajarian (CHR-001 V01); match it wherever Homayoun Shajarian appears.\n<<<image_2>>> is Mohammad-Reza Shajarian (CHR-002 V01); match it wherever Mohammad-Reza Shajarian appears.\n<<<image_3>>> is Musician (CHR-003 V01); match it wherever Musician appears.\n<<<image_4>>> is Studio Control Room (LOC-001 V01); match it wherever Studio Control Room appears.\n<<<image_5>>> is Studio Vocal Booth (LOC-002 V01); match it wherever Studio Vocal Booth appears.\n<<<image_6>>> is Mixing Console (PRP-001 V01); match it wherever Mixing Console appears.\n<<<image_7>>> is Audio Level Meter (PRP-002 V01); match it wherever Audio Level Meter appears.\n<<<image_8>>> is Studio Headphones (PRP-004 V01); match it wherever Studio Headphones appears.\n<<<image_9>>> is Sheet Music (PRP-006 V01); match it wherever Sheet Music appears.",
+  "basePrompt": "PLAN 02 — THE FIRST LINE | THE VOICE ARRIVES\n\nCreate a 15-second cinematic sequence for Seedance 2.5.\nHorizontal 16:9.\nExactly three shots lasting four, eight and three seconds.\n\nCHARACTER REFERENCES:\nYoung Homayoun = {{CHAR_HOMAYOUN_YOUNG}}\nComposer = {{CHAR_COMPOSER}}\nFather = {{CHAR_FATHER}}\n\nLOCATION REFERENCE:\nEarly-2000s recording studio, vocal booth and connected control room = {{LOC_RECORDING_STUDIO}}\n\nPROP REFERENCES:\nMixing console = {{PROP_MIXING_CONSOLE}}\nStudio microphone and pop filter = {{PROP_MIC}}\nStudio headphones = {{PROP_HEADPHONES}}\nLyric sheet = {{PROP_LYRIC_SHEET}}\n\nAUDIO REFERENCE:\nOriginal vocal performance of “می‌تراود مهتاب” = {{AUDIO_MITARAVAD_MAHTAB}}\n\nPreserve the exact character appearance, studio geography, wardrobe, microphone placement, headphone design, lighting direction and blocking established in PLAN 01.\n\nCONTINUITY START STATE:\n\nDirect continuation from PLAN 01.\n\nHomayoun remains inside the vocal booth at the microphone.\n\nThe headphones remain firmly over both ears.\n\nHe has just received the composer’s professional cue and his father’s quiet acknowledgement.\n\nThe composer remains seated behind the mixing console inside the control room.\n\nThe father remains standing separately in the control room.\n\nHomayoun now turns inward toward the act of singing.\n\nSHOT 02A | 00:15–00:19 | PREPARATION\n\nCut to a 65mm intimate detail sequence from the front side of the microphone.\n\nBegin on Homayoun’s hand gently stabilizing the lyric sheet.\n\nShift focus to the headphone cup enclosing his ear.\n\nContinue toward his mouth positioned naturally behind the pop filter.\n\nFinish on his eyes becoming still and focused.\n\nThese details communicate preparation and concentration rather than anxiety.\n\nHomayoun takes one calm controlled breath.\n\nHis body becomes quiet.\n\nSHOT 02B | 00:19–00:27 | “می‌تراود مهتاب”\n\nCut to a 40mm frontal medium shot directly facing Homayoun.\n\nThe microphone and pop filter remain centered naturally between camera and singer without covering his full face.\n\nThe headphones remain clearly visible on his head.\n\nBegin a single slow, physically smooth forward camera move.\n\nTravel gradually from medium framing toward an intimate close-up over the full eight seconds.\n\nFor the first three seconds, Homayoun lets the breath settle and prepares his mouth naturally.\n\nThen he begins performing the supplied vocal recording of “می‌تراود مهتاب”.\n\nUse the supplied audio as the exact performance source.\n\nMatch lip movement precisely to the original vocal timing, mouth shapes, syllable articulation, breath placement and phrasing.\n\nThe opening “می...” emerges softly and without theatrical emphasis.\n\nAs the phrase develops, his face opens almost imperceptibly.\n\nThe emotional transition is from concentrated readiness into quiet certainty.\n\nHe realizes through the act of singing that the room is truly listening to him.\n\nMaintain the frontal camera path throughout the performance.\n\nKeep Homayoun as the uninterrupted emotional center.\n\nSHOT 02C | 00:27–00:30 | THE ROOM LISTENS\n\nCut briefly to a 65mm control-room composition through layered foreground equipment.\n\nA VU meter responds clearly to Homayoun’s continuing voice in the foreground or near foreground.\n\nBehind it, the composer remains seated at the console, partially obscured by equipment, shallow focus and glass reflection.\n\nHis face remains indistinct, but his still attentive posture makes it clear that he is listening closely.\n\nThe father occupies a separate deeper position elsewhere in the control room.\n\nHe watches quietly.\n\nNeither man performs an exaggerated reaction.\n\nThe moment belongs to Homayoun’s voice.\n\nEnd while the singing continues.\n\nPERFORMANCE AND LIP-SYNC:\n\nThe supplied vocal recording is the absolute timing reference for Homayoun’s performance.\n\nPreserve natural facial anatomy.\n\nLip articulation follows the exact Persian phonemes of the supplied performance.\n\nFacial movement remains subtle and physically realistic.\n\nThe emotional change happens gradually through breath, focus, eyes and posture.\n\nCOMPOSER VISIBILITY:\n\nThe composer is never presented in a clean hero portrait.\n\nUse console hardware, foreground objects, studio-glass reflections, three-quarter orientation, partial silhouette and controlled shallow focus to limit facial detail.\n\nHis professional presence must remain unmistakable even when precise facial likeness is understated.\n\nLIGHT AND IMAGE:\n\nContinue the same warm practical lighting from PLAN 01.\n\nSoft highlights on microphone metal, headphone material, glass and console controls.\n\nNatural exposure and restrained contrast.\n\nThe frontal singing shot becomes progressively more intimate as the camera approaches.\n\nKeep the visual texture tactile, human and understated.\n\nSOUND:\n\nThe supplied vocal recording enters during SHOT 02B and remains the dominant sound through the end.\n\nSubtle studio room tone continues underneath.\n\nSmall breath detail before the first syllable.\nGentle electrical hum.\nNatural console ambience.\n\nADDITIONAL MUSIC: none.\nADDITIONAL DIALOGUE: none.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V01",
+    "@CHR-002/V01",
+    "@CHR-003/V01",
+    "@LOC-001/V01",
+    "@LOC-002/V01",
+    "@PRP-001/V01",
+    "@PRP-002/V01",
+    "@PRP-004/V01",
+    "@PRP-006/V01"
+  ],
+  "createdAt": "2026-09-29T08:08:34.047Z",
+  "costCredits": 7.5,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260929_080433_83685047-bd64-4f76-b6d2-15bafc205895.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-29T08:04:33.344345Z",
+      "display_name": "Seedance 2.0 Mini",
+      "id": "83685047-bd64-4f76-b6d2-15bafc205895",
+      "job_type": "seedance_2_0_mini",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "duration": 15,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "58e757f7-f133-4c90-a500-a8a64abd9630",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/58e757f7-f133-4c90-a500-a8a64abd9630.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "0fe8e3ad-a4ea-4cdd-9268-1dbf01fd4a8b",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/0fe8e3ad-a4ea-4cdd-9268-1dbf01fd4a8b.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "f493adf2-598b-4d5f-bbbe-6fa03af6d26f",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/f493adf2-598b-4d5f-bbbe-6fa03af6d26f.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "d41d5f08-4d0a-4453-9fa9-29e010e525bb",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/d41d5f08-4d0a-4453-9fa9-29e010e525bb.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "11c25f58-ba0f-4f4d-895c-db9b83878f7a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/11c25f58-ba0f-4f4d-895c-db9b83878f7a.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "29c8486c-ba41-41af-9606-2291c90845c8",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/29c8486c-ba41-41af-9606-2291c90845c8.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "154072e2-fd2f-4081-8080-4cd1b9fef1f0",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/154072e2-fd2f-4081-8080-4cd1b9fef1f0.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "f44d9bb4-5e64-41f5-901f-d62d1960f033",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/f44d9bb4-5e64-41f5-901f-d62d1960f033.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "d795a564-3b7a-41ae-8315-7afa81c99bb8",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/d795a564-3b7a-41ae-8315-7afa81c99bb8.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 02 — THE FIRST LINE | THE VOICE ARRIVES\n\nCreate a 15-second cinematic sequence for Seedance 2.5.\nHorizontal 16:9.\nExactly three shots lasting four, eight and three seconds.\n\nCHARACTER REFERENCES:\nYoung Homayoun = {{CHAR_HOMAYOUN_YOUNG}}\nComposer = {{CHAR_COMPOSER}}\nFather = {{CHAR_FATHER}}\n\nLOCATION REFERENCE:\nEarly-2000s recording studio, vocal booth and connected control room = {{LOC_RECORDING_STUDIO}}\n\nPROP REFERENCES:\nMixing console = {{PROP_MIXING_CONSOLE}}\nStudio microphone and pop filter = {{PROP_MIC}}\nStudio headphones = {{PROP_HEADPHONES}}\nLyric sheet = {{PROP_LYRIC_SHEET}}\n\nAUDIO REFERENCE:\nOriginal vocal performance of “می‌تراود مهتاب” = {{AUDIO_MITARAVAD_MAHTAB}}\n\nPreserve the exact character appearance, studio geography, wardrobe, microphone placement, headphone design, lighting direction and blocking established in PLAN 01.\n\nCONTINUITY START STATE:\n\nDirect continuation from PLAN 01.\n\nHomayoun remains inside the vocal booth at the microphone.\n\nThe headphones remain firmly over both ears.\n\nHe has just received the composer’s professional cue and his father’s quiet acknowledgement.\n\nThe composer remains seated behind the mixing console inside the control room.\n\nThe father remains standing separately in the control room.\n\nHomayoun now turns inward toward the act of singing.\n\nSHOT 02A | 00:15–00:19 | PREPARATION\n\nCut to a 65mm intimate detail sequence from the front side of the microphone.\n\nBegin on Homayoun’s hand gently stabilizing the lyric sheet.\n\nShift focus to the headphone cup enclosing his ear.\n\nContinue toward his mouth positioned naturally behind the pop filter.\n\nFinish on his eyes becoming still and focused.\n\nThese details communicate preparation and concentration rather than anxiety.\n\nHomayoun takes one calm controlled breath.\n\nHis body becomes quiet.\n\nSHOT 02B | 00:19–00:27 | “می‌تراود مهتاب”\n\nCut to a 40mm frontal medium shot directly facing Homayoun.\n\nThe microphone and pop filter remain centered naturally between camera and singer without covering his full face.\n\nThe headphones remain clearly visible on his head.\n\nBegin a single slow, physically smooth forward camera move.\n\nTravel gradually from medium framing toward an intimate close-up over the full eight seconds.\n\nFor the first three seconds, Homayoun lets the breath settle and prepares his mouth naturally.\n\nThen he begins performing the supplied vocal recording of “می‌تراود مهتاب”.\n\nUse the supplied audio as the exact performance source.\n\nMatch lip movement precisely to the original vocal timing, mouth shapes, syllable articulation, breath placement and phrasing.\n\nThe opening “می...” emerges softly and without theatrical emphasis.\n\nAs the phrase develops, his face opens almost imperceptibly.\n\nThe emotional transition is from concentrated readiness into quiet certainty.\n\nHe realizes through the act of singing that the room is truly listening to him.\n\nMaintain the frontal camera path throughout the performance.\n\nKeep Homayoun as the uninterrupted emotional center.\n\nSHOT 02C | 00:27–00:30 | THE ROOM LISTENS\n\nCut briefly to a 65mm control-room composition through layered foreground equipment.\n\nA VU meter responds clearly to Homayoun’s continuing voice in the foreground or near foreground.\n\nBehind it, the composer remains seated at the console, partially obscured by equipment, shallow focus and glass reflection.\n\nHis face remains indistinct, but his still attentive posture makes it clear that he is listening closely.\n\nThe father occupies a separate deeper position elsewhere in the control room.\n\nHe watches quietly.\n\nNeither man performs an exaggerated reaction.\n\nThe moment belongs to Homayoun’s voice.\n\nEnd while the singing continues.\n\nPERFORMANCE AND LIP-SYNC:\n\nThe supplied vocal recording is the absolute timing reference for Homayoun’s performance.\n\nPreserve natural facial anatomy.\n\nLip articulation follows the exact Persian phonemes of the supplied performance.\n\nFacial movement remains subtle and physically realistic.\n\nThe emotional change happens gradually through breath, focus, eyes and posture.\n\nCOMPOSER VISIBILITY:\n\nThe composer is never presented in a clean hero portrait.\n\nUse console hardware, foreground objects, studio-glass reflections, three-quarter orientation, partial silhouette and controlled shallow focus to limit facial detail.\n\nHis professional presence must remain unmistakable even when precise facial likeness is understated.\n\nLIGHT AND IMAGE:\n\nContinue the same warm practical lighting from PLAN 01.\n\nSoft highlights on microphone metal, headphone material, glass and console controls.\n\nNatural exposure and restrained contrast.\n\nThe frontal singing shot becomes progressively more intimate as the camera approaches.\n\nKeep the visual texture tactile, human and understated.\n\nSOUND:\n\nThe supplied vocal recording enters during SHOT 02B and remains the dominant sound through the end.\n\nSubtle studio room tone continues underneath.\n\nSmall breath detail before the first syllable.\nGentle electrical hum.\nNatural console ambience.\n\nADDITIONAL MUSIC: none.\nADDITIONAL DIALOGUE: none.\n\n<<<image_1>>> is Homayoun Shajarian (CHR-001 V01); match it wherever Homayoun Shajarian appears.\n<<<image_2>>> is Mohammad-Reza Shajarian (CHR-002 V01); match it wherever Mohammad-Reza Shajarian appears.\n<<<image_3>>> is Musician (CHR-003 V01); match it wherever Musician appears.\n<<<image_4>>> is Studio Control Room (LOC-001 V01); match it wherever Studio Control Room appears.\n<<<image_5>>> is Studio Vocal Booth (LOC-002 V01); match it wherever Studio Vocal Booth appears.\n<<<image_6>>> is Mixing Console (PRP-001 V01); match it wherever Mixing Console appears.\n<<<image_7>>> is Audio Level Meter (PRP-002 V01); match it wherever Audio Level Meter appears.\n<<<image_8>>> is Studio Headphones (PRP-004 V01); match it wherever Studio Headphones appears.\n<<<image_9>>> is Sheet Music (PRP-006 V01); match it wherever Sheet Music appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260929_080433_83685047-bd64-4f76-b6d2-15bafc205895.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260929_080433_83685047-bd64-4f76-b6d2-15bafc205895_thumbnail.webp"
+    }
+  ]
+}

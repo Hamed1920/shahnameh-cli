@@ -108,3 +108,21 @@
 {"batchId":"B-20260928-BVF","event":"price","key":"r1","credits":45,"ts":"2026-09-28T18:36:26.093Z"}
 {"batchId":"B-20260928-BVF","event":"priced","total":45,"unpriced":0,"ts":"2026-09-28T18:36:26.094Z"}
 {"batchId":"B-20260928-BVF","reqId":"jr_mullcxzd067z","event":"queued","jobIds":{"r1":"J-20260928-2NG"},"assigned":[{"key":"r1","proposal":"NEXT/EP014","id":"SHM-EP014-SC018-SH0010","shortId":"EP014-SC018-SH0010"}],"total":45,"ts":"2026-09-28T18:39:10.392Z"}
+{"batchId":"B-20260930-89K","reqId":"jr_munsz6433l6g","event":"validated","jobs":[{"key":"r1","ok":true,"target":"NEXT/EP014","jobId":"J-20260930-HAD"}],"newEntities":[],"ts":"2026-09-30T07:47:54.594Z"}
+{"batchId":"B-20260930-89K","event":"price","key":"r1","credits":45,"ts":"2026-09-30T07:48:11.174Z"}
+{"batchId":"B-20260930-89K","event":"priced","total":45,"unpriced":0,"ts":"2026-09-30T07:48:11.183Z"}
+{"batchId":"B-20260930-89K","reqId":"jr_munszmsvsnce","event":"queued","jobIds":{"r1":"J-20260930-HAD"},"assigned":[{"key":"r1","proposal":"NEXT/EP014","id":"SHM-EP014-SC019-SH0010","shortId":"EP014-SC019-SH0010"}],"total":45,"ts":"2026-09-30T07:48:16.428Z"}
+{"batchId":"B-20260930-GA0","reqId":"jr_muntshtj6jn4","event":"validated","jobs":[{"key":"r3","ok":true,"target":"NEXT/EP014","jobId":"J-20260930-I8R"}],"newEntities":[],"ts":"2026-09-30T08:10:41.325Z"}
+{"batchId":"B-20260930-GA0","event":"price","key":"r3","credits":45,"ts":"2026-09-30T08:10:57.293Z"}
+{"batchId":"B-20260930-GA0","event":"priced","total":45,"unpriced":0,"ts":"2026-09-30T08:10:57.301Z"}
+{"batchId":"B-20260930-C6E","reqId":"jr_muntsyeiwuwh","event":"validated","jobs":[{"key":"r5","ok":true,"target":"NEXT/EP014","jobId":"J-20260930-997"}],"newEntities":[],"ts":"2026-09-30T08:11:03.390Z"}
+{"batchId":"B-20260930-GA0","reqId":"jr_muntt0le0x8t","event":"queued","jobIds":{"r3":"J-20260930-I8R"},"assigned":[{"key":"r3","proposal":"NEXT/EP014","id":"SHM-EP014-SC020-SH0010","shortId":"EP014-SC020-SH0010"}],"total":45,"ts":"2026-09-30T08:11:08.119Z"}
+{"batchId":"B-20260930-C6E","event":"price","key":"r5","credits":45,"ts":"2026-09-30T08:11:47.627Z"}
+{"batchId":"B-20260930-C6E","event":"priced","total":45,"unpriced":0,"ts":"2026-09-30T08:11:47.635Z"}
+{"batchId":null,"reqId":"jr_muntxd88ybuh","event":"rejected","scope":"request","reason":"job J-20260927-DOK has not generated yet","ts":"2026-09-30T08:14:28.040Z"}
+{"batchId":"B-20260930-C6E","reqId":"jr_muntxo4enuk6","event":"queued","jobIds":{"r5":"J-20260930-997"},"assigned":[{"key":"r5","proposal":"NEXT/EP014","id":"SHM-EP014-SC021-SH0010","shortId":"EP014-SC021-SH0010"}],"total":45,"ts":"2026-09-30T08:14:44.920Z"}
+{"batchId":"B-20260930-BDG","reqId":"jr_munv53hoc8bo","event":"validated","jobs":[{"key":"r7","ok":true,"target":"NEXT/EP014","jobId":"J-20260930-F52"}],"newEntities":[],"ts":"2026-09-30T08:48:28.699Z"}
+{"batchId":"B-20260930-BDG","event":"price","key":"r7","credits":45,"ts":"2026-09-30T08:48:46.174Z"}
+{"batchId":"B-20260930-BDG","event":"priced","total":45,"unpriced":0,"ts":"2026-09-30T08:48:46.183Z"}
+{"batchId":"B-20260930-BDG","reqId":"jr_munv5pyp8wha","event":"queued","jobIds":{"r7":"J-20260930-F52"},"assigned":[{"key":"r7","proposal":"NEXT/EP014","id":"SHM-EP014-SC022-SH0010","shortId":"EP014-SC022-SH0010"}],"total":45,"ts":"2026-09-30T08:48:59.965Z"}
+{"batchId":null,"reqId":"jr_munxdm0c85f8","event":"queued","jobIds":{"J-20260930-K9K":"J-20260930-9IN"},"assigned":[],"total":null,"ts":"2026-09-30T09:51:04.729Z"}

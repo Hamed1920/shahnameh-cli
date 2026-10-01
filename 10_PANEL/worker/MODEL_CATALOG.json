@@ -1,6 +1,6 @@
 {
  "_comment": "Written by the worker from `higgsfield model list` / `model get` (worker/lib/models.mjs). Do not edit by hand; refresh from the Prompts page or restart a worker once it is a day old.",
- "fetchedAt": "2026-09-27T23:51:50.249Z",
+ "fetchedAt": "2026-09-30T09:28:06.569Z",
  "models": {
   "ad_multiplier": {
    "job_type": "ad_multiplier",
@@ -3207,6 +3207,18 @@
      ]
     },
     {
+     "name": "draft",
+     "type": "boolean",
+     "default": false,
+     "required": false
+    },
+    {
+     "name": "draft_job_id",
+     "type": "string|null",
+     "default": null,
+     "required": false
+    },
+    {
      "name": "duration",
      "type": "integer",
      "default": 5,
@@ -3291,7 +3303,8 @@
     "params.mode != \"video_extension\" || !(params.extension_mode == null)",
     "params.mode == \"video_extension\" || params.extension_mode == null",
     "size(params.image_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) <= 30",
-    "params.mode == \"omni_reference\" || (params.start_image == null && params.end_image == null)"
+    "params.mode == \"omni_reference\" || (params.start_image == null && params.end_image == null)",
+    "!params.draft || params.draft_job_id == null"
    ],
    "refs": {
     "param": "image_references",
@@ -3862,6 +3875,36 @@
     "max": 1,
     "min": 0
    },
+   "sound": null,
+   "stages": null
+  },
+  "topaz_hyperion_2_5": {
+   "job_type": "topaz_hyperion_2_5",
+   "display_name": "Topaz Hyperion 2.5",
+   "type": "video",
+   "usable": false,
+   "why": "takes no prompt (a tool, not a generator)",
+   "params": [
+    {
+     "name": "output_format",
+     "type": "string",
+     "default": "prores",
+     "required": false,
+     "enum": [
+      "h265",
+      "prores",
+      "exr"
+     ]
+    },
+    {
+     "name": "video_references",
+     "type": "array",
+     "default": null,
+     "required": true
+    }
+   ],
+   "rules": [],
+   "refs": null,
    "sound": null,
    "stages": null
   },

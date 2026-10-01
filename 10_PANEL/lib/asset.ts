@@ -21,6 +21,11 @@ export function isVideo(p: string) {
   return /\.(mp4|mov|webm)$/i.test(p)
 }
 
+/** A voice recording: played, never thumbnailed. */
+export function isAudio(p: string) {
+  return /\.(mp3|wav|m4a)$/i.test(p)
+}
+
 /**
  * Whether a take is filed as footage in an episode.
  *

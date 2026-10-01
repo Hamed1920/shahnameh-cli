@@ -127,7 +127,8 @@ W "## Naming rules you need to know"
 W ""
 W "- ID shape: ``$Code-KIND-NNN-SLUG``. Short form ``KIND-NNN`` is always acceptable."
 W "- Kinds: ``CHR`` character, ``GRP`` group/caste, ``LOC`` location, ``PRP`` prop, ``CRT`` creature,"
-W "  ``COS`` costume, ``VEH`` vehicle, ``FX`` effect, ``REF`` reference board."
+W "  ``COS`` costume, ``VEH`` vehicle, ``FX`` effect, ``REF`` reference board, ``VOX`` voice (a recording;"
+W "  never an image reference)."
 W "- **Different physical object -> different number. Same object, different look -> same number,"
 W "  new variant ``V``. Same look, re-rolled -> same variant, new take ``T``.**"
 W "- Slugs are ``UPPER-KEBAB`` and lead with a family word (``STAFF-``, ``GATE-``, ``THRONE-``)."
@@ -161,6 +162,7 @@ $kindTitles = [ordered]@{
     'VEH' = 'Vehicles'
     'FX'  = 'Effects'
     'REF' = 'Reference boards'
+    'VOX' = 'Voices'
 }
 
 foreach ($k in $kindTitles.Keys) {

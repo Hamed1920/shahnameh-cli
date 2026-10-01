@@ -5,7 +5,7 @@
  * while the form is still open, not after the decision is logged.
  */
 
-export const KINDS = ['CHR', 'GRP', 'LOC', 'PRP', 'CRT', 'COS', 'VEH', 'FX', 'REF'] as const
+export const KINDS = ['CHR', 'GRP', 'LOC', 'PRP', 'CRT', 'COS', 'VEH', 'FX', 'REF', 'VOX'] as const
 export type Kind = (typeof KINDS)[number]
 
 export const KIND_LABEL: Record<Kind, string> = {
@@ -18,7 +18,13 @@ export const KIND_LABEL: Record<Kind, string> = {
   VEH: 'Vehicle',
   FX: 'Effect',
   REF: 'Reference board',
+  VOX: 'Voice',
 }
+
+/** A voice is audio: its looks are recordings, uploaded as MP3, WAV or M4A, never shown as pictures. */
+export const AUDIO_KINDS: readonly Kind[] = ['VOX']
+export const AUDIO_EXT = ['.mp3', '.wav', '.m4a'] as const
+export const AUDIO_ACCEPT = 'audio/mpeg,audio/wav,audio/x-wav,audio/mp4,audio/x-m4a,.mp3,.wav,.m4a'
 
 /** RENDER is reserved for promoted generations; an upload is never one. */
 export const UPLOAD_ROLES = ['HERO', 'TURNAROUND', 'PLATE', 'DETAIL', 'BOARD'] as const

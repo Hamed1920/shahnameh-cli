@@ -7,21 +7,32 @@
  * browser code all import this one copy.
  */
 
-/** @type {readonly ['CHR', 'GRP', 'LOC', 'PRP', 'CRT', 'COS', 'VEH', 'FX', 'REF']} */
-export const KINDS = ['CHR', 'GRP', 'LOC', 'PRP', 'CRT', 'COS', 'VEH', 'FX', 'REF']
+/** @type {readonly ['CHR', 'GRP', 'LOC', 'PRP', 'CRT', 'COS', 'VEH', 'FX', 'REF', 'VOX']} */
+export const KINDS = ['CHR', 'GRP', 'LOC', 'PRP', 'CRT', 'COS', 'VEH', 'FX', 'REF', 'VOX']
 
 /** Mirrors $ShmFolderFor in tools/Shm-Common.ps1. */
 /** @type {Record<string, string>} */
 export const FOLDER_FOR = {
   CHR: '01_CHARACTERS', GRP: '02_GROUPS', LOC: '03_LOCATIONS', PRP: '04_PROPS',
   CRT: '05_CREATURES', COS: '06_COSTUMES', VEH: '04_PROPS', FX: '08_REFERENCE', REF: '08_REFERENCE',
+  // A voice: audio (a sung or spoken sample), never an image reference for a generation.
+  VOX: '10_VOICES',
 }
 
 /** Every folder a project has, in order. */
 export const PROJECT_FOLDERS = [
   '00_PROJECT', '01_CHARACTERS', '02_GROUPS', '03_LOCATIONS', '04_PROPS', '05_CREATURES',
-  '06_COSTUMES', '07_EPISODES', '08_REFERENCE', '09_OUTPUT', '99_INBOX',
+  '06_COSTUMES', '07_EPISODES', '08_REFERENCE', '09_OUTPUT', '10_VOICES', '99_INBOX',
 ]
+
+/** Kinds whose files are audio, not pictures: never thumbnailed, never sent as an image reference. */
+export const AUDIO_KINDS = ['VOX']
+
+/** What a voice's recording may be. */
+export const AUDIO_EXT = ['.mp3', '.wav', '.m4a']
+
+/** True for an audio file, by extension. */
+export const isAudioFile = (p) => /\.(mp3|wav|m4a)$/i.test(String(p ?? ''))
 
 // ---------------------------------------------------------------- project code and slug
 

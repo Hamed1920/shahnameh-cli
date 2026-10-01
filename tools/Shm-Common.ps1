@@ -17,7 +17,7 @@
 # Captured at dot-source time: the directory this file lives in (tools/).
 $script:ShmToolsDir = $PSScriptRoot
 
-$script:ShmKinds    = @('CHR','GRP','LOC','PRP','CRT','COS','VEH','FX','REF')
+$script:ShmKinds    = @('CHR','GRP','LOC','PRP','CRT','COS','VEH','FX','REF','VOX')
 $script:ShmStatuses = @('RESERVED','CONCEPT','APPROVED','LOCKED','RETIRED')
 
 # THE kind -> folder map. 10_PANEL/worker/lib/ids.mjs mirrors this; keep them in step.
@@ -31,6 +31,7 @@ $script:ShmFolderFor = [ordered]@{
     'VEH' = '04_PROPS'
     'FX'  = '08_REFERENCE'
     'REF' = '08_REFERENCE'
+    'VOX' = '10_VOICES'
 }
 
 # Top-level entries that belong to the system, never to a project. Anything else at the

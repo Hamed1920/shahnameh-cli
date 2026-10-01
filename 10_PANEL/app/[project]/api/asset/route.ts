@@ -28,6 +28,10 @@ const TYPES: Record<string, string> = {
   '.mp4': 'video/mp4',
   '.mov': 'video/quicktime',
   '.webm': 'video/webm',
+  // Voices (VOX): played in the References page.
+  '.mp3': 'audio/mpeg',
+  '.wav': 'audio/wav',
+  '.m4a': 'audio/mp4',
 }
 
 /** `bytes=start-end`, `bytes=start-` or `bytes=-suffix`, clamped to the file. Null when unsatisfiable. */

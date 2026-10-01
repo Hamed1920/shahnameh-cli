@@ -123,9 +123,14 @@ export async function decide(
     return { ok: false, error: 'Choose Accept, Deny or Discard first.' }
   }
   const discarding = verdict === 'discarded'
+  // Deny + regenerate: either a note added to the prompt, or a whole new prompt.
+  const replacing = verdict === 'denied' && requeue && formData.get('promptMode') === 'replace'
+  const newPrompt = replacing ? String(formData.get('prompt') ?? '').trim() : ''
+  if (replacing && !newPrompt) return { ok: false, error: 'Write the new prompt, or switch back to a note.' }
 
   // A denial with no note teaches nothing and cannot build a revision prompt.
-  if (verdict === 'denied' && !notes) {
+  // With a whole new prompt the prompt is the fix, so the note is optional.
+  if (verdict === 'denied' && !notes && !replacing) {
     return {
       ok: false,
       error: 'A denial needs a note saying what is wrong — that note is what drives the fix.',
@@ -147,7 +152,10 @@ export async function decide(
     uploads = await readUploads(pr, formData, id)
     const uploadIds = new Set(uploads.map((u) => u.meta.id))
     refs = await readRefs(pr, formData, candidate, regenerates, uploadIds)
-    await checkMentions(pr, parseMentions(notes), candidate, refs)
+    await checkMentions(pr, parseMentions(notes, newPrompt), candidate, refs)
+    if (replacing && newPrompt === (candidate.sidecar.basePrompt ?? candidate.sidecar.prompt ?? '').trim()) {
+      throw new Invalid('The new prompt is the same as the old one. Change it, or switch back to a note.')
+    }
   } catch (e) {
     if (e instanceof Invalid) return { ok: false, error: e.message }
     throw e
@@ -178,6 +186,7 @@ export async function decide(
     ...(regenerates && { sound: formData.get('sound') === 'on' }),
     ...(refs && { refs, refsBefore: candidate.sidecar.refs ?? [] }),
     ...(uploads.length > 0 && { uploads: uploads.map((u) => u.meta) }),
+    ...(replacing && { prompt: newPrompt }),
   }
 
   // Files first, decision second: the worker must never see a decision whose

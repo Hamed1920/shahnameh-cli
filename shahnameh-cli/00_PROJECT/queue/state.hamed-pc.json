@@ -68,7 +68,20 @@
     "J-20260928-343",
     "J-20260928-HS0",
     "J-20260928-PDT",
-    "J-20260928-9U3"
+    "J-20260928-9U3",
+    "J-20260930-HAD",
+    "J-20260930-K9K",
+    "J-20260930-I8R",
+    "J-20260930-997",
+    "J-20260930-VQ4",
+    "J-20260930-19Q",
+    "J-20260930-F4M",
+    "J-20260930-H69",
+    "J-20260930-P6N",
+    "J-20260930-RTS",
+    "J-20260930-F52",
+    "J-20260930-LYN",
+    "J-20260930-9IN"
   ],
   "processedDecisions": [
     "rev_mtljtubxafk9",
@@ -137,10 +150,37 @@
     "rev_mul97tx8ngj4",
     "rev_mul97xpvoqtj",
     "rev_mul9802j6tn2",
-    "rev_mulaow6wwtg8"
+    "rev_mulaow6wwtg8",
+    "rev_muntln4upw62",
+    "rev_munty5e3fwb8",
+    "rev_munty82l1rs5",
+    "rev_muntyb0qq3wp",
+    "rev_muntyd4wxr3i",
+    "rev_muntze0fp4v3",
+    "rev_muntzn5z3ayj",
+    "rev_muntzpv50ndr",
+    "rev_munu0f05o7wt",
+    "rev_munu0log9sg4",
+    "rev_munu0m5bmh75",
+    "rev_munu0zb8b039",
+    "rev_munu1byh4z3p",
+    "rev_munu1en92mn9",
+    "rev_munu1mcpi01h",
+    "rev_munu28tthmzj",
+    "rev_munu7znbmyec",
+    "rev_munuehwkh03y",
+    "rev_munugwxgpls5",
+    "rev_munuigb1uzo5",
+    "rev_munw2r07gtz6",
+    "rev_munwawnyjjmm",
+    "rev_munwbx4l7uir",
+    "rev_munwe6mfxhbn",
+    "rev_munwfl0h51v5",
+    "rev_munwg577wccc",
+    "rev_munzfykke3r6"
   ],
-  "spentCredits": 5370,
-  "updatedAt": "2026-09-28T13:50:53.420Z",
+  "spentCredits": 6855,
+  "updatedAt": "2026-09-30T10:48:59.324Z",
   "failedDecisions": {},
   "processedOps": [
     "op_mu18d6axozqm",
@@ -204,13 +244,27 @@
     "jr_mul71j24q5au",
     "jr_mul72mkatl9i",
     "jr_mul75000g05u",
-    "jr_mul7x8js29u2"
+    "jr_mul7x8js29u2",
+    "jr_munsz6433l6g",
+    "jr_munszmsvsnce",
+    "jr_muntshtj6jn4",
+    "jr_muntsyeiwuwh",
+    "jr_muntt0le0x8t",
+    "jr_muntxd88ybuh",
+    "jr_muntxo4enuk6",
+    "jr_munv53hoc8bo",
+    "jr_munv5pyp8wha",
+    "jr_munxdm0c85f8"
   ],
   "held": {},
   "failedJobs": {
     "J-20260928-WJR": {
       "reason": "Error: Higgsfield API error (HTTP 503). request failed with status 503 Service Unavailable",
       "at": "2026-09-28T12:00:03.496Z"
+    },
+    "J-20260930-H69": {
+      "reason": "Error: Higgsfield API error (HTTP 503). request failed with status 503 Service Unavailable",
+      "at": "2026-09-30T08:36:09.713Z"
     }
   }
 }

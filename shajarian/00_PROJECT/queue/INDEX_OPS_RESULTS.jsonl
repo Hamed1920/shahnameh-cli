@@ -1,2 +1,7 @@
 {"opId":"op_mufsx7myji68","ok":true,"summary":"added @CHR-001/V01, @LOC-001/V01, @LOC-002/V01, @PRP-001/V01, @PRP-002/V01, @PRP-003/V01, @PRP-004/V01, @PRP-005/V01","ts":"2026-09-24T17:24:12.334Z"}
 {"opId":"op_mufsx7myji68","ok":false,"reason":"made by an older version of the panel, before each machine ran its own worker; nothing was done with it. Do it again.","ts":"2026-09-28T07:46:41.006Z"}
+{"opId":"op_mumdm85l4tza","ok":false,"reason":"u1: entity name and description must be English","ts":"2026-09-29T07:50:10.356Z"}
+{"opId":"op_mumdmqmvcwkm","ok":true,"summary":"added @CHR-002/V01, @PRP-006/V01, @CHR-003/V01, @LOC-002/V02","ts":"2026-09-29T07:50:32.827Z"}
+{"opId":"op_mumehaf4i0po","ok":true,"summary":"added @LOC-001/V02","ts":"2026-09-29T08:14:19.529Z"}
+{"opId":"op_mumehiclv8ej","ok":true,"summary":"LOC-001 main look -> V02","ts":"2026-09-29T08:14:29.261Z"}
+{"opId":"op_mumf9vvemyiu","ok":true,"summary":"added @VOX-001/V01","ts":"2026-09-29T08:36:35.876Z"}

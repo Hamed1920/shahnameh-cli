@@ -1,0 +1,158 @@
+{
+  "jobId": "J-20260929-9VD",
+  "parentJobId": "J-20260929-PPA",
+  "hfJobId": "efa97a68-ed05-4288-b4b2-7efa28703328",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "P01 V02",
+  "target": "SHA-EP001-SC003-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHA-EP001/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 01 — SESSION OPENS | TRUST IS ESTABLISHED\n\nCreate a 15-second cinematic sequence for Seedance 2.5.\nHorizontal 16:9.\nExactly three shots lasting five, four and six seconds.\n\nCHARACTER REFERENCES:\nYoung Homayoun = {{CHAR_HOMAYOUN_YOUNG}}\nComposer = {{CHAR_COMPOSER}}\nFather = {{CHAR_FATHER}}\n\nLOCATION REFERENCE:\nEarly-2000s recording studio, vocal booth and connected control room = {{LOC_RECORDING_STUDIO}}\n\nPROP REFERENCES:\nMixing console = {{PROP_MIXING_CONSOLE}}\nStudio microphone and pop filter = {{PROP_MIC}}\nStudio headphones = {{PROP_HEADPHONES}}\nLyric sheet = {{PROP_LYRIC_SHEET}}\n\nPreserve the referenced studio architecture, booth wall treatment, glass partition, console design, microphone, costumes, hairstyles and character appearance.\n\nDRAMATIC STATE:\n\nThis is Homayoun’s first serious professional recording opportunity.\n\nThe emotional tone is quiet concentration, anticipation and the awareness that this room has made space for his voice.\n\nThe composer represents professional trust.\nThe father represents personal reassurance.\n\nSTART STATE AND BLOCKING:\n\nYoung Homayoun stands inside the vocal booth facing the studio glass and the control room beyond it.\n\nThe microphone is positioned between him and the glass, as in a normal recording setup.\n\nHe has not yet fully settled into performance.\n\nThe studio headphones are present only as the pair that will be placed on his ears. After he places them on, they remain on his head for the rest of both PLAN 01 and PLAN 02. They must never appear hanging elsewhere, resting on furniture, lying on the floor, or detached in any later shot.\n\nThe lyric sheet is in his hand.\n\nThe composer sits inside the separate control room behind the mixing console.\n\nThe father stands elsewhere inside the same control room, spatially separated from the composer.\n\nA large studio glass partition clearly separates Homayoun from both men.\n\nThe composer’s face remains only partially readable throughout the sequence. His identity is communicated through his position behind the console, silhouette, hands and professional actions.\n\nThe father remains clearly recognizable.\n\nSPATIAL LOCK:\n\nWhenever the camera can see the studio glass and the control room from inside the booth, Homayoun must be facing that glass. In such shots, his back, back-three-quarter, or side-back orientation is seen by camera.\n\nWhenever the camera sees Homayoun from the front, the background behind him must be the booth’s interior wall and acoustic treatment, not the studio glass.\n\nSHOT 01A | 00:00–00:05 | THE SESSION IS OPENED\n\nBegin inside the control room with a 50mm layered medium-detail shot at seated console height.\n\nBuild the frame through multiple depths.\n\nOut-of-focus faders, cables and illuminated meters occupy the near foreground.\n\nThe composer sits behind them in the middle distance, partially obscured by equipment and a soft reflection from the studio glass.\n\nHis face remains at a three-quarter or partial angle, never presented as a clean frontal portrait.\n\nThe camera makes a slow lateral drift of approximately half a meter across the console.\n\nAs the camera passes him, attention naturally transfers from his partially visible figure toward his hand.\n\nHis hand raises one fader with deliberate precision, adjusts a single rotary control, then activates the recording function.\n\nLet his professional action establish that the room is ready.\n\nSHOT 01B | 00:05–00:09 | HE PREPARES\n\nCut inside the vocal booth to a 40mm frontal medium shot at Homayoun’s eye level.\n\nBecause this is a frontal view of Homayoun, the background behind him is the booth wall with its acoustic treatment, never the control-room glass.\n\nHomayoun lifts the studio headphones and settles them firmly over both ears.\n\nThis is the only moment the headphones are handled as an object.\n\nFrom the end of this action onward, they remain on his head continuously for all remaining shots.\n\nHe steadies the lyric sheet, straightens his posture and draws one contained breath.\n\nUse a quiet handheld drift closer, approximately twenty centimeters.\n\nSHOT 01C | 00:09–00:15 | TWO FORMS OF TRUST\n\nCut to an over-the-shoulder shot from behind Homayoun inside the booth with a 65mm lens.\n\nBecause the glass is visible, Homayoun must be facing it, with his back-three-quarter silhouette in the foreground.\n\nUse the studio glass as a layered compositional surface.\n\nThe composer sits deeper SCREEN-LEFT behind the mixing console.\n\nForeground equipment, reflections and shallow focus partially obscure his face while keeping his body position and role completely understandable.\n\nHe gives Homayoun one small professional cue to begin: a restrained nod accompanied by a minimal hand gesture near the console.\n\nHomayoun’s eyeline then travels slightly across the glass.\n\nThe composition gently reframes to reveal his father standing separately deeper SCREEN-RIGHT, with clear empty space between the father and composer.\n\nThe father meets Homayoun’s gaze and gives one small, calm nod.\n\nThe gesture carries personal reassurance.\n\nEnd with Homayoun still facing the glass, receiving both cues.\n\nLIGHT AND IMAGE:\n\nWarm practical studio lighting mixed with soft ambient illumination from the control room.\n\nUse reflections on the studio glass as a natural visual layer.\n\nAllow foreground equipment to drift softly out of focus.\n\nNatural skin texture, restrained early-2000s image character, moderate shallow depth of field and subtle organic camera movement.\n\nSOUND:\n\nQuiet studio room tone.\nSoft electrical hum.\nFader movement.\nSmall console clicks.\nHeadphone contact during SHOT 01B only.\nControlled breathing.\n\nMUSIC: none.\nDIALOGUE: none.\n\n<<<image_1>>> is Homayoun Shajarian (CHR-001 V01); match it wherever Homayoun Shajarian appears.\n<<<image_2>>> is Mohammad-Reza Shajarian (CHR-002 V01); match it wherever Mohammad-Reza Shajarian appears.\n<<<image_3>>> is Musician (CHR-003 V01); match it wherever Musician appears.\n<<<image_4>>> is Studio Control Room (LOC-001 V02); match it wherever Studio Control Room appears.\n<<<image_5>>> is Studio Vocal Booth (LOC-002 V03); match it wherever Studio Vocal Booth appears.\n<<<image_6>>> is Mixing Console (PRP-001 V01); match it wherever Mixing Console appears.\n<<<image_7>>> is Audio Level Meter (PRP-002 V01); match it wherever Audio Level Meter appears.\n<<<image_8>>> is Recording Indicator Light (PRP-003 V01); match it wherever Recording Indicator Light appears.\n<<<image_9>>> is Studio Headphones (PRP-004 V01); match it wherever Studio Headphones appears.\n<<<image_10>>> is Sheet Music (PRP-006 V01); match it wherever Sheet Music appears.",
+  "basePrompt": "PLAN 01 — SESSION OPENS | TRUST IS ESTABLISHED\n\nCreate a 15-second cinematic sequence for Seedance 2.5.\nHorizontal 16:9.\nExactly three shots lasting five, four and six seconds.\n\nCHARACTER REFERENCES:\nYoung Homayoun = {{CHAR_HOMAYOUN_YOUNG}}\nComposer = {{CHAR_COMPOSER}}\nFather = {{CHAR_FATHER}}\n\nLOCATION REFERENCE:\nEarly-2000s recording studio, vocal booth and connected control room = {{LOC_RECORDING_STUDIO}}\n\nPROP REFERENCES:\nMixing console = {{PROP_MIXING_CONSOLE}}\nStudio microphone and pop filter = {{PROP_MIC}}\nStudio headphones = {{PROP_HEADPHONES}}\nLyric sheet = {{PROP_LYRIC_SHEET}}\n\nPreserve the referenced studio architecture, booth wall treatment, glass partition, console design, microphone, costumes, hairstyles and character appearance.\n\nDRAMATIC STATE:\n\nThis is Homayoun’s first serious professional recording opportunity.\n\nThe emotional tone is quiet concentration, anticipation and the awareness that this room has made space for his voice.\n\nThe composer represents professional trust.\nThe father represents personal reassurance.\n\nSTART STATE AND BLOCKING:\n\nYoung Homayoun stands inside the vocal booth facing the studio glass and the control room beyond it.\n\nThe microphone is positioned between him and the glass, as in a normal recording setup.\n\nHe has not yet fully settled into performance.\n\nThe studio headphones are present only as the pair that will be placed on his ears. After he places them on, they remain on his head for the rest of both PLAN 01 and PLAN 02. They must never appear hanging elsewhere, resting on furniture, lying on the floor, or detached in any later shot.\n\nThe lyric sheet is in his hand.\n\nThe composer sits inside the separate control room behind the mixing console.\n\nThe father stands elsewhere inside the same control room, spatially separated from the composer.\n\nA large studio glass partition clearly separates Homayoun from both men.\n\nThe composer’s face remains only partially readable throughout the sequence. His identity is communicated through his position behind the console, silhouette, hands and professional actions.\n\nThe father remains clearly recognizable.\n\nSPATIAL LOCK:\n\nWhenever the camera can see the studio glass and the control room from inside the booth, Homayoun must be facing that glass. In such shots, his back, back-three-quarter, or side-back orientation is seen by camera.\n\nWhenever the camera sees Homayoun from the front, the background behind him must be the booth’s interior wall and acoustic treatment, not the studio glass.\n\nSHOT 01A | 00:00–00:05 | THE SESSION IS OPENED\n\nBegin inside the control room with a 50mm layered medium-detail shot at seated console height.\n\nBuild the frame through multiple depths.\n\nOut-of-focus faders, cables and illuminated meters occupy the near foreground.\n\nThe composer sits behind them in the middle distance, partially obscured by equipment and a soft reflection from the studio glass.\n\nHis face remains at a three-quarter or partial angle, never presented as a clean frontal portrait.\n\nThe camera makes a slow lateral drift of approximately half a meter across the console.\n\nAs the camera passes him, attention naturally transfers from his partially visible figure toward his hand.\n\nHis hand raises one fader with deliberate precision, adjusts a single rotary control, then activates the recording function.\n\nLet his professional action establish that the room is ready.\n\nSHOT 01B | 00:05–00:09 | HE PREPARES\n\nCut inside the vocal booth to a 40mm frontal medium shot at Homayoun’s eye level.\n\nBecause this is a frontal view of Homayoun, the background behind him is the booth wall with its acoustic treatment, never the control-room glass.\n\nHomayoun lifts the studio headphones and settles them firmly over both ears.\n\nThis is the only moment the headphones are handled as an object.\n\nFrom the end of this action onward, they remain on his head continuously for all remaining shots.\n\nHe steadies the lyric sheet, straightens his posture and draws one contained breath.\n\nUse a quiet handheld drift closer, approximately twenty centimeters.\n\nSHOT 01C | 00:09–00:15 | TWO FORMS OF TRUST\n\nCut to an over-the-shoulder shot from behind Homayoun inside the booth with a 65mm lens.\n\nBecause the glass is visible, Homayoun must be facing it, with his back-three-quarter silhouette in the foreground.\n\nUse the studio glass as a layered compositional surface.\n\nThe composer sits deeper SCREEN-LEFT behind the mixing console.\n\nForeground equipment, reflections and shallow focus partially obscure his face while keeping his body position and role completely understandable.\n\nHe gives Homayoun one small professional cue to begin: a restrained nod accompanied by a minimal hand gesture near the console.\n\nHomayoun’s eyeline then travels slightly across the glass.\n\nThe composition gently reframes to reveal his father standing separately deeper SCREEN-RIGHT, with clear empty space between the father and composer.\n\nThe father meets Homayoun’s gaze and gives one small, calm nod.\n\nThe gesture carries personal reassurance.\n\nEnd with Homayoun still facing the glass, receiving both cues.\n\nLIGHT AND IMAGE:\n\nWarm practical studio lighting mixed with soft ambient illumination from the control room.\n\nUse reflections on the studio glass as a natural visual layer.\n\nAllow foreground equipment to drift softly out of focus.\n\nNatural skin texture, restrained early-2000s image character, moderate shallow depth of field and subtle organic camera movement.\n\nSOUND:\n\nQuiet studio room tone.\nSoft electrical hum.\nFader movement.\nSmall console clicks.\nHeadphone contact during SHOT 01B only.\nControlled breathing.\n\nMUSIC: none.\nDIALOGUE: none.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V01",
+    "@CHR-002/V01",
+    "@CHR-003/V01",
+    "@LOC-001/V02",
+    "@LOC-002/V03",
+    "@PRP-001/V01",
+    "@PRP-002/V01",
+    "@PRP-003/V01",
+    "@PRP-004/V01",
+    "@PRP-006/V01"
+  ],
+  "createdAt": "2026-09-29T09:17:40.572Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260929_090954_efa97a68-ed05-4288-b4b2-7efa28703328.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-09-29T09:09:54.554739Z",
+      "display_name": "Seedance 2.5",
+      "id": "efa97a68-ed05-4288-b4b2-7efa28703328",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "cf8618c9-f4ff-456e-a359-7470de58d68e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/cf8618c9-f4ff-456e-a359-7470de58d68e.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "180d3952-f7c7-4c51-a122-2f035d3d12e7",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/180d3952-f7c7-4c51-a122-2f035d3d12e7.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "8b5ddec8-7925-482a-b824-4bbe2ae80ce9",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/8b5ddec8-7925-482a-b824-4bbe2ae80ce9.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "db48e06c-67b3-4031-a1b0-c7614a98beae",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/db48e06c-67b3-4031-a1b0-c7614a98beae.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "7d78e859-1ffe-46b3-91f0-cea70c38f2c7",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/7d78e859-1ffe-46b3-91f0-cea70c38f2c7.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "cb56d81b-20e6-4bc9-b19f-81fd4b504197",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/cb56d81b-20e6-4bc9-b19f-81fd4b504197.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "998a15eb-7b2d-480b-9451-fe812d70f88e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/998a15eb-7b2d-480b-9451-fe812d70f88e.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "91cdc4d7-dc93-4bfe-98d5-89b0cf59681e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/91cdc4d7-dc93-4bfe-98d5-89b0cf59681e.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "170f84c1-915a-4c3b-86d2-84e281f3d442",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/170f84c1-915a-4c3b-86d2-84e281f3d442.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "94883941-c1e5-4c8d-a836-457dc41b13c9",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/94883941-c1e5-4c8d-a836-457dc41b13c9.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 01 — SESSION OPENS | TRUST IS ESTABLISHED\n\nCreate a 15-second cinematic sequence for Seedance 2.5.\nHorizontal 16:9.\nExactly three shots lasting five, four and six seconds.\n\nCHARACTER REFERENCES:\nYoung Homayoun = {{CHAR_HOMAYOUN_YOUNG}}\nComposer = {{CHAR_COMPOSER}}\nFather = {{CHAR_FATHER}}\n\nLOCATION REFERENCE:\nEarly-2000s recording studio, vocal booth and connected control room = {{LOC_RECORDING_STUDIO}}\n\nPROP REFERENCES:\nMixing console = {{PROP_MIXING_CONSOLE}}\nStudio microphone and pop filter = {{PROP_MIC}}\nStudio headphones = {{PROP_HEADPHONES}}\nLyric sheet = {{PROP_LYRIC_SHEET}}\n\nPreserve the referenced studio architecture, booth wall treatment, glass partition, console design, microphone, costumes, hairstyles and character appearance.\n\nDRAMATIC STATE:\n\nThis is Homayoun’s first serious professional recording opportunity.\n\nThe emotional tone is quiet concentration, anticipation and the awareness that this room has made space for his voice.\n\nThe composer represents professional trust.\nThe father represents personal reassurance.\n\nSTART STATE AND BLOCKING:\n\nYoung Homayoun stands inside the vocal booth facing the studio glass and the control room beyond it.\n\nThe microphone is positioned between him and the glass, as in a normal recording setup.\n\nHe has not yet fully settled into performance.\n\nThe studio headphones are present only as the pair that will be placed on his ears. After he places them on, they remain on his head for the rest of both PLAN 01 and PLAN 02. They must never appear hanging elsewhere, resting on furniture, lying on the floor, or detached in any later shot.\n\nThe lyric sheet is in his hand.\n\nThe composer sits inside the separate control room behind the mixing console.\n\nThe father stands elsewhere inside the same control room, spatially separated from the composer.\n\nA large studio glass partition clearly separates Homayoun from both men.\n\nThe composer’s face remains only partially readable throughout the sequence. His identity is communicated through his position behind the console, silhouette, hands and professional actions.\n\nThe father remains clearly recognizable.\n\nSPATIAL LOCK:\n\nWhenever the camera can see the studio glass and the control room from inside the booth, Homayoun must be facing that glass. In such shots, his back, back-three-quarter, or side-back orientation is seen by camera.\n\nWhenever the camera sees Homayoun from the front, the background behind him must be the booth’s interior wall and acoustic treatment, not the studio glass.\n\nSHOT 01A | 00:00–00:05 | THE SESSION IS OPENED\n\nBegin inside the control room with a 50mm layered medium-detail shot at seated console height.\n\nBuild the frame through multiple depths.\n\nOut-of-focus faders, cables and illuminated meters occupy the near foreground.\n\nThe composer sits behind them in the middle distance, partially obscured by equipment and a soft reflection from the studio glass.\n\nHis face remains at a three-quarter or partial angle, never presented as a clean frontal portrait.\n\nThe camera makes a slow lateral drift of approximately half a meter across the console.\n\nAs the camera passes him, attention naturally transfers from his partially visible figure toward his hand.\n\nHis hand raises one fader with deliberate precision, adjusts a single rotary control, then activates the recording function.\n\nLet his professional action establish that the room is ready.\n\nSHOT 01B | 00:05–00:09 | HE PREPARES\n\nCut inside the vocal booth to a 40mm frontal medium shot at Homayoun’s eye level.\n\nBecause this is a frontal view of Homayoun, the background behind him is the booth wall with its acoustic treatment, never the control-room glass.\n\nHomayoun lifts the studio headphones and settles them firmly over both ears.\n\nThis is the only moment the headphones are handled as an object.\n\nFrom the end of this action onward, they remain on his head continuously for all remaining shots.\n\nHe steadies the lyric sheet, straightens his posture and draws one contained breath.\n\nUse a quiet handheld drift closer, approximately twenty centimeters.\n\nSHOT 01C | 00:09–00:15 | TWO FORMS OF TRUST\n\nCut to an over-the-shoulder shot from behind Homayoun inside the booth with a 65mm lens.\n\nBecause the glass is visible, Homayoun must be facing it, with his back-three-quarter silhouette in the foreground.\n\nUse the studio glass as a layered compositional surface.\n\nThe composer sits deeper SCREEN-LEFT behind the mixing console.\n\nForeground equipment, reflections and shallow focus partially obscure his face while keeping his body position and role completely understandable.\n\nHe gives Homayoun one small professional cue to begin: a restrained nod accompanied by a minimal hand gesture near the console.\n\nHomayoun’s eyeline then travels slightly across the glass.\n\nThe composition gently reframes to reveal his father standing separately deeper SCREEN-RIGHT, with clear empty space between the father and composer.\n\nThe father meets Homayoun’s gaze and gives one small, calm nod.\n\nThe gesture carries personal reassurance.\n\nEnd with Homayoun still facing the glass, receiving both cues.\n\nLIGHT AND IMAGE:\n\nWarm practical studio lighting mixed with soft ambient illumination from the control room.\n\nUse reflections on the studio glass as a natural visual layer.\n\nAllow foreground equipment to drift softly out of focus.\n\nNatural skin texture, restrained early-2000s image character, moderate shallow depth of field and subtle organic camera movement.\n\nSOUND:\n\nQuiet studio room tone.\nSoft electrical hum.\nFader movement.\nSmall console clicks.\nHeadphone contact during SHOT 01B only.\nControlled breathing.\n\nMUSIC: none.\nDIALOGUE: none.\n\n<<<image_1>>> is Homayoun Shajarian (CHR-001 V01); match it wherever Homayoun Shajarian appears.\n<<<image_2>>> is Mohammad-Reza Shajarian (CHR-002 V01); match it wherever Mohammad-Reza Shajarian appears.\n<<<image_3>>> is Musician (CHR-003 V01); match it wherever Musician appears.\n<<<image_4>>> is Studio Control Room (LOC-001 V02); match it wherever Studio Control Room appears.\n<<<image_5>>> is Studio Vocal Booth (LOC-002 V03); match it wherever Studio Vocal Booth appears.\n<<<image_6>>> is Mixing Console (PRP-001 V01); match it wherever Mixing Console appears.\n<<<image_7>>> is Audio Level Meter (PRP-002 V01); match it wherever Audio Level Meter appears.\n<<<image_8>>> is Recording Indicator Light (PRP-003 V01); match it wherever Recording Indicator Light appears.\n<<<image_9>>> is Studio Headphones (PRP-004 V01); match it wherever Studio Headphones appears.\n<<<image_10>>> is Sheet Music (PRP-006 V01); match it wherever Sheet Music appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260929_090954_efa97a68-ed05-4288-b4b2-7efa28703328.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20260929_090954_efa97a68-ed05-4288-b4b2-7efa28703328_thumbnail.webp"
+    }
+  ]
+}

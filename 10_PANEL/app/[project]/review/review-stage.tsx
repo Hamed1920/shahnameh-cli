@@ -12,6 +12,7 @@ import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Disclosure } from '@/components/ui/disclosure'
 import { Field, Input } from '@/components/ui/field'
+import { Segmented } from '@/components/ui/segmented'
 import { EASE, SPRING_SNAPPY } from '@/components/ui/motion-tokens'
 import { Badge } from '@/components/ui/text'
 import { isVideo } from '@/lib/asset'
@@ -106,6 +107,11 @@ export function ReviewStage({
   const [notes, setNotes] = useState('')
   const [tags, setTags] = useState('')
   const [requeue, setRequeue] = useState(true)
+  // Deny + regenerate: a note on the old prompt, or the prompt replaced whole.
+  const [promptMode, setPromptMode] = useState<'note' | 'replace'>('note')
+  const [draftPrompt, setDraftPrompt] = useState(s.basePrompt ?? s.prompt ?? '')
+  // null: no choice to make (not a denial that regenerates); otherwise whether the prompt is replaced.
+  const replacing = verdict === 'denied' && requeue ? promptMode === 'replace' : null
   // Sound is on by default for whatever this decision queues, whatever this take had.
   const [sound, setSound] = useState(true)
   const [error, setError] = useState<string | null>(candidate.failedDecision?.reason ?? null)
@@ -138,7 +144,11 @@ export function ReviewStage({
 
   const submit = useCallback(async () => {
     if (!verdict || checking || !form.current) return
-    if (verdict === 'denied' && !notes.trim()) {
+    if (replacing && !draftPrompt.trim()) {
+      setError('Write the new prompt, or switch back to a note.')
+      return
+    }
+    if (verdict === 'denied' && !notes.trim() && !replacing) {
       setError('A denial needs a note saying what is wrong — that note is what drives the fix.')
       return
     }
@@ -170,7 +180,7 @@ export function ReviewStage({
         return res
       },
     })
-  }, [verdict, checking, notes, edits, regenerates, onQueue, candidate.path, title])
+  }, [verdict, checking, notes, replacing, draftPrompt, edits, regenerates, onQueue, candidate.path, title])
 
   // Shortcuts belong to the visible stage only.
   useEffect(() => {
@@ -367,7 +377,39 @@ export function ReviewStage({
                 >
                   <div className="space-y-5 pt-6">
                     {verdict !== 'discarded' && (<>
-                    <Field label={verdict === 'denied' ? 'What is wrong? This becomes the fix.' : 'Why did this one work? (optional)'}>
+                    {replacing !== null && (
+                      <div className="space-y-3">
+                        {/* Deny + regenerate: add a note to the old prompt, or write the prompt again. */}
+                        <input type="hidden" name="promptMode" value={promptMode} />
+                        <Segmented
+                          aria-label="How the regeneration is told what to fix"
+                          value={promptMode}
+                          onChange={setPromptMode}
+                          options={[['note', 'Add a note'], ['replace', 'Replace the prompt']] as const}
+                          className="w-full [&>button]:flex-1"
+                        />
+                        {replacing && (
+                          <Field label="The new prompt. The regeneration uses this alone; earlier notes are dropped.">
+                            <MentionTextarea
+                              name="prompt"
+                              rows={12}
+                              dir="auto"
+                              value={draftPrompt}
+                              onChange={setDraftPrompt}
+                              options={mentionOptions}
+                              sameRef={sameRef}
+                              className="scroll-pane max-h-[45vh] overflow-y-auto text-start font-mono text-[12px] leading-relaxed"
+                              placeholder="The whole prompt for the next attempt. Type @ to point at a reference."
+                            />
+                          </Field>
+                        )}
+                      </div>
+                    )}
+                    <Field label={
+                      verdict !== 'denied' ? 'Why did this one work? (optional)'
+                        : replacing ? 'What was wrong? (optional, kept for Learnings)'
+                          : 'What is wrong? This becomes the fix.'
+                    }>
                       <MentionTextarea
                         name="notes"
                         rows={5}
@@ -391,7 +433,7 @@ export function ReviewStage({
                     </>)}
 
                     {verdict === 'denied' && (
-                      <Checkbox name="requeue" checked={requeue} onChange={(e) => setRequeue(e.target.checked)} label="Regenerate with this note applied" />
+                      <Checkbox name="requeue" checked={requeue} onChange={(e) => setRequeue(e.target.checked)} label={replacing ? 'Regenerate with the new prompt' : 'Regenerate with this note applied'} />
                     )}
 
                     {isVideoJob && regenerates && (
@@ -454,7 +496,7 @@ export function ReviewStage({
             {(verdict || notes || tags || edits.changed || edits.uploads.length > 0) && (
               <button
                 type="button"
-                onClick={() => { setVerdict(null); setNotes(''); setTags(''); setRequeue(true); setSound(true); setError(null); edits.reset() }}
+                onClick={() => { setVerdict(null); setNotes(''); setTags(''); setRequeue(true); setSound(true); setPromptMode('note'); setDraftPrompt(s.basePrompt ?? s.prompt ?? ''); setError(null); edits.reset() }}
                 className="focus-ring mx-auto mt-4 flex cursor-pointer items-center gap-1.5 rounded text-xs text-faint transition-colors duration-150 hover:text-fg"
               >
                 <RotateCcw aria-hidden className="size-3" /> Start over

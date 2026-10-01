@@ -1,9 +1,13 @@
 id,short_id,kind,number,slug,name,family,status,canonical_variant,variant_count,folder,related,flags,description
 SHA-CHR-001-HOMAYOUN-SHAJARIAN,CHR-001,CHR,001,HOMAYOUN-SHAJARIAN,Homayoun Shajarian,HOMAYOUN,CONCEPT,V01,1,01_CHARACTERS,,,"The singer at the centre of the film. Dark wavy hair, heavy brows, close beard."
-SHA-LOC-001-STUDIO-CONTROL-ROOM,LOC-001,LOC,001,STUDIO-CONTROL-ROOM,Studio Control Room,STUDIO,CONCEPT,V01,1,03_LOCATIONS,,,"Control room of the recording studio, console facing the glass onto the live room. Warm lamps, period fittings."
-SHA-LOC-002-STUDIO-VOCAL-BOOTH,LOC-002,LOC,002,STUDIO-VOCAL-BOOTH,Studio Vocal Booth,STUDIO,CONCEPT,V01,1,03_LOCATIONS,,,"The vocal booth behind the glass, acoustic cloth walls, mic and music desk."
+SHA-LOC-001-STUDIO-CONTROL-ROOM,LOC-001,LOC,001,STUDIO-CONTROL-ROOM,Studio Control Room,STUDIO,CONCEPT,V02,2,03_LOCATIONS,,,"Control room of the recording studio, console facing the glass onto the live room. Warm lamps, period fittings."
+SHA-LOC-002-STUDIO-VOCAL-BOOTH,LOC-002,LOC,002,STUDIO-VOCAL-BOOTH,Studio Vocal Booth,STUDIO,CONCEPT,V01,3,03_LOCATIONS,,,"The vocal booth behind the glass, acoustic cloth walls, mic and music desk."
 SHA-PRP-001-MIXING-CONSOLE,PRP-001,PRP,001,MIXING-CONSOLE,Mixing Console,MIXING,CONCEPT,V01,1,04_PROPS,,,"The studio mixing desk, long row of faders and channel strips under lit meters."
 SHA-PRP-002-AUDIO-LEVEL-METER,PRP-002,PRP,002,AUDIO-LEVEL-METER,Audio Level Meter,AUDIO,CONCEPT,V01,1,04_PROPS,,,"Single analogue VU meter in the outboard rack, red scale and needle."
 SHA-PRP-003-RECORDING-INDICATOR-LIGHT,PRP-003,PRP,003,RECORDING-INDICATOR-LIGHT,Recording Indicator Light,RECORDING,CONCEPT,V01,1,04_PROPS,,,The red REC dome that lights when tape is rolling.
 SHA-PRP-004-STUDIO-HEADPHONES,PRP-004,PRP,004,STUDIO-HEADPHONES,Studio Headphones,STUDIO,CONCEPT,V01,1,04_PROPS,,,"Closed-back headphones with coiled cable, hanging on the mic stand."
 SHA-PRP-005-PRINTED-LYRIC-PAGE,PRP-005,PRP,005,PRINTED-LYRIC-PAGE,Printed Lyric Page,PRINTED,CONCEPT,V01,1,04_PROPS,,,A printed Persian lyric page held open at the music desk.
+SHA-CHR-002-MOHAMMAD-REZA-SHAJARIAN,CHR-002,CHR,002,MOHAMMAD-REZA-SHAJARIAN,Mohammad-Reza Shajarian,MOHAMMAD,CONCEPT,V01,1,01_CHARACTERS,,,"Father of Homayoun Shajarian. Older man, grey swept-back hair, thin wire glasses, charcoal suit, light blue shirt, red patterned tie."
+SHA-PRP-006-SHEET-MUSIC,PRP-006,PRP,006,SHEET-MUSIC,Sheet Music,SHEET,CONCEPT,V01,1,04_PROPS,,,"Printed piano score with Persian lyrics under the staff, titled Mitravad Mahtab, on cream paper."
+SHA-CHR-003-MUSICIAN,CHR-003,CHR,003,MUSICIAN,Musician,MUSICIAN,CONCEPT,V01,1,01_CHARACTERS,,,"Middle-aged man, long dark hair, full greying beard, denim shirt and jeans."
+SHA-VOX-001-HOMAYOUN-SHAJARIAN-VOICE,VOX-001,VOX,001,HOMAYOUN-SHAJARIAN-VOICE,Homayoun Shajarian Voice,HOMAYOUN,CONCEPT,V01,1,10_VOICES,,,Homayoun Shajarian singing two couplets (beyt). Reference for his singing voice.

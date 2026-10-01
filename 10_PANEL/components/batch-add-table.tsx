@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useRef, useState } from 'react'
-import { Check, CornerDownRight, Library, Trash2, Ungroup } from 'lucide-react'
+import { AudioLines, Check, CornerDownRight, Library, Trash2, Ungroup } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input, Select } from '@/components/ui/field'
 import { Segmented } from '@/components/ui/segmented'
@@ -223,8 +223,13 @@ function Row({
 
       <Td>
         <button type="button" onClick={onView} aria-label={`View ${u.file.name}`} className="focus-ring block cursor-zoom-in">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={u.preview} alt="" className="checker size-12 rounded-md border border-edge object-cover" />
+          {/\.(mp3|wav|m4a)$/i.test(u.file.name) ? (
+            // A recording for a voice: no picture to preview.
+            <span className="grid size-12 place-items-center rounded-md border border-edge bg-sunken text-muted"><AudioLines aria-hidden className="size-5" /></span>
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={u.preview} alt="" className="checker size-12 rounded-md border border-edge object-cover" />
+          )}
         </button>
       </Td>
 

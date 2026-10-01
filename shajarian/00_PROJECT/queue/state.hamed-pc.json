@@ -1,13 +1,54 @@
 {
-  "processedJobs": [],
-  "processedDecisions": [],
-  "spentCredits": 0,
-  "processedOps": [
-    "op_mufsx7myji68"
+  "processedJobs": [
+    "J-20260929-TRL",
+    "J-20260929-YP7",
+    "J-20260929-5XM",
+    "J-20260929-PPA",
+    "J-20260929-9VD",
+    "J-20260929-PN0",
+    "J-20260929-408"
   ],
-  "processedRequests": [],
+  "processedDecisions": [
+    "rev_mumgiv06mjfe",
+    "rev_mumgiwz6k0ba",
+    "rev_mumgrw6gq78a"
+  ],
+  "spentCredits": 285,
+  "processedOps": [
+    "op_mufsx7myji68",
+    "op_mumdm85l4tza",
+    "op_mumdmqmvcwkm",
+    "op_mumehaf4i0po",
+    "op_mumehiclv8ej",
+    "op_mumf9vvemyiu"
+  ],
+  "processedRequests": [
+    "jr_mumdyp31ydhw",
+    "jr_mume021sdmjj",
+    "jr_mume065uvg95",
+    "jr_mume0853h5i6",
+    "jr_mume1az2z7aa",
+    "jr_mume24e3ca4g",
+    "jr_mume2pf2drf5",
+    "jr_mume3qae5msy",
+    "jr_mumgbqxb460n",
+    "jr_mumgcfer8c8a",
+    "jr_mumgef4eewi6",
+    "jr_mumgezy4oh57",
+    "jr_mumgfdbtgfqx"
+  ],
   "failedDecisions": {},
   "held": {},
   "learnWatermark": "",
-  "updatedAt": "2026-09-28T07:46:41.013Z"
+  "updatedAt": "2026-09-29T09:24:52.585Z",
+  "failedJobs": {
+    "J-20260929-TRL": {
+      "reason": "Error: Higgsfield API error (HTTP 503). request failed with status 503 Service Unavailable",
+      "at": "2026-09-29T08:04:08.947Z"
+    },
+    "J-20260929-PPA": {
+      "reason": "Error: job 1ccfc7d1-d522-4958-81b8-593bf1b289c3 ended with status \"failed\"",
+      "at": "2026-09-29T09:07:25.908Z"
+    }
+  }
 }

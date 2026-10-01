@@ -36,9 +36,9 @@ $KINDS       = $ShmKinds
 $STATUSES    = $ShmStatuses
 $ROLES       = @('HERO','TURNAROUND','PLATE','DETAIL','BOARD','RENDER')
 $FLAGS       = @('NEEDS-HERO-SHEET','NEEDS-CANONICAL','REVIEW-SPLIT','NO-ASSET')
-$MEDIA_EXT   = @('.png','.jpg','.jpeg','.webp','.mp4','.mov')
+$MEDIA_EXT   = @('.png','.jpg','.jpeg','.webp','.mp4','.mov','.mp3','.wav','.m4a')
 $ASSET_DIRS  = @('01_CHARACTERS','02_GROUPS','03_LOCATIONS','04_PROPS','05_CREATURES',
-                 '06_COSTUMES','07_EPISODES','08_REFERENCE','09_OUTPUT')
+                 '06_COSTUMES','07_EPISODES','08_REFERENCE','09_OUTPUT','10_VOICES')
 
 # What the repo root may hold besides the projects themselves. Dot-entries are always
 # allowed (.git, .claude, and the panel's .generate.lock and .new-<slug>-<random>
@@ -82,7 +82,7 @@ function Invoke-ProjectValidation {
 
     $kindAlt   = ($KINDS -join '|')
     $RX_ID     = '^' + $codeRx + '-(' + $kindAlt + ')-\d{3}-[A-Z0-9]+(-[A-Z0-9]+)*$'
-    $RX_FILE   = '^' + $codeRx + '-(' + $kindAlt + ')-\d{3}-[A-Z0-9]+(-[A-Z0-9]+)*_V\d{2}(_T\d{2})?_[a-z0-9]+(-[a-z0-9]+)*\.(png|jpg|jpeg|webp|mp4|mov)$'
+    $RX_FILE   = '^' + $codeRx + '-(' + $kindAlt + ')-\d{3}-[A-Z0-9]+(-[A-Z0-9]+)*_V\d{2}(_T\d{2})?_[a-z0-9]+(-[a-z0-9]+)*\.(png|jpg|jpeg|webp|mp4|mov|mp3|wav|m4a)$'
     # Accepted shot renders live in 07_EPISODES/<episode>/shots/ and are NOT manifest
     # rows by design (INDEXING.md section 7: the manifest indexes reusable entities;
     # a shot's provenance is JOB_LEDGER.csv and the review log). Check their name

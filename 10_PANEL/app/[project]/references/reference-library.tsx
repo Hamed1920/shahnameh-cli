@@ -23,14 +23,16 @@ import { Badge, StickyHeader } from '@/components/ui/text'
 import { useToast } from '@/components/toast'
 import { cn } from '@/lib/cn'
 import {
-  KINDS, MAX_ADD_TOTAL_BYTES, MAX_ADD_UPLOADS, MAX_UPLOAD_BYTES, UPLOAD_ACCEPT, entitySlug, type Kind,
+  AUDIO_ACCEPT, KINDS, MAX_ADD_TOTAL_BYTES, MAX_ADD_UPLOADS, MAX_UPLOAD_BYTES, UPLOAD_ACCEPT, entitySlug, type Kind,
 } from '@/lib/indexing'
+import { LookMedia } from '@/components/look-media'
+import { isAudio } from '@/lib/asset'
 import type { CatalogEntity, LibraryData, LibraryEntity, LookUse } from '@/lib/types'
 
 const ROLES = ['HERO', 'TURNAROUND', 'PLATE', 'DETAIL', 'BOARD', 'RENDER']
 const PLURAL: Record<string, string> = {
   CHR: 'Characters', GRP: 'Groups', LOC: 'Locations', PRP: 'Props', CRT: 'Creatures',
-  COS: 'Costumes', VEH: 'Vehicles', FX: 'Effects', REF: 'Reference boards',
+  COS: 'Costumes', VEH: 'Vehicles', FX: 'Effects', REF: 'Reference boards', VOX: 'Voices',
 }
 const STATUSES = ['CONCEPT', 'APPROVED', 'LOCKED'] as const
 const lookKey = (entityId: string, variant: string) => `${entityId}|${variant}`
@@ -245,7 +247,7 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
     if (!r.ok) toast('bad', r.error ?? 'Could not open the folder.')
   }
   const viewItemsOf = (e: LibraryEntity): LightboxItem[] =>
-    e.looks.map((l) => ({ src: assetUrl(l.path), title: `${e.shortId}/${l.variant}`, subtitle: `${e.name} · ${l.role}` }))
+    e.looks.map((l) => ({ src: assetUrl(l.path), title: `${e.shortId}/${l.variant}`, subtitle: `${e.name} · ${l.role}`, audio: isAudio(l.path) }))
   const confirmRetire = (e: LibraryEntity) => setConfirm({
     title: `Retire ${e.shortId}?`,
     body: 'It disappears from pickers and can’t be used in new jobs. Its number and files are kept, and you can restore it from “Retired”.',
@@ -390,8 +392,7 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
                       ])}
                       className={cn('relative overflow-hidden rounded-lg border bg-sunken', on ? 'border-fg/70' : 'border-edge')}
                     >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={thumbUrl(a.file, 480)} alt="" className="checker aspect-4/3 w-full object-cover opacity-80" />
+                      <LookMedia path={a.file} className="opacity-80" />
                       <SelectBox checked={on} onChange={() => toggle(setSelA, a.archiveId)} label={`Select archived ${a.shortId} ${a.variant}`} className="absolute top-2 left-2" />
                       <div className="border-t border-edge px-3 py-2.5 text-[11px]">
                         <div className="font-mono text-fg">{a.shortId} / {a.variant}{a.take !== 'T01' ? ` / ${a.take}` : ''}</div>
@@ -605,8 +606,9 @@ function EntityCard({
   onEntityMenu: (ev: React.MouseEvent) => void
   onLookMenu: (ev: React.MouseEvent, variant: string) => void
 }) {
-  const { thumbUrl } = useAssetUrls()
   const retired = e.status === 'RETIRED'
+  // A voice's looks are recordings: full-width rows with a player, not picture tiles.
+  const voice = e.kind === 'VOX'
   return (
     <div
       onContextMenu={onEntityMenu}
@@ -643,13 +645,12 @@ function EntityCard({
 
       {e.description && <p className="mt-4 line-clamp-2 text-[13px] leading-relaxed text-muted">{e.description}</p>}
 
-      <div className="mt-5 grid grid-cols-3 gap-2 sm:grid-cols-4">
+      <div className={cn('mt-5 grid gap-2', voice ? 'grid-cols-1' : 'grid-cols-3 sm:grid-cols-4')}>
         {e.looks.map((l) => {
           const on = selectedLooks.has(lookKey(e.id, l.variant))
           return (
             <div key={l.variant} onContextMenu={(ev) => onLookMenu(ev, l.variant)} className={cn('group relative overflow-hidden rounded-md border bg-sunken', on ? 'border-fg ring-1 ring-fg/50' : 'border-edge')}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={thumbUrl(l.path, 480)} alt="" loading="lazy" className="checker aspect-4/3 w-full object-cover" />
+              <LookMedia path={l.path} alt={`${e.shortId}/${l.variant}`} row={voice} />
               <SelectBox checked={on} onChange={() => onSelectLook(l.variant)} label={`Select ${e.shortId}/${l.variant}`}
                 className={cn('absolute top-1.5 left-1.5 size-4', !on && 'opacity-0 group-hover:opacity-100 focus-visible:opacity-100')} />
               {l.variant === e.canonical && (
@@ -664,7 +665,7 @@ function EntityCard({
           )
         })}
         {!retired && (
-          <button type="button" onClick={(ev) => { ev.stopPropagation(); onAdd() }} className="focus-ring grid aspect-4/3 cursor-pointer place-items-center rounded-md border border-dashed border-edge-strong text-faint transition-colors duration-150 hover:border-muted hover:text-fg" aria-label={`Add a look to ${e.shortId}`}>
+          <button type="button" onClick={(ev) => { ev.stopPropagation(); onAdd() }} className={cn('focus-ring grid cursor-pointer place-items-center rounded-md border border-dashed border-edge-strong text-faint transition-colors duration-150 hover:border-muted hover:text-fg', voice ? 'h-10' : 'aspect-4/3')} aria-label={`Add a look to ${e.shortId}`}>
             {e.looks.length === 0 ? <span className="flex flex-col items-center gap-1.5 text-[10.5px]"><ImageOff aria-hidden className="size-4" />add image</span> : <Plus aria-hidden className="size-4" />}
           </button>
         )}
@@ -775,13 +776,14 @@ function AddDialog({ entity, catalog, onClose, send, busy }: {
 
   const take = (files: FileList | null) => {
     const all = [...(files ?? [])]
-    const images = all.filter((f) => /^image\/(png|jpeg|webp)$/.test(f.type))
+    // Pictures, or recordings for a voice (VOX). Some browsers give an .m4a no type, so the name decides too.
+    const images = all.filter((f) => /^image\/(png|jpeg|webp)$/.test(f.type) || /^audio\//.test(f.type) || /\.(mp3|wav|m4a)$/i.test(f.name))
     const ok = images.filter((f) => f.size <= MAX_UPLOAD_BYTES)
     const over = target
       ? edits.addFiles(ok, { asRef: false, replaceKey: null, entity })
       : edits.addFilesInferred(ok, { code, catalog })
     const said = [
-      all.length > images.length && 'only PNG, JPG or WEBP images are accepted',
+      all.length > images.length && 'only PNG, JPG or WEBP images, or MP3, WAV or M4A recordings for a voice, are accepted',
       images.length > ok.length && `${images.length - ok.length} over ${MB(MAX_UPLOAD_BYTES)} were skipped`,
       over > 0 && `at most ${MAX_ADD_UPLOADS} images at a time`,
     ].filter(Boolean)
@@ -817,7 +819,7 @@ function AddDialog({ entity, catalog, onClose, send, busy }: {
         </>
       }
     >
-      <input ref={input} type="file" accept={UPLOAD_ACCEPT} multiple hidden onChange={(ev) => { take(ev.target.files); ev.target.value = '' }} />
+      <input ref={input} type="file" accept={`${UPLOAD_ACCEPT},${AUDIO_ACCEPT}`} multiple hidden onChange={(ev) => { take(ev.target.files); ev.target.value = '' }} />
 
       <div
         onDragOver={(ev) => { ev.preventDefault(); setDragging(true) }}
@@ -835,7 +837,7 @@ function AddDialog({ entity, catalog, onClose, send, busy }: {
             <p className="font-display text-2xl text-fg">Drop images here</p>
             <Button type="button" size="sm" tone="outline" onClick={() => input.current?.click()}>Choose images</Button>
             <p className="font-mono text-[11px] text-faint">
-              PNG, JPG or WEBP · up to {MAX_ADD_UPLOADS} at a time
+              PNG, JPG or WEBP · MP3, WAV or M4A for a voice · up to {MAX_ADD_UPLOADS} at a time
               {!target && ' · named from their filenames'}
             </p>
           </>
@@ -958,7 +960,7 @@ function EntityView({
 
   const toggle = (v: string) => setSel((s) => { const n = new Set(s); if (n.has(v)) n.delete(v); else n.add(v); return n })
   const all = looks.length > 0 && chosen.length === looks.length
-  const viewItems = looks.map((l) => ({ src: assetUrl(l.path), title: `${e.shortId}/${l.variant}`, subtitle: `${e.name} · ${l.role}` }))
+  const viewItems = looks.map((l) => ({ src: assetUrl(l.path), title: `${e.shortId}/${l.variant}`, subtitle: `${e.name} · ${l.role}`, audio: isAudio(l.path) }))
   const copy = async (tokens: string[]) => { await navigator.clipboard.writeText(tokens.join(' ')); onToast('good', `Copied ${tokens.join(' ')}`, 3000) }
   // Looks that leave drop out of the selection by themselves (the effect above).
   const archive = (ls: typeof looks) => onArchive(asOps(ls))
@@ -1076,9 +1078,13 @@ function EntityView({
                     onClick={() => toggle(l.variant)}
                     className="focus-ring block w-full cursor-pointer"
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={thumbUrl(l.path, 720)} alt={`${e.name} ${l.variant}`} className="checker aspect-4/3 w-full object-contain" />
+                    {/* A recording's player sits outside the button: one interactive element inside another is invalid. */}
+                    <LookMedia path={l.path} alt={`${e.name} ${l.variant}`} width={720} fit="contain" controls={false} />
                   </button>
+                  {isAudio(l.path) && (
+                    // eslint-disable-next-line jsx-a11y/media-has-caption
+                    <audio src={assetUrl(l.path)} controls preload="metadata" aria-label={`${e.name} ${l.variant}`} className="block h-9 w-full border-t border-edge" />
+                  )}
 
                   <span className={cn(
                     'pointer-events-none absolute top-3 left-3 grid size-5 place-items-center rounded-[4px] border transition-colors duration-150',

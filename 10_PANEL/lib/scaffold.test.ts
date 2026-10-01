@@ -55,7 +55,7 @@ test('state.json is the full empty shape, and carries no BOM', async () => {
 test('every folder a project needs is there, and the queue files are empty', async () => {
   for (const folder of [
     '00_PROJECT', '01_CHARACTERS', '02_GROUPS', '03_LOCATIONS', '04_PROPS', '05_CREATURES',
-    '06_COSTUMES', '07_EPISODES', '08_REFERENCE', '09_OUTPUT', '99_INBOX',
+    '06_COSTUMES', '07_EPISODES', '08_REFERENCE', '09_OUTPUT', '10_VOICES', '99_INBOX',
   ]) {
     assert.ok((await fs.stat(path.join(dir, 'silk-road', folder))).isDirectory(), `${folder} is missing`)
   }

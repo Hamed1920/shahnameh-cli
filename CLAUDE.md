@@ -241,7 +241,7 @@ project.json    schema, name, slug, code, description, mark, created
 00_PROJECT/     log, open questions, registries, review, queue, sync
 01_CHARACTERS/  CHR      02_GROUPS/    GRP      03_LOCATIONS/  LOC
 04_PROPS/       PRP VEH  05_CREATURES/ CRT      06_COSTUMES/   COS
-07_EPISODES/    EP SQ SC SH             08_REFERENCE/ REF FX
+07_EPISODES/    EP SQ SC SH             08_REFERENCE/ REF FX     10_VOICES/ VOX (recordings)
 09_OUTPUT/      renders; _staging, _drafts, _rejected, _discarded, _uploads and _archive are working space
 99_INBOX/       unindexed drop zone
 ```

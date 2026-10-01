@@ -4,7 +4,7 @@ import {
   CODE, P, ROOT, appendJsonl, archivedVariants, findEntity, isShotId, loadEntities, log, readCsv, rel,
   shotFolder, writeCsv,
 } from './project.mjs'
-import { FOLDER_FOR, entityId as fullEntityId } from './ids.mjs'
+import { AUDIO_EXT, AUDIO_KINDS, FOLDER_FOR, entityId as fullEntityId } from './ids.mjs'
 import { transaction } from './tx.mjs'
 import { PULL_FIRST, remoteChangedIndex } from './git-guard.mjs'
 
@@ -141,7 +141,16 @@ export function syncEntityRow(row, assets, variant) {
 
 export { FOLDER_FOR }
 const UPLOAD_ROLES = ['HERO', 'TURNAROUND', 'PLATE', 'DETAIL', 'BOARD']
-const UPLOAD_EXT = ['.png', '.jpg', '.jpeg', '.webp']
+const IMAGE_EXT = ['.png', '.jpg', '.jpeg', '.webp']
+const UPLOAD_EXT = [...IMAGE_EXT, ...AUDIO_EXT]
+
+/** A voice takes recordings, every other kind takes pictures; never the other way round. */
+function checkMediaFits(upload, kind) {
+  const ext = path.extname(String(upload.file || '')).toLowerCase()
+  const audioKind = AUDIO_KINDS.includes(kind)
+  if (audioKind && !AUDIO_EXT.includes(ext)) throw new FilingError(`${upload.id}: a ${kind} is a recording (MP3, WAV or M4A), not ${ext}`)
+  if (!audioKind && AUDIO_EXT.includes(ext)) throw new FilingError(`${upload.id}: a recording can only be filed under a voice (VOX), not ${kind}`)
+}
 const ASCII = /^[\x20-\x7E]*$/
 
 export const entitySlug = (s) =>
@@ -206,6 +215,7 @@ export async function checkUploads(uploads, alreadyFiled = new Set(), { allowGro
       if (!lead) throw new FilingError(`${u.id}: ${u.groupOf} is not an earlier upload in this request`)
       if (lead.mode !== 'new') throw new FilingError(`${u.id}: ${u.groupOf} is not a new entity`)
       if (lead.groupOf) throw new FilingError(`${u.id}: ${u.groupOf} is itself grouped; groups are one level deep`)
+      checkMediaFits(u, lead.kind)
       plan.push(`${u.id} -> another look of the new entity from ${u.groupOf}`)
       continue
     }
@@ -215,9 +225,11 @@ export async function checkUploads(uploads, alreadyFiled = new Set(), { allowGro
       // Never create a missing target to make an upload succeed.
       if (!ent) throw new FilingError(`${u.id}: unknown entity '${u.entity}'`)
       if (ent.status === 'RETIRED') throw new FilingError(`${u.id}: ${ent.id} is RETIRED`)
+      checkMediaFits(u, ent.kind)
       plan.push(`${u.id} -> new look of ${ent.id}`)
     } else if (u.mode === 'new') {
       if (!FOLDER_FOR[u.kind]) throw new FilingError(`${u.id}: unknown kind '${u.kind}'`)
+      checkMediaFits(u, u.kind)
       if (!ASCII.test(u.name || '') || !ASCII.test(u.description || '')) {
         throw new FilingError(`${u.id}: entity name and description must be English`)
       }

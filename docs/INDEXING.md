@@ -66,6 +66,12 @@ Read every `SHM-` below as `<CODE>-` for the project you are working in.
 | `VEH` | Vehicle / conveyance | `04_PROPS/` |
 | `FX` | Effect, atmosphere, recurring visual motif | `08_REFERENCE/` |
 | `REF` | Reference / mood / contact board — not a story object | `08_REFERENCE/` |
+| `VOX` | Voice — a recording (MP3, WAV or M4A) of how someone sings or speaks | `10_VOICES/` |
+
+A `VOX` look is a recording, never a picture, and no other kind takes a recording. A voice is
+never sent to a model as an image reference: the worker drops an audio file from a job's
+references, and `@VOX-…` is not an @-mention. Its slug must differ from its character's
+(slugs are unique across the project), e.g. `SHA-VOX-001-HOMAYOUN-SHAJARIAN-VOICE`.
 
 ### Short IDs
 
@@ -191,7 +197,7 @@ Regex used by the validator, with `SHM` standing for the project's own code (the
 it from `project.json`):
 
 ```
-^SHM-(CHR|GRP|LOC|PRP|CRT|COS|VEH|FX|REF)-\d{3}-[A-Z0-9]+(-[A-Z0-9]+)*_V\d{2}(_T\d{2})?_[a-z0-9]+(-[a-z0-9]+)*\.(png|jpg|jpeg|webp|mp4|mov)$
+^SHM-(CHR|GRP|LOC|PRP|CRT|COS|VEH|FX|REF|VOX)-\d{3}-[A-Z0-9]+(-[A-Z0-9]+)*_V\d{2}(_T\d{2})?_[a-z0-9]+(-[a-z0-9]+)*\.(png|jpg|jpeg|webp|mp4|mov|mp3|wav|m4a)$
 ```
 
 ---

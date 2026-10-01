@@ -75,6 +75,7 @@ const KIND_HINTS: Record<Kind, string[]> = {
   VEH: ['vehicle', 'chariot', 'cart', 'wagon', 'boat', 'ship', 'carriage'],
   FX: ['fx', 'effect', 'smoke', 'fire', 'dust', 'ash', 'mist', 'fog', 'glow', 'atmosphere', 'sparks'],
   REF: ['board', 'moodboard', 'mood', 'collage', 'palette', 'refs', 'reference'],
+  VOX: ['voice', 'vocal', 'vocals', 'singing', 'sing', 'song', 'avaz', 'beyt', 'recording', 'audio'],
 }
 
 const ROLE_HINTS: [UploadRole, string[]][] = [
@@ -110,7 +111,7 @@ const VIEW_WORDS = new Set([
 
 // ---------------------------------------------------------------- reading a name
 
-const EXT_RX = /\.(png|jpe?g|webp)$/i
+const EXT_RX = /\.(png|jpe?g|webp|mp3|wav|m4a)$/i
 
 /**
  * A filename that already carries an ID: a file being re-imported, or one the

@@ -45,6 +45,10 @@ export interface StagingSidecar {
   variant: string
   model: string
   prompt: string
+  /** The prompt as written, before the worker added rules and revision notes. Absent on old takes. */
+  basePrompt?: string
+  /** The notes this attempt was regenerated with, oldest first. */
+  revisionNotes?: string[]
   params: Record<string, string>
   refs: string[]
   createdAt: string
@@ -96,6 +100,12 @@ export interface ReviewDecision {
   /** The references the candidate was generated with, kept for the diff. */
   refsBefore?: string[]
   uploads?: ReviewUpload[]
+  /**
+   * A whole new prompt for the regeneration (Deny, "Replace prompt"), instead of
+   * a note added to the old one. The regeneration uses it alone: earlier
+   * revision notes were written against the old prompt and are not carried over.
+   */
+  prompt?: string
 }
 
 export interface ReviewUpload {

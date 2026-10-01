@@ -1,6 +1,6 @@
 import path from 'node:path'
 import {
-  FOOTAGE_EXT, KINDS, MAX_FOOTAGE, MAX_FOOTAGE_BYTES, MAX_UPLOAD_BYTES, MAX_UPLOADS, UPLOAD_EXT, UPLOAD_ROLES,
+  AUDIO_EXT, AUDIO_KINDS, FOOTAGE_EXT, KINDS, MAX_FOOTAGE, MAX_FOOTAGE_BYTES, MAX_UPLOAD_BYTES, MAX_UPLOADS, UPLOAD_EXT, UPLOAD_ROLES,
   entitySlug, isAscii,
 } from '@/lib/indexing'
 import { toRelative } from '@/lib/paths'
@@ -42,6 +42,16 @@ export function sniffImage(buf: Buffer): '.png' | '.jpg' | '.webp' | null {
   ) {
     return '.webp'
   }
+  return null
+}
+
+/** The extension says recording (a voice); the first bytes have to agree. */
+export function sniffAudio(buf: Buffer): '.mp3' | '.wav' | '.m4a' | null {
+  if (buf.length >= 3 && buf.toString('ascii', 0, 3) === 'ID3') return '.mp3'
+  // A bare MPEG audio frame: 11 sync bits. (A JPEG's FF D8 does not match.)
+  if (buf.length >= 2 && buf[0] === 0xff && (buf[1] & 0xe0) === 0xe0) return '.mp3'
+  if (buf.length >= 12 && buf.toString('ascii', 0, 4) === 'RIFF' && buf.toString('ascii', 8, 12) === 'WAVE') return '.wav'
+  if (buf.length >= 8 && buf.toString('ascii', 4, 8) === 'ftyp') return '.m4a'
   return null
 }
 
@@ -100,12 +110,13 @@ export async function readUploads(
       )
     }
     const ext = path.extname(file.name).toLowerCase()
-    if (!(UPLOAD_EXT as readonly string[]).includes(ext)) {
-      throw new Invalid(`${label}: only PNG, JPG or WEBP images.`)
+    const audio = (AUDIO_EXT as readonly string[]).includes(ext)
+    if (!(UPLOAD_EXT as readonly string[]).includes(ext) && !audio) {
+      throw new Invalid(`${label}: only PNG, JPG or WEBP images, or an MP3, WAV or M4A recording for a voice.`)
     }
     const bytes = Buffer.from(await file.arrayBuffer())
-    const sniffed = sniffImage(bytes)
-    if (!sniffed) throw new Invalid(`${label}: that file is not a PNG, JPG or WEBP image.`)
+    const sniffed = audio ? sniffAudio(bytes) : sniffImage(bytes)
+    if (!sniffed) throw new Invalid(`${label}: that file is not ${audio ? 'an MP3, WAV or M4A recording' : 'a PNG, JPG or WEBP image'}.`)
 
     const role = String(u.role ?? '')
     if (!(UPLOAD_ROLES as readonly string[]).includes(role)) {
@@ -181,6 +192,13 @@ export async function readUploads(
     } else {
       throw new Invalid(`${label}: choose "new look" or "new entity".`)
     }
+    // A voice holds recordings and nothing else holds them (worker/lib/promote.mjs checks again).
+    const kindOf = meta.kind
+      ?? (meta.entity ? entities.find((e) => e.id === meta.entity)?.kind : undefined)
+      ?? (meta.groupOf ? out.find((o) => o.meta.id === meta.groupOf)?.meta.kind : undefined)
+    const audioKind = (AUDIO_KINDS as readonly string[]).includes(String(kindOf))
+    if (audio && !audioKind) throw new Invalid(`${label}: a recording can only be filed as a voice (VOX).`)
+    if (!audio && audioKind) throw new Invalid(`${label}: a voice takes a recording (MP3, WAV or M4A), not a picture.`)
     out.push({ meta, bytes })
   }
   return out

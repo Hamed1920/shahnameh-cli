@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'motion/react'
-import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { AudioLines, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { EASE } from '@/components/ui/motion-tokens'
 
 export interface LightboxItem {
@@ -12,6 +12,8 @@ export interface LightboxItem {
   title: string
   subtitle?: string
   video?: boolean
+  /** A voice's recording: a player, no picture. */
+  audio?: boolean
 }
 
 /**
@@ -78,7 +80,13 @@ export function Lightbox({
               onClick={(e) => e.stopPropagation()}
               className="w-full max-w-6xl overflow-hidden rounded-2xl border border-edge bg-panel"
             >
-              {current.video ? (
+              {current.audio ? (
+                <div className="grid place-items-center gap-6 px-8 py-16">
+                  <AudioLines aria-hidden strokeWidth={1.25} className="size-16 text-muted" />
+                  {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                  <audio src={current.src} controls autoPlay className="w-full max-w-xl" />
+                </div>
+              ) : current.video ? (
                 <video src={current.src} className="checker max-h-[72vh] w-full object-contain" controls autoPlay loop playsInline />
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element

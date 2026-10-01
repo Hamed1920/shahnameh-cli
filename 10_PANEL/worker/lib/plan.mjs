@@ -4,6 +4,7 @@ import { loadCatalog } from './models.mjs'
 import { mapParams, maxRefs, modelEntry, modelProblem } from './model-schema.mjs'
 import { MENTION_RX, buildPrompt } from './prompt.mjs'
 import { NEXT_SCENE_RX } from './scenes.mjs'
+import { isAudioFile } from './ids.mjs'
 
 /**
  * What a queued job needs before it can be priced or generated: its target,
@@ -53,6 +54,11 @@ export async function planJob(job, entities, assets, { cfg, dry = false, priceOn
   for (const token of job.refs ?? []) {
     const r = await resolveRef(token, entities, assets)
     if (!r.ok) return { skip: `unresolved ref ${token}: ${r.reason}` }
+    // A voice is a recording: sending it as an image reference would fail or mislead the model.
+    if (isAudioFile(r.path)) {
+      if (!priceOnly) await log(`SKIP REF ${job.jobId}: ${token} is a recording, not a picture; not sent`)
+      continue
+    }
     refPaths.push(r.path)
     refInfo.push({ path: r.path, entity: r.entity, variant: r.variant, label: r.label ?? null })
   }
@@ -79,7 +85,7 @@ export async function planJob(job, entities, assets, { cfg, dry = false, priceOn
       for (const m of String(text ?? '').matchAll(MENTION_RX)) {
         if (extra.length >= room) break
         const r = await resolveRef(m[1], entities, assets)
-        if (!r.ok || refPaths.includes(r.path) || extra.some((x) => x.path === r.path)) continue
+        if (!r.ok || isAudioFile(r.path) || refPaths.includes(r.path) || extra.some((x) => x.path === r.path)) continue
         extra.push({ path: r.path, entity: r.entity, variant: r.variant, label: r.label ?? null })
       }
     }

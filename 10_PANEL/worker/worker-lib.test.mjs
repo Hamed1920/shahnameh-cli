@@ -281,3 +281,17 @@ test('a take Higgsfield made for a failed job is adopted only for a failure, a r
   const queue = fs.readFileSync(P.queue, 'utf8').trim().split('\n').map((l) => JSON.parse(l))
   assert.ok(!queue.some((q) => q.adoptHfJobId), 'nothing adopted')
 })
+
+test('a voice (VOX) takes a recording and nothing else takes one', async () => {
+  const { P } = lib.project
+  const { checkUploads, FilingError } = lib.promote
+  const dir = path.join(P.uploads, 'op_vox')
+  fs.mkdirSync(dir, { recursive: true })
+  fs.writeFileSync(path.join(dir, 'u1.mp3'), 'ID3')
+  fs.writeFileSync(path.join(dir, 'u2.png'), 'png')
+  const up = (id, ext, extra) => ({ id, file: `09_OUTPUT/_uploads/op_vox/${id}.${ext}`, role: 'HERO', descriptor: 'two beyt', ...extra })
+  const plan = await checkUploads([up('u1', 'mp3', { mode: 'new', kind: 'VOX', name: 'Singer Voice', description: 'A voice' })])
+  assert.match(plan[0], /new VOX 'SINGER-VOICE'/)
+  await assert.rejects(() => checkUploads([up('u2', 'png', { mode: 'new', kind: 'VOX', name: 'Other Voice', description: 'x' })]), FilingError)
+  await assert.rejects(() => checkUploads([up('u1', 'mp3', { mode: 'new', kind: 'CHR', name: 'Singer', description: 'x' })]), /only be filed under a voice/)
+})

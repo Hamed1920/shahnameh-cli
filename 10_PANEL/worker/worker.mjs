@@ -787,9 +787,13 @@ async function enqueueRevision(decision, sidecar, entities, refs, uploadTokens =
   const priorNotes = (sidecar.revisionNotes ?? [])
   // The reviewer may write in Farsi; an English version, when given, is what the model reads.
   // An "@upload:u1" mention becomes the token that upload was filed as.
-  const note = String(decision.notesEn || decision.notes || '')
-    .replace(/@upload:(u\d{1,3})(?![\w/-])/g, (m, id) => uploadTokens[id] ?? m)
-  const revisionNotes = [...priorNotes, note].filter(Boolean)
+  const filed = (text) => String(text ?? '').replace(/@upload:(u\d{1,3})(?![\w/-])/g, (m, id) => uploadTokens[id] ?? m)
+  const note = filed(decision.notesEn || decision.notes || '')
+  // "Replace prompt" on Review: the reviewer's prompt is the whole prompt. The notes
+  // so far were written against the old one, so none of them is carried over.
+  const replaced = typeof decision.prompt === 'string' && decision.prompt.trim() ? filed(decision.prompt.trim()) : null
+  const revisionNotes = replaced ? [] : [...priorNotes, note].filter(Boolean)
+  const basePrompt = replaced ?? sidecar.basePrompt ?? sidecar.prompt
 
   const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, '')
   const jobId = `J-${stamp}-${Math.random().toString(36).slice(2, 5).toUpperCase()}`
@@ -804,8 +808,8 @@ async function enqueueRevision(decision, sidecar, entities, refs, uploadTokens =
     target: await currentShotId(sidecar.target),
     variant: sidecar.variant,
     model: sidecar.model,
-    prompt: sidecar.basePrompt ?? sidecar.prompt,
-    basePrompt: sidecar.basePrompt ?? sidecar.prompt,
+    prompt: basePrompt,
+    basePrompt,
     params,
     refs: refs ?? sidecar.refs ?? [],
     revisionNotes,
@@ -813,7 +817,7 @@ async function enqueueRevision(decision, sidecar, entities, refs, uploadTokens =
     enqueuedAt: new Date().toISOString(),
     enqueuedBy: 'worker:revision',
   })
-  await log(`REQUEUED ${sidecar.jobId} -> ${jobId} (attempt ${attempt})${'generate_audio' in params ? ` sound=${params.generate_audio}` : ''} reason: ${note}`)
+  await log(`REQUEUED ${sidecar.jobId} -> ${jobId} (attempt ${attempt})${'generate_audio' in params ? ` sound=${params.generate_audio}` : ''}${replaced ? ' with a new prompt' : ''} reason: ${note || '(none)'}`)
 }
 
 // ---------------------------------------------------------------- main

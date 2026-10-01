@@ -1,1 +1,8 @@
-job_id,content_hash,author,type,target,resolved_target,variant,engine,state,ingested,source_file,parent_job_id,hf_job_id,attempt,cost
+job_id,content_hash,author,type,target,resolved_target,variant,engine,state,ingested,source_file,parent_job_id,hf_job_id,attempt,cost,machine
+J-20260929-TRL,,panel:batch,generate.video,SHA-EP001-SC001-SH0010,SHA-EP001-SC001-SH0010,V01,higgsfield,FAILED,2026-09-29T08:04:08.896Z,queue,,,1,7.5,hamed-pc
+J-20260929-YP7,,worker:landed,generate.video,SHA-EP001-SC001-SH0010,SHA-EP001-SC001-SH0010,V01,higgsfield,GENERATED,2026-09-29T08:06:41.082Z,queue,J-20260929-TRL,62bdd565-b23f-463b-87f1-56f4d56b8a02,1,7.5,hamed-pc
+J-20260929-5XM,,panel:batch,generate.video,SHA-EP001-SC002-SH0010,SHA-EP001-SC002-SH0010,V01,higgsfield,GENERATED,2026-09-29T08:08:34.050Z,queue,,83685047-bd64-4f76-b6d2-15bafc205895,1,7.5,hamed-pc
+J-20260929-PPA,,panel:batch,generate.video,SHA-EP001-SC003-SH0010,SHA-EP001-SC003-SH0010,V01,higgsfield,FAILED,2026-09-29T09:07:25.472Z,queue,,1ccfc7d1-d522-4958-81b8-593bf1b289c3,1,45,hamed-pc
+J-20260929-9VD,,panel:retry,generate.video,SHA-EP001-SC003-SH0010,SHA-EP001-SC003-SH0010,V01,higgsfield,GENERATED,2026-09-29T09:17:40.574Z,queue,J-20260929-PPA,efa97a68-ed05-4288-b4b2-7efa28703328,1,45,hamed-pc
+J-20260929-PN0,,panel:batch,generate.video,SHA-EP001-SC004-SH0010,SHA-EP001-SC004-SH0010,V01,higgsfield,GENERATED,2026-09-29T09:20:09.501Z,queue,,52719265-7bcf-406d-af1a-babd26f2193a,1,45,hamed-pc
+J-20260929-408,,worker:final,generate.video,SHA-EP001-SC003-SH0010,SHA-EP001-SC003-SH0010,V01,higgsfield,GENERATED,2026-09-29T09:24:52.544Z,queue,J-20260929-9VD,6cf07b1e-ee02-4518-b682-b7d09d851116,1,180,hamed-pc
