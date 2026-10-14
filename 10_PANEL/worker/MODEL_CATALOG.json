@@ -1,7 +1,88 @@
 {
  "_comment": "Written by the worker from `higgsfield model list` / `model get` (worker/lib/models.mjs). Do not edit by hand; refresh from the Prompts page or restart a worker once it is a day old.",
- "fetchedAt": "2026-09-30T09:28:06.569Z",
+ "fetchedAt": "2026-10-14T10:14:21.686Z",
  "models": {
+  "3d_jutsu_angles": {
+   "job_type": "3d_jutsu_angles",
+   "display_name": "3D Jutsu Angles",
+   "type": "image",
+   "usable": true,
+   "params": [
+    {
+     "name": "aspect_ratio",
+     "type": "string",
+     "default": "1:1",
+     "required": false,
+     "enum": [
+      "1:1",
+      "4:3",
+      "3:4",
+      "16:9",
+      "9:16",
+      "3:2",
+      "2:3",
+      "21:9"
+     ]
+    },
+    {
+     "name": "height",
+     "type": "integer|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "is_inpaint",
+     "type": "boolean",
+     "default": false,
+     "required": false
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "remove_bg",
+     "type": "boolean",
+     "default": false,
+     "required": false
+    },
+    {
+     "name": "resolution",
+     "type": "string",
+     "default": "2k",
+     "required": false,
+     "enum": [
+      "1k",
+      "1.5k",
+      "2k"
+     ]
+    },
+    {
+     "name": "width",
+     "type": "integer|null",
+     "default": null,
+     "required": false
+    }
+   ],
+   "rules": [
+    "size(params.image_references) <= 10"
+   ],
+   "refs": {
+    "param": "image_references",
+    "max": 10,
+    "min": 0
+   },
+   "sound": null,
+   "stages": null
+  },
   "ad_multiplier": {
    "job_type": "ad_multiplier",
    "display_name": "Ad Multiplier",
@@ -144,6 +225,207 @@
      "1080p"
     ]
    }
+  },
+  "ad_multiplier_v2": {
+   "job_type": "ad_multiplier_v2",
+   "display_name": "Ad Multiplier Recreate",
+   "type": "video",
+   "usable": false,
+   "why": "edits a video",
+   "params": [
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "mode",
+     "type": "string",
+     "default": "recreate",
+     "required": false,
+     "enum": [
+      "recreate",
+      "sections"
+     ]
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": "",
+     "required": false
+    },
+    {
+     "name": "resolution",
+     "type": "string",
+     "default": "720p",
+     "required": false,
+     "enum": [
+      "480p",
+      "720p",
+      "1080p"
+     ]
+    },
+    {
+     "name": "section",
+     "type": "string|null",
+     "default": null,
+     "required": false,
+     "enum": [
+      "hook",
+      "cta",
+      "both"
+     ]
+    },
+    {
+     "name": "video_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    }
+   ],
+   "rules": [
+    "size(params.video_references) == 1",
+    "params.mode != \"sections\" || params.section != null",
+    "params.mode == \"sections\" || params.section == null"
+   ],
+   "refs": {
+    "param": "image_references",
+    "max": 12,
+    "min": 0
+   },
+   "sound": null,
+   "stages": {
+    "draft": "480p",
+    "final": "1080p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ]
+   }
+  },
+  "autosprite": {
+   "job_type": "autosprite",
+   "display_name": "AutoSprite Animation",
+   "type": "image",
+   "usable": true,
+   "params": [
+    {
+     "name": "folder_id",
+     "type": "string|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "frame_count",
+     "type": "integer",
+     "default": 25,
+     "required": false
+    },
+    {
+     "name": "frame_size",
+     "type": "integer",
+     "default": 256,
+     "required": false
+    },
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "is_humanoid",
+     "type": "boolean",
+     "default": true,
+     "required": false
+    },
+    {
+     "name": "kind",
+     "type": "string",
+     "default": "idle",
+     "required": false,
+     "enum": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "jump",
+      "custom",
+      "iso_idle_up",
+      "iso_idle_northeast",
+      "iso_idle_right",
+      "iso_idle_southeast",
+      "iso_idle_down",
+      "iso_walk_up",
+      "iso_walk_northeast",
+      "iso_walk_right",
+      "iso_walk_southeast",
+      "iso_walk_down",
+      "iso_run_up",
+      "iso_run_northeast",
+      "iso_run_right",
+      "iso_run_southeast",
+      "iso_run_down",
+      "iso_jump_up",
+      "iso_jump_northeast",
+      "iso_jump_right",
+      "iso_jump_southeast",
+      "iso_jump_down"
+     ]
+    },
+    {
+     "name": "name",
+     "type": "string|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "prompt",
+     "type": "string|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "remove_bg",
+     "type": "string",
+     "default": "default",
+     "required": false,
+     "enum": [
+      "default",
+      "ultra"
+     ]
+    },
+    {
+     "name": "video_tier",
+     "type": "string",
+     "default": "turbo",
+     "required": false,
+     "enum": [
+      "turbo",
+      "pro",
+      "max"
+     ]
+    },
+    {
+     "name": "with_sound",
+     "type": "boolean",
+     "default": false,
+     "required": false
+    }
+   ],
+   "rules": [
+    "params.kind != \"custom\" || (type(params.prompt) == string && size(params.prompt) > 0 && type(params.name) == string && size(params.name) > 0)",
+    "params.kind == \"custom\" || (params.prompt == null && params.name == null)"
+   ],
+   "refs": {
+    "param": "image_references",
+    "max": 12,
+    "min": 1
+   },
+   "sound": null,
+   "stages": null
   },
   "bytedance_image_upscale": {
    "job_type": "bytedance_image_upscale",
@@ -550,6 +832,82 @@
     "param": "image_references",
     "max": 1,
     "min": 1
+   },
+   "sound": null,
+   "stages": null
+  },
+  "flux_3_image": {
+   "job_type": "flux_3_image",
+   "display_name": "FLUX 3 Image",
+   "type": "image",
+   "usable": true,
+   "params": [
+    {
+     "name": "aspect_ratio",
+     "type": "string",
+     "default": "auto",
+     "required": false,
+     "enum": [
+      "auto",
+      "21:9",
+      "2:1",
+      "16:9",
+      "3:2",
+      "7:5",
+      "4:3",
+      "5:4",
+      "1:1",
+      "4:5",
+      "3:4",
+      "5:7",
+      "2:3",
+      "9:16",
+      "1:2"
+     ]
+    },
+    {
+     "name": "batch_size",
+     "type": "integer",
+     "default": 1,
+     "required": false
+    },
+    {
+     "name": "folder_id",
+     "type": "string|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "resolution",
+     "type": "string",
+     "default": "1k",
+     "required": false,
+     "enum": [
+      "768sq",
+      "1k",
+      "1.5k",
+      "2k",
+      "4k"
+     ]
+    }
+   ],
+   "rules": [],
+   "refs": {
+    "param": "image_references",
+    "max": 12,
+    "min": 0
    },
    "sound": null,
    "stages": null
@@ -1362,6 +1720,75 @@
     ]
    }
   },
+  "grok_video_v15_lite": {
+   "job_type": "grok_video_v15_lite",
+   "display_name": "Grok Imagine Video 1.5 Lite",
+   "type": "video",
+   "usable": true,
+   "params": [
+    {
+     "name": "aspect_ratio",
+     "type": "string",
+     "default": "16:9",
+     "required": false,
+     "enum": [
+      "auto",
+      "16:9",
+      "9:16",
+      "4:3",
+      "3:4",
+      "1:1",
+      "3:2",
+      "2:3"
+     ]
+    },
+    {
+     "name": "duration",
+     "type": "integer",
+     "default": 5,
+     "required": false
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "resolution",
+     "type": "string",
+     "default": "720p",
+     "required": false,
+     "enum": [
+      "480p",
+      "720p",
+      "1080p"
+     ]
+    },
+    {
+     "name": "start_image",
+     "type": "object|null",
+     "default": null,
+     "required": false
+    }
+   ],
+   "rules": [],
+   "refs": {
+    "param": "start_image",
+    "max": 1,
+    "min": 0
+   },
+   "sound": null,
+   "stages": {
+    "draft": "480p",
+    "final": "1080p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ]
+   }
+  },
   "happy_horse_video": {
    "job_type": "happy_horse_video",
    "display_name": "Happy Horse Video",
@@ -1540,6 +1967,121 @@
     ]
    }
   },
+  "ideogram_4_5": {
+   "job_type": "ideogram_4_5",
+   "display_name": "Ideogram 4.5",
+   "type": "image",
+   "usable": true,
+   "params": [
+    {
+     "name": "aspect_ratio",
+     "type": "string",
+     "default": "auto",
+     "required": false,
+     "enum": [
+      "auto",
+      "1:1",
+      "1:2",
+      "2:1",
+      "2:3",
+      "3:2",
+      "4:5",
+      "5:4",
+      "9:16",
+      "16:9",
+      "5:8",
+      "8:5",
+      "3:4",
+      "4:3",
+      "9:22",
+      "22:9",
+      "9:23",
+      "23:9",
+      "3:8",
+      "8:3",
+      "5:12",
+      "12:5",
+      "1:3",
+      "3:1"
+     ]
+    },
+    {
+     "name": "batch_size",
+     "type": "integer",
+     "default": 1,
+     "required": false
+    },
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "magic_prompt",
+     "type": "string",
+     "default": "auto",
+     "required": false,
+     "enum": [
+      "auto",
+      "on",
+      "off"
+     ]
+    },
+    {
+     "name": "mask",
+     "type": "object|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "quality",
+     "type": "string",
+     "default": "high",
+     "required": false,
+     "enum": [
+      "very_low",
+      "low",
+      "medium",
+      "high"
+     ]
+    },
+    {
+     "name": "resolution",
+     "type": "string",
+     "default": "2k",
+     "required": false,
+     "enum": [
+      "1k",
+      "2k"
+     ]
+    },
+    {
+     "name": "seed",
+     "type": "integer|null",
+     "default": null,
+     "required": false
+    }
+   ],
+   "rules": [
+    "params.quality != \"very_low\" || size(params.image_references) > 0",
+    "params.mask == null || (size(params.image_references) >= 1 && size(params.image_references) <= 4)",
+    "params.mask != null || params.resolution != \"1k\" || params.aspect_ratio in [\"auto\", \"1:1\", \"1:2\", \"2:1\", \"2:3\", \"3:2\", \"4:5\", \"5:4\", \"9:16\", \"16:9\", \"5:8\", \"8:5\", \"3:4\", \"4:3\"]"
+   ],
+   "refs": {
+    "param": "image_references",
+    "max": 12,
+    "min": 0
+   },
+   "sound": null,
+   "stages": null
+  },
   "image_auto": {
    "job_type": "image_auto",
    "display_name": "Image Auto",
@@ -1606,6 +2148,179 @@
     "min": 1
    },
    "sound": null,
+   "stages": null
+  },
+  "kling_o3_flf": {
+   "job_type": "kling_o3_flf",
+   "display_name": "Kling 3.0 Omni (Frames)",
+   "type": "video",
+   "usable": true,
+   "params": [
+    {
+     "name": "aspect_ratio",
+     "type": "string",
+     "default": "16:9",
+     "required": false,
+     "enum": [
+      "16:9",
+      "9:16",
+      "1:1"
+     ]
+    },
+    {
+     "name": "duration",
+     "type": "integer",
+     "default": 5,
+     "required": false
+    },
+    {
+     "name": "end_image",
+     "type": "object|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "mode",
+     "type": "string",
+     "default": "std",
+     "required": false,
+     "enum": [
+      "std",
+      "pro",
+      "4k"
+     ]
+    },
+    {
+     "name": "multi_prompt",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "multi_shots",
+     "type": "boolean",
+     "default": false,
+     "required": false
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "sound",
+     "type": "string",
+     "default": "on",
+     "required": false,
+     "enum": [
+      "on",
+      "off"
+     ]
+    },
+    {
+     "name": "start_image",
+     "type": "object|null",
+     "default": null,
+     "required": false
+    }
+   ],
+   "rules": [
+    "params.multi_shots == (size(params.multi_prompt) > 0)",
+    "type(params.end_image) != map || type(params.start_image) == map"
+   ],
+   "refs": {
+    "param": "start_image",
+    "max": 2,
+    "min": 0
+   },
+   "sound": {
+    "param": "sound",
+    "kind": "onoff"
+   },
+   "stages": null
+  },
+  "kling_o3_image_reference": {
+   "job_type": "kling_o3_image_reference",
+   "display_name": "Kling 3.0 Omni",
+   "type": "video",
+   "usable": true,
+   "params": [
+    {
+     "name": "aspect_ratio",
+     "type": "string",
+     "default": "16:9",
+     "required": false,
+     "enum": [
+      "16:9",
+      "9:16",
+      "1:1"
+     ]
+    },
+    {
+     "name": "duration",
+     "type": "integer",
+     "default": 5,
+     "required": false
+    },
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "mode",
+     "type": "string",
+     "default": "std",
+     "required": false,
+     "enum": [
+      "std",
+      "pro",
+      "4k"
+     ]
+    },
+    {
+     "name": "multi_prompt",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "multi_shots",
+     "type": "boolean",
+     "default": false,
+     "required": false
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "sound",
+     "type": "string",
+     "default": "on",
+     "required": false,
+     "enum": [
+      "on",
+      "off"
+     ]
+    }
+   ],
+   "rules": [
+    "params.multi_shots == (size(params.multi_prompt) > 0)"
+   ],
+   "refs": {
+    "param": "image_references",
+    "max": 12,
+    "min": 0
+   },
+   "sound": {
+    "param": "sound",
+    "kind": "onoff"
+   },
    "stages": null
   },
   "kling_omni_image": {
@@ -2236,6 +2951,118 @@
    "refs": {
     "param": "image_references",
     "max": 8,
+    "min": 0
+   },
+   "sound": null,
+   "stages": null
+  },
+  "nano_banana_2_1": {
+   "job_type": "nano_banana_2_1",
+   "display_name": "Nano Banana 2.1",
+   "type": "image",
+   "usable": true,
+   "params": [
+    {
+     "name": "aspect_ratio",
+     "type": "string",
+     "default": "auto",
+     "required": false,
+     "enum": [
+      "auto",
+      "1:1",
+      "3:2",
+      "2:3",
+      "4:3",
+      "3:4",
+      "4:5",
+      "5:4",
+      "9:16",
+      "16:9",
+      "21:9",
+      "4:1",
+      "1:4",
+      "8:1",
+      "1:8"
+     ]
+    },
+    {
+     "name": "enable_image_search",
+     "type": "boolean|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "enable_web_search",
+     "type": "boolean|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "is_inpaint",
+     "type": "boolean",
+     "default": false,
+     "required": false
+    },
+    {
+     "name": "mask",
+     "type": "object|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "resolution",
+     "type": "string",
+     "default": "1k",
+     "required": false,
+     "enum": [
+      "1k",
+      "2k",
+      "4k"
+     ]
+    },
+    {
+     "name": "seed",
+     "type": "integer|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "thinking_level",
+     "type": "string",
+     "default": "medium",
+     "required": false,
+     "enum": [
+      "minimal",
+      "medium",
+      "high"
+     ]
+    },
+    {
+     "name": "video_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    }
+   ],
+   "rules": [
+    "!params.is_inpaint || size(params.image_references) <= 13",
+    "!params.is_inpaint || size(params.video_references) == 0"
+   ],
+   "refs": {
+    "param": "image_references",
+    "max": 12,
     "min": 0
    },
    "sound": null,

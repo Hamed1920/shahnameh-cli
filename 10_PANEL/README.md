@@ -1,6 +1,8 @@
-# Shahnameh Review Panel
+# Film Making for Dummies — Panel and Worker
 
-Local web panel for reviewing Higgsfield generations, plus the worker that runs them.
+Local web panel for every film in the repo, plus the generation worker that runs each one's
+Higgsfield jobs. `http://localhost:3000` is the project picker; each project lives under
+`/<slug>/` (Review, Prompts, Studio, Gallery, Episodes, Decided, References, Learnings, Queue).
 
 Next.js 16.3 · React 19.2 · Tailwind 4 · localhost only.
 
@@ -10,11 +12,17 @@ Next.js 16.3 · React 19.2 · Tailwind 4 · localhost only.
 
 ```powershell
 cd 10_PANEL
-npm run up         # panel at http://localhost:3000, production build (rebuilt when the code changed); its server starts the worker and keeps it running
+npm run up         # panel at http://localhost:3000, production build (rebuilt when the code changed); its server starts one worker per project and keeps them running
 # or separately:
 npm run dev        # the dev server, for editing the panel's code (same as npm run up -- --dev)
-npm run worker     # generation worker by hand, only with SHM_WORKER=off (otherwise the panel runs it)
+npm run worker -- --project <slug>   # one project's worker by hand, only with SHM_WORKER=off (otherwise the panel runs it)
+npm test           # panel lib + worker tests
 ```
+
+Open it at `http://localhost:3000` (or `127.0.0.1`). Opened at the machine's network address,
+the page renders but never responds. The Higgsfield CLI needs a workspace chosen once per
+machine (`higgsfield workspace list`, then `higgsfield workspace set <id>`); until then the
+worker holds jobs and says so on the Queue and Prompts pages.
 
 > If PowerShell blocks `npm` with "running scripts is disabled", either use `npm.cmd run dev`
 > or set the standard developer policy once:
@@ -51,7 +59,7 @@ the panel all touch the same files.
 | Process | Writes |
 |---|---|
 | **Worker** | asset files, `ASSET_MANIFEST.csv`, `ENTITIES.csv`, `JOB_LEDGER.csv`, `QUEUE.jsonl` |
-| **Worker** (also) | files reviewer uploads, `FILINGS.jsonl`, `state.json` `failedDecisions`, `INDEX_OPS_RESULTS.jsonl`, `JOB_REQUEST_RESULTS.jsonl` |
+| **Worker** (also) | files reviewer uploads, `FILINGS.jsonl`, `queue/state.<machine>.json`, `INDEX_OPS_RESULTS.jsonl`, `JOB_REQUEST_RESULTS.jsonl` |
 | **Panel** | `REVIEW_LOG.jsonl`, `LEARNINGS.jsonl`, `INDEX_OPS.jsonl`, `JOB_REQUESTS.jsonl` — **append-only**; raw uploads into `09_OUTPUT/_uploads/<decision-id>/`; `queue/worker.stop` to ask the worker to stop |
 | **PowerShell tools** | registries, when the worker is not running |
 
@@ -94,8 +102,8 @@ events to `00_PROJECT/queue/JOB_REQUEST_RESULTS.jsonl`: `validated`, one `price`
 it showed; a total that changed since is refused and shown again. On approve the worker reserves
 a number for each `NEW/KIND/SLUG` (same rule as every other allocator), appends the jobs to
 `QUEUE.jsonl` as `panel:batch`, and records the receipt (`queued`, with the assigned ids).
-Discard is allowed until then and burns nothing. `state.json` keeps the cursor in
-`processedRequests`.
+Discard is allowed until then and burns nothing. `queue/state.<machine>.json` keeps the cursor
+in `processedRequests`.
 
 **Regenerate** on an accepted take (Decided page) is the same channel, type `regenerate`. It opens
 a dialog prefilled from the accepted job's `QUEUE.jsonl` record where the prompt, references (same
@@ -133,14 +141,24 @@ Sound checkbox for the revision or final a decision queues, and the Prompts page
 batch. Older jobs and sidecars carry the string `"false"` from the first EP001 batch file; the
 worker normalises it to a boolean, so those stay silent only if a reviewer leaves Sound off.
 
-## Worker from the panel
+## Workers
 
-The Queue and Prompts pages show whether the worker is running (from `queue/worker.lock`) and can
-start it (spawned detached, console in `queue/worker.stdout.log`), stop it after its current job
-(the panel writes `queue/worker.stop`; the worker exits between jobs and releases its lock), or
-restart it when it is running code from before an update. Force stop kills the process: the
-Higgsfield job keeps running server-side and its credits are spent, so it sits behind a confirm.
-`npm run up` starts the panel and the worker together in one terminal.
+The panel's server starts one worker per project and keeps them running
+(`lib/worker-supervisor.ts`), restarting a worker when its code changes. Every page shows the
+worker's state; its log is `00_PROJECT/queue/worker.log`. **Stop all workers** on the Queue page
+lets each finish the job in hand and stops new ones; wait for "All workers stopped" before
+committing. Set `SHM_WORKER=off` in `.env.local` on a machine that must never price or generate.
+
+Every machine runs its own workers, and each record (request, decision, index op, queued job)
+carries the `machine` that wrote it, so only that machine's worker acts on it
+(`worker/lib/machine.mjs`). Worker state is one file per machine, `queue/state.<machine>.json`,
+tracked in git: without it a worker would replay past decisions and spend again. Before writing a
+project's registries a worker checks git for unpulled changes to that index and holds with
+"pull first" (`worker/lib/git-guard.mjs`).
+
+Generations run in parallel, up to `maxConcurrentGenerations` across every project on the
+machine. Each running generation holds a slot in `.generate-slots/` at the repo root;
+`.generate.lock` is held only while a worker checks the spend ceiling and takes a slot.
 
 ## References page
 
@@ -230,33 +248,36 @@ npm run worker:dry    # plan and price only - generates nothing, spends nothing
 | Key | Meaning |
 |---|---|
 | `perJobCostCeilingCredits` | a single job above this is held, not run |
-| `costCeilingCredits` | ceiling on spend over the last `costWindowHours`, across every project's ledger; a job over it is held |
+| `costCeilingCredits` | ceiling on spend over the last `costWindowHours`, summed from every project's `JOB_LEDGER.csv` rows this machine spent; a job over it is held |
+| `maxConcurrentGenerations` | generations running at once, machine-wide (8, the Ultra plan's limit) |
+| `defaultImageModel` / `defaultVideoModel` | `nano_banana_pro` / `seedance_2_5`; `pinnedModels` only orders the pickers |
 | `maxJobsPerRun` | cap per pass |
 | `maxAttempts` | after this many failed revisions the loop stops and asks for a human rethink |
 
 Every job is priced with `higgsfield generate cost` **before** `generate create`. A job whose
 references cannot be resolved is skipped before any spend.
 
+Models come from `worker/MODEL_CATALOG.json`, which the worker fetches from `higgsfield model
+list` / `model get` once a day (`worker/lib/models.mjs`). Never edit it by hand: image vs video,
+the reference limit and how references are sent all come from it (`worker/lib/model-schema.mjs`).
+
 ## Configuration
 
 | Env | Default |
 |---|---|
-| `SHM_ROOT` | the parent of `10_PANEL` |
+| `SHM_PROJECTS` | the repo root — the folder the projects sit in |
+| `SHM_ROOT` | one project's folder; the supervisor sets it for each worker it starts |
+| `SHM_WORKER` | on; `off` stops the panel starting workers |
+| `SHM_MACHINE` | the host name — stamped on every record |
 | `SHM_REVIEWER` | `hamed` — recorded on every decision |
-
-## Known gaps
-
-- **Auth is not done.** `higgsfield auth login` needs an interactive browser sign-in, then
-  `higgsfield workspace set <id>`. Until then the worker holds queued jobs and logs why.
-- **The generate response schema is unverified.** `extractResultUrls` / `extractJobId` in
-  `worker/lib/hf.mjs` are deliberately tolerant because no live response has been seen yet. If a
-  generation produces no downloadable URL, the worker writes `raw-response.json` into the
-  staging folder instead of guessing — tighten those two functions against it.
-- Video review renders as an `<img>`; it needs a `<video>` branch once the first video lands.
+| `SHM_HIGGSFIELD_JS` | the real CLI; point it at `scripts/stub-higgsfield.js` to spend nothing |
+| `SHM_MODEL_CATALOG` | `worker/MODEL_CATALOG.json` (beside the sandbox when the stub is in use) |
+| `SHM_GIT_GUARD` | on; `off` skips the "pull first" check |
 
 ## Sandbox testing (spends nothing)
 
-The worker can be pointed at a copy of the project with `SHM_ROOT`, and at a stand-in CLI with
+The worker can be pointed at a copy of a project with `SHM_ROOT` (or of the whole repo with
+`SHM_PROJECTS`), and at a stand-in CLI with
 `SHM_HIGGSFIELD_JS`. `scripts/stub-higgsfield.js` answers `auth token`, `model get`,
 `generate cost` (12 credits for an image, 37.5 / 135 for a 480p / 1080p video) and
 `generate create` (a completed job whose `result_url` is served by `scripts/sandbox-serve.mjs`),
