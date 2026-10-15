@@ -1,0 +1,149 @@
+{
+  "jobId": "J-20261015-TET",
+  "parentJobId": "J-20261015-F73",
+  "hfJobId": "ca2b24dd-80ef-4e85-85b3-ac4177c650ef",
+  "attempt": 2,
+  "stage": "draft",
+  "label": "PLAN 07",
+  "target": "SHM-EP015-SC007-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 07 | THE BROTHER LEAVES FIRST\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_ARMAYIL_COOK}} <<<image_3>>> \r\n{{CHAR_GARMAYIL_COOK}} <<<image_4>>> \r\n{{CHAR_OLDER_BROTHER}} <<<image_1>>> \r\n{{CHAR_YOUNGER_BROTHER}} <<<image_2>>> \r\n{{CHAR_YOUNGER_ESCAPE}} <<<image_7>>> \r\n\r\nLOCATION REFERENCES\r\n{{LOC_PREP_ROOM}} <<<image_6>>> \r\n{{LOC_ESCAPE_PASSAGE}} <<<image_9>>> \r\n\r\nPROP REFERENCES\r\n{{PROP_ESCAPE_ROBE}} <<<image_7>>> \r\n{{PROP_WORK_STOOL}}\r\n{{PROP_PREP_KNIFE}} <<<image_8>>> \r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence with the precisely timed shots below. Preserve each referenced identity, body proportions, costume and rigid handmade mask. Masks stay fixed to the head with stable features and eye openings; emotion is performed through the body, eyes where visible, breath and hands. All characters are adults. Each listed cut changes the specified physical camera position, lens or viewpoint. Handheld movement responds to the actor and follows a possible path in the set; keep the key action readable and focus engaged. Use hard cuts at listed shot boundaries. References anchor design; the written lighting defines exposure and illumination. Preserve the tactile Iranian-inspired world and restrained natural exposure.\r\n\r\nLOCATION AND LIGHT\r\nEnclosed preparation room with a NORTH main door, EAST work counter and WEST narrow service exit. One hard neutral ceiling practical and weak warmer west-wall spill illuminate a continuous level floor. Old Iranian masonry, rounded openings and engineered lamps. Keep fixed exposure and light direction across all angles. A plain low wooden work stool stands near the central floor. Passage beyond the west exit has faint cold utility illumination.\r\n\r\nSTART STATE AND BLOCKING\r\nYounger center-right wears the one escape robe; Garmayil beside him draws its front closed. Older center-left faces him. Armayil stands at the open west service exit. Camera starts south of the group; a shot from inside the passage establishes the new travel axis before following Younger.\r\n\r\n\r\nSHOT 07A | 0s to 4s | 4 seconds\r\n35mm handheld close three-shot from south. Garmayil finishes the robe’s simple front fastening and turns Younger toward screen left/west. Older reaches from left, touches Younger’s masked forehead briefly with his own, then releases him and urgently motions him onward. Armayil reaches from the west opening to receive Younger; camera tracks left with the transfer.\r\n\r\nSHOT 07B | 4s to 7s | 3 seconds\r\n28mm close from just inside the west passage looking east into the room. Younger approaches lens; Garmayil is behind him at frame right and Older farther back at frame left. Younger reaches back once. Older stays inside and gives one emphatic forward gesture. Garmayil guides Younger past camera; his own feet remain at the room threshold.\r\n\r\nSHOT 07C | 7s to 11s | 4 seconds\r\n24mm handheld from within the passage, ahead of Younger and retreating toward the exterior. Younger is alone in foreground, chest heaving, one hand scraping the narrow wall. Behind him Garmayil closes the service door, cutting off the view of Older entirely. Younger staggers onward away from the room; retain the same robe and mask.\r\n\r\nSHOT 07D | 11s to 15s | 4 seconds\r\n40mm inside the preparation room from south-west. Older sits down on the low wooden work stool at center-left, feet on the level floor, hands pressing his knees. Armayil at center-right takes one hesitant step toward him, visibly trembling. Garmayil remains near the now-closed west door, turns his face away and braces one palm on the wall. Camera advances toward Older at seated eye height.\r\n\r\nEND STATE AND EDIT\r\nYounger is alone beyond the closed service door, physically separated from the room. Older sits center-left; Armayil approaches from right. Garmayil remains beside the west door. Younger will not witness the subsequent act.\r\n\r\nSOUND\r\nFast robe fastening, a broken farewell breath, departing steps, service door closing and muffled room tone. The sound remains confined to each shown space.\r\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_5>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.",
+  "basePrompt": "PLAN 07 | THE BROTHER LEAVES FIRST\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_ARMAYIL_COOK}} @CHR-007/V02 \r\n{{CHAR_GARMAYIL_COOK}} @CHR-008/V02 \r\n{{CHAR_OLDER_BROTHER}} @CHR-009/V01 \r\n{{CHAR_YOUNGER_BROTHER}} @CHR-010/V01 \r\n{{CHAR_YOUNGER_ESCAPE}} @PRP-021/V01 \r\n\r\nLOCATION REFERENCES\r\n{{LOC_PREP_ROOM}} @LOC-026/V01 \r\n{{LOC_ESCAPE_PASSAGE}} @LOC-030/V01 \r\n\r\nPROP REFERENCES\r\n{{PROP_ESCAPE_ROBE}} @PRP-021/V01 \r\n{{PROP_WORK_STOOL}}\r\n{{PROP_PREP_KNIFE}} @PRP-022/V01 \r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence with the precisely timed shots below. Preserve each referenced identity, body proportions, costume and rigid handmade mask. Masks stay fixed to the head with stable features and eye openings; emotion is performed through the body, eyes where visible, breath and hands. All characters are adults. Each listed cut changes the specified physical camera position, lens or viewpoint. Handheld movement responds to the actor and follows a possible path in the set; keep the key action readable and focus engaged. Use hard cuts at listed shot boundaries. References anchor design; the written lighting defines exposure and illumination. Preserve the tactile Iranian-inspired world and restrained natural exposure.\r\n\r\nLOCATION AND LIGHT\r\nEnclosed preparation room with a NORTH main door, EAST work counter and WEST narrow service exit. One hard neutral ceiling practical and weak warmer west-wall spill illuminate a continuous level floor. Old Iranian masonry, rounded openings and engineered lamps. Keep fixed exposure and light direction across all angles. A plain low wooden work stool stands near the central floor. Passage beyond the west exit has faint cold utility illumination.\r\n\r\nSTART STATE AND BLOCKING\r\nYounger center-right wears the one escape robe; Garmayil beside him draws its front closed. Older center-left faces him. Armayil stands at the open west service exit. Camera starts south of the group; a shot from inside the passage establishes the new travel axis before following Younger.\r\n\r\n\r\nSHOT 07A | 0s to 4s | 4 seconds\r\n35mm handheld close three-shot from south. Garmayil finishes the robe’s simple front fastening and turns Younger toward screen left/west. Older reaches from left, touches Younger’s masked forehead briefly with his own, then releases him and urgently motions him onward. Armayil reaches from the west opening to receive Younger; camera tracks left with the transfer.\r\n\r\nSHOT 07B | 4s to 7s | 3 seconds\r\n28mm close from just inside the west passage looking east into the room. Younger approaches lens; Garmayil is behind him at frame right and Older farther back at frame left. Younger reaches back once. Older stays inside and gives one emphatic forward gesture. Garmayil guides Younger past camera; his own feet remain at the room threshold.\r\n\r\nSHOT 07C | 7s to 11s | 4 seconds\r\n24mm handheld from within the passage, ahead of Younger and retreating toward the exterior. Younger is alone in foreground, chest heaving, one hand scraping the narrow wall. Behind him Garmayil closes the service door, cutting off the view of Older entirely. Younger staggers onward away from the room; retain the same robe and mask.\r\n\r\nSHOT 07D | 11s to 15s | 4 seconds\r\n40mm inside the preparation room from south-west. Older sits down on the low wooden work stool at center-left, feet on the level floor, hands pressing his knees. Armayil at center-right takes one hesitant step toward him, visibly trembling. Garmayil remains near the now-closed west door, turns his face away and braces one palm on the wall. Camera advances toward Older at seated eye height.\r\n\r\nEND STATE AND EDIT\r\nYounger is alone beyond the closed service door, physically separated from the room. Older sits center-left; Armayil approaches from right. Garmayil remains beside the west door. Younger will not witness the subsequent act.\r\n\r\nSOUND\r\nFast robe fastening, a broken farewell breath, departing steps, service door closing and muffled room tone. The sound remains confined to each shown space.\r\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-009/V01",
+    "@CHR-010/V01",
+    "@CHR-007/V02",
+    "@CHR-008/V02",
+    "@GRP-005/V01",
+    "@LOC-026/V01",
+    "@PRP-021/V01",
+    "@PRP-022/V01",
+    "@LOC-030/V01"
+  ],
+  "createdAt": "2026-10-15T19:53:28.783Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261015_194958_ca2b24dd-80ef-4e85-85b3-ac4177c650ef.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-15T19:49:58.086122Z",
+      "display_name": "Seedance 2.5",
+      "id": "ca2b24dd-80ef-4e85-85b3-ac4177c650ef",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "372573ff-b728-41a8-8537-b7f8ad125337",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/372573ff-b728-41a8-8537-b7f8ad125337.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "7e4b3b3c-a954-4b67-8b8c-f72282813760",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/7e4b3b3c-a954-4b67-8b8c-f72282813760.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a6b153ee-15ea-481e-bd9d-5fc70fad1e33",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/a6b153ee-15ea-481e-bd9d-5fc70fad1e33.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "fafdea05-bba6-424d-80d0-d0337bb71d8a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/fafdea05-bba6-424d-80d0-d0337bb71d8a.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "ec2bdf70-ed69-45d3-9bb3-6c7e74285b44",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/ec2bdf70-ed69-45d3-9bb3-6c7e74285b44.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "398e6948-ba5d-409c-a4ef-f2eb430272c0",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/398e6948-ba5d-409c-a4ef-f2eb430272c0.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "25b1dad6-1ef3-4647-bd4e-e9d36d8916c8",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/25b1dad6-1ef3-4647-bd4e-e9d36d8916c8.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "3492e073-6883-4089-8fcd-37bc6fe5339e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/3492e073-6883-4089-8fcd-37bc6fe5339e.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "8a3cbfe7-c5e9-44be-b09d-68aff1f90710",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/8a3cbfe7-c5e9-44be-b09d-68aff1f90710.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 07 | THE BROTHER LEAVES FIRST\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_ARMAYIL_COOK}} <<<image_3>>> \r\n{{CHAR_GARMAYIL_COOK}} <<<image_4>>> \r\n{{CHAR_OLDER_BROTHER}} <<<image_1>>> \r\n{{CHAR_YOUNGER_BROTHER}} <<<image_2>>> \r\n{{CHAR_YOUNGER_ESCAPE}} <<<image_7>>> \r\n\r\nLOCATION REFERENCES\r\n{{LOC_PREP_ROOM}} <<<image_6>>> \r\n{{LOC_ESCAPE_PASSAGE}} <<<image_9>>> \r\n\r\nPROP REFERENCES\r\n{{PROP_ESCAPE_ROBE}} <<<image_7>>> \r\n{{PROP_WORK_STOOL}}\r\n{{PROP_PREP_KNIFE}} <<<image_8>>> \r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence with the precisely timed shots below. Preserve each referenced identity, body proportions, costume and rigid handmade mask. Masks stay fixed to the head with stable features and eye openings; emotion is performed through the body, eyes where visible, breath and hands. All characters are adults. Each listed cut changes the specified physical camera position, lens or viewpoint. Handheld movement responds to the actor and follows a possible path in the set; keep the key action readable and focus engaged. Use hard cuts at listed shot boundaries. References anchor design; the written lighting defines exposure and illumination. Preserve the tactile Iranian-inspired world and restrained natural exposure.\r\n\r\nLOCATION AND LIGHT\r\nEnclosed preparation room with a NORTH main door, EAST work counter and WEST narrow service exit. One hard neutral ceiling practical and weak warmer west-wall spill illuminate a continuous level floor. Old Iranian masonry, rounded openings and engineered lamps. Keep fixed exposure and light direction across all angles. A plain low wooden work stool stands near the central floor. Passage beyond the west exit has faint cold utility illumination.\r\n\r\nSTART STATE AND BLOCKING\r\nYounger center-right wears the one escape robe; Garmayil beside him draws its front closed. Older center-left faces him. Armayil stands at the open west service exit. Camera starts south of the group; a shot from inside the passage establishes the new travel axis before following Younger.\r\n\r\n\r\nSHOT 07A | 0s to 4s | 4 seconds\r\n35mm handheld close three-shot from south. Garmayil finishes the robe’s simple front fastening and turns Younger toward screen left/west. Older reaches from left, touches Younger’s masked forehead briefly with his own, then releases him and urgently motions him onward. Armayil reaches from the west opening to receive Younger; camera tracks left with the transfer.\r\n\r\nSHOT 07B | 4s to 7s | 3 seconds\r\n28mm close from just inside the west passage looking east into the room. Younger approaches lens; Garmayil is behind him at frame right and Older farther back at frame left. Younger reaches back once. Older stays inside and gives one emphatic forward gesture. Garmayil guides Younger past camera; his own feet remain at the room threshold.\r\n\r\nSHOT 07C | 7s to 11s | 4 seconds\r\n24mm handheld from within the passage, ahead of Younger and retreating toward the exterior. Younger is alone in foreground, chest heaving, one hand scraping the narrow wall. Behind him Garmayil closes the service door, cutting off the view of Older entirely. Younger staggers onward away from the room; retain the same robe and mask.\r\n\r\nSHOT 07D | 11s to 15s | 4 seconds\r\n40mm inside the preparation room from south-west. Older sits down on the low wooden work stool at center-left, feet on the level floor, hands pressing his knees. Armayil at center-right takes one hesitant step toward him, visibly trembling. Garmayil remains near the now-closed west door, turns his face away and braces one palm on the wall. Camera advances toward Older at seated eye height.\r\n\r\nEND STATE AND EDIT\r\nYounger is alone beyond the closed service door, physically separated from the room. Older sits center-left; Armayil approaches from right. Garmayil remains beside the west door. Younger will not witness the subsequent act.\r\n\r\nSOUND\r\nFast robe fastening, a broken farewell breath, departing steps, service door closing and muffled room tone. The sound remains confined to each shown space.\r\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_5>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261015_194958_ca2b24dd-80ef-4e85-85b3-ac4177c650ef.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261015_194958_ca2b24dd-80ef-4e85-85b3-ac4177c650ef_thumbnail.webp"
+    }
+  ]
+}

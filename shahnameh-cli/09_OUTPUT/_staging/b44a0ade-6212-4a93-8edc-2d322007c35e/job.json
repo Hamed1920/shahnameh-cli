@@ -1,0 +1,149 @@
+{
+  "jobId": "J-20261015-B1Q",
+  "parentJobId": "J-20261015-9HS",
+  "hfJobId": "b44a0ade-6212-4a93-8edc-2d322007c35e",
+  "attempt": 2,
+  "stage": "draft",
+  "label": "PLAN 04",
+  "target": "SHM-EP015-SC004-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 04 | THROWN IN AND LIFTED\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_ARMAYIL_COOK}} <<<image_3>>> \r\n{{CHAR_GARMAYIL_COOK}} <<<image_4>>> \r\n{{CHAR_OLDER_BROTHER}} <<<image_1>>> \r\n{{CHAR_YOUNGER_BROTHER}} <<<image_2>>> \r\n{{CHAR_GUARD_A}} <<<image_6>>> \r\n{{CHAR_GUARD_B}} <<<image_6>>> \r\n\r\nLOCATION REFERENCES\r\n{{LOC_PREP_ROOM}} <<<image_7>>> \r\n\r\nPROP REFERENCES\r\n{{PROP_ESCAPE_ROBE}} <<<image_8>>> \r\n{{PROP_WORK_STOOL}} \r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence with the precisely timed shots below. Preserve each referenced identity, body proportions, costume and rigid handmade mask. Masks stay fixed to the head with stable features and eye openings; emotion is performed through the body, eyes where visible, breath and hands. All characters are adults. Each listed cut changes the specified physical camera position, lens or viewpoint. Handheld movement responds to the actor and follows a possible path in the set; keep the key action readable and focus engaged. Use hard cuts at listed shot boundaries. References anchor design; the written lighting defines exposure and illumination. Preserve the tactile Iranian-inspired world and restrained natural exposure.\r\n\r\nLOCATION AND LIGHT\r\nEnclosed preparation room with a NORTH main door, EAST work counter and WEST narrow service exit. One hard neutral ceiling practical and weak warmer west-wall spill illuminate a continuous level floor. Old Iranian masonry, rounded openings and engineered lamps. Keep fixed exposure and light direction across all angles. A plain low wooden work stool stands near the central floor.\r\n\r\nSTART STATE AND BLOCKING\r\nCamera inside the room, south of the north main door, facing north. Armayil waits at screen left/west; Garmayil at screen right/east. The two adult brothers are outside the main door with guards. The low stool is clear of their landing area. The guards remain on the corridor side of the threshold.\r\n\r\n\r\nSHOT 04A | 0s to 3s | 3 seconds\r\n24mm shoulder-height handheld from inside, three meters south of the main door. The door bursts inward. From the corridor, Guard A shoves Older through the left half of the doorway and Guard B shoves Younger through the right half. Older stumbles onto hands and knees; Younger falls onto one knee beside him. The guards’ boots stay outside. Camera recoils half a step and dips with the fall. The main door slams shut immediately behind the brothers.\r\n\r\nSHOT 04B | 3s to 6s | 3 seconds\r\n28mm floor-height close shot from southwest. Older occupies left foreground on hands and knees, Younger right background. Armayil drops into frame beside Older, offering one hand under his upper arm and the other supporting his shoulder. Camera moves in at Older’s height, then rises as Armayil helps him stand; the support is gentle and urgent.\r\n\r\nSHOT 04C | 6s to 9s | 3 seconds\r\n35mm close from southeast, a distinct position near Younger. Younger right foreground struggles to find his footing; Garmayil center-right crouches beside him, steadies his elbow and lifts him. Camera rises unevenly with Younger. Older and Armayil remain soft at left rear; the main door stays shut.\r\n\r\nSHOT 04D | 9s to 12s | 3 seconds\r\n40mm tight two-shot from south-center, moving around the near edge of Armayil’s shoulder. Both brothers now stand center, Older left and Younger right. Armayil opens his empty palm low toward them in reassurance; Garmayil checks the shut door over his shoulder, then turns back. Older catches Younger’s shoulders and pulls him into a relieved embrace.\r\n\r\nSHOT 04E | 12s to 15s | 3 seconds\r\n65mm close on Older over Younger’s near shoulder, camera southeast but within the south half-space. Older’s face tilts toward Armayil off-screen left; his rigid mask stays unchanged while a sudden relieved exhale, a rapid grateful nod and tightened embrace reveal that he believes both are saved. Camera drifts closer with that brief surge of hope. Younger remains held against him.\r\n\r\nEND STATE AND EDIT\r\nOlder left and Younger right are upright, embracing near center. Armayil stands west/left beside them; Garmayil is east/right within reach of the prepared escape robe. The north door is shut; both guards are outside.\r\n\r\nSOUND\r\nDoor opening, harsh boots outside, two body-and-clothing falls, immediate door slam, hurried helpers’ steps, frightened breath turning briefly into relief. Nonverbal sounds only.\r\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_5>>> is Head Chef (CHR-011 V02); match it wherever Head Chef appears.\n<<<image_9>>> is Cleaver Butcher Wide (PRP-022 V01); match it wherever Cleaver Butcher Wide appears.",
+  "basePrompt": "PLAN 04 | THROWN IN AND LIFTED\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_ARMAYIL_COOK}} @CHR-007/V02 \r\n{{CHAR_GARMAYIL_COOK}} @CHR-008/V02 \r\n{{CHAR_OLDER_BROTHER}} @CHR-009/V01 \r\n{{CHAR_YOUNGER_BROTHER}} @CHR-010/V01 \r\n{{CHAR_GUARD_A}} @GRP-005/V01 \r\n{{CHAR_GUARD_B}} @GRP-005/V01 \r\n\r\nLOCATION REFERENCES\r\n{{LOC_PREP_ROOM}} @LOC-026/V01 \r\n\r\nPROP REFERENCES\r\n{{PROP_ESCAPE_ROBE}} @PRP-021/V01 \r\n{{PROP_WORK_STOOL}} \r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence with the precisely timed shots below. Preserve each referenced identity, body proportions, costume and rigid handmade mask. Masks stay fixed to the head with stable features and eye openings; emotion is performed through the body, eyes where visible, breath and hands. All characters are adults. Each listed cut changes the specified physical camera position, lens or viewpoint. Handheld movement responds to the actor and follows a possible path in the set; keep the key action readable and focus engaged. Use hard cuts at listed shot boundaries. References anchor design; the written lighting defines exposure and illumination. Preserve the tactile Iranian-inspired world and restrained natural exposure.\r\n\r\nLOCATION AND LIGHT\r\nEnclosed preparation room with a NORTH main door, EAST work counter and WEST narrow service exit. One hard neutral ceiling practical and weak warmer west-wall spill illuminate a continuous level floor. Old Iranian masonry, rounded openings and engineered lamps. Keep fixed exposure and light direction across all angles. A plain low wooden work stool stands near the central floor.\r\n\r\nSTART STATE AND BLOCKING\r\nCamera inside the room, south of the north main door, facing north. Armayil waits at screen left/west; Garmayil at screen right/east. The two adult brothers are outside the main door with guards. The low stool is clear of their landing area. The guards remain on the corridor side of the threshold.\r\n\r\n\r\nSHOT 04A | 0s to 3s | 3 seconds\r\n24mm shoulder-height handheld from inside, three meters south of the main door. The door bursts inward. From the corridor, Guard A shoves Older through the left half of the doorway and Guard B shoves Younger through the right half. Older stumbles onto hands and knees; Younger falls onto one knee beside him. The guards’ boots stay outside. Camera recoils half a step and dips with the fall. The main door slams shut immediately behind the brothers.\r\n\r\nSHOT 04B | 3s to 6s | 3 seconds\r\n28mm floor-height close shot from southwest. Older occupies left foreground on hands and knees, Younger right background. Armayil drops into frame beside Older, offering one hand under his upper arm and the other supporting his shoulder. Camera moves in at Older’s height, then rises as Armayil helps him stand; the support is gentle and urgent.\r\n\r\nSHOT 04C | 6s to 9s | 3 seconds\r\n35mm close from southeast, a distinct position near Younger. Younger right foreground struggles to find his footing; Garmayil center-right crouches beside him, steadies his elbow and lifts him. Camera rises unevenly with Younger. Older and Armayil remain soft at left rear; the main door stays shut.\r\n\r\nSHOT 04D | 9s to 12s | 3 seconds\r\n40mm tight two-shot from south-center, moving around the near edge of Armayil’s shoulder. Both brothers now stand center, Older left and Younger right. Armayil opens his empty palm low toward them in reassurance; Garmayil checks the shut door over his shoulder, then turns back. Older catches Younger’s shoulders and pulls him into a relieved embrace.\r\n\r\nSHOT 04E | 12s to 15s | 3 seconds\r\n65mm close on Older over Younger’s near shoulder, camera southeast but within the south half-space. Older’s face tilts toward Armayil off-screen left; his rigid mask stays unchanged while a sudden relieved exhale, a rapid grateful nod and tightened embrace reveal that he believes both are saved. Camera drifts closer with that brief surge of hope. Younger remains held against him.\r\n\r\nEND STATE AND EDIT\r\nOlder left and Younger right are upright, embracing near center. Armayil stands west/left beside them; Garmayil is east/right within reach of the prepared escape robe. The north door is shut; both guards are outside.\r\n\r\nSOUND\r\nDoor opening, harsh boots outside, two body-and-clothing falls, immediate door slam, hurried helpers’ steps, frightened breath turning briefly into relief. Nonverbal sounds only.\r\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-009/V01",
+    "@CHR-010/V01",
+    "@CHR-007/V02",
+    "@CHR-008/V02",
+    "@CHR-011/V02",
+    "@GRP-005/V01",
+    "@LOC-026/V01",
+    "@PRP-021/V01",
+    "@PRP-022/V01"
+  ],
+  "createdAt": "2026-10-15T19:38:01.883Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261015_193431_b44a0ade-6212-4a93-8edc-2d322007c35e.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-15T19:34:31.203301Z",
+      "display_name": "Seedance 2.5",
+      "id": "b44a0ade-6212-4a93-8edc-2d322007c35e",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "be2cff74-8513-4907-aa63-f6200205aa81",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/be2cff74-8513-4907-aa63-f6200205aa81.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "82048dac-a04a-439d-859b-158b3cc9e124",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/82048dac-a04a-439d-859b-158b3cc9e124.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "91e24d60-cbea-40dd-b193-26b045651d58",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/91e24d60-cbea-40dd-b193-26b045651d58.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "c849651a-0554-48bb-ac14-00e8729a5a90",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/c849651a-0554-48bb-ac14-00e8729a5a90.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "36cb2a75-47c7-48dd-ac3b-0d408f77be6a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/36cb2a75-47c7-48dd-ac3b-0d408f77be6a.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "85542aba-278e-4062-b7ed-949e471b97c6",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/85542aba-278e-4062-b7ed-949e471b97c6.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "b16f0536-206e-43cd-8d97-44e389e7deae",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/b16f0536-206e-43cd-8d97-44e389e7deae.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "99232a7c-1f98-4508-9a32-166707321194",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/99232a7c-1f98-4508-9a32-166707321194.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "235a8d2f-1aa2-456e-9a4b-485b4dc69e67",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/235a8d2f-1aa2-456e-9a4b-485b4dc69e67.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 04 | THROWN IN AND LIFTED\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_ARMAYIL_COOK}} <<<image_3>>> \r\n{{CHAR_GARMAYIL_COOK}} <<<image_4>>> \r\n{{CHAR_OLDER_BROTHER}} <<<image_1>>> \r\n{{CHAR_YOUNGER_BROTHER}} <<<image_2>>> \r\n{{CHAR_GUARD_A}} <<<image_6>>> \r\n{{CHAR_GUARD_B}} <<<image_6>>> \r\n\r\nLOCATION REFERENCES\r\n{{LOC_PREP_ROOM}} <<<image_7>>> \r\n\r\nPROP REFERENCES\r\n{{PROP_ESCAPE_ROBE}} <<<image_8>>> \r\n{{PROP_WORK_STOOL}} \r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence with the precisely timed shots below. Preserve each referenced identity, body proportions, costume and rigid handmade mask. Masks stay fixed to the head with stable features and eye openings; emotion is performed through the body, eyes where visible, breath and hands. All characters are adults. Each listed cut changes the specified physical camera position, lens or viewpoint. Handheld movement responds to the actor and follows a possible path in the set; keep the key action readable and focus engaged. Use hard cuts at listed shot boundaries. References anchor design; the written lighting defines exposure and illumination. Preserve the tactile Iranian-inspired world and restrained natural exposure.\r\n\r\nLOCATION AND LIGHT\r\nEnclosed preparation room with a NORTH main door, EAST work counter and WEST narrow service exit. One hard neutral ceiling practical and weak warmer west-wall spill illuminate a continuous level floor. Old Iranian masonry, rounded openings and engineered lamps. Keep fixed exposure and light direction across all angles. A plain low wooden work stool stands near the central floor.\r\n\r\nSTART STATE AND BLOCKING\r\nCamera inside the room, south of the north main door, facing north. Armayil waits at screen left/west; Garmayil at screen right/east. The two adult brothers are outside the main door with guards. The low stool is clear of their landing area. The guards remain on the corridor side of the threshold.\r\n\r\n\r\nSHOT 04A | 0s to 3s | 3 seconds\r\n24mm shoulder-height handheld from inside, three meters south of the main door. The door bursts inward. From the corridor, Guard A shoves Older through the left half of the doorway and Guard B shoves Younger through the right half. Older stumbles onto hands and knees; Younger falls onto one knee beside him. The guards’ boots stay outside. Camera recoils half a step and dips with the fall. The main door slams shut immediately behind the brothers.\r\n\r\nSHOT 04B | 3s to 6s | 3 seconds\r\n28mm floor-height close shot from southwest. Older occupies left foreground on hands and knees, Younger right background. Armayil drops into frame beside Older, offering one hand under his upper arm and the other supporting his shoulder. Camera moves in at Older’s height, then rises as Armayil helps him stand; the support is gentle and urgent.\r\n\r\nSHOT 04C | 6s to 9s | 3 seconds\r\n35mm close from southeast, a distinct position near Younger. Younger right foreground struggles to find his footing; Garmayil center-right crouches beside him, steadies his elbow and lifts him. Camera rises unevenly with Younger. Older and Armayil remain soft at left rear; the main door stays shut.\r\n\r\nSHOT 04D | 9s to 12s | 3 seconds\r\n40mm tight two-shot from south-center, moving around the near edge of Armayil’s shoulder. Both brothers now stand center, Older left and Younger right. Armayil opens his empty palm low toward them in reassurance; Garmayil checks the shut door over his shoulder, then turns back. Older catches Younger’s shoulders and pulls him into a relieved embrace.\r\n\r\nSHOT 04E | 12s to 15s | 3 seconds\r\n65mm close on Older over Younger’s near shoulder, camera southeast but within the south half-space. Older’s face tilts toward Armayil off-screen left; his rigid mask stays unchanged while a sudden relieved exhale, a rapid grateful nod and tightened embrace reveal that he believes both are saved. Camera drifts closer with that brief surge of hope. Younger remains held against him.\r\n\r\nEND STATE AND EDIT\r\nOlder left and Younger right are upright, embracing near center. Armayil stands west/left beside them; Garmayil is east/right within reach of the prepared escape robe. The north door is shut; both guards are outside.\r\n\r\nSOUND\r\nDoor opening, harsh boots outside, two body-and-clothing falls, immediate door slam, hurried helpers’ steps, frightened breath turning briefly into relief. Nonverbal sounds only.\r\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_5>>> is Head Chef (CHR-011 V02); match it wherever Head Chef appears.\n<<<image_9>>> is Cleaver Butcher Wide (PRP-022 V01); match it wherever Cleaver Butcher Wide appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261015_193431_b44a0ade-6212-4a93-8edc-2d322007c35e.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261015_193431_b44a0ade-6212-4a93-8edc-2d322007c35e_thumbnail.webp"
+    }
+  ]
+}
