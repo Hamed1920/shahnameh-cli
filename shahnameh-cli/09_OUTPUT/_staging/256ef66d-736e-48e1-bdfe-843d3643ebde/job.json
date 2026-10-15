@@ -1,0 +1,140 @@
+{
+  "jobId": "J-20261015-R7Q",
+  "parentJobId": null,
+  "hfJobId": "256ef66d-736e-48e1-bdfe-843d3643ebde",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 09",
+  "target": "SHM-EP015-SC009-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 09 | GARMAYIL MUST CONTINUE\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_GARMAYIL_COOK}}\nLOCATION REFERENCES\n{{LOC_KITCHEN}}\nPROP REFERENCES\n{{PROP_MIXING_SET}}\n{{PROP_CLOSED_SERVING_BOWL}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nVast empty kitchen at night: massive Iranian-inspired masonry, rounded openings, restrained carved reliefs, functional sinks and metal work surfaces. One hard neutral integrated lamp over the central bench; distant work lights dim, corners deep shadow. Keep the room’s scale visible. Natural exposure, no theatrical spotlight blackout.\nSTART STATE AND BLOCKING\nGarmayil alone, behind the east-west central bench, faces south toward camera. Two covered source bowls at his right, appearing screen left from camera south. Production identities: bowl A contains the victim’s prepared material, bowl B the sheep substitute. These identities are reference metadata, not visible lettering. Empty mixing bowl center, one spoon beside it; matching serving lid screen right. He has not begun.\n\nSHOT 09A | 00s to 04s | 4 seconds\n24mm wide from south, continuing the isolation. Garmayil reaches toward source bowl B, stops before contact, presses his palm flat to the bench and bows his masked head. His back rises with a difficult breath. Camera advances slowly; leave empty room around him.\nSHOT 09B | 04s to 08s | 4 seconds\n85mm hand detail from south at rim height. His right hand returns, trembles against the lid, then lifts it. Frame the lid and fingers; the high bowl wall conceals the interior. He recoils a few centimeters, then steadies his wrist with his left hand. His rigid mask remains outside this detail.\nSHOT 09C | 08s to 12s | 4 seconds\n50mm chest-height medium view from south. Brief time compression: both source lids now rest beside their bowls. Using the single spoon, he transfers one small spoonful from A, then one from B into the central bowl. The material is pale and indistinct at this scale, without anatomical detail. The camera stays at rim height; the action reads as substitution and mixing.\nSHOT 09D | 12s to 15s | 3 seconds\n65mm close medium from the same side. He makes one reluctant stirring movement, sets the spoon down and closes the serving bowl with its lid. His hand stays on the lid while his shoulders fold. He fails to straighten before the cut.\nEND STATE AND EDIT\nExactly one mixed serving bowl is closed. Garmayil has finished this task and will return to the preparation room. His distress remains visible; no triumphant relief.\nSOUND\nVentilation, held breath, lid scraping softly, two quiet spoon contacts, one stir and the lid settling. Keep the sound mundane and close, without wet amplified effects.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Big Brother (CHR-009 V01); match it wherever Big Brother appears.\n<<<image_2>>> is Little Brother (CHR-010 V01); match it wherever Little Brother appears.\n<<<image_3>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_4>>> is Garmayel (CHR-008 V02); match it wherever Garmayel appears.\n<<<image_5>>> is Slaughter Prep Room (LOC-026 V01); match it wherever Slaughter Prep Room appears.\n<<<image_6>>> is Cleaver Butcher Wide (PRP-022 V01); match it wherever Cleaver Butcher Wide appears.\n<<<image_7>>> is Cloak Burlap Grey (PRP-021 V01); match it wherever Cloak Burlap Grey appears.\n<<<image_8>>> is Vessel Snake Feeding Tray (PRP-020 V01); match it wherever Vessel Snake Feeding Tray appears.",
+  "basePrompt": "PLAN 09 | GARMAYIL MUST CONTINUE\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_GARMAYIL_COOK}}\nLOCATION REFERENCES\n{{LOC_KITCHEN}}\nPROP REFERENCES\n{{PROP_MIXING_SET}}\n{{PROP_CLOSED_SERVING_BOWL}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nVast empty kitchen at night: massive Iranian-inspired masonry, rounded openings, restrained carved reliefs, functional sinks and metal work surfaces. One hard neutral integrated lamp over the central bench; distant work lights dim, corners deep shadow. Keep the room’s scale visible. Natural exposure, no theatrical spotlight blackout.\nSTART STATE AND BLOCKING\nGarmayil alone, behind the east-west central bench, faces south toward camera. Two covered source bowls at his right, appearing screen left from camera south. Production identities: bowl A contains the victim’s prepared material, bowl B the sheep substitute. These identities are reference metadata, not visible lettering. Empty mixing bowl center, one spoon beside it; matching serving lid screen right. He has not begun.\n\nSHOT 09A | 00s to 04s | 4 seconds\n24mm wide from south, continuing the isolation. Garmayil reaches toward source bowl B, stops before contact, presses his palm flat to the bench and bows his masked head. His back rises with a difficult breath. Camera advances slowly; leave empty room around him.\nSHOT 09B | 04s to 08s | 4 seconds\n85mm hand detail from south at rim height. His right hand returns, trembles against the lid, then lifts it. Frame the lid and fingers; the high bowl wall conceals the interior. He recoils a few centimeters, then steadies his wrist with his left hand. His rigid mask remains outside this detail.\nSHOT 09C | 08s to 12s | 4 seconds\n50mm chest-height medium view from south. Brief time compression: both source lids now rest beside their bowls. Using the single spoon, he transfers one small spoonful from A, then one from B into the central bowl. The material is pale and indistinct at this scale, without anatomical detail. The camera stays at rim height; the action reads as substitution and mixing.\nSHOT 09D | 12s to 15s | 3 seconds\n65mm close medium from the same side. He makes one reluctant stirring movement, sets the spoon down and closes the serving bowl with its lid. His hand stays on the lid while his shoulders fold. He fails to straighten before the cut.\nEND STATE AND EDIT\nExactly one mixed serving bowl is closed. Garmayil has finished this task and will return to the preparation room. His distress remains visible; no triumphant relief.\nSOUND\nVentilation, held breath, lid scraping softly, two quiet spoon contacts, one stir and the lid settling. Keep the sound mundane and close, without wet amplified effects.\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-009/V01",
+    "@CHR-010/V01",
+    "@CHR-007/V02",
+    "@CHR-008/V02",
+    "@LOC-026/V01",
+    "@PRP-022/V01",
+    "@PRP-021/V01",
+    "@PRP-020/V01"
+  ],
+  "createdAt": "2026-10-15T15:06:19.037Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150257_256ef66d-736e-48e1-bdfe-843d3643ebde.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-15T15:02:57.958742Z",
+      "display_name": "Seedance 2.5",
+      "id": "256ef66d-736e-48e1-bdfe-843d3643ebde",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "edfbc1e4-5f85-4eaa-b5d8-de8156e299f0",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/edfbc1e4-5f85-4eaa-b5d8-de8156e299f0.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "eb0f6e2f-e545-42f9-8299-77dad8614892",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/eb0f6e2f-e545-42f9-8299-77dad8614892.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "7f0e5997-beff-453b-b3f4-996090c124e8",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/7f0e5997-beff-453b-b3f4-996090c124e8.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a8c1899e-713b-4c39-b03c-ef36fd67c3b8",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/a8c1899e-713b-4c39-b03c-ef36fd67c3b8.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "211ce660-171e-448d-ba04-4e09e1ea44c7",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/211ce660-171e-448d-ba04-4e09e1ea44c7.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "c1e7e081-eecd-418a-92a4-31150e69c4b1",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/c1e7e081-eecd-418a-92a4-31150e69c4b1.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "77210f17-b0cd-4715-bdaf-8e682daddf0c",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/77210f17-b0cd-4715-bdaf-8e682daddf0c.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "bc95b025-57d2-413e-bd53-e382604a080e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/bc95b025-57d2-413e-bd53-e382604a080e.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 09 | GARMAYIL MUST CONTINUE\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_GARMAYIL_COOK}}\nLOCATION REFERENCES\n{{LOC_KITCHEN}}\nPROP REFERENCES\n{{PROP_MIXING_SET}}\n{{PROP_CLOSED_SERVING_BOWL}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nVast empty kitchen at night: massive Iranian-inspired masonry, rounded openings, restrained carved reliefs, functional sinks and metal work surfaces. One hard neutral integrated lamp over the central bench; distant work lights dim, corners deep shadow. Keep the room’s scale visible. Natural exposure, no theatrical spotlight blackout.\nSTART STATE AND BLOCKING\nGarmayil alone, behind the east-west central bench, faces south toward camera. Two covered source bowls at his right, appearing screen left from camera south. Production identities: bowl A contains the victim’s prepared material, bowl B the sheep substitute. These identities are reference metadata, not visible lettering. Empty mixing bowl center, one spoon beside it; matching serving lid screen right. He has not begun.\n\nSHOT 09A | 00s to 04s | 4 seconds\n24mm wide from south, continuing the isolation. Garmayil reaches toward source bowl B, stops before contact, presses his palm flat to the bench and bows his masked head. His back rises with a difficult breath. Camera advances slowly; leave empty room around him.\nSHOT 09B | 04s to 08s | 4 seconds\n85mm hand detail from south at rim height. His right hand returns, trembles against the lid, then lifts it. Frame the lid and fingers; the high bowl wall conceals the interior. He recoils a few centimeters, then steadies his wrist with his left hand. His rigid mask remains outside this detail.\nSHOT 09C | 08s to 12s | 4 seconds\n50mm chest-height medium view from south. Brief time compression: both source lids now rest beside their bowls. Using the single spoon, he transfers one small spoonful from A, then one from B into the central bowl. The material is pale and indistinct at this scale, without anatomical detail. The camera stays at rim height; the action reads as substitution and mixing.\nSHOT 09D | 12s to 15s | 3 seconds\n65mm close medium from the same side. He makes one reluctant stirring movement, sets the spoon down and closes the serving bowl with its lid. His hand stays on the lid while his shoulders fold. He fails to straighten before the cut.\nEND STATE AND EDIT\nExactly one mixed serving bowl is closed. Garmayil has finished this task and will return to the preparation room. His distress remains visible; no triumphant relief.\nSOUND\nVentilation, held breath, lid scraping softly, two quiet spoon contacts, one stir and the lid settling. Keep the sound mundane and close, without wet amplified effects.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Big Brother (CHR-009 V01); match it wherever Big Brother appears.\n<<<image_2>>> is Little Brother (CHR-010 V01); match it wherever Little Brother appears.\n<<<image_3>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_4>>> is Garmayel (CHR-008 V02); match it wherever Garmayel appears.\n<<<image_5>>> is Slaughter Prep Room (LOC-026 V01); match it wherever Slaughter Prep Room appears.\n<<<image_6>>> is Cleaver Butcher Wide (PRP-022 V01); match it wherever Cleaver Butcher Wide appears.\n<<<image_7>>> is Cloak Burlap Grey (PRP-021 V01); match it wherever Cloak Burlap Grey appears.\n<<<image_8>>> is Vessel Snake Feeding Tray (PRP-020 V01); match it wherever Vessel Snake Feeding Tray appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150257_256ef66d-736e-48e1-bdfe-843d3643ebde.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150257_256ef66d-736e-48e1-bdfe-843d3643ebde_thumbnail.webp"
+    }
+  ]
+}

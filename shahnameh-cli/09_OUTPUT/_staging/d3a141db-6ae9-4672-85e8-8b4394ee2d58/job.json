@@ -1,0 +1,140 @@
+{
+  "jobId": "J-20261015-F73",
+  "parentJobId": null,
+  "hfJobId": "d3a141db-6ae9-4672-85e8-8b4394ee2d58",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 07",
+  "target": "SHM-EP015-SC007-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 07 | ARMAYIL CANNOT DO IT\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_COOK}}\n{{CHAR_GARMAYIL_COOK}}\n{{CHAR_OLDER_BROTHER}}\n{{CHAR_YOUNGER_BROTHER}}\nLOCATION REFERENCES\n{{LOC_PREP_ROOM}}\nPROP REFERENCES\n{{PROP_ESCAPE_ROBE}}\n{{PROP_PREP_KNIFE}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nHard neutral ceiling lamp above the central floor; warmer practical spill at the left wall. The east/right work counter is visible. Deep shadow at room edges with enough exposure to distinguish bodies and hands. Light remains steady despite unstable camera movement.\nSTART STATE AND BLOCKING\nCamera on south side. Older center-left facing right toward Armayil center-right facing left. Garmayil rear-right steadies Younger near the counter; the single escape robe lies folded on that counter. One preparation knife rests on the counter within Armayil’s reach. Older remains standing.\n\nSHOT 07A | 00s to 03s | 3 seconds\n65mm close view from south-east, within the south half-space, on Armayil’s right hand lifting the single knife from the counter. The handle trembles; the blade points down toward the floor. His left hand braces on the counter. Short imperfect focus correction from handle to fingers.\nSHOT 07B | 03s to 07s | 4 seconds\n40mm chest-height close two-shot from south: Older left, Armayil right. Armayil takes half a step toward Older, stops, then retreats. The blade remains low beside his own thigh. Older breathes through his fear; he is not serenely heroic. Camera drifts too close and corrects.\nSHOT 07C | 07s to 10s | 3 seconds\n65mm reaction at rear-right: Younger left in this tight frame faces left toward Older off-screen; Garmayil right holds his upper arms. Younger leans toward his brother; Garmayil quietly prevents the step, distressed himself. The folded robe is visible low on the right counter.\nSHOT 07D | 10s to 15s | 5 seconds\n50mm close profile of Armayil from south. He faces left, looks toward Older just outside the left edge, attempts to raise his right forearm, then lets it fall again. Left hand covers his own right wrist for a moment to steady it. His breath breaks; shoulders shake. Camera makes a short hesitant push, then holds on his inability.\nEND STATE AND EDIT\nArmayil still holds the knife in his right hand, low. Older remains alive and standing. The room contains exactly four men; guards stay outside.\nSOUND\nGrip creak, broken breathing, foot scrape and clothing pulled at Younger’s upper arms. No strike, no wound sound.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Big Brother (CHR-009 V01); match it wherever Big Brother appears.\n<<<image_2>>> is Little Brother (CHR-010 V01); match it wherever Little Brother appears.\n<<<image_3>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_4>>> is Garmayel (CHR-008 V02); match it wherever Garmayel appears.\n<<<image_5>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_6>>> is Slaughter Prep Room (LOC-026 V01); match it wherever Slaughter Prep Room appears.\n<<<image_7>>> is Cloak Burlap Grey (PRP-021 V01); match it wherever Cloak Burlap Grey appears.\n<<<image_8>>> is Cleaver Butcher Wide (PRP-022 V01); match it wherever Cleaver Butcher Wide appears.",
+  "basePrompt": "PLAN 07 | ARMAYIL CANNOT DO IT\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_COOK}}\n{{CHAR_GARMAYIL_COOK}}\n{{CHAR_OLDER_BROTHER}}\n{{CHAR_YOUNGER_BROTHER}}\nLOCATION REFERENCES\n{{LOC_PREP_ROOM}}\nPROP REFERENCES\n{{PROP_ESCAPE_ROBE}}\n{{PROP_PREP_KNIFE}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nHard neutral ceiling lamp above the central floor; warmer practical spill at the left wall. The east/right work counter is visible. Deep shadow at room edges with enough exposure to distinguish bodies and hands. Light remains steady despite unstable camera movement.\nSTART STATE AND BLOCKING\nCamera on south side. Older center-left facing right toward Armayil center-right facing left. Garmayil rear-right steadies Younger near the counter; the single escape robe lies folded on that counter. One preparation knife rests on the counter within Armayil’s reach. Older remains standing.\n\nSHOT 07A | 00s to 03s | 3 seconds\n65mm close view from south-east, within the south half-space, on Armayil’s right hand lifting the single knife from the counter. The handle trembles; the blade points down toward the floor. His left hand braces on the counter. Short imperfect focus correction from handle to fingers.\nSHOT 07B | 03s to 07s | 4 seconds\n40mm chest-height close two-shot from south: Older left, Armayil right. Armayil takes half a step toward Older, stops, then retreats. The blade remains low beside his own thigh. Older breathes through his fear; he is not serenely heroic. Camera drifts too close and corrects.\nSHOT 07C | 07s to 10s | 3 seconds\n65mm reaction at rear-right: Younger left in this tight frame faces left toward Older off-screen; Garmayil right holds his upper arms. Younger leans toward his brother; Garmayil quietly prevents the step, distressed himself. The folded robe is visible low on the right counter.\nSHOT 07D | 10s to 15s | 5 seconds\n50mm close profile of Armayil from south. He faces left, looks toward Older just outside the left edge, attempts to raise his right forearm, then lets it fall again. Left hand covers his own right wrist for a moment to steady it. His breath breaks; shoulders shake. Camera makes a short hesitant push, then holds on his inability.\nEND STATE AND EDIT\nArmayil still holds the knife in his right hand, low. Older remains alive and standing. The room contains exactly four men; guards stay outside.\nSOUND\nGrip creak, broken breathing, foot scrape and clothing pulled at Younger’s upper arms. No strike, no wound sound.\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-009/V01",
+    "@CHR-010/V01",
+    "@CHR-007/V02",
+    "@CHR-008/V02",
+    "@GRP-005/V01",
+    "@LOC-026/V01",
+    "@PRP-021/V01",
+    "@PRP-022/V01"
+  ],
+  "createdAt": "2026-10-15T15:07:38.443Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150202_d3a141db-6ae9-4672-85e8-8b4394ee2d58.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-15T15:02:02.547526Z",
+      "display_name": "Seedance 2.5",
+      "id": "d3a141db-6ae9-4672-85e8-8b4394ee2d58",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "5857f27a-5305-4afa-bd97-7280c8650ed0",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/5857f27a-5305-4afa-bd97-7280c8650ed0.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "dcc025aa-ee02-4299-866b-84dc206c56bc",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/dcc025aa-ee02-4299-866b-84dc206c56bc.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "7d09fb7d-988a-47cd-900b-fa2bc85a8722",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/7d09fb7d-988a-47cd-900b-fa2bc85a8722.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "9a5bdea4-d72f-4da9-8465-75140a5e5a0e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/9a5bdea4-d72f-4da9-8465-75140a5e5a0e.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "d07161ea-8e78-4853-bdb1-48cf9edeb427",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/d07161ea-8e78-4853-bdb1-48cf9edeb427.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "7441410c-31eb-4b89-8939-15fcf04ceb82",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/7441410c-31eb-4b89-8939-15fcf04ceb82.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "18045c9d-f763-457e-bf32-c1f075f615e3",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/18045c9d-f763-457e-bf32-c1f075f615e3.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "fcab33f0-1220-426d-bc36-4eddf46f0634",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/fcab33f0-1220-426d-bc36-4eddf46f0634.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 07 | ARMAYIL CANNOT DO IT\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_COOK}}\n{{CHAR_GARMAYIL_COOK}}\n{{CHAR_OLDER_BROTHER}}\n{{CHAR_YOUNGER_BROTHER}}\nLOCATION REFERENCES\n{{LOC_PREP_ROOM}}\nPROP REFERENCES\n{{PROP_ESCAPE_ROBE}}\n{{PROP_PREP_KNIFE}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nHard neutral ceiling lamp above the central floor; warmer practical spill at the left wall. The east/right work counter is visible. Deep shadow at room edges with enough exposure to distinguish bodies and hands. Light remains steady despite unstable camera movement.\nSTART STATE AND BLOCKING\nCamera on south side. Older center-left facing right toward Armayil center-right facing left. Garmayil rear-right steadies Younger near the counter; the single escape robe lies folded on that counter. One preparation knife rests on the counter within Armayil’s reach. Older remains standing.\n\nSHOT 07A | 00s to 03s | 3 seconds\n65mm close view from south-east, within the south half-space, on Armayil’s right hand lifting the single knife from the counter. The handle trembles; the blade points down toward the floor. His left hand braces on the counter. Short imperfect focus correction from handle to fingers.\nSHOT 07B | 03s to 07s | 4 seconds\n40mm chest-height close two-shot from south: Older left, Armayil right. Armayil takes half a step toward Older, stops, then retreats. The blade remains low beside his own thigh. Older breathes through his fear; he is not serenely heroic. Camera drifts too close and corrects.\nSHOT 07C | 07s to 10s | 3 seconds\n65mm reaction at rear-right: Younger left in this tight frame faces left toward Older off-screen; Garmayil right holds his upper arms. Younger leans toward his brother; Garmayil quietly prevents the step, distressed himself. The folded robe is visible low on the right counter.\nSHOT 07D | 10s to 15s | 5 seconds\n50mm close profile of Armayil from south. He faces left, looks toward Older just outside the left edge, attempts to raise his right forearm, then lets it fall again. Left hand covers his own right wrist for a moment to steady it. His breath breaks; shoulders shake. Camera makes a short hesitant push, then holds on his inability.\nEND STATE AND EDIT\nArmayil still holds the knife in his right hand, low. Older remains alive and standing. The room contains exactly four men; guards stay outside.\nSOUND\nGrip creak, broken breathing, foot scrape and clothing pulled at Younger’s upper arms. No strike, no wound sound.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Big Brother (CHR-009 V01); match it wherever Big Brother appears.\n<<<image_2>>> is Little Brother (CHR-010 V01); match it wherever Little Brother appears.\n<<<image_3>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_4>>> is Garmayel (CHR-008 V02); match it wherever Garmayel appears.\n<<<image_5>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_6>>> is Slaughter Prep Room (LOC-026 V01); match it wherever Slaughter Prep Room appears.\n<<<image_7>>> is Cloak Burlap Grey (PRP-021 V01); match it wherever Cloak Burlap Grey appears.\n<<<image_8>>> is Cleaver Butcher Wide (PRP-022 V01); match it wherever Cleaver Butcher Wide appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150202_d3a141db-6ae9-4672-85e8-8b4394ee2d58.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150202_d3a141db-6ae9-4672-85e8-8b4394ee2d58_thumbnail.webp"
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "jobId": "J-20261015-PNV",
+  "parentJobId": null,
+  "hfJobId": "8cbc33f8-2f24-441d-bc7b-69e73b88a9fb",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 11",
+  "target": "SHM-EP015-SC011-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 11 | THE PATH REPEATS\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_YOUNGER_ESCAPE}}\n{{CHAR_SURVIVOR_A}}\n{{CHAR_SURVIVOR_B}}\n{{CHAR_LAST_ARRIVAL}}\nLOCATION REFERENCES\n{{LOC_ESCAPE_EXTERIOR}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nExterior service exit and bare route toward the mountains. First shot: pre-dawn cold blue sky with the city dark behind. Later rescue shots: separate nights with restrained changes in sky brightness and ground dampness, preserving the same route and landmarks. Natural sky light and a small recessed lamp at the palace exit.\nSTART STATE AND BLOCKING\nYounger wears his single escape robe over original clothes. Travel is left to right toward mountains; city remains behind screen left. Later survivors are different adult individuals with distinct masks and clothes. Only one survivor appears in each shot. The final arrival is a new individual, not Younger.\n\nSHOT 11A | 00s to 06s | 6 seconds\n35mm handheld side tracking beside Younger moving left to right. He walks, tries three running steps, then stops bent over with a caught breath. He looks back left toward the distant city, touches the sleeve his brother held, and forces himself to continue right. Stay near his body rather than making the run athletic.\nSHOT 11B | 06s to 09s | 3 seconds\n50mm fixed composition of a recognizable bend on the escape path. Later night: Survivor A crosses left to right past the same low wall. A different robe and mask make the change of person clear. Hold the camera still for the temporal match cut.\nSHOT 11C | 09s to 12s | 3 seconds\nExact same 50mm composition on another night. Survivor B, different height, mask and clothing, crosses the same bend left to right. Damp ground and slightly different sky establish elapsed time. Each shot contains only its own individual.\nSHOT 11D | 12s to 15s | 3 seconds\nExact same composition on a further night nearing dawn. Last Arrival crosses the bend left to right wearing the assigned unique travel clothes. Continue his movement beyond the wall toward the mountain route. Cut on his rightward step to the next block; retain this person’s precise costume and mask.\nEND STATE AND EDIT\nLast Arrival is the person moving toward the mountain community. Younger is no longer on this path; he has lived in the community during the intervening rescues.\nSOUND\nUneven breath and footfalls for Younger; different walking rhythms across later nights, open-air wind and distant city ambience diminishing.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Big Brother (CHR-009 V01); match it wherever Big Brother appears.\n<<<image_2>>> is Little Brother (CHR-010 V01); match it wherever Little Brother appears.\n<<<image_3>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_4>>> is Garmayel (CHR-008 V02); match it wherever Garmayel appears.\n<<<image_5>>> is Townsfolk Masked (GRP-009 V12); match it wherever Townsfolk Masked appears.\n<<<image_6>>> is Townsfolk Masked (GRP-009 V07); match it wherever Townsfolk Masked appears.\n<<<image_7>>> is Townsfolk Masked (GRP-009 V08); match it wherever Townsfolk Masked appears.\n<<<image_8>>> is Back Exit To Plain (LOC-028 V01); match it wherever Back Exit To Plain appears.\n<<<image_9>>> is Dawn Plain Mountain Foot (LOC-029 V01); match it wherever Dawn Plain Mountain Foot appears.\n<<<image_10>>> is Narrow Escape Passage (LOC-030 V01); match it wherever Narrow Escape Passage appears.",
+  "basePrompt": "PLAN 11 | THE PATH REPEATS\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_YOUNGER_ESCAPE}}\n{{CHAR_SURVIVOR_A}}\n{{CHAR_SURVIVOR_B}}\n{{CHAR_LAST_ARRIVAL}}\nLOCATION REFERENCES\n{{LOC_ESCAPE_EXTERIOR}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nExterior service exit and bare route toward the mountains. First shot: pre-dawn cold blue sky with the city dark behind. Later rescue shots: separate nights with restrained changes in sky brightness and ground dampness, preserving the same route and landmarks. Natural sky light and a small recessed lamp at the palace exit.\nSTART STATE AND BLOCKING\nYounger wears his single escape robe over original clothes. Travel is left to right toward mountains; city remains behind screen left. Later survivors are different adult individuals with distinct masks and clothes. Only one survivor appears in each shot. The final arrival is a new individual, not Younger.\n\nSHOT 11A | 00s to 06s | 6 seconds\n35mm handheld side tracking beside Younger moving left to right. He walks, tries three running steps, then stops bent over with a caught breath. He looks back left toward the distant city, touches the sleeve his brother held, and forces himself to continue right. Stay near his body rather than making the run athletic.\nSHOT 11B | 06s to 09s | 3 seconds\n50mm fixed composition of a recognizable bend on the escape path. Later night: Survivor A crosses left to right past the same low wall. A different robe and mask make the change of person clear. Hold the camera still for the temporal match cut.\nSHOT 11C | 09s to 12s | 3 seconds\nExact same 50mm composition on another night. Survivor B, different height, mask and clothing, crosses the same bend left to right. Damp ground and slightly different sky establish elapsed time. Each shot contains only its own individual.\nSHOT 11D | 12s to 15s | 3 seconds\nExact same composition on a further night nearing dawn. Last Arrival crosses the bend left to right wearing the assigned unique travel clothes. Continue his movement beyond the wall toward the mountain route. Cut on his rightward step to the next block; retain this person’s precise costume and mask.\nEND STATE AND EDIT\nLast Arrival is the person moving toward the mountain community. Younger is no longer on this path; he has lived in the community during the intervening rescues.\nSOUND\nUneven breath and footfalls for Younger; different walking rhythms across later nights, open-air wind and distant city ambience diminishing.\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-009/V01",
+    "@CHR-010/V01",
+    "@CHR-007/V02",
+    "@CHR-008/V02",
+    "@GRP-009/V12",
+    "@GRP-009/V07",
+    "@GRP-009/V08",
+    "@LOC-028/V01",
+    "@LOC-029/V01",
+    "@LOC-030/V01"
+  ],
+  "createdAt": "2026-10-15T15:12:19.081Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150653_8cbc33f8-2f24-441d-bc7b-69e73b88a9fb.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-15T15:06:53.280913Z",
+      "display_name": "Seedance 2.5",
+      "id": "8cbc33f8-2f24-441d-bc7b-69e73b88a9fb",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "3c4884d1-308f-42b2-be62-d59b3188495c",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/3c4884d1-308f-42b2-be62-d59b3188495c.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "edf59c97-f1d1-4d35-8c8b-90fa63b565df",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/edf59c97-f1d1-4d35-8c8b-90fa63b565df.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "de1116a0-139a-45b3-ae4f-ae004ed4fe44",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/de1116a0-139a-45b3-ae4f-ae004ed4fe44.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "f97e1289-515a-40fe-a5c2-90b1fe166dcb",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/f97e1289-515a-40fe-a5c2-90b1fe166dcb.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "b5f14f3e-fa89-4c33-89eb-412a95db652e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/b5f14f3e-fa89-4c33-89eb-412a95db652e.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "66687c51-9b68-4940-8d19-fcdfc6f5633a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/66687c51-9b68-4940-8d19-fcdfc6f5633a.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "2b899451-d8ad-4331-a733-fa23529ed5ac",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/2b899451-d8ad-4331-a733-fa23529ed5ac.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "752e6aa4-ab95-41fa-9246-f328d9f3eb64",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/752e6aa4-ab95-41fa-9246-f328d9f3eb64.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "933ee3ca-1c26-447b-85f1-8287332be27a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/933ee3ca-1c26-447b-85f1-8287332be27a.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "d46f5f39-f834-4187-86f7-29bb0e6821fc",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/d46f5f39-f834-4187-86f7-29bb0e6821fc.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 11 | THE PATH REPEATS\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_YOUNGER_ESCAPE}}\n{{CHAR_SURVIVOR_A}}\n{{CHAR_SURVIVOR_B}}\n{{CHAR_LAST_ARRIVAL}}\nLOCATION REFERENCES\n{{LOC_ESCAPE_EXTERIOR}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nExterior service exit and bare route toward the mountains. First shot: pre-dawn cold blue sky with the city dark behind. Later rescue shots: separate nights with restrained changes in sky brightness and ground dampness, preserving the same route and landmarks. Natural sky light and a small recessed lamp at the palace exit.\nSTART STATE AND BLOCKING\nYounger wears his single escape robe over original clothes. Travel is left to right toward mountains; city remains behind screen left. Later survivors are different adult individuals with distinct masks and clothes. Only one survivor appears in each shot. The final arrival is a new individual, not Younger.\n\nSHOT 11A | 00s to 06s | 6 seconds\n35mm handheld side tracking beside Younger moving left to right. He walks, tries three running steps, then stops bent over with a caught breath. He looks back left toward the distant city, touches the sleeve his brother held, and forces himself to continue right. Stay near his body rather than making the run athletic.\nSHOT 11B | 06s to 09s | 3 seconds\n50mm fixed composition of a recognizable bend on the escape path. Later night: Survivor A crosses left to right past the same low wall. A different robe and mask make the change of person clear. Hold the camera still for the temporal match cut.\nSHOT 11C | 09s to 12s | 3 seconds\nExact same 50mm composition on another night. Survivor B, different height, mask and clothing, crosses the same bend left to right. Damp ground and slightly different sky establish elapsed time. Each shot contains only its own individual.\nSHOT 11D | 12s to 15s | 3 seconds\nExact same composition on a further night nearing dawn. Last Arrival crosses the bend left to right wearing the assigned unique travel clothes. Continue his movement beyond the wall toward the mountain route. Cut on his rightward step to the next block; retain this person’s precise costume and mask.\nEND STATE AND EDIT\nLast Arrival is the person moving toward the mountain community. Younger is no longer on this path; he has lived in the community during the intervening rescues.\nSOUND\nUneven breath and footfalls for Younger; different walking rhythms across later nights, open-air wind and distant city ambience diminishing.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Big Brother (CHR-009 V01); match it wherever Big Brother appears.\n<<<image_2>>> is Little Brother (CHR-010 V01); match it wherever Little Brother appears.\n<<<image_3>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_4>>> is Garmayel (CHR-008 V02); match it wherever Garmayel appears.\n<<<image_5>>> is Townsfolk Masked (GRP-009 V12); match it wherever Townsfolk Masked appears.\n<<<image_6>>> is Townsfolk Masked (GRP-009 V07); match it wherever Townsfolk Masked appears.\n<<<image_7>>> is Townsfolk Masked (GRP-009 V08); match it wherever Townsfolk Masked appears.\n<<<image_8>>> is Back Exit To Plain (LOC-028 V01); match it wherever Back Exit To Plain appears.\n<<<image_9>>> is Dawn Plain Mountain Foot (LOC-029 V01); match it wherever Dawn Plain Mountain Foot appears.\n<<<image_10>>> is Narrow Escape Passage (LOC-030 V01); match it wherever Narrow Escape Passage appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150653_8cbc33f8-2f24-441d-bc7b-69e73b88a9fb.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150653_8cbc33f8-2f24-441d-bc7b-69e73b88a9fb_thumbnail.webp"
+    }
+  ]
+}

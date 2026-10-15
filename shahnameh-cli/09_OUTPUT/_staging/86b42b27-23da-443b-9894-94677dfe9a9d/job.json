@@ -1,0 +1,158 @@
+{
+  "jobId": "J-20261015-CIR",
+  "parentJobId": null,
+  "hfJobId": "86b42b27-23da-443b-9894-94677dfe9a9d",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 12",
+  "target": "SHM-EP015-SC012-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 12 | THE PEOPLE WHO SHOULD BE GONE\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_LAST_ARRIVAL}}\n{{CHAR_YOUNGER_LEADER}}\n{{GROUP_SURVIVORS_35}}\nLOCATION REFERENCES\n{{LOC_MOUNTAIN_COMMUNITY}}\nPROP REFERENCES\n{{PROP_COMMUNITY_KIT}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nEarly mountain daylight, cold soft sky with small warm practical cooking fires among low shelters. The community occupies a sheltered terrace. City visible far away down-valley to the south. Natural exposure, tactile fabric and simple tools. Landscape is physically continuous, not a fantasy transformation.\nSTART STATE AND BLOCKING\nLast Arrival enters from screen left and moves right along the ridge path. Community occupies center and right beyond a rock shoulder. About 35 adult survivors in varied work clothes and handmade masks, including Younger, form a lived-in settlement. Younger is the same man: identical mask, original costume identifier and escape robe now worn and repaired, more upright posture and modestly aged exposed hair. He stands at the community’s near edge facing the approaching newcomer.\n\nSHOT 12A | 00s to 05s | 5 seconds\n18mm wide following behind Last Arrival, his back at lower left. Camera moves one meter right around an existing rock shoulder, revealing shelters, cookware, hand tools and approximately 35 survivors in depth. Some mend clothes, carry water or tend small fires. Last Arrival stops. The collective image feels inhabited rather than arranged in military ranks.\nSHOT 12B | 05s to 10s | 5 seconds\n50mm eye-level medium two-shot. Last Arrival screen left faces right. Younger Leader screen right faces left. Younger takes the newcomer’s forearm and steadies him; a nearby survivor opens space beside a shelter. Hold Younger’s exact recognizable mask and worn escape robe long enough to connect him to the earlier brother. He releases the newcomer toward the settlement behind him.\nSHOT 12C | 10s to 15s | 5 seconds\n65mm medium close three-quarter view of Younger from his east side. He occupies screen right facing down-valley to SCREEN LEFT, toward the southern city. The community remains softly visible behind and to the right; Last Arrival has joined it. A restrained handheld push approaches 15cm. Younger turns his head left and holds his distant eyeline. His hand slowly closes around the edge of the old robe, then becomes still. End on controlled resolve. Cut to black at the endpoint.\nEND STATE AND EDIT\nThe younger brother has become a point of welcome and resistance within a living community. End on his look toward the city, not a victory gesture.\nSOUND\nMountain wind, subdued nonverbal human presence, tools and small fires; wind continues beneath the final look and cuts to silence at black.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Little Brother (CHR-010 V03); match it wherever Little Brother appears.\n<<<image_2>>> is Townsfolk Masked (GRP-009 V12); match it wherever Townsfolk Masked appears.\n<<<image_3>>> is Townsfolk Masked (GRP-009 V02); match it wherever Townsfolk Masked appears.\n<<<image_4>>> is Townsfolk Masked (GRP-009 V11); match it wherever Townsfolk Masked appears.\n<<<image_5>>> is Townsfolk Masked (GRP-009 V10); match it wherever Townsfolk Masked appears.\n<<<image_6>>> is Townsfolk Masked (GRP-009 V09); match it wherever Townsfolk Masked appears.\n<<<image_7>>> is Townsfolk Masked (GRP-009 V05); match it wherever Townsfolk Masked appears.\n<<<image_8>>> is Townsfolk Masked (GRP-009 V06); match it wherever Townsfolk Masked appears.\n<<<image_9>>> is Townsfolk Masked (GRP-009 V08); match it wherever Townsfolk Masked appears.\n<<<image_10>>> is Dawn Plain Mountain Foot (LOC-029 V01); match it wherever Dawn Plain Mountain Foot appears.",
+  "basePrompt": "PLAN 12 | THE PEOPLE WHO SHOULD BE GONE\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_LAST_ARRIVAL}}\n{{CHAR_YOUNGER_LEADER}}\n{{GROUP_SURVIVORS_35}}\nLOCATION REFERENCES\n{{LOC_MOUNTAIN_COMMUNITY}}\nPROP REFERENCES\n{{PROP_COMMUNITY_KIT}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nEarly mountain daylight, cold soft sky with small warm practical cooking fires among low shelters. The community occupies a sheltered terrace. City visible far away down-valley to the south. Natural exposure, tactile fabric and simple tools. Landscape is physically continuous, not a fantasy transformation.\nSTART STATE AND BLOCKING\nLast Arrival enters from screen left and moves right along the ridge path. Community occupies center and right beyond a rock shoulder. About 35 adult survivors in varied work clothes and handmade masks, including Younger, form a lived-in settlement. Younger is the same man: identical mask, original costume identifier and escape robe now worn and repaired, more upright posture and modestly aged exposed hair. He stands at the community’s near edge facing the approaching newcomer.\n\nSHOT 12A | 00s to 05s | 5 seconds\n18mm wide following behind Last Arrival, his back at lower left. Camera moves one meter right around an existing rock shoulder, revealing shelters, cookware, hand tools and approximately 35 survivors in depth. Some mend clothes, carry water or tend small fires. Last Arrival stops. The collective image feels inhabited rather than arranged in military ranks.\nSHOT 12B | 05s to 10s | 5 seconds\n50mm eye-level medium two-shot. Last Arrival screen left faces right. Younger Leader screen right faces left. Younger takes the newcomer’s forearm and steadies him; a nearby survivor opens space beside a shelter. Hold Younger’s exact recognizable mask and worn escape robe long enough to connect him to the earlier brother. He releases the newcomer toward the settlement behind him.\nSHOT 12C | 10s to 15s | 5 seconds\n65mm medium close three-quarter view of Younger from his east side. He occupies screen right facing down-valley to SCREEN LEFT, toward the southern city. The community remains softly visible behind and to the right; Last Arrival has joined it. A restrained handheld push approaches 15cm. Younger turns his head left and holds his distant eyeline. His hand slowly closes around the edge of the old robe, then becomes still. End on controlled resolve. Cut to black at the endpoint.\nEND STATE AND EDIT\nThe younger brother has become a point of welcome and resistance within a living community. End on his look toward the city, not a victory gesture.\nSOUND\nMountain wind, subdued nonverbal human presence, tools and small fires; wind continues beneath the final look and cuts to silence at black.\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-010/V03",
+    "@GRP-009/V12",
+    "@GRP-009/V02",
+    "@GRP-009/V11",
+    "@GRP-009/V10",
+    "@GRP-009/V09",
+    "@GRP-009/V05",
+    "@GRP-009/V06",
+    "@GRP-009/V08",
+    "@LOC-029/V01"
+  ],
+  "createdAt": "2026-10-15T15:11:05.985Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150720_86b42b27-23da-443b-9894-94677dfe9a9d.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-15T15:07:20.097235Z",
+      "display_name": "Seedance 2.5",
+      "id": "86b42b27-23da-443b-9894-94677dfe9a9d",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "eb5d82fa-e5b1-4e00-a497-1a943905a71d",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/eb5d82fa-e5b1-4e00-a497-1a943905a71d.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "b1db2fc8-60e5-44b2-a2c6-b99647be3ddf",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/b1db2fc8-60e5-44b2-a2c6-b99647be3ddf.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "00b7ff34-3b37-4aa9-96d8-eb97407878ba",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/00b7ff34-3b37-4aa9-96d8-eb97407878ba.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "5d32fc80-b557-49a9-a2be-048279cc57c5",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/5d32fc80-b557-49a9-a2be-048279cc57c5.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "7b38adaa-ddc9-4bed-a50e-2ae814fa07f1",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/7b38adaa-ddc9-4bed-a50e-2ae814fa07f1.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "3e6cfb9f-992c-49f0-8a6b-83a3a67ef40a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/3e6cfb9f-992c-49f0-8a6b-83a3a67ef40a.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "7d80ec4e-2beb-4829-9e2b-eb2afe8ff0c8",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/7d80ec4e-2beb-4829-9e2b-eb2afe8ff0c8.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "42fc6e28-1d6a-4dc3-93ce-df60a08d4532",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/42fc6e28-1d6a-4dc3-93ce-df60a08d4532.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "bd7b2299-af8b-4e66-8459-c7031d1e979d",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/bd7b2299-af8b-4e66-8459-c7031d1e979d.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "912dad35-0eec-43da-943c-e93358c8b875",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/912dad35-0eec-43da-943c-e93358c8b875.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 12 | THE PEOPLE WHO SHOULD BE GONE\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_LAST_ARRIVAL}}\n{{CHAR_YOUNGER_LEADER}}\n{{GROUP_SURVIVORS_35}}\nLOCATION REFERENCES\n{{LOC_MOUNTAIN_COMMUNITY}}\nPROP REFERENCES\n{{PROP_COMMUNITY_KIT}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nEarly mountain daylight, cold soft sky with small warm practical cooking fires among low shelters. The community occupies a sheltered terrace. City visible far away down-valley to the south. Natural exposure, tactile fabric and simple tools. Landscape is physically continuous, not a fantasy transformation.\nSTART STATE AND BLOCKING\nLast Arrival enters from screen left and moves right along the ridge path. Community occupies center and right beyond a rock shoulder. About 35 adult survivors in varied work clothes and handmade masks, including Younger, form a lived-in settlement. Younger is the same man: identical mask, original costume identifier and escape robe now worn and repaired, more upright posture and modestly aged exposed hair. He stands at the community’s near edge facing the approaching newcomer.\n\nSHOT 12A | 00s to 05s | 5 seconds\n18mm wide following behind Last Arrival, his back at lower left. Camera moves one meter right around an existing rock shoulder, revealing shelters, cookware, hand tools and approximately 35 survivors in depth. Some mend clothes, carry water or tend small fires. Last Arrival stops. The collective image feels inhabited rather than arranged in military ranks.\nSHOT 12B | 05s to 10s | 5 seconds\n50mm eye-level medium two-shot. Last Arrival screen left faces right. Younger Leader screen right faces left. Younger takes the newcomer’s forearm and steadies him; a nearby survivor opens space beside a shelter. Hold Younger’s exact recognizable mask and worn escape robe long enough to connect him to the earlier brother. He releases the newcomer toward the settlement behind him.\nSHOT 12C | 10s to 15s | 5 seconds\n65mm medium close three-quarter view of Younger from his east side. He occupies screen right facing down-valley to SCREEN LEFT, toward the southern city. The community remains softly visible behind and to the right; Last Arrival has joined it. A restrained handheld push approaches 15cm. Younger turns his head left and holds his distant eyeline. His hand slowly closes around the edge of the old robe, then becomes still. End on controlled resolve. Cut to black at the endpoint.\nEND STATE AND EDIT\nThe younger brother has become a point of welcome and resistance within a living community. End on his look toward the city, not a victory gesture.\nSOUND\nMountain wind, subdued nonverbal human presence, tools and small fires; wind continues beneath the final look and cuts to silence at black.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Little Brother (CHR-010 V03); match it wherever Little Brother appears.\n<<<image_2>>> is Townsfolk Masked (GRP-009 V12); match it wherever Townsfolk Masked appears.\n<<<image_3>>> is Townsfolk Masked (GRP-009 V02); match it wherever Townsfolk Masked appears.\n<<<image_4>>> is Townsfolk Masked (GRP-009 V11); match it wherever Townsfolk Masked appears.\n<<<image_5>>> is Townsfolk Masked (GRP-009 V10); match it wherever Townsfolk Masked appears.\n<<<image_6>>> is Townsfolk Masked (GRP-009 V09); match it wherever Townsfolk Masked appears.\n<<<image_7>>> is Townsfolk Masked (GRP-009 V05); match it wherever Townsfolk Masked appears.\n<<<image_8>>> is Townsfolk Masked (GRP-009 V06); match it wherever Townsfolk Masked appears.\n<<<image_9>>> is Townsfolk Masked (GRP-009 V08); match it wherever Townsfolk Masked appears.\n<<<image_10>>> is Dawn Plain Mountain Foot (LOC-029 V01); match it wherever Dawn Plain Mountain Foot appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150720_86b42b27-23da-443b-9894-94677dfe9a9d.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150720_86b42b27-23da-443b-9894-94677dfe9a9d_thumbnail.webp"
+    }
+  ]
+}

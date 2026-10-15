@@ -1,0 +1,140 @@
+{
+  "jobId": "J-20261015-UNG",
+  "parentJobId": null,
+  "hfJobId": "4a5fbe7a-7697-4c82-b70e-7ca5f5e371b2",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 10",
+  "target": "SHM-EP015-SC010-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 10 | SURVIVING AGAINST HIS WILL\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_COOK}}\n{{CHAR_GARMAYIL_COOK}}\n{{CHAR_YOUNGER_BROTHER}}\nLOCATION REFERENCES\n{{LOC_PREP_ROOM}}\n{{LOC_ESCAPE_PASSAGE}}\nPROP REFERENCES\n{{PROP_ESCAPE_ROBE}}\n{{PROP_COVER_CLOTH}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nPreparation room: hard neutral overhead light, warm spill at left wall, continuous floor and east/right counter. Escape passage: recessed cool utility lamps, rounded stone openings and a dark exterior exit ahead. Preserve practical light and architecture; transitions occur only at cuts.\nSTART STATE AND BLOCKING\nRoom camera south: fully covered body lies center-left. Younger kneels at its right side facing left, in original prisoner clothing. Armayil stands center-right; Garmayil returns through north/rear door. Exactly one escape robe is folded on the east/right counter. Covered body remains fully concealed and motionless.\n\nSHOT 10A | 00s to 06s | 6 seconds\n40mm close handheld from south. Garmayil enters, collects the single robe and wraps it around Younger’s shoulders. Younger refuses to rise, keeping his left hand on the covering cloth. Armayil crouches on his right and offers support under the right upper arm. Garmayil supports the left. Younger shakes his head and clings for one final moment.\nSHOT 10B | 06s to 11s | 5 seconds\n35mm continuous handheld view from the same side. The two rescuers help Younger stand. He slowly releases the cloth and reaches back once as they guide him toward the rear door. Camera follows one step and loses perfect composition briefly. The body stays on the floor; only the one escape robe moves with Younger.\nSHOT 10C | 11s to 15s | 4 seconds\n28mm in the escape passage, camera ahead of the three facing back toward them. Younger center in the robe, Armayil left, Garmayil right. The rescuers stop at a service turn and release him. Younger takes two reluctant steps toward camera, turns his head back to them, then continues. Camera retreats, keeping his unsteady balance readable.\nEND STATE AND EDIT\nYounger has left the rescuers, wearing the single escape robe over his original clothes. Armayil and Garmayil remain behind at the passage turn.\nSOUND\nCloth under fingers, knees shifting on floor, strained breaths, weight lifting, uneven footsteps and the deeper echo of the passage.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Big Brother (CHR-009 V01); match it wherever Big Brother appears.\n<<<image_2>>> is Little Brother (CHR-010 V01); match it wherever Little Brother appears.\n<<<image_3>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_4>>> is Garmayel (CHR-008 V02); match it wherever Garmayel appears.\n<<<image_5>>> is Slaughter Prep Room (LOC-026 V01); match it wherever Slaughter Prep Room appears.\n<<<image_6>>> is Narrow Escape Passage (LOC-030 V01); match it wherever Narrow Escape Passage appears.\n<<<image_7>>> is Cloak Burlap Grey (PRP-021 V01); match it wherever Cloak Burlap Grey appears.\n<<<image_8>>> is Vessel Snake Feeding Tray (PRP-020 V01); match it wherever Vessel Snake Feeding Tray appears.",
+  "basePrompt": "PLAN 10 | SURVIVING AGAINST HIS WILL\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_COOK}}\n{{CHAR_GARMAYIL_COOK}}\n{{CHAR_YOUNGER_BROTHER}}\nLOCATION REFERENCES\n{{LOC_PREP_ROOM}}\n{{LOC_ESCAPE_PASSAGE}}\nPROP REFERENCES\n{{PROP_ESCAPE_ROBE}}\n{{PROP_COVER_CLOTH}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nPreparation room: hard neutral overhead light, warm spill at left wall, continuous floor and east/right counter. Escape passage: recessed cool utility lamps, rounded stone openings and a dark exterior exit ahead. Preserve practical light and architecture; transitions occur only at cuts.\nSTART STATE AND BLOCKING\nRoom camera south: fully covered body lies center-left. Younger kneels at its right side facing left, in original prisoner clothing. Armayil stands center-right; Garmayil returns through north/rear door. Exactly one escape robe is folded on the east/right counter. Covered body remains fully concealed and motionless.\n\nSHOT 10A | 00s to 06s | 6 seconds\n40mm close handheld from south. Garmayil enters, collects the single robe and wraps it around Younger’s shoulders. Younger refuses to rise, keeping his left hand on the covering cloth. Armayil crouches on his right and offers support under the right upper arm. Garmayil supports the left. Younger shakes his head and clings for one final moment.\nSHOT 10B | 06s to 11s | 5 seconds\n35mm continuous handheld view from the same side. The two rescuers help Younger stand. He slowly releases the cloth and reaches back once as they guide him toward the rear door. Camera follows one step and loses perfect composition briefly. The body stays on the floor; only the one escape robe moves with Younger.\nSHOT 10C | 11s to 15s | 4 seconds\n28mm in the escape passage, camera ahead of the three facing back toward them. Younger center in the robe, Armayil left, Garmayil right. The rescuers stop at a service turn and release him. Younger takes two reluctant steps toward camera, turns his head back to them, then continues. Camera retreats, keeping his unsteady balance readable.\nEND STATE AND EDIT\nYounger has left the rescuers, wearing the single escape robe over his original clothes. Armayil and Garmayil remain behind at the passage turn.\nSOUND\nCloth under fingers, knees shifting on floor, strained breaths, weight lifting, uneven footsteps and the deeper echo of the passage.\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-009/V01",
+    "@CHR-010/V01",
+    "@CHR-007/V02",
+    "@CHR-008/V02",
+    "@LOC-026/V01",
+    "@LOC-030/V01",
+    "@PRP-021/V01",
+    "@PRP-020/V01"
+  ],
+  "createdAt": "2026-10-15T15:10:27.867Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150551_4a5fbe7a-7697-4c82-b70e-7ca5f5e371b2.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-15T15:05:51.974666Z",
+      "display_name": "Seedance 2.5",
+      "id": "4a5fbe7a-7697-4c82-b70e-7ca5f5e371b2",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "be65a8f3-7f58-4cf1-9b80-36b7725ac15c",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/be65a8f3-7f58-4cf1-9b80-36b7725ac15c.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "2f6cf369-12f5-45fa-95d5-c03b185ec88a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/2f6cf369-12f5-45fa-95d5-c03b185ec88a.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "fe49a369-553f-4a74-99dd-6a47ee6de7f2",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/fe49a369-553f-4a74-99dd-6a47ee6de7f2.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "5a18d24f-a92c-416c-aba0-5c5f8a7b9ee4",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/5a18d24f-a92c-416c-aba0-5c5f8a7b9ee4.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "bd1c2be8-695f-4e55-9928-dbf195616018",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/bd1c2be8-695f-4e55-9928-dbf195616018.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "c23fca89-fa10-46dd-8001-448377317da5",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/c23fca89-fa10-46dd-8001-448377317da5.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "bd277ad6-e4ff-4ef3-9853-e4458dcf757c",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/bd277ad6-e4ff-4ef3-9853-e4458dcf757c.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "b0b3773e-05a0-4053-98b6-02ef94fd017f",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/b0b3773e-05a0-4053-98b6-02ef94fd017f.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 10 | SURVIVING AGAINST HIS WILL\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_COOK}}\n{{CHAR_GARMAYIL_COOK}}\n{{CHAR_YOUNGER_BROTHER}}\nLOCATION REFERENCES\n{{LOC_PREP_ROOM}}\n{{LOC_ESCAPE_PASSAGE}}\nPROP REFERENCES\n{{PROP_ESCAPE_ROBE}}\n{{PROP_COVER_CLOTH}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nPreparation room: hard neutral overhead light, warm spill at left wall, continuous floor and east/right counter. Escape passage: recessed cool utility lamps, rounded stone openings and a dark exterior exit ahead. Preserve practical light and architecture; transitions occur only at cuts.\nSTART STATE AND BLOCKING\nRoom camera south: fully covered body lies center-left. Younger kneels at its right side facing left, in original prisoner clothing. Armayil stands center-right; Garmayil returns through north/rear door. Exactly one escape robe is folded on the east/right counter. Covered body remains fully concealed and motionless.\n\nSHOT 10A | 00s to 06s | 6 seconds\n40mm close handheld from south. Garmayil enters, collects the single robe and wraps it around Younger’s shoulders. Younger refuses to rise, keeping his left hand on the covering cloth. Armayil crouches on his right and offers support under the right upper arm. Garmayil supports the left. Younger shakes his head and clings for one final moment.\nSHOT 10B | 06s to 11s | 5 seconds\n35mm continuous handheld view from the same side. The two rescuers help Younger stand. He slowly releases the cloth and reaches back once as they guide him toward the rear door. Camera follows one step and loses perfect composition briefly. The body stays on the floor; only the one escape robe moves with Younger.\nSHOT 10C | 11s to 15s | 4 seconds\n28mm in the escape passage, camera ahead of the three facing back toward them. Younger center in the robe, Armayil left, Garmayil right. The rescuers stop at a service turn and release him. Younger takes two reluctant steps toward camera, turns his head back to them, then continues. Camera retreats, keeping his unsteady balance readable.\nEND STATE AND EDIT\nYounger has left the rescuers, wearing the single escape robe over his original clothes. Armayil and Garmayil remain behind at the passage turn.\nSOUND\nCloth under fingers, knees shifting on floor, strained breaths, weight lifting, uneven footsteps and the deeper echo of the passage.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Big Brother (CHR-009 V01); match it wherever Big Brother appears.\n<<<image_2>>> is Little Brother (CHR-010 V01); match it wherever Little Brother appears.\n<<<image_3>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_4>>> is Garmayel (CHR-008 V02); match it wherever Garmayel appears.\n<<<image_5>>> is Slaughter Prep Room (LOC-026 V01); match it wherever Slaughter Prep Room appears.\n<<<image_6>>> is Narrow Escape Passage (LOC-030 V01); match it wherever Narrow Escape Passage appears.\n<<<image_7>>> is Cloak Burlap Grey (PRP-021 V01); match it wherever Cloak Burlap Grey appears.\n<<<image_8>>> is Vessel Snake Feeding Tray (PRP-020 V01); match it wherever Vessel Snake Feeding Tray appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150551_4a5fbe7a-7697-4c82-b70e-7ca5f5e371b2.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150551_4a5fbe7a-7697-4c82-b70e-7ca5f5e371b2_thumbnail.webp"
+    }
+  ]
+}

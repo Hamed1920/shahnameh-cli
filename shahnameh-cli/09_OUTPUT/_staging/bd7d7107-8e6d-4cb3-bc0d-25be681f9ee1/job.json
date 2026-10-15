@@ -1,0 +1,104 @@
+{
+  "jobId": "J-20261015-3DD",
+  "parentJobId": null,
+  "hfJobId": "bd7d7107-8e6d-4cb3-bc0d-25be681f9ee1",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 03",
+  "target": "SHM-EP015-SC003-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 03 | THE HEAD COOK APPROVES\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_COOK}}\n{{CHAR_GARMAYIL_COOK}}\n{{CHAR_HEAD_COOK}}\nLOCATION REFERENCES\n{{LOC_KITCHEN}}\nPROP REFERENCES\n{{PROP_WORK_TOOLS}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nKitchen at night. One integrated overhead neutral work lamp lights the foreground counter; distant islands are dimmer. Rounded masonry arches and Iranian relief fragments remain visible beyond modern functional preparation equipment. Metal and cloth are matte, worn and practical.\nSTART STATE AND BLOCKING\nCamera on south side of an east-west workbench, looking north. Armayil stands at the far side on screen left, Garmayil on screen right, both facing camera-side across their work. Head Cook approaches behind them from upper screen right. Masks retain original identity; only work garments differ from observer state. Exactly three people are visible.\n\nSHOT 03A | 00s to 05s | 5 seconds\n35mm medium-wide from south. Armayil portions ordinary vegetables; Garmayil cleans and arranges serving bowls. Head Cook enters behind Garmayil and stops between the two men, inspecting their hands. Camera advances 20cm with restrained handheld tension. Neither worker turns to acknowledge him.\nSHOT 03B | 05s to 09s | 4 seconds\n85mm close detail from the same side on Armayil’s hands. He momentarily presses the tool handle too hard, pauses half a beat, then resumes measured cutting. The Head Cook’s sleeve enters at upper right as he reaches toward a finished portion, not toward Armayil’s body.\nSHOT 03C | 09s to 15s | 6 seconds\n50mm medium three-shot from south. Head Cook examines the finished portion, looks from Armayil to Garmayil, gives a clearly readable approving nod, and taps the workbench once. Both men maintain working posture until he exits screen right. Only then does Garmayil release a shallow breath. Hold their small relief for the final second.\nEND STATE AND EDIT\nHead Cook has exited. Armayil and Garmayil remain in approved kitchen work clothing; these exact garments persist through the rescue night.\nSOUND\nBlade on vegetables, bowl placement, quiet extraction fan, one bench tap and a restrained exhale.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_2>>> is Garmayel (CHR-008 V02); match it wherever Garmayel appears.\n<<<image_3>>> is Head Chef (CHR-011 V02); match it wherever Head Chef appears.\n<<<image_4>>> is Zahhak Kitchen Main (LOC-025 V01); match it wherever Zahhak Kitchen Main appears.",
+  "basePrompt": "PLAN 03 | THE HEAD COOK APPROVES\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_COOK}}\n{{CHAR_GARMAYIL_COOK}}\n{{CHAR_HEAD_COOK}}\nLOCATION REFERENCES\n{{LOC_KITCHEN}}\nPROP REFERENCES\n{{PROP_WORK_TOOLS}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nKitchen at night. One integrated overhead neutral work lamp lights the foreground counter; distant islands are dimmer. Rounded masonry arches and Iranian relief fragments remain visible beyond modern functional preparation equipment. Metal and cloth are matte, worn and practical.\nSTART STATE AND BLOCKING\nCamera on south side of an east-west workbench, looking north. Armayil stands at the far side on screen left, Garmayil on screen right, both facing camera-side across their work. Head Cook approaches behind them from upper screen right. Masks retain original identity; only work garments differ from observer state. Exactly three people are visible.\n\nSHOT 03A | 00s to 05s | 5 seconds\n35mm medium-wide from south. Armayil portions ordinary vegetables; Garmayil cleans and arranges serving bowls. Head Cook enters behind Garmayil and stops between the two men, inspecting their hands. Camera advances 20cm with restrained handheld tension. Neither worker turns to acknowledge him.\nSHOT 03B | 05s to 09s | 4 seconds\n85mm close detail from the same side on Armayil’s hands. He momentarily presses the tool handle too hard, pauses half a beat, then resumes measured cutting. The Head Cook’s sleeve enters at upper right as he reaches toward a finished portion, not toward Armayil’s body.\nSHOT 03C | 09s to 15s | 6 seconds\n50mm medium three-shot from south. Head Cook examines the finished portion, looks from Armayil to Garmayil, gives a clearly readable approving nod, and taps the workbench once. Both men maintain working posture until he exits screen right. Only then does Garmayil release a shallow breath. Hold their small relief for the final second.\nEND STATE AND EDIT\nHead Cook has exited. Armayil and Garmayil remain in approved kitchen work clothing; these exact garments persist through the rescue night.\nSOUND\nBlade on vegetables, bowl placement, quiet extraction fan, one bench tap and a restrained exhale.\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-007/V02",
+    "@CHR-008/V02",
+    "@CHR-011/V02",
+    "@LOC-025/V01"
+  ],
+  "createdAt": "2026-10-15T15:06:21.524Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150030_bd7d7107-8e6d-4cb3-bc0d-25be681f9ee1.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-15T15:00:30.497181Z",
+      "display_name": "Seedance 2.5",
+      "id": "bd7d7107-8e6d-4cb3-bc0d-25be681f9ee1",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "8ceeef40-af14-409f-9a6a-e8beff4ad655",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/8ceeef40-af14-409f-9a6a-e8beff4ad655.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "f0d3112e-088f-4766-93b4-6ce3bb477ef0",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/f0d3112e-088f-4766-93b4-6ce3bb477ef0.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "83747734-7a0a-47c0-a9b8-6963f55f13bf",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/83747734-7a0a-47c0-a9b8-6963f55f13bf.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "9fa10838-e4de-47a6-ba4a-d439002634f8",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/9fa10838-e4de-47a6-ba4a-d439002634f8.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 03 | THE HEAD COOK APPROVES\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_COOK}}\n{{CHAR_GARMAYIL_COOK}}\n{{CHAR_HEAD_COOK}}\nLOCATION REFERENCES\n{{LOC_KITCHEN}}\nPROP REFERENCES\n{{PROP_WORK_TOOLS}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nKitchen at night. One integrated overhead neutral work lamp lights the foreground counter; distant islands are dimmer. Rounded masonry arches and Iranian relief fragments remain visible beyond modern functional preparation equipment. Metal and cloth are matte, worn and practical.\nSTART STATE AND BLOCKING\nCamera on south side of an east-west workbench, looking north. Armayil stands at the far side on screen left, Garmayil on screen right, both facing camera-side across their work. Head Cook approaches behind them from upper screen right. Masks retain original identity; only work garments differ from observer state. Exactly three people are visible.\n\nSHOT 03A | 00s to 05s | 5 seconds\n35mm medium-wide from south. Armayil portions ordinary vegetables; Garmayil cleans and arranges serving bowls. Head Cook enters behind Garmayil and stops between the two men, inspecting their hands. Camera advances 20cm with restrained handheld tension. Neither worker turns to acknowledge him.\nSHOT 03B | 05s to 09s | 4 seconds\n85mm close detail from the same side on Armayil’s hands. He momentarily presses the tool handle too hard, pauses half a beat, then resumes measured cutting. The Head Cook’s sleeve enters at upper right as he reaches toward a finished portion, not toward Armayil’s body.\nSHOT 03C | 09s to 15s | 6 seconds\n50mm medium three-shot from south. Head Cook examines the finished portion, looks from Armayil to Garmayil, gives a clearly readable approving nod, and taps the workbench once. Both men maintain working posture until he exits screen right. Only then does Garmayil release a shallow breath. Hold their small relief for the final second.\nEND STATE AND EDIT\nHead Cook has exited. Armayil and Garmayil remain in approved kitchen work clothing; these exact garments persist through the rescue night.\nSOUND\nBlade on vegetables, bowl placement, quiet extraction fan, one bench tap and a restrained exhale.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_2>>> is Garmayel (CHR-008 V02); match it wherever Garmayel appears.\n<<<image_3>>> is Head Chef (CHR-011 V02); match it wherever Head Chef appears.\n<<<image_4>>> is Zahhak Kitchen Main (LOC-025 V01); match it wherever Zahhak Kitchen Main appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150030_bd7d7107-8e6d-4cb3-bc0d-25be681f9ee1.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150030_bd7d7107-8e6d-4cb3-bc0d-25be681f9ee1_thumbnail.webp"
+    }
+  ]
+}

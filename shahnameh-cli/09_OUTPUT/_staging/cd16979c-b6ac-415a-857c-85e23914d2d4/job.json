@@ -1,0 +1,140 @@
+{
+  "jobId": "J-20261015-E4T",
+  "parentJobId": null,
+  "hfJobId": "cd16979c-b6ac-415a-857c-85e23914d2d4",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 02",
+  "target": "SHM-EP015-SC002-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 02 | THE KITCHEN BELOW\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_OBSERVER}}\n{{CHAR_GARMAYIL_OBSERVER}}\n{{CHAR_GUARD_A}}\n{{CHAR_GUARD_B}}\n{{PAIR_PRISONERS_NIGHT_B}}\n{{CHAR_KITCHEN_WORKER_A}}\n{{CHAR_KITCHEN_WORKER_B}}\nLOCATION REFERENCES\n{{LOC_UPPER_SERVICE}}\n{{LOC_KITCHEN}}\nPROP REFERENCES\n{{PROP_CLOSED_TRAY_PAIR}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nNight. Kitchen work islands have hard downward neutral fixtures with controlled pools of light. Upper observation gallery is dim, lit by weak blue night spill. Old massive masonry, rounded openings and Iranian carved reliefs coexist with functional metal counters, sinks and engineered ventilation. Preserve spatial depth; the room is not a black void.\nSTART STATE AND BLOCKING\nThe upper gallery overlooks the KITCHEN itself. Camera behind the observers looks downward. Armayil left, Garmayil right. A small preparation-room doorway is visible at the kitchen rear right. Guard A and B bring the Night B pair toward that doorway. Two masked kitchen workers remain at separate workstations.\n\nSHOT 02A | 00s to 06s | 6 seconds\n18mm high-angle view through the gallery aperture. A slow 15cm handheld lean reveals sinks, preparation surfaces and cookware, making the kitchen unmistakable. Guards take the two captives through the rear-right doorway; its door closes. Keep the observers as partial back silhouettes at the edges.\nSHOT 02B | 06s to 09s | 3 seconds\n50mm from the same upper opening, tighter on that closed doorway. Explicit time ellipsis: later, Guard A emerges carrying one tray with exactly two closed containers. Guard B closes the door behind him; the captives remain unseen. Ordinary kitchen labor continues in the edge of frame.\nSHOT 02C | 09s to 13s | 4 seconds\n40mm side two-shot on the upper gallery: Armayil left facing right, Garmayil right facing left. Garmayil holds Armayil’s gaze. Armayil takes one breath, then gives one small deliberate nod. Garmayil briefly clasps his forearm; their masks stay inanimate.\nSHOT 02D | 13s to 15s | 2 seconds\n28mm wider on the gallery. They release hands and separate: Armayil exits screen right along the passage leading toward kitchen access; Garmayil exits screen left toward the service stores. Both leave on foot with controlled urgency.\nEND STATE AND EDIT\nThey have silently agreed to intervene. Cut forward in time to their work-clothing state; the actual costume change is omitted.\nSOUND\nDistant water and metal utensils, door weight, closed containers vibrating on a tray, a breath and one forearm fabric touch.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Armayel (CHR-007 V01); match it wherever Armayel appears.\n<<<image_2>>> is Garmayel (CHR-008 V01); match it wherever Garmayel appears.\n<<<image_3>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Townsfolk Masked (GRP-009 V05); match it wherever Townsfolk Masked appears.\n<<<image_5>>> is Townsfolk Masked (GRP-009 V06); match it wherever Townsfolk Masked appears.\n<<<image_6>>> is Back Courtyard Transfer (LOC-027 V02); match it wherever Back Courtyard Transfer appears.\n<<<image_7>>> is Back Courtyard Transfer (LOC-027 V01); match it wherever Back Courtyard Transfer appears.\n<<<image_8>>> is Zahhak Kitchen Main (LOC-025 V01); match it wherever Zahhak Kitchen Main appears.",
+  "basePrompt": "PLAN 02 | THE KITCHEN BELOW\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_OBSERVER}}\n{{CHAR_GARMAYIL_OBSERVER}}\n{{CHAR_GUARD_A}}\n{{CHAR_GUARD_B}}\n{{PAIR_PRISONERS_NIGHT_B}}\n{{CHAR_KITCHEN_WORKER_A}}\n{{CHAR_KITCHEN_WORKER_B}}\nLOCATION REFERENCES\n{{LOC_UPPER_SERVICE}}\n{{LOC_KITCHEN}}\nPROP REFERENCES\n{{PROP_CLOSED_TRAY_PAIR}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nNight. Kitchen work islands have hard downward neutral fixtures with controlled pools of light. Upper observation gallery is dim, lit by weak blue night spill. Old massive masonry, rounded openings and Iranian carved reliefs coexist with functional metal counters, sinks and engineered ventilation. Preserve spatial depth; the room is not a black void.\nSTART STATE AND BLOCKING\nThe upper gallery overlooks the KITCHEN itself. Camera behind the observers looks downward. Armayil left, Garmayil right. A small preparation-room doorway is visible at the kitchen rear right. Guard A and B bring the Night B pair toward that doorway. Two masked kitchen workers remain at separate workstations.\n\nSHOT 02A | 00s to 06s | 6 seconds\n18mm high-angle view through the gallery aperture. A slow 15cm handheld lean reveals sinks, preparation surfaces and cookware, making the kitchen unmistakable. Guards take the two captives through the rear-right doorway; its door closes. Keep the observers as partial back silhouettes at the edges.\nSHOT 02B | 06s to 09s | 3 seconds\n50mm from the same upper opening, tighter on that closed doorway. Explicit time ellipsis: later, Guard A emerges carrying one tray with exactly two closed containers. Guard B closes the door behind him; the captives remain unseen. Ordinary kitchen labor continues in the edge of frame.\nSHOT 02C | 09s to 13s | 4 seconds\n40mm side two-shot on the upper gallery: Armayil left facing right, Garmayil right facing left. Garmayil holds Armayil’s gaze. Armayil takes one breath, then gives one small deliberate nod. Garmayil briefly clasps his forearm; their masks stay inanimate.\nSHOT 02D | 13s to 15s | 2 seconds\n28mm wider on the gallery. They release hands and separate: Armayil exits screen right along the passage leading toward kitchen access; Garmayil exits screen left toward the service stores. Both leave on foot with controlled urgency.\nEND STATE AND EDIT\nThey have silently agreed to intervene. Cut forward in time to their work-clothing state; the actual costume change is omitted.\nSOUND\nDistant water and metal utensils, door weight, closed containers vibrating on a tray, a breath and one forearm fabric touch.\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-007/V01",
+    "@CHR-008/V01",
+    "@GRP-005/V01",
+    "@GRP-009/V05",
+    "@GRP-009/V06",
+    "@LOC-027/V02",
+    "@LOC-027/V01",
+    "@LOC-025/V01"
+  ],
+  "createdAt": "2026-10-15T15:05:03.679Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150027_cd16979c-b6ac-415a-857c-85e23914d2d4.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-15T15:00:27.77884Z",
+      "display_name": "Seedance 2.5",
+      "id": "cd16979c-b6ac-415a-857c-85e23914d2d4",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "6fabd972-d327-4ed3-afe2-00a20a5a5ddb",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/6fabd972-d327-4ed3-afe2-00a20a5a5ddb.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "bf850d3b-48c9-4aca-bccb-626332f07811",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/bf850d3b-48c9-4aca-bccb-626332f07811.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "37382255-7653-4a3b-962b-c4f2a0206edc",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/37382255-7653-4a3b-962b-c4f2a0206edc.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "e5f05350-8bb6-421e-b150-16304b58dc05",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/e5f05350-8bb6-421e-b150-16304b58dc05.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "062a0f25-fd05-442f-9b65-87f40f42076e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/062a0f25-fd05-442f-9b65-87f40f42076e.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "0fae1001-a44d-45f2-87c9-f672effd0254",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/0fae1001-a44d-45f2-87c9-f672effd0254.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "5a1619c0-a8bd-40e6-93ad-823a93e7120f",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/5a1619c0-a8bd-40e6-93ad-823a93e7120f.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "16997996-bbf9-4e02-8bda-dc4bdfb3000e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/16997996-bbf9-4e02-8bda-dc4bdfb3000e.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 02 | THE KITCHEN BELOW\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_OBSERVER}}\n{{CHAR_GARMAYIL_OBSERVER}}\n{{CHAR_GUARD_A}}\n{{CHAR_GUARD_B}}\n{{PAIR_PRISONERS_NIGHT_B}}\n{{CHAR_KITCHEN_WORKER_A}}\n{{CHAR_KITCHEN_WORKER_B}}\nLOCATION REFERENCES\n{{LOC_UPPER_SERVICE}}\n{{LOC_KITCHEN}}\nPROP REFERENCES\n{{PROP_CLOSED_TRAY_PAIR}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nNight. Kitchen work islands have hard downward neutral fixtures with controlled pools of light. Upper observation gallery is dim, lit by weak blue night spill. Old massive masonry, rounded openings and Iranian carved reliefs coexist with functional metal counters, sinks and engineered ventilation. Preserve spatial depth; the room is not a black void.\nSTART STATE AND BLOCKING\nThe upper gallery overlooks the KITCHEN itself. Camera behind the observers looks downward. Armayil left, Garmayil right. A small preparation-room doorway is visible at the kitchen rear right. Guard A and B bring the Night B pair toward that doorway. Two masked kitchen workers remain at separate workstations.\n\nSHOT 02A | 00s to 06s | 6 seconds\n18mm high-angle view through the gallery aperture. A slow 15cm handheld lean reveals sinks, preparation surfaces and cookware, making the kitchen unmistakable. Guards take the two captives through the rear-right doorway; its door closes. Keep the observers as partial back silhouettes at the edges.\nSHOT 02B | 06s to 09s | 3 seconds\n50mm from the same upper opening, tighter on that closed doorway. Explicit time ellipsis: later, Guard A emerges carrying one tray with exactly two closed containers. Guard B closes the door behind him; the captives remain unseen. Ordinary kitchen labor continues in the edge of frame.\nSHOT 02C | 09s to 13s | 4 seconds\n40mm side two-shot on the upper gallery: Armayil left facing right, Garmayil right facing left. Garmayil holds Armayil’s gaze. Armayil takes one breath, then gives one small deliberate nod. Garmayil briefly clasps his forearm; their masks stay inanimate.\nSHOT 02D | 13s to 15s | 2 seconds\n28mm wider on the gallery. They release hands and separate: Armayil exits screen right along the passage leading toward kitchen access; Garmayil exits screen left toward the service stores. Both leave on foot with controlled urgency.\nEND STATE AND EDIT\nThey have silently agreed to intervene. Cut forward in time to their work-clothing state; the actual costume change is omitted.\nSOUND\nDistant water and metal utensils, door weight, closed containers vibrating on a tray, a breath and one forearm fabric touch.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Armayel (CHR-007 V01); match it wherever Armayel appears.\n<<<image_2>>> is Garmayel (CHR-008 V01); match it wherever Garmayel appears.\n<<<image_3>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Townsfolk Masked (GRP-009 V05); match it wherever Townsfolk Masked appears.\n<<<image_5>>> is Townsfolk Masked (GRP-009 V06); match it wherever Townsfolk Masked appears.\n<<<image_6>>> is Back Courtyard Transfer (LOC-027 V02); match it wherever Back Courtyard Transfer appears.\n<<<image_7>>> is Back Courtyard Transfer (LOC-027 V01); match it wherever Back Courtyard Transfer appears.\n<<<image_8>>> is Zahhak Kitchen Main (LOC-025 V01); match it wherever Zahhak Kitchen Main appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150027_cd16979c-b6ac-415a-857c-85e23914d2d4.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150027_cd16979c-b6ac-415a-857c-85e23914d2d4_thumbnail.webp"
+    }
+  ]
+}

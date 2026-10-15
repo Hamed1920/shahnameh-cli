@@ -1,0 +1,149 @@
+{
+  "jobId": "J-20261015-9HS",
+  "parentJobId": null,
+  "hfJobId": "b5d18095-552e-4cc5-8b54-8975bfc12026",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 04",
+  "target": "SHM-EP015-SC004-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 04 | BOTH OF US WILL LIVE\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_COOK}}\n{{CHAR_GARMAYIL_COOK}}\n{{CHAR_OLDER_BROTHER}}\n{{CHAR_YOUNGER_BROTHER}}\n{{CHAR_GUARD_A}}\n{{CHAR_GUARD_B}}\nLOCATION REFERENCES\n{{LOC_PREP_ROOM}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nEnclosed preparation room adjoining kitchen. A hard neutral ceiling fixture lights the central floor; a warmer practical work lamp softly reaches the brothers at the west wall. East wall and threshold are darker. Fixed light and exposure; the feeling of warmth comes from framing and bodies, not a magical light change.\nSTART STATE AND BLOCKING\nDoor is at north/rear wall, work counter at east/right, empty floor at center. Camera stays south looking north. Brothers stand at west/screen left: Older at far left, Younger just right of him. Armayil stands center-right facing left toward them. Garmayil is near the rear door. Guards are at that door. Everyone is an adult; masks are rigid.\n\nSHOT 04A | 00s to 04s | 4 seconds\n28mm medium-wide from south. Guards release the brothers just inside the room and both exit through the rear door. Garmayil closes it after the second guard. Armayil keeps his hands open and low as the brothers recoil toward the left wall.\nSHOT 04B | 04s to 08s | 4 seconds\n50mm close group view from south-west, still on the south side of the axis. Armayil at right raises one finger briefly near his own mask to request quiet, then lowers both hands openly. Garmayil, behind him near the door, gives a small reassuring nod. Older’s shoulders begin to release; Younger watches his brother.\nSHOT 04C | 08s to 15s | 7 seconds\n40mm intimate two-shot from south. Older left, Younger right. Older takes Younger by both upper arms, looks into his mask, and draws him into a short relieved embrace. Older’s chest opens and a breath almost becomes a quiet laugh. Younger cautiously returns the embrace. Hold the relief in real time. Armayil’s open hand stays at the far-right edge. Garmayil quietly moves to the right work counter off-screen.\nEND STATE AND EDIT\nBoth brothers believe rescue is for both of them. Older is visibly more hopeful. Garmayil is by the right counter; no escape garment is visible yet.\nSOUND\nGuard boots recede, latch, quick breathing slowing, cloth in the embrace, one breath of relief. No spoken reassurance.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Big Brother (CHR-009 V01); match it wherever Big Brother appears.\n<<<image_2>>> is Little Brother (CHR-010 V01); match it wherever Little Brother appears.\n<<<image_3>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_4>>> is Garmayel (CHR-008 V02); match it wherever Garmayel appears.\n<<<image_5>>> is Head Chef (CHR-011 V02); match it wherever Head Chef appears.\n<<<image_6>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_7>>> is Slaughter Prep Room (LOC-026 V01); match it wherever Slaughter Prep Room appears.\n<<<image_8>>> is Armayel (CHR-007 V01); match it wherever Armayel appears.\n<<<image_9>>> is Garmayel (CHR-008 V01); match it wherever Garmayel appears.",
+  "basePrompt": "PLAN 04 | BOTH OF US WILL LIVE\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_COOK}}\n{{CHAR_GARMAYIL_COOK}}\n{{CHAR_OLDER_BROTHER}}\n{{CHAR_YOUNGER_BROTHER}}\n{{CHAR_GUARD_A}}\n{{CHAR_GUARD_B}}\nLOCATION REFERENCES\n{{LOC_PREP_ROOM}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nEnclosed preparation room adjoining kitchen. A hard neutral ceiling fixture lights the central floor; a warmer practical work lamp softly reaches the brothers at the west wall. East wall and threshold are darker. Fixed light and exposure; the feeling of warmth comes from framing and bodies, not a magical light change.\nSTART STATE AND BLOCKING\nDoor is at north/rear wall, work counter at east/right, empty floor at center. Camera stays south looking north. Brothers stand at west/screen left: Older at far left, Younger just right of him. Armayil stands center-right facing left toward them. Garmayil is near the rear door. Guards are at that door. Everyone is an adult; masks are rigid.\n\nSHOT 04A | 00s to 04s | 4 seconds\n28mm medium-wide from south. Guards release the brothers just inside the room and both exit through the rear door. Garmayil closes it after the second guard. Armayil keeps his hands open and low as the brothers recoil toward the left wall.\nSHOT 04B | 04s to 08s | 4 seconds\n50mm close group view from south-west, still on the south side of the axis. Armayil at right raises one finger briefly near his own mask to request quiet, then lowers both hands openly. Garmayil, behind him near the door, gives a small reassuring nod. Older’s shoulders begin to release; Younger watches his brother.\nSHOT 04C | 08s to 15s | 7 seconds\n40mm intimate two-shot from south. Older left, Younger right. Older takes Younger by both upper arms, looks into his mask, and draws him into a short relieved embrace. Older’s chest opens and a breath almost becomes a quiet laugh. Younger cautiously returns the embrace. Hold the relief in real time. Armayil’s open hand stays at the far-right edge. Garmayil quietly moves to the right work counter off-screen.\nEND STATE AND EDIT\nBoth brothers believe rescue is for both of them. Older is visibly more hopeful. Garmayil is by the right counter; no escape garment is visible yet.\nSOUND\nGuard boots recede, latch, quick breathing slowing, cloth in the embrace, one breath of relief. No spoken reassurance.\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-009/V01",
+    "@CHR-010/V01",
+    "@CHR-007/V02",
+    "@CHR-008/V02",
+    "@CHR-011/V02",
+    "@GRP-005/V01",
+    "@LOC-026/V01",
+    "@CHR-007/V01",
+    "@CHR-008/V01"
+  ],
+  "createdAt": "2026-10-15T15:07:24.270Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150108_b5d18095-552e-4cc5-8b54-8975bfc12026.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-15T15:01:08.496421Z",
+      "display_name": "Seedance 2.5",
+      "id": "b5d18095-552e-4cc5-8b54-8975bfc12026",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "c022866a-b8ee-4eef-a963-96ee03fda89f",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/c022866a-b8ee-4eef-a963-96ee03fda89f.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "27e55cc3-825f-470c-8669-c84453a8eea3",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/27e55cc3-825f-470c-8669-c84453a8eea3.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "2b0e7324-76d7-4793-be05-940397df302a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/2b0e7324-76d7-4793-be05-940397df302a.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "dc3a5207-8d9e-4590-81d8-70683cc4d21b",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/dc3a5207-8d9e-4590-81d8-70683cc4d21b.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "65c1ddeb-aac9-4d67-b1b4-486fcdbacde2",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/65c1ddeb-aac9-4d67-b1b4-486fcdbacde2.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "25eb1291-9cb5-4caf-96fb-6eb19accb72b",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/25eb1291-9cb5-4caf-96fb-6eb19accb72b.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "b6e6c2af-5b84-48fe-8a82-1d7371699739",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/b6e6c2af-5b84-48fe-8a82-1d7371699739.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "26bef1aa-130b-4d6f-910b-b7f4bcb72561",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/26bef1aa-130b-4d6f-910b-b7f4bcb72561.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "1d64c44c-6b68-41c6-a15c-96c5da292f1e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/1d64c44c-6b68-41c6-a15c-96c5da292f1e.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 04 | BOTH OF US WILL LIVE\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_COOK}}\n{{CHAR_GARMAYIL_COOK}}\n{{CHAR_OLDER_BROTHER}}\n{{CHAR_YOUNGER_BROTHER}}\n{{CHAR_GUARD_A}}\n{{CHAR_GUARD_B}}\nLOCATION REFERENCES\n{{LOC_PREP_ROOM}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nEnclosed preparation room adjoining kitchen. A hard neutral ceiling fixture lights the central floor; a warmer practical work lamp softly reaches the brothers at the west wall. East wall and threshold are darker. Fixed light and exposure; the feeling of warmth comes from framing and bodies, not a magical light change.\nSTART STATE AND BLOCKING\nDoor is at north/rear wall, work counter at east/right, empty floor at center. Camera stays south looking north. Brothers stand at west/screen left: Older at far left, Younger just right of him. Armayil stands center-right facing left toward them. Garmayil is near the rear door. Guards are at that door. Everyone is an adult; masks are rigid.\n\nSHOT 04A | 00s to 04s | 4 seconds\n28mm medium-wide from south. Guards release the brothers just inside the room and both exit through the rear door. Garmayil closes it after the second guard. Armayil keeps his hands open and low as the brothers recoil toward the left wall.\nSHOT 04B | 04s to 08s | 4 seconds\n50mm close group view from south-west, still on the south side of the axis. Armayil at right raises one finger briefly near his own mask to request quiet, then lowers both hands openly. Garmayil, behind him near the door, gives a small reassuring nod. Older’s shoulders begin to release; Younger watches his brother.\nSHOT 04C | 08s to 15s | 7 seconds\n40mm intimate two-shot from south. Older left, Younger right. Older takes Younger by both upper arms, looks into his mask, and draws him into a short relieved embrace. Older’s chest opens and a breath almost becomes a quiet laugh. Younger cautiously returns the embrace. Hold the relief in real time. Armayil’s open hand stays at the far-right edge. Garmayil quietly moves to the right work counter off-screen.\nEND STATE AND EDIT\nBoth brothers believe rescue is for both of them. Older is visibly more hopeful. Garmayil is by the right counter; no escape garment is visible yet.\nSOUND\nGuard boots recede, latch, quick breathing slowing, cloth in the embrace, one breath of relief. No spoken reassurance.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Big Brother (CHR-009 V01); match it wherever Big Brother appears.\n<<<image_2>>> is Little Brother (CHR-010 V01); match it wherever Little Brother appears.\n<<<image_3>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_4>>> is Garmayel (CHR-008 V02); match it wherever Garmayel appears.\n<<<image_5>>> is Head Chef (CHR-011 V02); match it wherever Head Chef appears.\n<<<image_6>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_7>>> is Slaughter Prep Room (LOC-026 V01); match it wherever Slaughter Prep Room appears.\n<<<image_8>>> is Armayel (CHR-007 V01); match it wherever Armayel appears.\n<<<image_9>>> is Garmayel (CHR-008 V01); match it wherever Garmayel appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150108_b5d18095-552e-4cc5-8b54-8975bfc12026.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150108_b5d18095-552e-4cc5-8b54-8975bfc12026_thumbnail.webp"
+    }
+  ]
+}

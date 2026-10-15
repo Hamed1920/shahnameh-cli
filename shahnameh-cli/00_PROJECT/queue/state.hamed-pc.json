@@ -81,7 +81,19 @@
     "J-20260930-RTS",
     "J-20260930-F52",
     "J-20260930-LYN",
-    "J-20260930-9IN"
+    "J-20260930-9IN",
+    "J-20261015-RIU",
+    "J-20261015-E4T",
+    "J-20261015-OFI",
+    "J-20261015-R7Q",
+    "J-20261015-3DD",
+    "J-20261015-WFN",
+    "J-20261015-QKQ",
+    "J-20261015-9HS",
+    "J-20261015-F73",
+    "J-20261015-UNG",
+    "J-20261015-CIR",
+    "J-20261015-PNV"
   ],
   "processedDecisions": [
     "rev_mtljtubxafk9",
@@ -179,8 +191,8 @@
     "rev_munwg577wccc",
     "rev_munzfykke3r6"
   ],
-  "spentCredits": 6855,
-  "updatedAt": "2026-10-15T14:59:21.599Z",
+  "spentCredits": 7350,
+  "updatedAt": "2026-10-15T15:12:19.181Z",
   "failedDecisions": {},
   "processedOps": [
     "op_mu18d6axozqm",
@@ -265,7 +277,8 @@
     "jr_munv5pyp8wha",
     "jr_munxdm0c85f8",
     "jr_mv9nss1ga46t",
-    "jr_mv9nzs5d372e"
+    "jr_mv9nzs5d372e",
+    "jr_mv9o2ddl3842"
   ],
   "held": {},
   "failedJobs": {
@@ -276,6 +289,10 @@
     "J-20260930-H69": {
       "reason": "Error: Higgsfield API error (HTTP 503). request failed with status 503 Service Unavailable",
       "at": "2026-09-30T08:36:09.713Z"
+    },
+    "J-20261015-RIU": {
+      "reason": "Error: Higgsfield API error (HTTP 503). request failed with status 503 Service Unavailable",
+      "at": "2026-10-15T14:59:59.915Z"
     }
   }
 }

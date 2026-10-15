@@ -1,0 +1,122 @@
+{
+  "jobId": "J-20261015-WFN",
+  "parentJobId": null,
+  "hfJobId": "713c69d7-8dfa-488c-bfda-ee650576cf10",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 06",
+  "target": "SHM-EP015-SC006-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 06 | THE OLDER BROTHER STEPS FORWARD\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_COOK}}\n{{CHAR_GARMAYIL_COOK}}\n{{CHAR_OLDER_BROTHER}}\n{{CHAR_YOUNGER_BROTHER}}\nLOCATION REFERENCES\n{{LOC_PREP_ROOM}}\nPROP REFERENCES\n{{PROP_ESCAPE_ROBE}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nEnclosed room, hard neutral ceiling lamp and warmer west-wall work-lamp spill. North door behind; right/east counter; left/west wall. Preserve fixed exposure and practical sources. Keep the floor a continuous level surface.\nSTART STATE AND BLOCKING\nCamera south. Older at left, Younger center-left. Armayil center-right. Garmayil far right holds the one unfolded robe. Armayil faces left. The brothers face right toward the rescuers; they turn toward one another during the exchange. The central floor is clear.\n\nSHOT 06A | 00s to 05s | 5 seconds\n40mm close handheld two-shot from south. Younger puts his right hand against Older’s left upper arm and tries to guide him right toward the robe. Older resists softly, turns toward Younger, and redirects Younger’s arm. Bodies stay human and uneven; this is an argument through touch, not a fight.\nSHOT 06B | 05s to 10s | 5 seconds\n35mm wider same-side view. Older guides Younger two steps to screen right into Garmayil’s reach. Garmayil gathers the single robe over his left forearm and steadies Younger with his right hand. Older briefly presses his forehead mask against Younger’s mask, then separates. Armayil waits center-right without reaching for them.\nSHOT 06C | 10s to 15s | 5 seconds\n50mm from south, panning slightly left as Older steps into the center-left space directly opposite Armayil. Older faces right; Armayil faces left. Younger and Garmayil remain deeper right by the counter. Older settles his hands open beside him. Armayil’s shoulders sink; he looks down. Hold the separation between the brothers.\nEND STATE AND EDIT\nOlder stands center-left facing Armayil center-right. Younger remains rear-right beside Garmayil and the one robe. Choice is made; no killing action yet.\nSOUND\nUneven breaths, small foot scrapes, sleeves under hands, cloth gathering. Preserve the pause after Older steps away.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Big Brother (CHR-009 V01); match it wherever Big Brother appears.\n<<<image_2>>> is Little Brother (CHR-010 V01); match it wherever Little Brother appears.\n<<<image_3>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_4>>> is Garmayel (CHR-008 V02); match it wherever Garmayel appears.\n<<<image_5>>> is Slaughter Prep Room (LOC-026 V01); match it wherever Slaughter Prep Room appears.\n<<<image_6>>> is Cloak Burlap Grey (PRP-021 V01); match it wherever Cloak Burlap Grey appears.",
+  "basePrompt": "PLAN 06 | THE OLDER BROTHER STEPS FORWARD\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_COOK}}\n{{CHAR_GARMAYIL_COOK}}\n{{CHAR_OLDER_BROTHER}}\n{{CHAR_YOUNGER_BROTHER}}\nLOCATION REFERENCES\n{{LOC_PREP_ROOM}}\nPROP REFERENCES\n{{PROP_ESCAPE_ROBE}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nEnclosed room, hard neutral ceiling lamp and warmer west-wall work-lamp spill. North door behind; right/east counter; left/west wall. Preserve fixed exposure and practical sources. Keep the floor a continuous level surface.\nSTART STATE AND BLOCKING\nCamera south. Older at left, Younger center-left. Armayil center-right. Garmayil far right holds the one unfolded robe. Armayil faces left. The brothers face right toward the rescuers; they turn toward one another during the exchange. The central floor is clear.\n\nSHOT 06A | 00s to 05s | 5 seconds\n40mm close handheld two-shot from south. Younger puts his right hand against Older’s left upper arm and tries to guide him right toward the robe. Older resists softly, turns toward Younger, and redirects Younger’s arm. Bodies stay human and uneven; this is an argument through touch, not a fight.\nSHOT 06B | 05s to 10s | 5 seconds\n35mm wider same-side view. Older guides Younger two steps to screen right into Garmayil’s reach. Garmayil gathers the single robe over his left forearm and steadies Younger with his right hand. Older briefly presses his forehead mask against Younger’s mask, then separates. Armayil waits center-right without reaching for them.\nSHOT 06C | 10s to 15s | 5 seconds\n50mm from south, panning slightly left as Older steps into the center-left space directly opposite Armayil. Older faces right; Armayil faces left. Younger and Garmayil remain deeper right by the counter. Older settles his hands open beside him. Armayil’s shoulders sink; he looks down. Hold the separation between the brothers.\nEND STATE AND EDIT\nOlder stands center-left facing Armayil center-right. Younger remains rear-right beside Garmayil and the one robe. Choice is made; no killing action yet.\nSOUND\nUneven breaths, small foot scrapes, sleeves under hands, cloth gathering. Preserve the pause after Older steps away.\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-009/V01",
+    "@CHR-010/V01",
+    "@CHR-007/V02",
+    "@CHR-008/V02",
+    "@LOC-026/V01",
+    "@PRP-021/V01"
+  ],
+  "createdAt": "2026-10-15T15:06:44.296Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150138_713c69d7-8dfa-488c-bfda-ee650576cf10.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-15T15:01:38.119299Z",
+      "display_name": "Seedance 2.5",
+      "id": "713c69d7-8dfa-488c-bfda-ee650576cf10",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "b3d4b8aa-7b41-4c58-b0fc-57d355893b95",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/b3d4b8aa-7b41-4c58-b0fc-57d355893b95.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "01aa35af-25a7-48ae-a106-695882c6cb95",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/01aa35af-25a7-48ae-a106-695882c6cb95.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "309ff412-bf90-46f7-9383-c87bfda689b4",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/309ff412-bf90-46f7-9383-c87bfda689b4.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "146f9bd2-537f-4ac9-a793-27cb1d1d69ab",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/146f9bd2-537f-4ac9-a793-27cb1d1d69ab.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "7960791e-0c0e-4ea4-bf1d-952719ef0633",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/7960791e-0c0e-4ea4-bf1d-952719ef0633.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "cd34f695-98a6-4dc9-8ee5-d91f8ad8b0cf",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/cd34f695-98a6-4dc9-8ee5-d91f8ad8b0cf.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 06 | THE OLDER BROTHER STEPS FORWARD\nDURATION 15 SECONDS | HORIZONTAL 16:9\nREFERENCE ASSIGNMENTS\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_COOK}}\n{{CHAR_GARMAYIL_COOK}}\n{{CHAR_OLDER_BROTHER}}\n{{CHAR_YOUNGER_BROTHER}}\nLOCATION REFERENCES\n{{LOC_PREP_ROOM}}\nPROP REFERENCES\n{{PROP_ESCAPE_ROBE}}\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\nLOCATION AND LIGHT\nEnclosed room, hard neutral ceiling lamp and warmer west-wall work-lamp spill. North door behind; right/east counter; left/west wall. Preserve fixed exposure and practical sources. Keep the floor a continuous level surface.\nSTART STATE AND BLOCKING\nCamera south. Older at left, Younger center-left. Armayil center-right. Garmayil far right holds the one unfolded robe. Armayil faces left. The brothers face right toward the rescuers; they turn toward one another during the exchange. The central floor is clear.\n\nSHOT 06A | 00s to 05s | 5 seconds\n40mm close handheld two-shot from south. Younger puts his right hand against Older’s left upper arm and tries to guide him right toward the robe. Older resists softly, turns toward Younger, and redirects Younger’s arm. Bodies stay human and uneven; this is an argument through touch, not a fight.\nSHOT 06B | 05s to 10s | 5 seconds\n35mm wider same-side view. Older guides Younger two steps to screen right into Garmayil’s reach. Garmayil gathers the single robe over his left forearm and steadies Younger with his right hand. Older briefly presses his forehead mask against Younger’s mask, then separates. Armayil waits center-right without reaching for them.\nSHOT 06C | 10s to 15s | 5 seconds\n50mm from south, panning slightly left as Older steps into the center-left space directly opposite Armayil. Older faces right; Armayil faces left. Younger and Garmayil remain deeper right by the counter. Older settles his hands open beside him. Armayil’s shoulders sink; he looks down. Hold the separation between the brothers.\nEND STATE AND EDIT\nOlder stands center-left facing Armayil center-right. Younger remains rear-right beside Garmayil and the one robe. Choice is made; no killing action yet.\nSOUND\nUneven breaths, small foot scrapes, sleeves under hands, cloth gathering. Preserve the pause after Older steps away.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Big Brother (CHR-009 V01); match it wherever Big Brother appears.\n<<<image_2>>> is Little Brother (CHR-010 V01); match it wherever Little Brother appears.\n<<<image_3>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_4>>> is Garmayel (CHR-008 V02); match it wherever Garmayel appears.\n<<<image_5>>> is Slaughter Prep Room (LOC-026 V01); match it wherever Slaughter Prep Room appears.\n<<<image_6>>> is Cloak Burlap Grey (PRP-021 V01); match it wherever Cloak Burlap Grey appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150138_713c69d7-8dfa-488c-bfda-ee650576cf10.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261015_150138_713c69d7-8dfa-488c-bfda-ee650576cf10_thumbnail.webp"
+    }
+  ]
+}
