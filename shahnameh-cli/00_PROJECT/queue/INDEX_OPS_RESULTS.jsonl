@@ -43,3 +43,12 @@
 {"opId":"op_mujwh9xri43q","ok":false,"reason":"made by an older version of the panel, before each machine ran its own worker; nothing was done with it. Do it again.","ts":"2026-09-28T07:46:40.792Z"}
 {"opId":"op_mukyo8es1m5a","ok":true,"summary":"role HERO on 1 file(s)","ts":"2026-09-28T08:04:05.794Z"}
 {"opId":"op_mukyor8ijvqf","ok":true,"summary":"role HERO on 1 file(s)","ts":"2026-09-28T08:04:26.268Z"}
+{"opId":"op_mup1ep15intk","ok":true,"summary":"added @CHR-007/V01, @CHR-008/V01, @CHR-009/V01, @CHR-010/V01, @CHR-010/V02, @CHR-011/V01, @LOC-025/V01, @LOC-026/V01, @LOC-027/V01, @LOC-027/V02, @LOC-027/V03, @LOC-027/V04, @LOC-028/V01, @LOC-029/V01, @LOC-030/V01","ts":"2026-10-15T13:28:26.692Z"}
+{"opId":"op_mup2ep15snkv","ok":true,"summary":"added @PRP-020/V01","ts":"2026-10-15T13:31:53.237Z"}
+{"opId":"op_mv9ll3fzbqhy","ok":true,"summary":"archived CHR-010/V02","ts":"2026-10-15T13:51:57.427Z"}
+{"opId":"op_mup3ep15lks2","ok":true,"summary":"added @CHR-007/V02, @CHR-008/V02, @CHR-010/V03, @CHR-011/V02","ts":"2026-10-15T14:11:58.135Z"}
+{"opId":"op_mv9mdtelxui1","ok":true,"summary":"CHR-011 main look -> V02","ts":"2026-10-15T14:14:16.847Z"}
+{"opId":"op_mv9me598xzpy","ok":true,"summary":"archived CHR-011/V01","ts":"2026-10-15T14:14:32.527Z"}
+{"opId":"op_mup4ep15twnf","ok":true,"summary":"added @GRP-009/V01, @GRP-009/V02, @GRP-009/V03, @GRP-009/V04, @GRP-009/V05, @GRP-009/V06, @GRP-009/V07, @GRP-009/V08, @GRP-009/V09, @GRP-009/V10, @GRP-009/V11, @GRP-009/V12","ts":"2026-10-15T14:23:22.807Z"}
+{"opId":"op_mup5ep15cloa","ok":true,"summary":"added @PRP-021/V01","ts":"2026-10-15T14:42:40.749Z"}
+{"opId":"op_mup6ep15clvr","ok":true,"summary":"added @PRP-022/V01","ts":"2026-10-15T14:45:56.158Z"}

@@ -1,6 +1,6 @@
 {
  "_comment": "Written by the worker from `higgsfield model list` / `model get` (worker/lib/models.mjs). Do not edit by hand; refresh from the Prompts page or restart a worker once it is a day old.",
- "fetchedAt": "2026-10-14T10:14:21.686Z",
+ "fetchedAt": "2026-10-15T13:10:37.017Z",
  "models": {
   "3d_jutsu_angles": {
    "job_type": "3d_jutsu_angles",
