@@ -87,6 +87,8 @@ export function ReviewStage({
   active,
   near = false,
   onQueue,
+  siblings = [],
+  onOpen,
 }: {
   item: ReviewItem
   catalog: CatalogEntity[]
@@ -96,6 +98,9 @@ export function ReviewStage({
   /** Next to the active one on the strip: load its video now, so moving to it is instant. */
   near?: boolean
   onQueue: (d: QueuedDecision) => void
+  /** Other takes of this same plan that are waiting for review as well. */
+  siblings?: { path: string; number: number; stage: 'draft' | 'final' | null; from: number | null }[]
+  onOpen?: (path: string) => void
 }) {
   // Every stage stays mounted so what was typed survives moving around, but a
   // video loads only once its stage is on screen or next to it, not all at once.
@@ -288,12 +293,32 @@ export function ReviewStage({
               <Badge tone={s.stage === 'draft' ? 'accent' : 'good'}>{s.stage === 'draft' ? 'draft' : 'final'}</Badge>
             )}
             {ctx.attemptNumber > 1 && <Badge>attempt {ctx.attemptNumber}</Badge>}
+            {ctx.attemptFrom !== null && <Badge tone="accent">branched from attempt {ctx.attemptFrom}</Badge>}
             {isVideoJob && wasSilent && <Badge tone="muted">silent</Badge>}
             <span className="ml-1 font-mono text-muted">{s.model}</span>
             <span className="text-faint">·</span>
             <span className="font-mono text-faint">{s.jobId}</span>
           </div>
         </header>
+
+        {/* Other takes of this same plan waiting too: one plan, one page; switch between them here. */}
+        {siblings.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 rounded-lg border border-accent/30 bg-accent/[0.05] px-3 py-2 text-[12.5px]">
+            <span className="text-muted">Also waiting for review in this plan:</span>
+            {siblings.map((x) => (
+              <button
+                key={x.path}
+                type="button"
+                onClick={() => onOpen?.(x.path)}
+                className="focus-ring h-7 cursor-pointer rounded-md border border-edge-strong px-2.5 text-fg/90 transition-colors hover:border-[#505050] hover:bg-white/[0.04] hover:text-fg"
+              >
+                Attempt {x.number}
+                {x.stage === 'final' ? ' · 1080p final' : x.stage === 'draft' ? ' · draft' : ''}
+                {x.from !== null ? ` · branched from attempt ${x.from}` : ''}
+              </button>
+            ))}
+          </div>
+        )}
 
         {comparing?.video ? (
           <div>

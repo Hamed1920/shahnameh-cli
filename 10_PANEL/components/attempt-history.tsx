@@ -193,6 +193,7 @@ export function AttemptHistory({
               <div className="min-w-0 flex-1 space-y-2.5">
                 <div className="flex flex-wrap items-center gap-2 text-xs">
                   <span className="font-display text-xl leading-none text-fg">Attempt {h.number}</span>
+                  {h.from !== null && <Badge tone="accent">branched from attempt {h.from}</Badge>}
                   {h.stage && <span className="ml-1 font-mono text-[11px] text-muted">{h.stage}</span>}
                   {h.verdict === 'denied' && <Badge tone="bad">denied</Badge>}
                   {h.verdict === 'accepted' && <Badge tone="good">{h.stage === 'draft' ? 'draft approved' : 'accepted'}</Badge>}

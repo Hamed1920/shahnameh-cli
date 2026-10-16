@@ -491,6 +491,7 @@ export async function getReviewContexts(
       return {
         jobId,
         decisionId: d?.id ?? '',
+        from: null,
         source,
         attempt: job?.attempt ?? 1,
         stage: job?.stage ?? null,
@@ -549,6 +550,16 @@ export async function getReviewContexts(
     ordered.forEach((o, i) => { if (o.entry) o.entry.number = i + 1 })
     const attemptNumber = ordered.indexOf(here) + 1
     const history = ordered.flatMap((o) => (o.entry ? [o.entry] : []))
+    // Which attempt each one was continued from. An ordinary next attempt follows the one before it and says nothing;
+    // one made with "Continue from here" on an earlier attempt is a branch, and says which.
+    const numberOf = new Map<string, number>(history.map((h) => [h.jobId, h.number]))
+    numberOf.set(s.jobId, attemptNumber)
+    const branchOf = (jobId: string, number: number) => {
+      const parentNumber = numberOf.get(jobs.get(jobId)?.parentJobId ?? '')
+      return parentNumber !== undefined && parentNumber !== number - 1 ? parentNumber : null
+    }
+    for (const h of history) h.from = branchOf(h.jobId, h.number)
+    const attemptFrom = branchOf(s.jobId, attemptNumber)
 
     const m = String(s.target ?? '').match(idRx(pr.code).shotParts)
     const finalParams = { ...s.params, resolution: cfg.videoFinalResolution }
@@ -561,6 +572,7 @@ export async function getReviewContexts(
       beats: beatsOf((s as StagingSidecar & { basePrompt?: string }).basePrompt ?? s.prompt),
       history,
       attemptNumber,
+      attemptFrom,
       cost: {
         regenerate: s.costCredits ?? prices.get(priceKey(s.model, s.params)) ?? null,
         final: s.stage === 'draft' ? (prices.get(priceKey(s.model, finalParams)) ?? null) : null,

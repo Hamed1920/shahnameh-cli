@@ -283,6 +283,11 @@ export interface AttemptEntry {
   /** The decision recorded about this attempt, when there is one. */
   decisionId: string
   /**
+   * The attempt this one was continued from, when that is not simply the one before it (a "Continue from here"
+   * on an earlier attempt). Null for an ordinary next attempt.
+   */
+  from: number | null
+  /**
    * Everything the confirmation panel needs to start another attempt from this one ("Continue from here"):
    * its prompt, references, model, stage and settings. Null when the queue record is gone.
    */
@@ -313,6 +318,8 @@ export interface ReviewContext {
   history: AttemptEntry[]
   /** This take's place among every attempt at the plan, history included: the number to show. */
   attemptNumber: number
+  /** The attempt this take was continued from, when that is not simply the one before it. */
+  attemptFrom: number | null
   /** Credit estimates, null when there is nothing to go on. */
   cost: { regenerate: number | null; final: number | null; /** One more try as a cheap draft: what Deny costs on a final. */ draft: number | null }
 }

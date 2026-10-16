@@ -85,7 +85,23 @@ export function ReviewWorkspace({ items, catalog, episodeTitles, regenCfg, price
   const countIn = (episode: string) =>
     waiting.filter((i) => (episode === 'none' ? i.context.episode === null : i.context.episode === episode)).length
   const current = queue.find((i) => i.candidate.path === currentPath) ?? queue[0] ?? null
+  // One place per plan. A plan with more than one take waiting (an attempt continued from an earlier one, say)
+  // is still one row and one page: the other takes are chips on it, not rows of their own.
+  const plans = (() => {
+    const groups = new Map<string, ReviewItem[]>()
+    for (const i of queue) {
+      const key = i.candidate.sidecar.target
+      const group = groups.get(key)
+      if (group) group.push(i)
+      else groups.set(key, [i])
+    }
+    return [...groups.values()]
+  })()
+  const planOf = (item: ReviewItem | null) => (item ? plans.find((g) => g.includes(item)) ?? null : null)
+  /** The take a plan opens on: the one on screen if it is this plan's, else the newest waiting. */
+  const repOf = (group: ReviewItem[]) => (current && group.includes(current) ? current : group[group.length - 1])
   const index = current ? queue.indexOf(current) : -1
+  const planIndex = current ? plans.findIndex((g) => g.includes(current)) : -1
   const shownRef = useRef<string | null>(null)
   shownRef.current = current?.candidate.path ?? null
 
@@ -239,13 +255,14 @@ export function ReviewWorkspace({ items, catalog, episodeTitles, regenCfg, price
       if (e.defaultPrevented || isTyping(e.target) || e.ctrlKey || e.metaKey || e.altKey) return
       if (document.querySelector('[role=dialog]') || !current) return
       const step = e.key === 'j' || e.key === 'J' ? 1 : e.key === 'k' || e.key === 'K' ? -1 : 0
-      if (!step || queue.length < 2) return
+      if (!step || plans.length < 2) return
       e.preventDefault()
-      setCurrentPath(queue[(index + step + queue.length) % queue.length].candidate.path)
+      const next = plans[(planIndex + step + plans.length) % plans.length]
+      setCurrentPath(next[next.length - 1].candidate.path)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [current, queue, index])
+  }, [current, plans, planIndex])
 
   /** The episode chips as a menu, plus what this one candidate is. */
   const menuFor = (i: ReviewItem): MenuEntry[] => [
@@ -282,13 +299,13 @@ export function ReviewWorkspace({ items, catalog, episodeTitles, regenCfg, price
           <span className="pb-0.5 font-mono text-xs text-muted tabular-nums">
             {queue.length === 0 ? 'nothing waiting' : (
               <>
-                <span className="text-fg">{String(index + 1).padStart(2, '0')}</span>
-                <span className="text-faint"> / {String(queue.length).padStart(2, '0')}</span>
+                <span className="text-fg">{String(planIndex + 1).padStart(2, '0')}</span>
+                <span className="text-faint"> / {String(plans.length).padStart(2, '0')}</span>
               </>
             )}
           </span>
           <div className="ml-auto flex items-center gap-4 pb-0.5">
-            {queue.length > 1 && (
+            {plans.length > 1 && (
               <span className="hidden items-center gap-1.5 text-xs text-faint sm:flex">
                 <Kbd>J</Kbd> <Kbd>K</Kbd> <span className="ml-1">to move</span>
               </span>
@@ -334,12 +351,13 @@ export function ReviewWorkspace({ items, catalog, episodeTitles, regenCfg, price
               'lg:flex-col lg:gap-1 lg:self-start lg:overflow-x-visible lg:overflow-y-auto lg:px-0 lg:pb-0 lg:pr-1',
             )}
           >
-            {queue.map((i) => {
-              const on = i === current
+            {plans.map((group) => {
+              const i = repOf(group)
+              const on = group.includes(current as ReviewItem)
               const c = i.context
               return (
                 <button
-                  key={i.candidate.path}
+                  key={i.candidate.sidecar.target}
                   type="button"
                   onClick={() => setCurrentPath(i.candidate.path)}
                   onContextMenu={(ev) => { ev.preventDefault(); ev.stopPropagation(); setMenu({ at: { x: ev.clientX, y: ev.clientY }, entries: menuFor(i) }) }}
@@ -370,6 +388,9 @@ export function ReviewWorkspace({ items, catalog, episodeTitles, regenCfg, price
                   )}
                   {i.context.attemptNumber > 1 && (
                     <span className={cn('font-mono text-[11px]', i.candidate.sidecar.stage === 'final' ? '' : 'lg:ml-auto', on ? 'text-ink/50' : 'text-faint')}>×{i.context.attemptNumber}</span>
+                  )}
+                  {group.length > 1 && (
+                    <span className={cn('rounded-full px-1.5 font-mono text-[10px] leading-[16px]', on ? 'bg-ink/15 text-ink' : 'bg-accent/15 text-accent')} title={`${group.length} takes of this plan are waiting`}>{group.length}</span>
                   )}
                 </button>
               )
@@ -411,8 +432,10 @@ export function ReviewWorkspace({ items, catalog, episodeTitles, regenCfg, price
           regenCfg={regenCfg}
           prices={prices}
           active={i === current}
-          near={index >= 0 && queue.includes(i) && Math.abs(queue.indexOf(i) - index) === 1}
+          near={planIndex >= 0 && Boolean(planOf(i)) && Math.abs(plans.indexOf(planOf(i)!) - planIndex) <= 1}
           onQueue={onQueue}
+          siblings={(planOf(i) ?? []).filter((x) => x !== i).map((x) => ({ path: x.candidate.path, number: x.context.attemptNumber, stage: x.candidate.sidecar.stage, from: x.context.attemptFrom }))}
+          onOpen={setCurrentPath}
         />
       ))}
         </div>
