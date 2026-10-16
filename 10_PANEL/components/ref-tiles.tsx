@@ -22,6 +22,9 @@ export function RefTiles({ refs }: { refs: RefView[] }) {
         {refs.map((r) => {
           const label = r.token.replace(/^@/, '')
           const kind = r.kind ? (KIND_LABEL[r.kind as Kind] ?? r.kind) : null
+          // "Character · look 2": what it is, not which id. The id is for the worker.
+          const look = /\/V(\d+)/.exec(label)?.[1]
+          const said = [kind, look ? `look ${Number(look)}` : null].filter(Boolean).join(' · ')
           return (
             <li key={r.token}>
               {r.path ? (
@@ -39,7 +42,7 @@ export function RefTiles({ refs }: { refs: RefView[] }) {
                   />
                   <span className="block border-t border-edge px-3 py-2">
                     <span className="block truncate text-[13px] text-fg">{r.name ?? label}</span>
-                    <span className="block truncate font-mono text-[11px] text-faint">{label}{kind && ` · ${kind}`}</span>
+                    <span className="block truncate text-[11px] text-faint">{said || label}</span>
                   </span>
                 </button>
               ) : (
@@ -48,7 +51,7 @@ export function RefTiles({ refs }: { refs: RefView[] }) {
                     <ImageOff aria-hidden className="size-6 text-bad/70" />
                   </div>
                   <div className="border-t border-bad/25 px-3 py-2">
-                    <span className="block truncate font-mono text-[11px] text-bad">{label}</span>
+                    <span className="block truncate text-[12px] text-bad">{r.name ?? label}</span>
                     <span className="block text-[11px] leading-snug text-bad/80">
                       Not sent: {r.stale ?? 'not in the index'}.
                     </span>
@@ -60,7 +63,7 @@ export function RefTiles({ refs }: { refs: RefView[] }) {
         })}
       </ul>
       <Lightbox
-        items={live.map((r) => ({ src: assetUrl(r.path!), title: r.token.replace(/^@/, ''), subtitle: r.name ?? undefined }))}
+        items={live.map((r) => ({ src: assetUrl(r.path!), title: r.name ?? r.token.replace(/^@/, '') }))}
         index={open}
         onIndex={setOpen}
         onClose={() => setOpen(null)}

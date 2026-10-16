@@ -1,0 +1,149 @@
+{
+  "jobId": "J-20261016-YDK",
+  "parentJobId": "J-20261015-LC7",
+  "hfJobId": "2242eafe-ad25-4e3b-843c-daeaa9f8d606",
+  "attempt": 2,
+  "stage": "final",
+  "label": "PLAN 01",
+  "target": "SHM-EP015-SC013-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 01 | THE REPEATED ROUTE\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_ARMAYIL_OBSERVER}} <<<image_1>>> \r\n{{CHAR_GARMAYIL_OBSERVER}} <<<image_2>>> \r\n{{CHAR_GUARD_A}} <<<image_3>>> \r\n{{CHAR_GUARD_B}} <<<image_3>>> \r\n{{PAIR_PRISONERS_NIGHT_A}} <<<image_4>>> \r\n{{PAIR_PRISONERS_NIGHT_B}} <<<image_5>>> \r\n\r\nLOCATION REFERENCES\r\n{{LOC_UPPER_SERVICE}}\r\n{{LOC_TRANSFER_ROUTE}}\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence with the precisely timed shots below. Preserve each referenced identity, body proportions, costume and rigid handmade mask. Masks stay fixed to the head with stable features and eye openings; emotion is performed through the body, eyes where visible, breath and hands. All characters are adults. Each listed cut changes the specified physical camera position, lens or viewpoint. Handheld movement responds to the actor and follows a possible path in the set; keep the key action readable and focus engaged. Use hard cuts at listed shot boundaries. References anchor design; the written lighting defines exposure and illumination. Preserve the tactile Iranian-inspired world and restrained natural exposure.\r\n\r\nLOCATION AND LIGHT\r\nNight. Recessed cold-neutral service lamps define the lower passage. Weak blue night spill enters the elevated gallery. Preserve heavy Iranian-inspired masonry, rounded arches and restrained carved reliefs; engineered lights are integrated into this old architecture. Deep peripheral shadow, readable walking surfaces.\r\n\r\nSTART STATE AND BLOCKING\r\nUpper gallery: Armayil stands screen left and Garmayil screen right, both looking through a waist-high opening toward the lower passage. Camera begins behind them. Below, exactly two guards escort exactly two adult captives from screen left to right. The two men above remain concealed behind the wall, with their masks turned away from the rear camera.\r\n\r\n\r\nSHOT 01A | 0s to 4s | 4 seconds\r\n24mm rear medium-wide at shoulder height on the upper gallery. Armayil and Garmayil stop beside the opening. A small handheld drift discovers the lower route between them. Armayil leans just enough to look down; Garmayil stops half a step behind him. Four figures below move left to right.\r\n\r\nSHOT 01B | 4s to 8s | 4 seconds\r\n50mm high-angle view through the opening: Night A pair between Guard A leading and Guard B following. They cross a distinctive existing vertical wall joint from left to right. Hold camera position; record ordinary, mechanical escort pace.\r\n\r\nSHOT 01C | 8s to 12s | 4 seconds\r\nHard temporal match cut to the IDENTICAL 50mm composition on another night. Night B pair replaces Night A pair; the same guards cross the same wall joint in the same direction. The changed captive masks and clothing establish a different pair. Repeat the footsteps rhythm; nothing morphs within either shot.\r\n\r\nSHOT 01D | 12s to 15s | 3 seconds\r\n65mm intimate side two-shot, camera at eye height moving a few centimeters closer. Armayil screen left and Garmayil screen right both look down toward the off-screen route at right. Their shoulders stay low and physically still. Armayil slowly redirects his masked face toward the now-empty doorway below; his fingers stop against the wall. Garmayil follows that eyeline, then glances briefly toward Armayil without receiving an answer. Hold unresolved concentration: they are trying to understand what they have witnessed. The masks remain fixed; thought is carried by delayed attention, a suspended hand and restrained breathing.\r\n\r\nEND STATE AND EDIT\r\nBoth observers remain at the gallery opening, shoulders settled, attention fixed on the unexplained route. Their uncertainty remains unresolved.\r\n\r\nSOUND\r\nFootsteps below, fabric, distant ventilation and cookware. Match the two escort rhythms across the temporal cut; subdued breaths on the final shot.\r\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_6>>> is Back Courtyard Transfer (LOC-027 V05); match it wherever Back Courtyard Transfer appears.\n<<<image_7>>> is Back Courtyard Transfer (LOC-027 V07); match it wherever Back Courtyard Transfer appears.\n<<<image_8>>> is Townsfolk Masked (GRP-009 V03); match it wherever Townsfolk Masked appears.\n<<<image_9>>> is Townsfolk Masked (GRP-009 V05); match it wherever Townsfolk Masked appears.",
+  "basePrompt": "PLAN 01 | THE REPEATED ROUTE\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_ARMAYIL_OBSERVER}} @CHR-007/V01 \r\n{{CHAR_GARMAYIL_OBSERVER}} @CHR-008/V01 \r\n{{CHAR_GUARD_A}} @GRP-005/V01 \r\n{{CHAR_GUARD_B}} @GRP-005/V01 \r\n{{PAIR_PRISONERS_NIGHT_A}} @GRP-009/V01 \r\n{{PAIR_PRISONERS_NIGHT_B}} @GRP-009/V02 \r\n\r\nLOCATION REFERENCES\r\n{{LOC_UPPER_SERVICE}}\r\n{{LOC_TRANSFER_ROUTE}}\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence with the precisely timed shots below. Preserve each referenced identity, body proportions, costume and rigid handmade mask. Masks stay fixed to the head with stable features and eye openings; emotion is performed through the body, eyes where visible, breath and hands. All characters are adults. Each listed cut changes the specified physical camera position, lens or viewpoint. Handheld movement responds to the actor and follows a possible path in the set; keep the key action readable and focus engaged. Use hard cuts at listed shot boundaries. References anchor design; the written lighting defines exposure and illumination. Preserve the tactile Iranian-inspired world and restrained natural exposure.\r\n\r\nLOCATION AND LIGHT\r\nNight. Recessed cold-neutral service lamps define the lower passage. Weak blue night spill enters the elevated gallery. Preserve heavy Iranian-inspired masonry, rounded arches and restrained carved reliefs; engineered lights are integrated into this old architecture. Deep peripheral shadow, readable walking surfaces.\r\n\r\nSTART STATE AND BLOCKING\r\nUpper gallery: Armayil stands screen left and Garmayil screen right, both looking through a waist-high opening toward the lower passage. Camera begins behind them. Below, exactly two guards escort exactly two adult captives from screen left to right. The two men above remain concealed behind the wall, with their masks turned away from the rear camera.\r\n\r\n\r\nSHOT 01A | 0s to 4s | 4 seconds\r\n24mm rear medium-wide at shoulder height on the upper gallery. Armayil and Garmayil stop beside the opening. A small handheld drift discovers the lower route between them. Armayil leans just enough to look down; Garmayil stops half a step behind him. Four figures below move left to right.\r\n\r\nSHOT 01B | 4s to 8s | 4 seconds\r\n50mm high-angle view through the opening: Night A pair between Guard A leading and Guard B following. They cross a distinctive existing vertical wall joint from left to right. Hold camera position; record ordinary, mechanical escort pace.\r\n\r\nSHOT 01C | 8s to 12s | 4 seconds\r\nHard temporal match cut to the IDENTICAL 50mm composition on another night. Night B pair replaces Night A pair; the same guards cross the same wall joint in the same direction. The changed captive masks and clothing establish a different pair. Repeat the footsteps rhythm; nothing morphs within either shot.\r\n\r\nSHOT 01D | 12s to 15s | 3 seconds\r\n65mm intimate side two-shot, camera at eye height moving a few centimeters closer. Armayil screen left and Garmayil screen right both look down toward the off-screen route at right. Their shoulders stay low and physically still. Armayil slowly redirects his masked face toward the now-empty doorway below; his fingers stop against the wall. Garmayil follows that eyeline, then glances briefly toward Armayil without receiving an answer. Hold unresolved concentration: they are trying to understand what they have witnessed. The masks remain fixed; thought is carried by delayed attention, a suspended hand and restrained breathing.\r\n\r\nEND STATE AND EDIT\r\nBoth observers remain at the gallery opening, shoulders settled, attention fixed on the unexplained route. Their uncertainty remains unresolved.\r\n\r\nSOUND\r\nFootsteps below, fabric, distant ventilation and cookware. Match the two escort rhythms across the temporal cut; subdued breaths on the final shot.\r\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@CHR-007/V01",
+    "@CHR-008/V01",
+    "@GRP-005/V01",
+    "@GRP-009/V01",
+    "@GRP-009/V02",
+    "@LOC-027/V05",
+    "@LOC-027/V07",
+    "@GRP-009/V03",
+    "@GRP-009/V05"
+  ],
+  "createdAt": "2026-10-16T10:18:02.931Z",
+  "costCredits": 240,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_095911_2242eafe-ad25-4e3b-843c-daeaa9f8d606.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-16T09:59:11.95553Z",
+      "display_name": "Seedance 2.5",
+      "id": "2242eafe-ad25-4e3b-843c-daeaa9f8d606",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "7e3e44d8-671e-48a2-ba2b-8608b4fcc610",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/7e3e44d8-671e-48a2-ba2b-8608b4fcc610.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "f043e23a-fed8-4c81-9d9f-518e00509ccf",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/f043e23a-fed8-4c81-9d9f-518e00509ccf.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "eca2c94f-9e9d-40f7-9a9e-4a0b86c37914",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/eca2c94f-9e9d-40f7-9a9e-4a0b86c37914.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "8a053075-5fbc-4929-a5db-bd1b0fae1381",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/8a053075-5fbc-4929-a5db-bd1b0fae1381.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "da141465-9c33-4671-91c0-be32cebd091e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/da141465-9c33-4671-91c0-be32cebd091e.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "9cc41aed-32e9-4db9-90a6-4f6ee744a392",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/9cc41aed-32e9-4db9-90a6-4f6ee744a392.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "2947f633-35d2-479d-93c0-87c7149dd33d",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/2947f633-35d2-479d-93c0-87c7149dd33d.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "0d03a6b7-3aeb-4cb8-bbf0-ab0511e48bfc",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/0d03a6b7-3aeb-4cb8-bbf0-ab0511e48bfc.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a969e520-ff16-4152-9848-8d4b26a8d5ab",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/a969e520-ff16-4152-9848-8d4b26a8d5ab.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 01 | THE REPEATED ROUTE\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_ARMAYIL_OBSERVER}} <<<image_1>>> \r\n{{CHAR_GARMAYIL_OBSERVER}} <<<image_2>>> \r\n{{CHAR_GUARD_A}} <<<image_3>>> \r\n{{CHAR_GUARD_B}} <<<image_3>>> \r\n{{PAIR_PRISONERS_NIGHT_A}} <<<image_4>>> \r\n{{PAIR_PRISONERS_NIGHT_B}} <<<image_5>>> \r\n\r\nLOCATION REFERENCES\r\n{{LOC_UPPER_SERVICE}}\r\n{{LOC_TRANSFER_ROUTE}}\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence with the precisely timed shots below. Preserve each referenced identity, body proportions, costume and rigid handmade mask. Masks stay fixed to the head with stable features and eye openings; emotion is performed through the body, eyes where visible, breath and hands. All characters are adults. Each listed cut changes the specified physical camera position, lens or viewpoint. Handheld movement responds to the actor and follows a possible path in the set; keep the key action readable and focus engaged. Use hard cuts at listed shot boundaries. References anchor design; the written lighting defines exposure and illumination. Preserve the tactile Iranian-inspired world and restrained natural exposure.\r\n\r\nLOCATION AND LIGHT\r\nNight. Recessed cold-neutral service lamps define the lower passage. Weak blue night spill enters the elevated gallery. Preserve heavy Iranian-inspired masonry, rounded arches and restrained carved reliefs; engineered lights are integrated into this old architecture. Deep peripheral shadow, readable walking surfaces.\r\n\r\nSTART STATE AND BLOCKING\r\nUpper gallery: Armayil stands screen left and Garmayil screen right, both looking through a waist-high opening toward the lower passage. Camera begins behind them. Below, exactly two guards escort exactly two adult captives from screen left to right. The two men above remain concealed behind the wall, with their masks turned away from the rear camera.\r\n\r\n\r\nSHOT 01A | 0s to 4s | 4 seconds\r\n24mm rear medium-wide at shoulder height on the upper gallery. Armayil and Garmayil stop beside the opening. A small handheld drift discovers the lower route between them. Armayil leans just enough to look down; Garmayil stops half a step behind him. Four figures below move left to right.\r\n\r\nSHOT 01B | 4s to 8s | 4 seconds\r\n50mm high-angle view through the opening: Night A pair between Guard A leading and Guard B following. They cross a distinctive existing vertical wall joint from left to right. Hold camera position; record ordinary, mechanical escort pace.\r\n\r\nSHOT 01C | 8s to 12s | 4 seconds\r\nHard temporal match cut to the IDENTICAL 50mm composition on another night. Night B pair replaces Night A pair; the same guards cross the same wall joint in the same direction. The changed captive masks and clothing establish a different pair. Repeat the footsteps rhythm; nothing morphs within either shot.\r\n\r\nSHOT 01D | 12s to 15s | 3 seconds\r\n65mm intimate side two-shot, camera at eye height moving a few centimeters closer. Armayil screen left and Garmayil screen right both look down toward the off-screen route at right. Their shoulders stay low and physically still. Armayil slowly redirects his masked face toward the now-empty doorway below; his fingers stop against the wall. Garmayil follows that eyeline, then glances briefly toward Armayil without receiving an answer. Hold unresolved concentration: they are trying to understand what they have witnessed. The masks remain fixed; thought is carried by delayed attention, a suspended hand and restrained breathing.\r\n\r\nEND STATE AND EDIT\r\nBoth observers remain at the gallery opening, shoulders settled, attention fixed on the unexplained route. Their uncertainty remains unresolved.\r\n\r\nSOUND\r\nFootsteps below, fabric, distant ventilation and cookware. Match the two escort rhythms across the temporal cut; subdued breaths on the final shot.\r\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_6>>> is Back Courtyard Transfer (LOC-027 V05); match it wherever Back Courtyard Transfer appears.\n<<<image_7>>> is Back Courtyard Transfer (LOC-027 V07); match it wherever Back Courtyard Transfer appears.\n<<<image_8>>> is Townsfolk Masked (GRP-009 V03); match it wherever Townsfolk Masked appears.\n<<<image_9>>> is Townsfolk Masked (GRP-009 V05); match it wherever Townsfolk Masked appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_095911_2242eafe-ad25-4e3b-843c-daeaa9f8d606.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_095911_2242eafe-ad25-4e3b-843c-daeaa9f8d606_thumbnail.webp"
+    }
+  ]
+}

@@ -26,14 +26,20 @@ export async function requestRegenerate(formData: FormData): Promise<{ ok: boole
   freshCatalog()
   const jobId = String(formData.get('jobId') ?? '').trim()
   const decisionId = String(formData.get('decisionId') ?? '').trim()
-  if (!jobId || !decisionId) return { ok: false, error: 'Missing job.' }
+  // From Review's history, any attempt can be continued from, whatever became of it: it need not be an accepted take.
+  const fromHistory = formData.get('from') === 'history'
+  if (!jobId || (!decisionId && !fromHistory)) return { ok: false, error: 'Missing job.' }
 
   const [decisions, state, cfg] = await Promise.all([getDecisions(pr), getWorkerState(pr), getWorkerConfig()])
   const d = decisions.find((x) => x.id === decisionId)
-  if (!d || d.jobId !== jobId) return { ok: false, error: 'Unknown decision.' }
-  if (d.verdict !== 'accepted') return { ok: false, error: 'Only an accepted take can be regenerated from here.' }
-  const failed = (state?.failedDecisions ?? {}) as Record<string, string>
-  if (failed[d.id]) return { ok: false, error: 'This decision was not applied; decide it again on Review first.' }
+  if (fromHistory) {
+    if (decisionId && d && d.jobId !== jobId) return { ok: false, error: 'Unknown decision.' }
+  } else {
+    if (!d || d.jobId !== jobId) return { ok: false, error: 'Unknown decision.' }
+    if (d.verdict !== 'accepted') return { ok: false, error: 'Only an accepted take can be regenerated from here.' }
+    const failed = (state?.failedDecisions ?? {}) as Record<string, string>
+    if (failed[d.id]) return { ok: false, error: 'This decision was not applied; decide it again on Review first.' }
+  }
 
   const req: Extract<JobRequest, { type: 'regenerate' }> = {
     id: newRequestId(), ts: new Date().toISOString(), reviewer: REVIEWER, type: 'regenerate', jobId, decisionId,

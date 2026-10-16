@@ -14,7 +14,7 @@ import { foldStudio, openSessionIds, type StudioSession } from './studio'
 import type {
   ArchivedLook, AssetRow, AttemptEntry, BatchStatus, BatchView, Candidate, CatalogEntity, Entity, Filing, IndexOp,
   IndexOpResult, JobRequest, JobRequestEvent, Learning, LibraryData, LibraryEntity, PromptLibraryItem, QueueItem, RegenerationView,
-  ResolvedReference, ReviewContext, ReviewDecision, LookUse, ShotMove, ShotMoveRequests, ShotMoves, StagingSidecar,
+  RegenerateSource, ResolvedReference, ReviewContext, ReviewDecision, LookUse, ShotMove, ShotMoveRequests, ShotMoves, StagingSidecar,
   WorkerStatus,
 } from './types'
 
@@ -370,6 +370,12 @@ interface QueueJob {
   model?: string
   params?: Record<string, unknown>
   refs?: string[]
+  prompt?: string
+  basePrompt?: string
+  target?: string
+  enqueuedAt?: string
+  variant?: string
+  revisionNotes?: string[]
 }
 
 async function exists(pr: Project, rel: string): Promise<boolean> {
@@ -437,7 +443,19 @@ export async function getPriceTable(): Promise<Map<string, number>> {
   return prices
 }
 
-export async function getReviewContexts(pr: Project, candidates: Candidate[]): Promise<Map<string, ReviewContext>> {
+export async function getReviewContexts(
+  pr: Project,
+  candidates: Candidate[],
+  /**
+   * decision id -> where that take is now. An accepted final is moved out of staging into its
+   * episode's shots folder, so the staging path in the decision no longer holds it; the Decided
+   * page knows where it went. Without this, an attempt that was accepted and then regenerated
+   * (a 1080p with a small flaw, say) would read "video not on disk" in the history.
+   */
+  decidedFiles?: Map<string, string | null>,
+  /** Resolves a reference token against the index, to build what "Continue from here" starts from. */
+  resolve?: (token: string) => Promise<ResolvedReference>,
+): Promise<Map<string, ReviewContext>> {
   const [queue, decisions, state, prices, cfg] = await Promise.all([
     readJsonl<QueueJob>(pr.P.queue),
     getDecisions(pr),
@@ -453,29 +471,88 @@ export async function getReviewContexts(pr: Project, candidates: Candidate[]): P
   const out = new Map<string, ReviewContext>()
   for (const c of candidates) {
     const s = c.sidecar
-    const history: AttemptEntry[] = []
     let label = s.label ?? null
-    let parent = s.parentJobId
-    for (let guard = 0; parent && guard < 12; guard++) {
-      const job = jobs.get(parent)
-      const d = decisionFor.get(parent)
-      label ??= job?.label ?? null
-      history.unshift({
-        jobId: parent,
+    const entryFor = async (jobId: string, job: QueueJob | undefined): Promise<AttemptEntry> => {
+      const d = decisionFor.get(jobId)
+      const source: RegenerateSource | null = job && resolve
+        ? {
+            prompt: job.basePrompt ?? job.prompt ?? '',
+            refs: await Promise.all([...new Set(job.refs ?? [])].map(resolve)),
+            model: job.model ?? s.model,
+            stage: job.stage ?? null,
+            variant: job.variant || 'V01',
+            params: (job.params ?? {}) as RegenerateSource['params'],
+            revisionNotes: job.revisionNotes ?? [],
+            jobId,
+            attempt: job.attempt ?? 1,
+            sentPrompt: job.prompt ?? '',
+          }
+        : null
+      return {
+        jobId,
+        decisionId: d?.id ?? '',
+        source,
         attempt: job?.attempt ?? 1,
         stage: job?.stage ?? null,
         verdict: d?.verdict ?? null,
         notes: d ? (d.notesEn || d.notes || '') : '',
         tags: d?.tags ?? [],
         decidedAt: d?.ts ?? null,
-        video: d ? await locateDecided(pr, d, job?.stage) : null,
+        video: d ? ((await locateDecided(pr, d, job?.stage)) ?? decidedFiles?.get(d.id) ?? null) : null,
         refs: job?.refs ?? [],
-      })
+        // Filled in once every attempt at the plan is known.
+        number: 0,
+        // As the prompt was written for that attempt, for the Copy prompt button.
+        prompt: job?.basePrompt ?? job?.prompt ?? '',
+      }
+    }
+
+    // Every attempt at this plan, not only this take's ancestors. The parents are one way to find them,
+    // but a link can be missing (a take made on another machine, a retry, a regenerate from the Decided
+    // page), and an attempt that is simply absent from this list is worse than one listed out of order.
+    const seen = new Set<string>([s.jobId])
+    const found: { entry: AttemptEntry; at: string }[] = []
+    const add = async (jobId: string, job: QueueJob | undefined) => {
+      if (seen.has(jobId)) return
+      seen.add(jobId)
+      label ??= job?.label ?? null
+      found.push({ entry: await entryFor(jobId, job), at: job?.enqueuedAt ?? '' })
+    }
+    // 1. the chain of parents
+    let parent = s.parentJobId
+    for (let guard = 0; parent && guard < 40; guard++) {
+      const job = jobs.get(parent)
+      await add(parent, job)
       parent = job?.parentJobId ?? null
     }
+    // 2. every other job queued for the same shot, or for the same plan of the same episode
+    const mine = String(s.target ?? '').match(idRx(pr.code).shotParts)
+    for (const job of queue) {
+      if (seen.has(job.jobId)) continue
+      const theirs = String(job.target ?? '').match(idRx(pr.code).shotParts)
+      const sameShot = job.target !== undefined && job.target === s.target
+      const samePlan = Boolean(label) && job.label === label && Boolean(mine?.[1]) && theirs?.[1] === mine?.[1]
+      if (sameShot || samePlan) await add(job.jobId, job)
+    }
+    // 3. every decision made about this shot whose job the queue no longer has
+    for (const d of decisions) {
+      if (failed[d.id] || seen.has(d.jobId) || jobs.has(d.jobId) || d.target !== s.target) continue
+      await add(d.jobId, undefined)
+    }
+    // Oldest first, as the page has always listed them -- and numbered by that order, this take included.
+    // The attempt at a plan is how many were made before it, whatever their quality, prompt or stage: a draft,
+    // the draft it was approved from's 1080p final, a retry. The worker's own `attempt` counts revisions and a
+    // final repeats its draft's, which is how the third thing made for a plan came to be called "attempt 2".
+    const here = { entry: null as AttemptEntry | null, at: jobs.get(s.jobId)?.enqueuedAt ?? s.createdAt ?? '', attempt: s.attempt ?? 1 }
+    const ordered = [...found.map((f) => ({ entry: f.entry as AttemptEntry | null, at: f.at, attempt: f.entry.attempt })), here]
+      .sort((x, y) => x.at.localeCompare(y.at) || x.attempt - y.attempt)
+    ordered.forEach((o, i) => { if (o.entry) o.entry.number = i + 1 })
+    const attemptNumber = ordered.indexOf(here) + 1
+    const history = ordered.flatMap((o) => (o.entry ? [o.entry] : []))
 
     const m = String(s.target ?? '').match(idRx(pr.code).shotParts)
     const finalParams = { ...s.params, resolution: cfg.videoFinalResolution }
+    const draftParams = { ...s.params, resolution: cfg.videoDraftResolution }
     out.set(c.path, {
       label,
       episode: m?.[1] ?? null,
@@ -483,9 +560,11 @@ export async function getReviewContexts(pr: Project, candidates: Candidate[]): P
       shot: m?.[3] ?? null,
       beats: beatsOf((s as StagingSidecar & { basePrompt?: string }).basePrompt ?? s.prompt),
       history,
+      attemptNumber,
       cost: {
         regenerate: s.costCredits ?? prices.get(priceKey(s.model, s.params)) ?? null,
         final: s.stage === 'draft' ? (prices.get(priceKey(s.model, finalParams)) ?? null) : null,
+        draft: s.stage === 'final' ? (prices.get(priceKey(s.model, draftParams)) ?? null) : null,
       },
     })
   }

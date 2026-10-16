@@ -1,8 +1,11 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Copy, Film } from 'lucide-react'
 import { useHoldLiveRefresh } from '@/components/live-refresh'
+import { PlayThroughButton, usePlayOrder } from '@/components/play-through'
+import type { RegenerateConfig } from '@/components/regenerate-button'
+import { orderBy, reviewStops } from '@/lib/play-through'
 import { useProject } from '@/components/project-context'
 import { useToast } from '@/components/toast'
 import { EmptyState } from '@/components/ui/card'
@@ -36,9 +39,12 @@ const heldToast = (heldId: number) => `review-held-${heldId}`
  * then. Every stage stays mounted (hidden) so moving away and back, or undoing,
  * keeps what was typed and uploaded.
  */
-export function ReviewWorkspace({ items, catalog, episodeTitles }: {
+export function ReviewWorkspace({ items, catalog, episodeTitles, regenCfg, prices }: {
   items: ReviewItem[]
   catalog: CatalogEntity[]
+  /** For the "Continue from here" panel on an earlier attempt. */
+  regenCfg: RegenerateConfig
+  prices: Record<string, number>
   /** EP001 -> "Zahhak Entry", from the episode folders on disk. */
   episodeTitles: Record<string, string>
 }) {
@@ -51,6 +57,9 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
   const toaster = useToast()
   const [menu, setMenu] = useState<{ at: { x: number; y: number }; entries: MenuEntry[] } | null>(null)
   const [copied, setCopied] = useState<string | null>(null)
+  // The viewer's own arrangement (Reorder), shared with the Play through button; empty means as numbered.
+  const [playOrder] = usePlayOrder('review')
+  const sorted = useMemo(() => orderBy(items, playOrder, (i) => i.candidate.sidecar.target), [items, playOrder])
   const heldRef = useRef(held)
   heldRef.current = held
 
@@ -69,7 +78,7 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
           : i.context.episode === episodeFilter,
     [episodeFilter],
   )
-  const waiting = items.filter((i) => !hidden.has(i.candidate.path))
+  const waiting = sorted.filter((i) => !hidden.has(i.candidate.path))
   const queue = waiting.filter(inEpisode)
   const episodes = episodesIn([], waiting.map((i) => i.context.episode))
   const looseItems = waiting.some((i) => i.context.episode === null)
@@ -80,15 +89,38 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
   const shownRef = useRef<string | null>(null)
   shownRef.current = current?.candidate.path ?? null
 
+  // Play through: the strip as it stands (the episode filter applies), a stop per shot.
+  const playStops = useMemo(
+    () =>
+      reviewStops(
+        queue.map((i) => {
+          const s = i.candidate.sidecar
+          return {
+            path: i.candidate.path,
+            target: s.target,
+            title: i.context.label ?? i.context.scene ?? s.target.slice(-12),
+            subtitle: i.context.beats.join(' → ') || undefined,
+            take: i.candidate.take,
+            stage: s.stage,
+            attempt: s.attempt,
+            createdAt: s.createdAt,
+          }
+        }),
+      ),
+    // `queue` is rebuilt every render; its paths are what matter.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [queue.map((i) => i.candidate.path).join('|')],
+  )
+
   /** The next candidate after `path` in page order that is still in the queue. */
   const nextAfter = useCallback(
     (path: string, skip: Set<string>) => {
-      const order = items.filter(inEpisode).map((i) => i.candidate.path)
+      const order = sorted.filter(inEpisode).map((i) => i.candidate.path)
       const at = order.indexOf(path)
       const rest = [...order.slice(at + 1), ...order.slice(0, Math.max(at, 0))]
       return rest.find((p) => !skip.has(p)) ?? null
     },
-    [items, inEpisode],
+    [sorted, inEpisode],
   )
 
   const commit = useCallback(
@@ -197,7 +229,7 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
     const text =
       unseen.length > 1
         ? `${unseen.length} new videos to review`
-        : `New: ${name}${s.attempt > 1 ? ` · attempt ${s.attempt}` : ''}${s.stage === 'final' ? ' · final' : ''}`
+        : `New: ${name}${first.context.attemptNumber > 1 ? ` · attempt ${first.context.attemptNumber}` : ''}${s.stage === 'final' ? ' · final' : ''}`
     toaster.show({ tone: 'new', title: text, action: { label: 'Open', onClick: () => setCurrentPath(first.candidate.path) }, duration: 10000 })
   }, [items, toaster])
 
@@ -255,11 +287,14 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
               </>
             )}
           </span>
-          {queue.length > 1 && (
-            <span className="ml-auto hidden items-center gap-1.5 pb-0.5 text-xs text-faint sm:flex">
-              <Kbd>J</Kbd> <Kbd>K</Kbd> <span className="ml-1">to move</span>
-            </span>
-          )}
+          <div className="ml-auto flex items-center gap-4 pb-0.5">
+            {queue.length > 1 && (
+              <span className="hidden items-center gap-1.5 text-xs text-faint sm:flex">
+                <Kbd>J</Kbd> <Kbd>K</Kbd> <span className="ml-1">to move</span>
+              </span>
+            )}
+            <PlayThroughButton stops={playStops} scope="review" />
+          </div>
         </div>
         {(episodes.length > 1 || (episodes.length === 1 && looseItems)) && (
           <div className="mt-5 flex flex-wrap items-center gap-1.5">
@@ -285,9 +320,20 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
             })}
           </div>
         )}
+      </StickyHeader>
 
+      <div className={cn('grid gap-6 lg:gap-8', queue.length > 0 && 'lg:grid-cols-[176px_minmax(0,1fr)]')}>
+        {/* ------------------------------------------------ plans, down the side */}
         {queue.length > 0 && (
-          <div className="scroll-pane-x mt-6 flex gap-1.5 overflow-x-auto pb-1">
+          <nav
+            aria-label="Plans waiting for review"
+            className={cn(
+              // Beside the stage on a wide screen, stuck under the header and scrolling on its own; a row above it on a narrow one.
+              'scroll-pane-x -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1',
+              'lg:sticky lg:top-[calc(var(--sticky-h,0px)+1.5rem)] lg:mx-0 lg:max-h-[calc(100vh-var(--sticky-h,0px)-3rem)]',
+              'lg:flex-col lg:gap-1 lg:self-start lg:overflow-x-visible lg:overflow-y-auto lg:px-0 lg:pb-0 lg:pr-1',
+            )}
+          >
             {queue.map((i) => {
               const on = i === current
               const c = i.context
@@ -299,15 +345,16 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
                   onContextMenu={(ev) => { ev.preventDefault(); ev.stopPropagation(); setMenu({ at: { x: ev.clientX, y: ev.clientY }, entries: menuFor(i) }) }}
                   aria-current={on ? 'true' : undefined}
                   title={c.beats.join(' → ')}
+                  ref={on ? (el) => el?.scrollIntoView({ block: 'nearest', inline: 'nearest' }) : undefined}
                   className={cn(
-                    'focus-ring flex h-8 shrink-0 cursor-pointer items-center gap-2 rounded-md border px-3 text-left transition-colors duration-150',
+                    'focus-ring flex h-8 shrink-0 cursor-pointer items-center gap-2 rounded-md border px-3 text-left transition-colors duration-150 lg:w-full',
                     on ? 'border-fg bg-fg text-ink' : 'border-edge text-muted hover:border-edge-strong hover:text-fg',
                   )}
                 >
                   <span
                     aria-hidden
                     className={cn(
-                      'size-1.5 rounded-full',
+                      'size-1.5 shrink-0 rounded-full',
                       i.candidate.failedDecision
                         ? 'bg-bad'
                         : i.candidate.sidecar.stage === 'final'
@@ -315,22 +362,22 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
                           : on ? 'bg-ink/35' : 'bg-faint',
                     )}
                   />
-                  <span className="font-mono text-xs font-medium">
+                  <span className="min-w-0 truncate font-mono text-xs font-medium">
                     {c.label ?? c.scene ?? i.candidate.sidecar.target.slice(-12)}
                   </span>
                   {i.candidate.sidecar.stage === 'final' && (
-                    <span className={cn('text-[11px]', on ? 'text-ink/60' : 'text-good')}>final</span>
+                    <span className={cn('text-[11px] lg:ml-auto', on ? 'text-ink/60' : 'text-good')}>final</span>
                   )}
-                  {i.candidate.sidecar.attempt > 1 && (
-                    <span className={cn('font-mono text-[11px]', on ? 'text-ink/50' : 'text-faint')}>×{i.candidate.sidecar.attempt}</span>
+                  {i.context.attemptNumber > 1 && (
+                    <span className={cn('font-mono text-[11px]', i.candidate.sidecar.stage === 'final' ? '' : 'lg:ml-auto', on ? 'text-ink/50' : 'text-faint')}>×{i.context.attemptNumber}</span>
                   )}
                 </button>
               )
             })}
-          </div>
+          </nav>
         )}
-      </StickyHeader>
 
+        <div className={cn('min-w-0', queue.length > 0 && 'lg:col-start-2 lg:row-start-1')}>
       {/* ------------------------------------------------ stages */}
       {queue.length === 0 && held.length === 0 && (
         <EmptyState className="py-28">
@@ -361,11 +408,15 @@ export function ReviewWorkspace({ items, catalog, episodeTitles }: {
           key={i.candidate.path}
           item={i}
           catalog={catalog}
+          regenCfg={regenCfg}
+          prices={prices}
           active={i === current}
           near={index >= 0 && queue.includes(i) && Math.abs(queue.indexOf(i) - index) === 1}
           onQueue={onQueue}
         />
       ))}
+        </div>
+      </div>
 
       <ContextMenu at={menu?.at ?? null} entries={menu?.entries ?? []} onClose={() => setMenu(null)} />
       {copied && <MenuNote text={copied} bad={copied.startsWith('Could not')} />}

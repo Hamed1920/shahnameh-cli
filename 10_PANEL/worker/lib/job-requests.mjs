@@ -17,6 +17,30 @@ import { OLD_PANEL, ownerOf, requestOwners } from './machine.mjs'
 import { PULL_FIRST, remoteChangedIndex } from './git-guard.mjs'
 
 /**
+ * True when any machine's worker has generated the job.
+ *
+ * A take is often reviewed on a different machine from the one that made it, and
+ * the regenerate then comes from the reviewer's machine -- whose own state never
+ * heard of the job. Each machine writes its own state file and they all travel
+ * through git, so the job counts as generated if any of them lists it. Without
+ * this, a take generated on one machine could not be regenerated from the other.
+ */
+export async function generatedAnywhere(jobId, state) {
+  if ((state.processedJobs ?? []).includes(jobId)) return true
+  const dir = path.dirname(P.state)
+  let names = []
+  try { names = await fs.readdir(dir) } catch { return false }
+  for (const name of names) {
+    if (!/^state\.[a-z0-9-]+\.json$/.test(name)) continue
+    try {
+      const other = JSON.parse((await fs.readFile(path.join(dir, name), 'utf8')).replace(/^﻿/, ''))
+      if ((other.processedJobs ?? []).includes(jobId)) return true
+    } catch { /* another machine's file may be mid-write or unreadable: it just does not count */ }
+  }
+  return false
+}
+
+/**
  * Requests from the panel's Prompts page and its Regenerate button.
  *
  * The panel appends to JOB_REQUESTS.jsonl; this is the only code that acts on
@@ -319,7 +343,7 @@ const HANDLERS = {
     const queue = await readJsonl(P.queue)
     const src = queue.find((q) => q.jobId === req.jobId)
     if (!src) fail(`job ${req.jobId} is not in the queue file`)
-    if (!(state.processedJobs ?? []).includes(req.jobId)) fail(`job ${req.jobId} has not generated yet`)
+    if (!(await generatedAnywhere(req.jobId, state))) fail(`job ${req.jobId} has not generated yet`)
 
     const model = String(req.model || src.model)
     let stage = req.stage === 'draft' || req.stage === 'final' ? req.stage : (src.stage ?? null)

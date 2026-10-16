@@ -118,7 +118,7 @@ export default async function LearningsPage({ params }: PageProps<'/[project]/le
       token: `@${e.shortId}/${v.variant}`,
       position: 0,
       title: e.name,
-      subtitle: `${v.variant} · ${KIND_LABEL[e.kind as Kind] ?? e.kind}`,
+      subtitle: `${KIND_LABEL[e.kind as Kind] ?? e.kind} · look ${Number(v.variant.replace(/\D/g, ''))}`,
       thumb: thumbUrl(pr.slug, v.path, 96),
       keywords: `${e.id} ${e.kind}${v.variant === e.canonical ? ' canonical' : ''}`,
     })),

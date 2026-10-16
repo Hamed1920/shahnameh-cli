@@ -1,0 +1,113 @@
+{
+  "jobId": "J-20261016-44E",
+  "parentJobId": null,
+  "hfJobId": "e796f37b-b3c7-4469-9139-28300a58d044",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 08A",
+  "target": "SHM-EP015-SC015-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 08A | ARMAYIL CANNOT MAKE HIMSELF DO IT\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_COOK}}\n{{CHAR_OLDER_BROTHER}}\nLOCATION REFERENCES\n{{LOC_PREP_ROOM}}\nPROP REFERENCES\n{{PROP_PREP_CLEAVER}}\n{{PROP_WORK_STOOL}}\nCreate a 15-second horizontal 16:9 live-action cinematic block. Follow the timed shot boundaries exactly. Preserve the assigned identities, costumes, body proportions and rigid handmade masks. Mask surfaces and eye openings stay physically fixed; emotions register through visible eyes, breathing, hands and body weight. All performers are adults. Use tactile worn materials and physically motivated handheld camera movement. Each cut takes the camera to the specified new physical station. References anchor design; the written lighting governs exposure. Preserve readable action within the instability.\nLOCATION AND LIGHT\nEnclosed preparation room: north main door shut, west service exit shut, east metal work counter. One hard neutral ceiling practical lights the center and the seated man; faint warmer west-wall spill reaches Armayil near the wall. The level floor, old masonry and rounded openings remain physically readable. Keep lamp direction, brightness and exposure consistent across these fragments, which occur within the same extended period of hesitation.\nSTART STATE AND BLOCKING\nExactly two adults are visible. Older Brother sits on a plain low wooden work stool at center, facing south, feet flat on the level floor and masked head lowered. Armayil moves between the space behind Older to the northeast, the east counter, and the west wall. The younger brother has already left and is absent. Garmayil remains outside the frame. Armayil has the established soiled apron, rigid mask and ONE preparation cleaver in his right hand at the beginning. This cleaver must match the one in the existing raised-cleaver shot. Each cut may jump over an interval of indecision; these are editorial inserts from BEFORE the fatal act. Older remains alive throughout.\n\nSHOT 08A-01 | 00s to 03s | 3 seconds\n65mm close detail from southeast at seated-head height. Older’s bowed mask occupies left foreground; Armayil’s torso is right rear. Armayil reaches his empty LEFT hand toward the crown of Older’s mask. His fingertips tremble visibly within a few centimeters of it; his wrist locks and he pulls back before contact. The cleaver stays low in his right hand below the crop. Camera inches forward following the hesitant fingers, then loses that reach when the hand withdraws. Older keeps breathing, shoulders tight.\nSHOT 08A-02 | 03s to 06s | 3 seconds\n35mm handheld from south-east beside the work counter. A time cut finds Armayil facing east toward the counter at frame right; Older remains seated and softly visible at left rear. Armayil flings the cleaver a short distance down onto the CLEAR metal worktop, blade landing flat and handle still reachable. It remains on that counter, away from Older. Camera flinches at the metal impact and follows Armayil recoiling left out of the working position. He cannot bear to hold it.\nSHOT 08A-03 | 06s to 09s | 3 seconds\n50mm intimate close-up from southwest beside the west wall, at Armayil’s eye height. Another time cut: Armayil faces partly left into the wall, left forearm braced against it. He bows his masked forehead toward his forearm, shoulders collapsing under a broken sob; his empty right hand opens and closes helplessly beside his chest. Camera slips close around his near shoulder without crossing through the wall. His rigid mask has no facial animation; breath, body weight and shaking hands carry the breakdown.\nSHOT 08A-04 | 09s to 12s | 3 seconds\n40mm handheld medium-close from south-center. A later fragment finds Armayil left foreground at the west wall and Older center-right in the background, still seated, alive and bowed. Armayil turns toward Older, tries to take a step and stops. Older’s fingers grip his own knees; his back rises with frightened breathing. Armayil forces himself across toward the east counter at right, camera tracking alongside his faltering approach. Keep the physical distance between them visible.\nSHOT 08A-05 | 12s to 15s | 3 seconds\n85mm tight detail from south of the east counter, camera at handle height. The ONE cleaver lies flat exactly where it was discarded. Armayil’s right hand enters, hovers, touches the handle and recoils slightly. He clamps his trembling left hand around his own right wrist, forces his right fingers to close around the handle and lifts the cleaver only a few centimeters from the counter. Camera shakes subtly with his grip and holds the effort. End on the reluctant pickup, ready to cut back into an earlier failed approach or the existing raised-cleaver shot.\nEND STATE AND EDIT\nArmayil has reluctantly recovered the single cleaver but has not attacked. Older remains seated, alive and afraid. These five fragments can be distributed BEFORE the existing final blade-raising shot. Preserve identity, apron, light and cleaver across the chosen edit; elapsed hesitation may be compressed by the cuts.\nSOUND\nUnsteady breathing, a hand moving through fabric, one cleaver impact on metal, a muffled sob against the forearm, hesitant footsteps, fingernails and grip on the handle. Every sound belongs to hesitation; the fatal event is outside this block.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_2>>> is Big Brother (CHR-009 V01); match it wherever Big Brother appears.\n<<<image_3>>> is Slaughter Prep Room (LOC-026 V01); match it wherever Slaughter Prep Room appears.\n<<<image_4>>> is Slaughter Prep Room (LOC-026 V02); match it wherever Slaughter Prep Room appears.\n<<<image_5>>> is Cleaver Butcher Wide (PRP-022 V01); match it wherever Cleaver Butcher Wide appears.",
+  "basePrompt": "PLAN 08A | ARMAYIL CANNOT MAKE HIMSELF DO IT\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_COOK}}\n{{CHAR_OLDER_BROTHER}}\nLOCATION REFERENCES\n{{LOC_PREP_ROOM}}\nPROP REFERENCES\n{{PROP_PREP_CLEAVER}}\n{{PROP_WORK_STOOL}}\nCreate a 15-second horizontal 16:9 live-action cinematic block. Follow the timed shot boundaries exactly. Preserve the assigned identities, costumes, body proportions and rigid handmade masks. Mask surfaces and eye openings stay physically fixed; emotions register through visible eyes, breathing, hands and body weight. All performers are adults. Use tactile worn materials and physically motivated handheld camera movement. Each cut takes the camera to the specified new physical station. References anchor design; the written lighting governs exposure. Preserve readable action within the instability.\nLOCATION AND LIGHT\nEnclosed preparation room: north main door shut, west service exit shut, east metal work counter. One hard neutral ceiling practical lights the center and the seated man; faint warmer west-wall spill reaches Armayil near the wall. The level floor, old masonry and rounded openings remain physically readable. Keep lamp direction, brightness and exposure consistent across these fragments, which occur within the same extended period of hesitation.\nSTART STATE AND BLOCKING\nExactly two adults are visible. Older Brother sits on a plain low wooden work stool at center, facing south, feet flat on the level floor and masked head lowered. Armayil moves between the space behind Older to the northeast, the east counter, and the west wall. The younger brother has already left and is absent. Garmayil remains outside the frame. Armayil has the established soiled apron, rigid mask and ONE preparation cleaver in his right hand at the beginning. This cleaver must match the one in the existing raised-cleaver shot. Each cut may jump over an interval of indecision; these are editorial inserts from BEFORE the fatal act. Older remains alive throughout.\n\nSHOT 08A-01 | 00s to 03s | 3 seconds\n65mm close detail from southeast at seated-head height. Older’s bowed mask occupies left foreground; Armayil’s torso is right rear. Armayil reaches his empty LEFT hand toward the crown of Older’s mask. His fingertips tremble visibly within a few centimeters of it; his wrist locks and he pulls back before contact. The cleaver stays low in his right hand below the crop. Camera inches forward following the hesitant fingers, then loses that reach when the hand withdraws. Older keeps breathing, shoulders tight.\nSHOT 08A-02 | 03s to 06s | 3 seconds\n35mm handheld from south-east beside the work counter. A time cut finds Armayil facing east toward the counter at frame right; Older remains seated and softly visible at left rear. Armayil flings the cleaver a short distance down onto the CLEAR metal worktop, blade landing flat and handle still reachable. It remains on that counter, away from Older. Camera flinches at the metal impact and follows Armayil recoiling left out of the working position. He cannot bear to hold it.\nSHOT 08A-03 | 06s to 09s | 3 seconds\n50mm intimate close-up from southwest beside the west wall, at Armayil’s eye height. Another time cut: Armayil faces partly left into the wall, left forearm braced against it. He bows his masked forehead toward his forearm, shoulders collapsing under a broken sob; his empty right hand opens and closes helplessly beside his chest. Camera slips close around his near shoulder without crossing through the wall. His rigid mask has no facial animation; breath, body weight and shaking hands carry the breakdown.\nSHOT 08A-04 | 09s to 12s | 3 seconds\n40mm handheld medium-close from south-center. A later fragment finds Armayil left foreground at the west wall and Older center-right in the background, still seated, alive and bowed. Armayil turns toward Older, tries to take a step and stops. Older’s fingers grip his own knees; his back rises with frightened breathing. Armayil forces himself across toward the east counter at right, camera tracking alongside his faltering approach. Keep the physical distance between them visible.\nSHOT 08A-05 | 12s to 15s | 3 seconds\n85mm tight detail from south of the east counter, camera at handle height. The ONE cleaver lies flat exactly where it was discarded. Armayil’s right hand enters, hovers, touches the handle and recoils slightly. He clamps his trembling left hand around his own right wrist, forces his right fingers to close around the handle and lifts the cleaver only a few centimeters from the counter. Camera shakes subtly with his grip and holds the effort. End on the reluctant pickup, ready to cut back into an earlier failed approach or the existing raised-cleaver shot.\nEND STATE AND EDIT\nArmayil has reluctantly recovered the single cleaver but has not attacked. Older remains seated, alive and afraid. These five fragments can be distributed BEFORE the existing final blade-raising shot. Preserve identity, apron, light and cleaver across the chosen edit; elapsed hesitation may be compressed by the cuts.\nSOUND\nUnsteady breathing, a hand moving through fabric, one cleaver impact on metal, a muffled sob against the forearm, hesitant footsteps, fingernails and grip on the handle. Every sound belongs to hesitation; the fatal event is outside this block.\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-007/V02",
+    "@CHR-009/V01",
+    "@LOC-026/V01",
+    "@LOC-026/V02",
+    "@PRP-022/V01"
+  ],
+  "createdAt": "2026-10-16T10:29:14.055Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_102413_e796f37b-b3c7-4469-9139-28300a58d044.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-16T10:24:13.075181Z",
+      "display_name": "Seedance 2.5",
+      "id": "e796f37b-b3c7-4469-9139-28300a58d044",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "ca580df3-8fac-4bb9-b066-fc9abd91a18e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/ca580df3-8fac-4bb9-b066-fc9abd91a18e.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "35aabb08-eb12-411a-b4ae-6dbba79e0907",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/35aabb08-eb12-411a-b4ae-6dbba79e0907.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "e823580c-19eb-49f6-a068-0d736636fbd7",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/e823580c-19eb-49f6-a068-0d736636fbd7.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "b0d6a0a1-3e7a-458c-88ad-7b222b9a69c1",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/b0d6a0a1-3e7a-458c-88ad-7b222b9a69c1.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "d7a84263-c0c1-4a76-b47e-492beb97ecc8",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/d7a84263-c0c1-4a76-b47e-492beb97ecc8.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 08A | ARMAYIL CANNOT MAKE HIMSELF DO IT\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_ARMAYIL_COOK}}\n{{CHAR_OLDER_BROTHER}}\nLOCATION REFERENCES\n{{LOC_PREP_ROOM}}\nPROP REFERENCES\n{{PROP_PREP_CLEAVER}}\n{{PROP_WORK_STOOL}}\nCreate a 15-second horizontal 16:9 live-action cinematic block. Follow the timed shot boundaries exactly. Preserve the assigned identities, costumes, body proportions and rigid handmade masks. Mask surfaces and eye openings stay physically fixed; emotions register through visible eyes, breathing, hands and body weight. All performers are adults. Use tactile worn materials and physically motivated handheld camera movement. Each cut takes the camera to the specified new physical station. References anchor design; the written lighting governs exposure. Preserve readable action within the instability.\nLOCATION AND LIGHT\nEnclosed preparation room: north main door shut, west service exit shut, east metal work counter. One hard neutral ceiling practical lights the center and the seated man; faint warmer west-wall spill reaches Armayil near the wall. The level floor, old masonry and rounded openings remain physically readable. Keep lamp direction, brightness and exposure consistent across these fragments, which occur within the same extended period of hesitation.\nSTART STATE AND BLOCKING\nExactly two adults are visible. Older Brother sits on a plain low wooden work stool at center, facing south, feet flat on the level floor and masked head lowered. Armayil moves between the space behind Older to the northeast, the east counter, and the west wall. The younger brother has already left and is absent. Garmayil remains outside the frame. Armayil has the established soiled apron, rigid mask and ONE preparation cleaver in his right hand at the beginning. This cleaver must match the one in the existing raised-cleaver shot. Each cut may jump over an interval of indecision; these are editorial inserts from BEFORE the fatal act. Older remains alive throughout.\n\nSHOT 08A-01 | 00s to 03s | 3 seconds\n65mm close detail from southeast at seated-head height. Older’s bowed mask occupies left foreground; Armayil’s torso is right rear. Armayil reaches his empty LEFT hand toward the crown of Older’s mask. His fingertips tremble visibly within a few centimeters of it; his wrist locks and he pulls back before contact. The cleaver stays low in his right hand below the crop. Camera inches forward following the hesitant fingers, then loses that reach when the hand withdraws. Older keeps breathing, shoulders tight.\nSHOT 08A-02 | 03s to 06s | 3 seconds\n35mm handheld from south-east beside the work counter. A time cut finds Armayil facing east toward the counter at frame right; Older remains seated and softly visible at left rear. Armayil flings the cleaver a short distance down onto the CLEAR metal worktop, blade landing flat and handle still reachable. It remains on that counter, away from Older. Camera flinches at the metal impact and follows Armayil recoiling left out of the working position. He cannot bear to hold it.\nSHOT 08A-03 | 06s to 09s | 3 seconds\n50mm intimate close-up from southwest beside the west wall, at Armayil’s eye height. Another time cut: Armayil faces partly left into the wall, left forearm braced against it. He bows his masked forehead toward his forearm, shoulders collapsing under a broken sob; his empty right hand opens and closes helplessly beside his chest. Camera slips close around his near shoulder without crossing through the wall. His rigid mask has no facial animation; breath, body weight and shaking hands carry the breakdown.\nSHOT 08A-04 | 09s to 12s | 3 seconds\n40mm handheld medium-close from south-center. A later fragment finds Armayil left foreground at the west wall and Older center-right in the background, still seated, alive and bowed. Armayil turns toward Older, tries to take a step and stops. Older’s fingers grip his own knees; his back rises with frightened breathing. Armayil forces himself across toward the east counter at right, camera tracking alongside his faltering approach. Keep the physical distance between them visible.\nSHOT 08A-05 | 12s to 15s | 3 seconds\n85mm tight detail from south of the east counter, camera at handle height. The ONE cleaver lies flat exactly where it was discarded. Armayil’s right hand enters, hovers, touches the handle and recoils slightly. He clamps his trembling left hand around his own right wrist, forces his right fingers to close around the handle and lifts the cleaver only a few centimeters from the counter. Camera shakes subtly with his grip and holds the effort. End on the reluctant pickup, ready to cut back into an earlier failed approach or the existing raised-cleaver shot.\nEND STATE AND EDIT\nArmayil has reluctantly recovered the single cleaver but has not attacked. Older remains seated, alive and afraid. These five fragments can be distributed BEFORE the existing final blade-raising shot. Preserve identity, apron, light and cleaver across the chosen edit; elapsed hesitation may be compressed by the cuts.\nSOUND\nUnsteady breathing, a hand moving through fabric, one cleaver impact on metal, a muffled sob against the forearm, hesitant footsteps, fingernails and grip on the handle. Every sound belongs to hesitation; the fatal event is outside this block.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_2>>> is Big Brother (CHR-009 V01); match it wherever Big Brother appears.\n<<<image_3>>> is Slaughter Prep Room (LOC-026 V01); match it wherever Slaughter Prep Room appears.\n<<<image_4>>> is Slaughter Prep Room (LOC-026 V02); match it wherever Slaughter Prep Room appears.\n<<<image_5>>> is Cleaver Butcher Wide (PRP-022 V01); match it wherever Cleaver Butcher Wide appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_102413_e796f37b-b3c7-4469-9139-28300a58d044.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_102413_e796f37b-b3c7-4469-9139-28300a58d044_thumbnail.webp"
+    }
+  ]
+}

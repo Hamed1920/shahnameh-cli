@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Coins, RotateCcw } from 'lucide-react'
 import { requestRegenerate } from '@/app/[project]/decided/actions'
 import { useProject } from '@/components/project-context'
@@ -32,10 +32,18 @@ const startSettings = (source: RegenerateSource | null, cfg: RegenerateConfig) =
  * price is on the button while the settings that decide it are unchanged.
  */
 export function RegenerateButton({
-  jobId, decisionId, credits, source, catalog, cfg, regenerations, prices,
+  jobId, decisionId, credits, source, catalog, cfg, regenerations, prices, from, open: openProp, onOpenChange, hideTrigger = false, title,
 }: {
   jobId: string
   decisionId: string
+  /** "history": continuing from an earlier attempt on Review, whatever became of it, rather than regenerating an accepted take. */
+  from?: 'history'
+  /** Controlled from outside (the history's right-click menu opens it). Nothing is queued until the button inside is pressed. */
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  /** Open it from elsewhere and show no button of its own. */
+  hideTrigger?: boolean
+  title?: string
   credits: number | null
   source: RegenerateSource | null
   catalog: CatalogEntity[]
@@ -45,7 +53,9 @@ export function RegenerateButton({
   prices?: Record<string, number>
 }) {
   const project = useProject()
-  const [open, setOpen] = useState(false)
+  const [innerOpen, setInnerOpen] = useState(false)
+  const open = openProp ?? innerOpen
+  const setOpen = (v: boolean) => { setInnerOpen(v); onOpenChange?.(v) }
   const [overlay, setOverlay] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -65,6 +75,10 @@ export function RegenerateButton({
     && model === source.model
     && (!video || (stage === (source.stage ?? 'draft') && String(duration) === String(source.params.duration ?? '') && sound === !wasSilent))
 
+  // Opened from outside: start from the attempt it was opened for, as the button would.
+  useEffect(() => { if (openProp) reset() }, [openProp])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   function reset() {
     setPrompt(source?.prompt ?? '')
     setSettings(startSettings(source, cfg))
@@ -80,6 +94,7 @@ export function RegenerateButton({
     fd.set('project', project.slug)
     fd.set('jobId', jobId)
     fd.set('decisionId', decisionId)
+    if (from) fd.set('from', from)
     fd.set('prompt', prompt)
     edits.serialize(fd, true)
     // The whole list, always: the worker replaces the job's references with it.
@@ -103,7 +118,7 @@ export function RegenerateButton({
 
   return (
     <div className="space-y-2.5">
-      {regenerations.length > 0 && (
+      {!hideTrigger && regenerations.length > 0 && (
         <ul className="space-y-1 text-xs text-muted">
           {regenerations.map((r) => (
             <li key={r.reqId} className="flex flex-wrap items-center gap-2">
@@ -117,15 +132,19 @@ export function RegenerateButton({
           ))}
         </ul>
       )}
-      <Button type="button" size="sm" tone="outline" disabled={!source} onClick={() => { reset(); setOpen(true) }} title={source ? undefined : 'The queue record for this job is missing'}>
-        <RotateCcw aria-hidden className="size-3.5" /> Regenerate
-      </Button>
-      {!source && <span className="text-xs text-faint">Can’t regenerate from here: this job’s queue record is missing.</span>}
+      {!hideTrigger && (
+        <>
+          <Button type="button" size="sm" tone="outline" disabled={!source} onClick={() => { reset(); setOpen(true) }} title={source ? undefined : 'The queue record for this job is missing'}>
+            <RotateCcw aria-hidden className="size-3.5" /> Regenerate
+          </Button>
+          {!source && <span className="text-xs text-faint">Can’t regenerate from here: this job’s queue record is missing.</span>}
+        </>
+      )}
 
       <Modal
         open={open}
         size="xl"
-        title="Regenerate this take"
+        title={title ?? 'Regenerate this take'}
         onClose={() => setOpen(false)}
         onKeyGuard={() => !overlay}
         clip={false}
@@ -152,7 +171,7 @@ export function RegenerateButton({
               title={edits.stale.length > 0 ? 'Fix the references that no longer resolve first' : undefined}
               onClick={send}
             >
-              <RotateCcw aria-hidden className="size-3.5" /> Regenerate
+              <RotateCcw aria-hidden className="size-3.5" /> {from === 'history' ? 'Generate' : 'Regenerate'}
             </Button>
           </>
         }

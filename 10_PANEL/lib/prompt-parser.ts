@@ -56,14 +56,14 @@ const MENTION_RX = /@((?:CHR|GRP|LOC|PRP|CRT|COS|VEH|FX|REF)-\d{3}(?:\/V\d{2}(?:
 
 /** Block-level markers: P01, PROMPT 3, BLOCK 2, پرامپت ۱, بلاک ۲, with an optional markdown # prefix. */
 // `\b` is ASCII-only, so the "not followed by another digit or letter" check is spelled out.
-const BLOCK_HEADING_RX = /^\s*(?:#{1,6}\s*)?(?:P|PROMPT|BLOCK|پرامپت|بلاک)\s*[-–:.]?\s*[\d۰-۹]{1,3}(?![\d۰-۹A-Za-z])/i
+const BLOCK_HEADING_RX = /^\s*(?:#{1,6}\s*)?(?:P|PROMPT|BLOCK|پرامپت|بلاک)\s*[-–:.]?\s*[\d۰-۹]{1,3}(?:\.[\d۰-۹]{1,3})*(?:[-_.]?[A-Za-z](?![A-Za-z])|\s*[-_.]?\s*(?:version|ver|v)\s*\.?\s*[\d۰-۹]{1,2})?(?![\d۰-۹A-Za-z])/i
 /** Shot-level markers. Never a split by default: an EP001 block has SHOT 1..3 inside it. */
 const SHOT_HEADING_RX = /^\s*(?:#{1,6}\s*)?(?:SHOT|SCENE|شات|صحنه)\s*[-–:.]?\s*[\d۰-۹]{1,3}(?![\d۰-۹A-Za-z])/i
 /** A fenced prompt: a line that is just BEGIN PROMPT, then one that is just END PROMPT. */
 const FENCE_OPEN_RX = /^\s*(?:#{1,6}\s*)?BEGIN\s+PROMPT\s*:?\s*$/i
 const FENCE_CLOSE_RX = /^\s*(?:#{1,6}\s*)?END\s+PROMPT\s*$/i
 /** A fenced prompt's first line names it when it reads like a heading: PLAN 01 | SHOTS 01-02 | ... */
-const FENCE_LABEL_RX = /^\s*(?:#{1,6}\s*)?(?:P|PLAN|PROMPT|BLOCK|پلان|پرامپت|بلاک)\s*[-–:.]?\s*[\d۰-۹]{1,3}(?![\d۰-۹A-Za-z])/i
+const FENCE_LABEL_RX = /^\s*(?:#{1,6}\s*)?(?:P|PLAN|PROMPT|BLOCK|پلان|پرامپت|بلاک)\s*[-–:.]?\s*[\d۰-۹]{1,3}(?:\.[\d۰-۹]{1,3})*(?:[-_.]?[A-Za-z](?![A-Za-z])|\s*[-_.]?\s*(?:version|ver|v)\s*\.?\s*[\d۰-۹]{1,2})?(?![\d۰-۹A-Za-z])/i
 /** Numbered list items: "1." "2)" "۳." at the start of a line. */
 const NUMBERED_RX = /^\s*[\d۰-۹]{1,3}[.)]\s+\S/
 

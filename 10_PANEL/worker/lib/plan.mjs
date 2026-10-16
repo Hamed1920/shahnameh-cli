@@ -1,7 +1,7 @@
 import { P, findEntity, isShotId, log, readJsonl, resolveRef } from './project.mjs'
 import { NEW_TARGET_RX } from './batch.mjs'
 import { loadCatalog } from './models.mjs'
-import { mapParams, maxRefs, modelEntry, modelProblem } from './model-schema.mjs'
+import { hasHiggsfieldDrafts, mapParams, maxRefs, modelEntry, modelProblem } from './model-schema.mjs'
 import { MENTION_RX, buildPrompt } from './prompt.mjs'
 import { NEXT_SCENE_RX } from './scenes.mjs'
 import { isAudioFile } from './ids.mjs'
@@ -78,20 +78,25 @@ export async function planJob(job, entities, assets, { cfg, dry = false, priceOn
   // the rule points at, not just its name. Only as many as the model takes, and
   // never as a start frame (a frame model's one image is the shot's own). One that
   // does not resolve (archived, say) is left to buildPrompt to name in words.
-  if (!frames) {
+  // Every reference attached beyond the job's own, as its token, so a final can be sent the same set.
+  const extra = []
+  // A job that carries `sentPrompt` is a final of an approved draft: that draft's prompt and its images
+  // are reused as they were, not rebuilt from today's rules and notes (see enqueueFinal in worker.mjs).
+  if (!frames && !job.sentPrompt) {
     const room = maxRefs(entry) - refInfo.length
-    const extra = []
     for (const text of [...learnings, ...(job.revisionNotes ?? [])]) {
       for (const m of String(text ?? '').matchAll(MENTION_RX)) {
         if (extra.length >= room) break
         const r = await resolveRef(m[1], entities, assets)
         if (!r.ok || isAudioFile(r.path) || refPaths.includes(r.path) || extra.some((x) => x.path === r.path)) continue
-        extra.push({ path: r.path, entity: r.entity, variant: r.variant, label: r.label ?? null })
+        extra.push({ path: r.path, entity: r.entity, variant: r.variant, label: r.label ?? null, token: m[1] })
       }
     }
     for (const x of extra) { refPaths.push(x.path); refInfo.push(x) }
   }
-  const { prompt, mentioned } = await buildPrompt(job.prompt, learnings, job.revisionNotes, refInfo, entities, assets, { frames })
+  const { prompt, mentioned } = job.sentPrompt
+    ? { prompt: String(job.sentPrompt), mentioned: true }
+    : await buildPrompt(job.prompt, learnings, job.revisionNotes, refInfo, entities, assets, { frames })
   if (refInfo.length && !priceOnly) {
     const key = refInfo.map((r, i) => `${frames ? (i ? 'end' : 'start') : `image_${i + 1}`}=${r.entity ? `${r.entity.short_id}/${r.variant}` : 'studio-file'}`).join(' ')
     await log(`IMAGES ${job.jobId}: ${key}${mentioned ? ' (called in the text)' : ' (none called in the text; each named once at the end)'}`)
@@ -104,6 +109,21 @@ export async function planJob(job, entities, assets, { cfg, dry = false, priceOn
   const mapped = mapParams(entry, { refs: refPaths, params: job.params ?? {}, stage: job.stage ?? null, cfg: { ...cfg, model } })
   if (mapped.errors.length) return { skip: mapped.errors.join('; ') }
   if (mapped.warnings.length && !priceOnly) await log(`PARAMS ${job.jobId}: ${mapped.warnings.join('; ')}`)
+  // Higgsfield's draft mode, where the model has it. A draft is made as a real draft, so that if it is
+  // approved untouched it can be finished at full quality as itself (`draft_job_id`) rather than generated
+  // again and coming out different. `draft` has to be said explicitly (false) beside a draft_job_id: the
+  // CLI cannot check the pair otherwise.
+  let hfDraft = false
+  if (hasHiggsfieldDrafts(entry) && cfg?.useHiggsfieldDrafts !== false) {
+    if (job.draftJobId && job.stage === 'final') {
+      mapped.params.draft = false
+      mapped.params.draft_job_id = job.draftJobId
+    } else if (job.stage === 'draft') {
+      mapped.params.draft = true
+      hfDraft = true
+    }
+  }
   const params = { prompt, ...mapped.params }
-  return { shot, entity, targetId, refPaths, prompt, model, params, entry }
+  const sentRefs = [...(job.refs ?? []), ...extra.map((x) => x.token).filter(Boolean)]
+  return { shot, entity, targetId, refPaths, prompt, model, params, entry, sentRefs, hfDraft }
 }

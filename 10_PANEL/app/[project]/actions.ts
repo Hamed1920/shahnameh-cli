@@ -144,6 +144,11 @@ export async function decide(
 
   const id = newId('rev')
   const regenerates = discarding ? false : verdict === 'denied' ? requeue : candidate.sidecar.stage === 'draft'
+  // A final that is sent back either goes again as a final (Modify) or falls back to a cheap draft (Deny).
+  const regenStage: 'draft' | 'final' | null =
+    verdict === 'denied' && requeue && candidate.sidecar.stage === 'final'
+      ? formData.get('regenStage') === 'final' ? 'final' : 'draft'
+      : null
 
   // A discard files nothing: uploads and reference edits on the form are ignored.
   let uploads: PendingUpload[] = []
@@ -187,6 +192,9 @@ export async function decide(
     ...(refs && { refs, refsBefore: candidate.sidecar.refs ?? [] }),
     ...(uploads.length > 0 && { uploads: uploads.map((u) => u.meta) }),
     ...(replacing && { prompt: newPrompt }),
+    ...(regenStage && { regenStage }),
+    // Untick "finish this draft" on an accepted draft: the final is generated again from scratch.
+    ...(verdict === 'accepted' && formData.get('convert') === 'off' && { convert: false }),
   }
 
   // Files first, decision second: the worker must never see a decision whose

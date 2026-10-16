@@ -270,14 +270,14 @@ export type ReferenceEdits = ReturnType<typeof useReferenceEdits>
 
 /** What "@" offers in a note or prompt: exactly the references in use, in the order the model gets them. */
 export function useMentionOptions(edits: ReferenceEdits, catalog: CatalogEntity[]): MentionOption[] {
-  const { thumbUrl } = useAssetUrls()
+  const { thumbUrl, assetUrl } = useAssetUrls()
   return edits.items
     .filter((i) => !i.removed)
     .map((i, n) => {
       if (i.uploadId) {
         const u = edits.uploads.findIndex((x) => x.id === i.uploadId)
         const file = edits.uploads[u]?.file.name ?? ''
-        return { token: `@upload:${i.uploadId}`, position: n + 1, title: `Upload ${u + 1}`, subtitle: file || 'new upload', thumb: i.path, keywords: `upload new ${file}` }
+        return { token: `@upload:${i.uploadId}`, position: n + 1, title: `Upload ${u + 1}`, subtitle: file || 'new upload', thumb: i.path, full: i.path, keywords: `upload new ${file}` }
       }
       const key = refKey(i.token, catalog)
       const ent = key ? catalog.find((e) => e.shortId === key.split('/')[0]) : undefined
@@ -285,8 +285,12 @@ export function useMentionOptions(edits: ReferenceEdits, catalog: CatalogEntity[
         token: key ? `@${key}` : i.token,
         position: n + 1,
         title: ent?.name ?? i.token,
-        subtitle: ent ? `${KIND_LABEL[ent.kind as Kind] ?? ent.kind} ${key!.split('/')[1]}` : 'reference',
+        subtitle: ent ? `${KIND_LABEL[ent.kind as Kind] ?? ent.kind} · ${lookWords(key!.split('/')[1])}` : 'reference',
         thumb: i.path ? thumbUrl(i.path, 96) : null,
+        // The preview and the enlarged view want more than a 96px chip: a mid-size JPEG, the
+        // original (often several MB) only through the lightbox's own request.
+        full: i.path ? thumbUrl(i.path, 720) : null,
+        original: i.path ? assetUrl(i.path) : null,
         keywords: ent ? `${ent.id} ${ent.kind}` : '',
       }
     })
@@ -303,6 +307,38 @@ export function sameRefFor(catalog: CatalogEntity[]) {
 // ---------------------------------------------------------------- view
 
 const shortOf = (token: string) => token.replace(/^@/, '').split('/')[0]
+
+/** V02 -> "look 2": what a person calls it. */
+export function lookWords(variant: string | undefined): string {
+  const n = /(\d+)/.exec(variant ?? '')?.[1]
+  return n ? `look ${Number(n)}` : 'main look'
+}
+
+/**
+ * What a reference is called on screen: "Armayel", "Armayel · look 2". The id behind it
+ * (CHR-007/V02) is for the worker and is not shown. Falls back to the id only for
+ * something the index does not know.
+ */
+/** "Character", "Location": the kind of thing a token is, or null when the index does not know it. */
+function kindOf(token: string | undefined, catalog: CatalogEntity[]): string | null {
+  if (!token) return null
+  const ent = catalog.find((e) => e.shortId === shortOf(token) || e.id === shortOf(token))
+  return ent ? (KIND_LABEL[ent.kind as Kind] ?? ent.kind) : null
+}
+
+/** The likeness plate is named by entity and look ("SHM-CHR-001-ZAHHAK V02"): show it as the name. */
+function plateName(token: string, catalog: CatalogEntity[]): string {
+  const [ref, variant] = token.trim().split(/\s+/)
+  const ent = catalog.find((e) => e.id === ref || e.shortId === ref)
+  return ent ? `${ent.name}${variant ? ` · ${lookWords(variant)}` : ''}` : token
+}
+
+export function referenceName(token: string, catalog: CatalogEntity[]): string {
+  const [ref, variant] = token.replace(/^@/, '').split('/')
+  const ent = catalog.find((e) => e.shortId === ref || e.id === ref)
+  if (!ent) return token.replace(/^@/, '')
+  return variant ? `${ent.name} · ${lookWords(variant)}` : ent.name
+}
 
 export function ReferenceEditor({
   edits,
@@ -367,7 +403,7 @@ export function ReferenceEditor({
     item.origin === 'upload' ? item.path : item.path ? assetUrl(item.path) : null
   const viewable: (LightboxItem & { key: string })[] = [
     ...(plate?.path
-      ? [{ key: 'plate', src: assetUrl(plate.path), title: plate.token, subtitle: 'likeness plate: compare only, not sent to the model' }]
+      ? [{ key: 'plate', src: assetUrl(plate.path), title: plateName(plate.token, catalog), subtitle: 'likeness plate: compare only, not sent to the model' }]
       : []),
     ...edits.items.flatMap((item) => {
       const src = srcOf(item)
@@ -375,7 +411,7 @@ export function ReferenceEditor({
       const name = item.token
         ? entityForToken(item.token)?.name
         : edits.uploads.find((u) => u.id === item.uploadId)?.file.name
-      return [{ key: item.key, src, title: item.token || 'New upload', subtitle: name }]
+      return [{ key: item.key, src, title: item.token ? referenceName(item.token, catalog) : 'New upload', subtitle: item.token ? (kindOf(item.token, catalog) ?? undefined) : name }]
     }),
   ]
   const open = (key: string) => {
@@ -437,7 +473,7 @@ export function ReferenceEditor({
       {refsEditable && edits.stale.length > 0 && (
         <p className="mb-5 max-w-2xl rounded-md border border-bad/35 bg-bad/8 px-3.5 py-2.5 text-[13px] leading-relaxed text-bad">
           {edits.stale.length === 1 ? 'One reference no longer resolves' : `${edits.stale.length} references no longer resolve`}
-          {' '}({edits.stale.map((i) => i.token).join(', ')}). Use the current look, replace or remove{' '}
+          {' '}({edits.stale.map((i) => referenceName(i.token, catalog)).join(', ')}). Use the current look, replace or remove{' '}
           {edits.stale.length === 1 ? 'it' : 'them'}: the worker refuses a job with a reference it cannot find.
         </p>
       )}
@@ -450,10 +486,10 @@ export function ReferenceEditor({
               className="focus-ring group relative cursor-zoom-in overflow-hidden rounded-lg border border-dashed border-edge-strong bg-sunken text-left"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={thumbUrl(plate.path, 480)} alt={plate.token} className="checker aspect-4/3 w-full object-contain opacity-80" />
+              <img src={thumbUrl(plate.path, 480)} alt={plateName(plate.token, catalog)} className="checker aspect-4/3 w-full object-contain opacity-80" />
               <span className="absolute top-2 left-2 rounded-[4px] bg-black/80 px-1.5 py-1 text-[10px] leading-none text-muted">compare only</span>
-              <span className="block truncate border-t border-dashed border-edge-strong px-3 py-2.5 font-mono text-[11px] text-muted">
-                {plate.token}
+              <span className="block truncate border-t border-dashed border-edge-strong px-3 py-2.5 text-[13px] text-muted">
+                {plateName(plate.token, catalog)}
               </span>
             </button>
           )}
@@ -597,11 +633,10 @@ function RefTile({
   const { thumbUrl } = useAssetUrls()
   const broken = item.origin === 'job' && !item.path && !item.removed
   const src = item.origin === 'upload' ? item.path : item.path ? thumbUrl(item.path, 480) : null
-  const name = item.token ? catalog.find((e) => e.shortId === shortOf(item.token))?.name : undefined
   const label =
     item.origin === 'upload'
       ? `Upload ${upload ? upload.file.name : ''}`
-      : item.token
+      : referenceName(item.token, catalog)
 
   return (
     <div
@@ -645,15 +680,15 @@ function RefTile({
       )}
 
       <div className="border-t border-edge px-3 py-2.5">
-        <div className={cn('truncate font-mono text-[11px] text-fg/90', item.removed && 'line-through opacity-50')}>
+        <div className={cn('truncate text-[13px] text-fg', item.removed && 'line-through opacity-50')}>
           {label}
         </div>
         <div className={cn('mt-0.5 text-[11px]', broken ? 'text-bad' : 'truncate text-muted')} title={broken ? item.stale : undefined}>
           {item.removed
             ? 'removed'
             : broken
-              ? `${name ? `${name}: ` : ''}${item.stale ?? 'no longer in the index'}`
-              : (name ?? (item.origin === 'upload' ? 'new upload' : 'reference'))}
+              ? `${item.stale ?? 'no longer in the index'}`
+              : (kindOf(item.token, catalog) ?? (item.origin === 'upload' ? 'new upload' : 'reference'))}
         </div>
       </div>
 

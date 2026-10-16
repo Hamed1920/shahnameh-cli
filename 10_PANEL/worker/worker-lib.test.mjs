@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 /**
  * The worker's money-safety rules, against a throwaway project and a fake CLI
@@ -150,7 +151,8 @@ test('scene numbers already given out stay taken: moved and archived shots count
 
 test('a reference an approved learning names is attached; one that no longer resolves is named in words', async () => {
   const { P, appendJsonl } = lib.project
-  const REAL = path.join(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')), 'MODEL_CATALOG.json')
+  // fileURLToPath, not URL.pathname: the latter leaves a space in the folder name as %20.
+  const REAL = path.join(path.dirname(fileURLToPath(import.meta.url)), 'MODEL_CATALOG.json')
   fs.copyFileSync(REAL, path.join(TMP, '.model-catalog.json'))
   fs.mkdirSync(path.join(ROOT, '08_REFERENCE'), { recursive: true })
   fs.writeFileSync(path.join(ROOT, '08_REFERENCE', 'TST-REF-001-BOARD_V01_board.png'), 'png')
@@ -169,6 +171,73 @@ test('a reference an approved learning names is attached; one that no longer res
   assert.doesNotMatch(plan.prompt, /@REF-001\/V02/, 'no raw token for a look that is gone')
   assert.match(plan.prompt, /Castes as in REF-001, Caste Board/)
 })
+test('a final sends its approved draft\'s prompt and images exactly, not a rebuild from today\'s notes and rules', async () => {
+  const { P, loadEntities, readCsv } = lib.project
+  const { planJob } = await import('./lib/plan.mjs')
+  const sent = 'THE TEXT THE DRAFT WAS SENT WITH <<<image_1>>>'
+  // The learning in the fixture names @REF-001/V02-ish pictures and the note asks for more; a rebuild would
+  // add both. A final that carries the draft's text must not.
+  const job = {
+    jobId: 'J-F', target: 'TST-REF-001-BOARD', model: 'nano_banana_pro', prompt: 'A different, older prompt.',
+    sentPrompt: sent, params: {}, refs: ['@REF-001/V01'], revisionNotes: ['a note written after the draft'],
+  }
+  const plan = await planJob(job, await loadEntities(), (await readCsv(P.manifest)).rows, { cfg: { defaultImageModel: 'nano_banana_pro' }, priceOnly: true })
+  assert.equal(plan.skip, undefined, plan.skip)
+  assert.equal(plan.prompt, sent, 'the approved text, character for character')
+  assert.deepEqual(plan.sentRefs, ['@REF-001/V01'], 'the images are the draft\'s, with nothing a rule pulled in since')
+  assert.equal(plan.refPaths.length, 1)
+})
+
+test('a draft is made as a real Higgsfield draft; an untouched approval finishes that very draft', async () => {
+  const { P, loadEntities, readCsv } = lib.project
+  const { planJob } = await import('./lib/plan.mjs')
+  const cfg = { defaultImageModel: 'nano_banana_pro', videoDraftResolution: '480p', videoFinalResolution: '1080p', videoDuration: 15 }
+  const base = { target: 'TST-REF-001-BOARD', model: 'seedance_2_5', prompt: 'p', params: { duration: 15 }, refs: [] }
+  const run = async (job, c = cfg) =>
+    planJob({ jobId: 'J-X', ...base, ...job }, await loadEntities(), (await readCsv(P.manifest)).rows, { cfg: c, priceOnly: true })
+
+  const draft = await run({ stage: 'draft' })
+  assert.equal(draft.skip, undefined, draft.skip)
+  assert.equal(draft.params.draft, true)
+  assert.equal(draft.params.resolution, '480p')
+  assert.equal(draft.hfDraft, true)
+
+  // Finishing it: the draft's job id, with draft said explicitly as false (the CLI cannot check the pair otherwise).
+  const finish = await run({ stage: 'final', draftJobId: 'hf-123' })
+  assert.equal(finish.params.draft, false)
+  assert.equal(finish.params.draft_job_id, 'hf-123')
+  assert.equal(finish.params.resolution, '1080p')
+  assert.equal(finish.hfDraft, false)
+
+  // A final with no draft to finish is generated as before, with neither parameter.
+  const fresh = await run({ stage: 'final' })
+  assert.equal('draft' in fresh.params, false)
+  assert.equal('draft_job_id' in fresh.params, false)
+
+  // Switched off in the config: a plain 480p draft, as it always was.
+  const off = await run({ stage: 'draft' }, { ...cfg, useHiggsfieldDrafts: false })
+  assert.equal('draft' in off.params, false)
+  assert.equal(off.params.resolution, '480p')
+
+  // A model without draft mode is untouched.
+  const image = await planJob(
+    { jobId: 'J-I', target: 'TST-REF-001-BOARD', model: 'nano_banana_pro', prompt: 'p', params: {}, refs: [] },
+    await loadEntities(), (await readCsv(P.manifest)).rows, { cfg, priceOnly: true },
+  )
+  assert.equal('draft' in image.params, false)
+})
+
+test('a take generated on another machine counts as generated, so it can be regenerated from this one', async () => {
+  const { P } = lib.project
+  const { generatedAnywhere } = lib.requests
+  const dir = path.dirname(P.state)
+  fs.writeFileSync(path.join(dir, 'state.test-elsewhere.json'), JSON.stringify({ processedJobs: ['J-ELSEWHERE'] }))
+  assert.equal(await generatedAnywhere('J-ELSEWHERE', { processedJobs: [] }), true)
+  assert.equal(await generatedAnywhere('J-HERE', { processedJobs: ['J-HERE'] }), true)
+  assert.equal(await generatedAnywhere('J-NOBODY', { processedJobs: [] }), false)
+  fs.rmSync(path.join(dir, 'state.test-elsewhere.json'))
+})
+
 test('a worker acts only on its own machine\'s requests; an untagged new one is skipped, never guessed at', async () => {
   const { P, appendJsonl } = lib.project
   const { runJobRequests } = lib.requests

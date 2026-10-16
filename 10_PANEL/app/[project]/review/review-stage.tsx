@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { Coins, Pause, Play, RotateCcw, Trash2, X } from 'lucide-react'
 import { decide, type ActionResult } from '../actions'
 import { AttemptHistory } from '@/components/attempt-history'
+import type { RegenerateConfig } from '@/components/regenerate-button'
 import { MentionTextarea } from '@/components/mention-textarea'
 import { ReferenceEditor, useMentionOptions, sameRefFor, useReferenceEdits } from '@/components/reference-editor'
 import { Button } from '@/components/ui/button'
@@ -17,6 +18,7 @@ import { EASE, SPRING_SNAPPY } from '@/components/ui/motion-tokens'
 import { Badge } from '@/components/ui/text'
 import { isVideo } from '@/lib/asset'
 import { hasSound } from '@/lib/models'
+import { looksLikeWholePrompt } from '@/lib/note-shape'
 import { useAssetUrls, useProject } from '@/components/project-context'
 import { cn } from '@/lib/cn'
 import type { AttemptEntry, CatalogEntity, ReviewItem, Verdict } from '@/lib/types'
@@ -80,12 +82,16 @@ function Player({ path, label, videoRef }: { path: string; label?: string; video
 export function ReviewStage({
   item,
   catalog,
+  regenCfg,
+  prices,
   active,
   near = false,
   onQueue,
 }: {
   item: ReviewItem
   catalog: CatalogEntity[]
+  regenCfg: RegenerateConfig
+  prices: Record<string, number>
   active: boolean
   /** Next to the active one on the strip: load its video now, so moving to it is instant. */
   near?: boolean
@@ -109,9 +115,18 @@ export function ReviewStage({
   const [requeue, setRequeue] = useState(true)
   // Deny + regenerate: a note on the old prompt, or the prompt replaced whole.
   const [promptMode, setPromptMode] = useState<'note' | 'replace'>('note')
+  // On a 1080p final, sending it back is two different things: Modify runs the final again with the changes;
+  // Deny falls back to a cheap draft, as for any rejected take.
+  const isFinal = s.stage === 'final'
+  const [redo, setRedo] = useState<'final' | 'draft'>('draft')
+  // An accepted draft made as a Higgsfield draft is, by default, finished as itself at 1080p -- no new generation --
+  // provided nothing about it changes. Switching this off asks for a new 1080p from scratch instead.
+  const [finish, setFinish] = useState(true)
   const [draftPrompt, setDraftPrompt] = useState(s.basePrompt ?? s.prompt ?? '')
   // null: no choice to make (not a denial that regenerates); otherwise whether the prompt is replaced.
   const replacing = verdict === 'denied' && requeue ? promptMode === 'replace' : null
+  // A whole prompt pasted into the note box: the worker uses it as the new prompt (see lib/note-shape.ts).
+  const noteIsPrompt = replacing === false && looksLikeWholePrompt(notes)
   // Sound is on by default for whatever this decision queues, whatever this take had.
   const [sound, setSound] = useState(true)
   const [error, setError] = useState<string | null>(candidate.failedDecision?.reason ?? null)
@@ -141,6 +156,9 @@ export function ReviewStage({
     setVerdict(v)
     requestAnimationFrame(() => root.current?.querySelector<HTMLTextAreaElement>('textarea[name=notes]')?.focus())
   }, [])
+
+  const modify = useCallback(() => { setRedo('final'); choose('denied') }, [choose])
+  const deny = useCallback(() => { setRedo('draft'); choose('denied') }, [choose])
 
   const submit = useCallback(async () => {
     if (!verdict || checking || !form.current) return
@@ -194,12 +212,13 @@ export function ReviewStage({
       }
       if (isTyping(e.target) || e.ctrlKey || e.metaKey || e.altKey) return
       if (e.key === 'a' || e.key === 'A') { e.preventDefault(); choose('accepted') }
-      if (e.key === 'd' || e.key === 'D') { e.preventDefault(); choose('denied') }
+      if (e.key === 'd' || e.key === 'D') { e.preventDefault(); deny() }
+      if ((e.key === 'm' || e.key === 'M') && isFinal) { e.preventDefault(); modify() }
       if (e.key === 'x' || e.key === 'X') { e.preventDefault(); choose('discarded') }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [active, submit, choose])
+  }, [active, submit, choose, deny, modify, isFinal])
 
   // A stage that is not on screen must not keep playing.
   useEffect(() => {
@@ -211,23 +230,40 @@ export function ReviewStage({
   const right = useRef<HTMLVideoElement>(null)
   const both = (fn: (v: HTMLVideoElement) => void) => [left.current, right.current].forEach((v) => v && fn(v))
 
+  // Anything meaningful changed about an accepted draft means a new 1080p from scratch, never the draft finished.
+  const changedWhy =
+    notes.trim() ? 'You added a note'
+      : edits.changed ? 'The references changed'
+        : edits.uploads.length > 0 ? 'An image was added'
+          : isVideoJob && sound !== !wasSilent ? 'The sound setting changed'
+            : null
+  const canFinish = verdict === 'accepted' && s.stage === 'draft' && Boolean(s.hfDraft)
+  const finishing = canFinish && finish && changedWhy === null
+
   const costLine = (() => {
     if (!verdict) return null
     if (verdict === 'discarded') return 'Out of Review, kept in _discarded. Nothing is filed or generated. No credits.'
     if (verdict === 'denied' && !requeue) return 'Nothing is generated. No credits.'
     if (verdict === 'denied') {
+      if (isFinal && redo === 'draft') {
+        const c = ctx.cost.draft
+        return `Rejects this 1080p and tries again as a cheap draft · ${c != null ? `≈ ${c} credits` : 'priced by the worker before it runs'}`
+      }
       const c = ctx.cost.regenerate
+      if (isFinal) return `Runs this 1080p again with your changes · ${c != null ? `≈ ${c} credits` : 'priced by the worker before it runs'}`
       return `Regenerates this ${s.stage ?? 'job'} · ${c != null ? `≈ ${c} credits` : 'priced by the worker before it runs'}`
     }
     if (s.stage === 'draft') {
       const c = ctx.cost.final
-      return `Buys the full-quality final · ${c != null ? `≈ ${c} credits` : 'priced by the worker before it runs'}`
+      const price = c != null ? `≈ ${c} credits` : 'priced by the worker before it runs'
+      if (finishing) return `Finishes this exact draft at 1080p, no new generation · ${price}`
+      return `Generates a new 1080p from scratch · ${price}`
     }
     return 'Files the shot. No credits.'
   })()
 
   return (
-    <div ref={root} className={cn('grid gap-10 lg:grid-cols-[minmax(0,1fr)_360px] xl:grid-cols-[minmax(0,1fr)_400px] xl:gap-12', !active && 'hidden')}>
+    <div ref={root} className={cn('grid gap-10 lg:grid-cols-[minmax(0,1fr)_360px] xl:grid-cols-[minmax(0,1fr)_400px] xl:gap-12 2xl:grid-cols-[minmax(0,1fr)_460px]', !active && 'hidden')}>
       {/* ------------------------------------------------ what is being judged */}
       <div className="min-w-0 space-y-10">
         <header>
@@ -251,7 +287,7 @@ export function ReviewStage({
             {s.stage && (
               <Badge tone={s.stage === 'draft' ? 'accent' : 'good'}>{s.stage === 'draft' ? 'draft' : 'final'}</Badge>
             )}
-            {s.attempt > 1 && <Badge>attempt {s.attempt}</Badge>}
+            {ctx.attemptNumber > 1 && <Badge>attempt {ctx.attemptNumber}</Badge>}
             {isVideoJob && wasSilent && <Badge tone="muted">silent</Badge>}
             <span className="ml-1 font-mono text-muted">{s.model}</span>
             <span className="text-faint">·</span>
@@ -262,8 +298,8 @@ export function ReviewStage({
         {comparing?.video ? (
           <div>
             <div className="grid gap-3 md:grid-cols-2">
-              <Player path={comparing.video} videoRef={left} label={`Attempt ${comparing.attempt} · ${comparing.verdict ?? 'not reviewed'}`} />
-              <Player path={candidate.path} videoRef={right} label={`Attempt ${s.attempt} · now`} />
+              <Player path={comparing.video} videoRef={left} label={`Attempt ${comparing.number} · ${comparing.verdict ?? 'not reviewed'}`} />
+              <Player path={candidate.path} videoRef={right} label={`Attempt ${ctx.attemptNumber} · now`} />
             </div>
             <div className="mt-4 flex flex-wrap items-center gap-2">
               <Button type="button" size="sm" tone="outline" onClick={() => both((v) => { v.currentTime = 0; void v.play() })}>
@@ -291,7 +327,7 @@ export function ReviewStage({
           plate={item.plate}
         />
 
-        <AttemptHistory history={ctx.history} comparing={comparing?.jobId ?? null} onCompare={setComparing} />
+        <AttemptHistory history={ctx.history} comparing={comparing?.jobId ?? null} onCompare={setComparing} catalog={catalog} cfg={regenCfg} prices={prices} />
 
         <Disclosure summary="Full prompt sent to the model">
           <pre className="scroll-pane max-h-80 rounded-xl border border-edge bg-sunken p-5 font-mono text-xs leading-[1.7] whitespace-pre-wrap text-fg/80">
@@ -316,20 +352,25 @@ export function ReviewStage({
           >
             <input type="hidden" name="candidate" value={candidate.path} />
             <input type="hidden" name="verdict" value={verdict ?? ''} />
+            {isFinal && verdict === 'denied' && <input type="hidden" name="regenStage" value={redo} />}
 
-            <div className="grid grid-cols-2 gap-2">
-              {(['accepted', 'denied'] as const).map((v) => {
-                const on = verdict === v
+            <div className={cn('grid gap-2', isFinal ? 'grid-cols-3' : 'grid-cols-2')}>
+              {(isFinal ? (['accepted', 'modify', 'denied'] as const) : (['accepted', 'denied'] as const)).map((v) => {
+                const on = v === 'accepted' ? verdict === 'accepted'
+                  : v === 'modify' ? verdict === 'denied' && redo === 'final'
+                    : verdict === 'denied' && (!isFinal || redo === 'draft')
+                const tone = v === 'accepted' ? 'fg' : v === 'modify' ? 'accent' : 'bad'
                 return (
                   <button
                     key={v}
                     type="button"
                     aria-pressed={on}
-                    onClick={() => choose(v)}
+                    title={v === 'modify' ? 'Run this 1080p again with your changes' : v === 'denied' && isFinal ? 'Reject it and try again as a cheap draft' : undefined}
+                    onClick={() => (v === 'modify' ? modify() : v === 'denied' ? deny() : choose(v))}
                     className={cn(
                       'focus-ring relative flex h-12 cursor-pointer items-center justify-center gap-2.5 rounded-lg border text-sm font-medium transition-colors duration-150',
                       on
-                        ? v === 'accepted' ? 'border-fg text-ink' : 'border-bad/50 text-bad'
+                        ? tone === 'fg' ? 'border-fg text-ink' : tone === 'accent' ? 'border-accent text-accent' : 'border-bad/50 text-bad'
                         : 'border-edge-strong text-fg/80 hover:border-[#505050] hover:bg-white/[0.04] hover:text-fg',
                     )}
                   >
@@ -338,13 +379,13 @@ export function ReviewStage({
                         aria-hidden
                         layoutId={pillId}
                         transition={SPRING_SNAPPY}
-                        className={cn('absolute inset-0 rounded-[7px]', v === 'accepted' ? 'bg-fg' : 'bg-bad/12')}
+                        className={cn('absolute inset-0 rounded-[7px]', tone === 'fg' ? 'bg-fg' : tone === 'accent' ? 'bg-accent/12' : 'bg-bad/12')}
                       />
                     )}
-                    <span className="relative">{v === 'accepted' ? 'Accept' : 'Deny'}</span>
+                    <span className="relative">{v === 'accepted' ? 'Accept' : v === 'modify' ? 'Modify' : 'Deny'}</span>
                     <span className="relative">
-                      <Kbd className={cn(on && (v === 'accepted' ? 'border-ink/20 text-ink/55' : 'border-bad/30 text-bad/70'))}>
-                        {v === 'accepted' ? 'A' : 'D'}
+                      <Kbd className={cn(on && (tone === 'fg' ? 'border-ink/20 text-ink/55' : tone === 'accent' ? 'border-accent/30 text-accent/70' : 'border-bad/30 text-bad/70'))}>
+                        {v === 'accepted' ? 'A' : v === 'modify' ? 'M' : 'D'}
                       </Kbd>
                     </span>
                   </button>
@@ -405,10 +446,28 @@ export function ReviewStage({
                         )}
                       </div>
                     )}
+                    {noteIsPrompt && (
+                      <div className="space-y-2 rounded-md border border-accent/40 bg-accent/[0.06] px-3 py-2.5 text-xs leading-relaxed text-fg/90">
+                        <p>
+                          This note reads as a whole prompt. A note is added <em>under</em> the old prompt, which would
+                          still lead — so it is sent as the new prompt instead. Use “Replace the prompt” to see and
+                          edit it as one.
+                        </p>
+                        <Button
+                          type="button"
+                          size="sm"
+                          tone="outline"
+                          onClick={() => { setDraftPrompt(notes.trim()); setNotes(''); setPromptMode('replace') }}
+                        >
+                          Move it to the new prompt
+                        </Button>
+                      </div>
+                    )}
                     <Field label={
                       verdict !== 'denied' ? 'Why did this one work? (optional)'
                         : replacing ? 'What was wrong? (optional, kept for Learnings)'
-                          : 'What is wrong? This becomes the fix.'
+                          : isFinal && redo === 'final' ? 'What should change? This becomes the fix.'
+                            : 'What is wrong? This becomes the fix.'
                     }>
                       <MentionTextarea
                         name="notes"
@@ -433,7 +492,7 @@ export function ReviewStage({
                     </>)}
 
                     {verdict === 'denied' && (
-                      <Checkbox name="requeue" checked={requeue} onChange={(e) => setRequeue(e.target.checked)} label={replacing ? 'Regenerate with the new prompt' : 'Regenerate with this note applied'} />
+                      <Checkbox name="requeue" checked={requeue} onChange={(e) => setRequeue(e.target.checked)} label={isFinal && redo === 'draft' ? (replacing ? 'Try again as a draft with the new prompt' : 'Try again as a draft with this note applied') : isFinal ? (replacing ? 'Run the 1080p again with the new prompt' : 'Run the 1080p again with this note applied') : replacing ? 'Regenerate with the new prompt' : 'Regenerate with this note applied'} />
                     )}
 
                     {isVideoJob && regenerates && (
@@ -446,6 +505,20 @@ export function ReviewStage({
                         />
                         <p className="text-xs text-faint">
                           {wasSilent ? 'This take was generated silent.' : 'This take was generated with sound.'}
+                        </p>
+                      </div>
+                    )}
+
+                    {canFinish && (
+                      <div className="space-y-1.5">
+                        <Checkbox checked={finish} onChange={(e) => setFinish(e.target.checked)} label="Finish this exact draft at 1080p" />
+                        {!finish && <input type="hidden" name="convert" value="off" />}
+                        <p className="text-xs leading-relaxed text-faint">
+                          {finishing
+                            ? 'No new generation: this draft itself is rendered at full quality, so the 1080p is the video you approved.'
+                            : changedWhy
+                              ? `${changedWhy}, so a new 1080p is generated from scratch.`
+                              : 'A new 1080p is generated from scratch.'}
                         </p>
                       </div>
                     )}
@@ -496,7 +569,7 @@ export function ReviewStage({
             {(verdict || notes || tags || edits.changed || edits.uploads.length > 0) && (
               <button
                 type="button"
-                onClick={() => { setVerdict(null); setNotes(''); setTags(''); setRequeue(true); setSound(true); setPromptMode('note'); setDraftPrompt(s.basePrompt ?? s.prompt ?? ''); setError(null); edits.reset() }}
+                onClick={() => { setVerdict(null); setNotes(''); setTags(''); setRequeue(true); setSound(true); setPromptMode('note'); setRedo('draft'); setFinish(true); setDraftPrompt(s.basePrompt ?? s.prompt ?? ''); setError(null); edits.reset() }}
                 className="focus-ring mx-auto mt-4 flex cursor-pointer items-center gap-1.5 rounded text-xs text-faint transition-colors duration-150 hover:text-fg"
               >
                 <RotateCcw aria-hidden className="size-3" /> Start over

@@ -38,6 +38,8 @@ export interface StagingSidecar {
   parentJobId: string | null
   hfJobId: string
   attempt: number
+  /** Made as a Higgsfield draft, so that approving it untouched can finish this very draft at full quality. */
+  hfDraft?: boolean
   /** draft = cheap preview; approving it queues the final. null for stills. */
   stage: 'draft' | 'final' | null
   label: string | null
@@ -106,6 +108,14 @@ export interface ReviewDecision {
    * revision notes were written against the old prompt and are not carried over.
    */
   prompt?: string
+  /**
+   * Only on a denied FINAL that is regenerated: "final" is Modify (the same 1080p, with the changes),
+   * "draft" is Deny (a cheap draft again, as for any rejected take). Absent on an older decision, which keeps
+   * the stage it was.
+   */
+  regenStage?: 'draft' | 'final'
+  /** Only false is ever written: an accepted draft the reviewer asked to render again from scratch instead of finishing it. */
+  convert?: boolean
 }
 
 export interface ReviewUpload {
@@ -265,6 +275,20 @@ export interface ResolvedReference {
 /** One earlier attempt at the same shot, for the review history. */
 export interface AttemptEntry {
   jobId: string
+  /**
+   * Which attempt at the PLAN this is, counting every one in the order it was made: 1, 2, 3. The worker's own
+   * `attempt` is a revision counter that a 1080p final repeats from its draft, so it is not what to show.
+   */
+  number: number
+  /** The decision recorded about this attempt, when there is one. */
+  decisionId: string
+  /**
+   * Everything the confirmation panel needs to start another attempt from this one ("Continue from here"):
+   * its prompt, references, model, stage and settings. Null when the queue record is gone.
+   */
+  source: RegenerateSource | null
+  /** The prompt that attempt was written with (before the worker added rules and notes). Empty when the queue record is gone. */
+  prompt: string
   attempt: number
   stage: 'draft' | 'final' | null
   verdict: Verdict | null
@@ -287,8 +311,10 @@ export interface ReviewContext {
   beats: string[]
   /** Earlier attempts, oldest first. */
   history: AttemptEntry[]
+  /** This take's place among every attempt at the plan, history included: the number to show. */
+  attemptNumber: number
   /** Credit estimates, null when there is nothing to go on. */
-  cost: { regenerate: number | null; final: number | null }
+  cost: { regenerate: number | null; final: number | null; /** One more try as a cheap draft: what Deny costs on a final. */ draft: number | null }
 }
 
 export interface ReviewItem {

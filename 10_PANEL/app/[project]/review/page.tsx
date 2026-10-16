@@ -1,5 +1,8 @@
+import { getDecidedEntries } from '@/lib/decided'
+import { compareReviewOrder } from '@/lib/play-through'
 import { requireProject } from '@/lib/projects'
-import { getCatalog, getEpisodes, getPending, getReferenceFor, getReviewContexts, referenceResolver } from '@/lib/store'
+import { getCatalog, getEpisodes, getPending, getPriceTable, getReferenceFor, getReviewContexts, getWorkerConfig, referenceResolver } from '@/lib/store'
+import type { RegenerateConfig } from '@/components/regenerate-button'
 import type { ReviewItem } from '@/lib/types'
 import { ReviewWorkspace } from './review-workspace'
 
@@ -14,7 +17,19 @@ export default async function ReviewPage({ params }: PageProps<'/[project]/revie
   const [pending, catalog, resolve, episodes] = await Promise.all([
     getPending(pr), getCatalog(pr), referenceResolver(pr), getEpisodes(pr),
   ])
-  const contexts = await getReviewContexts(pr, pending)
+  // Where each decided take is now, so the history keeps the footage of takes that were filed.
+  const decided = await getDecidedEntries(pr)
+  const contexts = await getReviewContexts(pr, pending, new Map(decided.map((e) => [e.decision.id, e.file])), resolve)
+
+  // What the "Continue from here" panel needs: the models and settings it offers, and what each costs.
+  const [workerCfg, priceTable] = await Promise.all([getWorkerConfig(), getPriceTable()])
+  const regenCfg: RegenerateConfig = {
+    pinned: (workerCfg.pinnedModels as string[] | undefined) ?? [],
+    aspectRatios: (workerCfg.aspectRatios as string[]) ?? ['16:9', '9:16', '1:1'],
+    videoDurations: (workerCfg.videoDurations as number[]) ?? [5, 10, 15],
+    videoDraftResolution: String(workerCfg.videoDraftResolution ?? '480p'),
+    videoFinalResolution: String(workerCfg.videoFinalResolution ?? '1080p'),
+  }
 
   const items: ReviewItem[] = await Promise.all(
     pending.map(async (candidate) => {
@@ -32,17 +47,23 @@ export default async function ReviewPage({ params }: PageProps<'/[project]/revie
     }),
   )
 
-  // Scene order, so a sequence is reviewed the way it will be watched.
-  items.sort(
-    (a, b) =>
-      a.candidate.sidecar.target.localeCompare(b.candidate.sidecar.target) ||
-      a.candidate.sidecar.createdAt.localeCompare(b.candidate.sidecar.createdAt),
-  )
+  // The order the prompts were numbered in, so a sequence is reviewed the way it
+  // will be watched. Not scene or generation order: a prompt that failed and was
+  // retried is made late and numbered late, and would otherwise land after the last.
+  const keyOf = (i: ReviewItem) => ({
+    episode: i.context.episode,
+    label: i.context.label,
+    target: i.candidate.sidecar.target,
+    createdAt: i.candidate.sidecar.createdAt,
+  })
+  items.sort((a, b) => compareReviewOrder(keyOf(a), keyOf(b)))
 
   return (
     <ReviewWorkspace
       items={items}
       catalog={catalog}
+      regenCfg={regenCfg}
+      prices={Object.fromEntries(priceTable)}
       episodeTitles={Object.fromEntries(episodes.filter((e) => e.title).map((e) => [e.id, e.title]))}
     />
   )

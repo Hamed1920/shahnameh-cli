@@ -23,7 +23,7 @@ import { Badge, StickyHeader } from '@/components/ui/text'
 import { useToast } from '@/components/toast'
 import { cn } from '@/lib/cn'
 import {
-  AUDIO_ACCEPT, KINDS, MAX_ADD_TOTAL_BYTES, MAX_ADD_UPLOADS, MAX_UPLOAD_BYTES, UPLOAD_ACCEPT, entitySlug, type Kind,
+  AUDIO_ACCEPT, KINDS, MAX_ADD_TOTAL_BYTES, MAX_ADD_UPLOADS, MAX_UPLOAD_BYTES, KIND_LABEL, UPLOAD_ACCEPT, entitySlug, type Kind,
 } from '@/lib/indexing'
 import { LookMedia } from '@/components/look-media'
 import { isAudio } from '@/lib/asset'
@@ -155,6 +155,8 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
         : null
 
   const byId = useMemo(() => new Map(data.entities.map((e) => [e.id, e])), [data.entities])
+  /** The name a person knows an entity by, from its short id (CHR-007). Falls back to the id for one the index no longer lists. */
+  const nameOfShort = (shortId: string) => data.entities.find((e) => e.shortId === shortId)?.name ?? shortId
   const pendingFor = (e: LibraryEntity) => data.pending.some((op) => JSON.stringify(op).includes(e.id))
 
   const live = data.entities.filter((e) => e.status !== 'RETIRED')
@@ -247,9 +249,9 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
     if (!r.ok) toast('bad', r.error ?? 'Could not open the folder.')
   }
   const viewItemsOf = (e: LibraryEntity): LightboxItem[] =>
-    e.looks.map((l) => ({ src: assetUrl(l.path), title: `${e.shortId}/${l.variant}`, subtitle: `${e.name} · ${l.role}`, audio: isAudio(l.path) }))
+    e.looks.map((l) => ({ src: assetUrl(l.path), title: `${e.name} · look ${Number(l.variant.replace(/\D/g, ''))}`, subtitle: l.role, audio: isAudio(l.path) }))
   const confirmRetire = (e: LibraryEntity) => setConfirm({
-    title: `Retire ${e.shortId}?`,
+    title: `Retire ${e.name}?`,
     body: 'It disappears from pickers and can’t be used in new jobs. Its number and files are kept, and you can restore it from “Retired”.',
     label: 'Retire',
     run: () => send({ type: 'retire', entities: [e.id] }),
@@ -287,11 +289,11 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
   const entityEntries = (e: LibraryEntity): MenuEntry[] => {
     const retired = e.status === 'RETIRED'
     return [
-      { heading: `@${e.shortId} · ${e.name}` },
+      { heading: e.name },
       { label: 'Open', icon: <Maximize2 className="size-3.5" />, onSelect: () => setOpenId(e.id) },
       { label: 'Edit name, ID, description…', icon: <Pencil className="size-3.5" />, onSelect: () => setEditing(e) },
       ...(retired ? [] : [{ label: 'Add looks…', icon: <Plus className="size-3.5" />, onSelect: () => setAdding({ entity: e.id }) }]),
-      { label: 'Copy reference', icon: <Copy className="size-3.5" />, hint: `@${e.shortId}`, onSelect: () => copyTokens([`@${e.shortId}`]) },
+      { label: 'Copy reference', icon: <Copy className="size-3.5" />, onSelect: () => copyTokens([`@${e.shortId}`]) },
       { label: selE.has(e.id) ? 'Unselect' : 'Select', icon: <Check className="size-3.5" />, onSelect: () => toggle(setSelE, e.id) },
       ...(retired ? [] : [{ caption: 'Status', chips: STATUSES.map((s) => ({ label: s, active: e.status === s, onSelect: () => send({ type: 'status', entities: [e.id], status: s }) })) }]),
       { divider: true },
@@ -385,7 +387,7 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
                     <div
                       key={a.archiveId}
                       onContextMenu={(ev) => openMenu(ev, [
-                        { heading: `${a.shortId}/${a.variant} · archived` },
+                        { heading: `${nameOfShort(a.shortId)} · look ${Number(a.variant.replace(/\D/g, ''))} · archived` },
                         { label: 'Restore', icon: <ArchiveRestore className="size-3.5" />, onSelect: () => send({ type: 'unarchive', archiveIds: [a.archiveId] }) },
                         { label: 'Show in folder', icon: <FolderOpen className="size-3.5" />, onSelect: () => reveal(a.file) },
                         { label: on ? 'Unselect' : 'Select', icon: <Check className="size-3.5" />, onSelect: () => toggle(setSelA, a.archiveId) },
@@ -395,7 +397,7 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
                       <LookMedia path={a.file} className="opacity-80" />
                       <SelectBox checked={on} onChange={() => toggle(setSelA, a.archiveId)} label={`Select archived ${a.shortId} ${a.variant}`} className="absolute top-2 left-2" />
                       <div className="border-t border-edge px-3 py-2.5 text-[11px]">
-                        <div className="font-mono text-fg">{a.shortId} / {a.variant}{a.take !== 'T01' ? ` / ${a.take}` : ''}</div>
+                        <div className="text-fg">{nameOfShort(a.shortId)} · look {Number(a.variant.replace(/\D/g, ''))}{a.take !== 'T01' ? ` · take ${Number(a.take.replace(/\D/g, ''))}` : ''}</div>
                         <div className="mt-0.5 text-faint">archived {a.ts.slice(0, 10)}{a.by ? ` by ${a.by}` : ''}</div>
                       </div>
                     </div>
@@ -475,7 +477,7 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
                 <>
                   {selEntities.some((e) => e.status !== 'RETIRED') && (
                     <Button type="button" size="sm" tone="outline" disabled={busy} onClick={() => setConfirm({
-                      title: `Retire ${selE.size === 1 ? selEntities[0].shortId : `${selE.size} entities`}?`,
+                      title: `Retire ${selE.size === 1 ? selEntities[0].name : `${selE.size} entities`}?`,
                       body: 'Retired entities disappear from pickers and can’t be used in new jobs. Their number and files are kept, and you can restore them any time from “Retired”.',
                       label: 'Retire',
                       run: () => send({ type: 'retire', entities: [...selE] }),
@@ -560,7 +562,7 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
       <IndexPicker
         open={moveLooks !== null}
         mode="entity"
-        title={`Move ${(moveLooks?.length ?? 0) === 1 ? `${byId.get(moveLooks![0].entity)?.shortId}/${moveLooks![0].variant}` : `${moveLooks?.length} looks`} to…`}
+        title={`Move ${(moveLooks?.length ?? 0) === 1 ? `${byId.get(moveLooks![0].entity)?.name ?? ''} · look ${Number(moveLooks![0].variant.replace(/\D/g, ''))}` : `${moveLooks?.length} looks`} to…`}
         catalog={catalog}
         onClose={() => setMoveLooks(null)}
         onPickEntity={(target) => { const looks = moveLooks ?? []; setMoveLooks(null); send({ type: 'move', looks, to: target.id }) }}
@@ -632,10 +634,10 @@ function EntityCard({
             {e.flags.includes('NO-ASSET') && <Badge tone="muted">no image</Badge>}
             {pending && <LoaderCircle aria-label="applying" className="size-3.5 animate-spin text-fg" />}
           </div>
-          <p className="mt-2 truncate font-mono text-[11px] text-faint" title={e.id}>
-            <span className="text-fg/85">{e.shortId}</span>
+          <p className="mt-2 truncate text-[12px] text-faint">
+            {KIND_LABEL[e.kind as Kind] ?? e.kind}
             <span className="px-1.5">·</span>
-            {e.id}
+            {e.looks.length} {e.looks.length === 1 ? 'look' : 'looks'}
           </p>
         </div>
         <Button type="button" size="sm" tone="ghost" onClick={(ev) => { ev.stopPropagation(); onEdit() }} aria-label={`Edit ${e.shortId}`} className="-mt-1 -mr-1.5 h-8 px-2">
@@ -659,7 +661,7 @@ function EntityCard({
                 </span>
               )}
               <div className="pointer-events-none absolute bottom-1.5 left-1.5 flex items-center gap-1 rounded-[3px] bg-black/80 px-1 py-0.5 font-mono text-[9px] leading-none text-fg">
-                {l.variant}<span className="text-muted">{l.role}</span>{l.takes > 1 && <span className="text-muted">×{l.takes}</span>}
+                look {Number(l.variant.replace(/\D/g, ''))}<span className="text-muted">{l.role}</span>{l.takes > 1 && <span className="text-muted">×{l.takes}</span>}
               </div>
             </div>
           )
@@ -700,7 +702,7 @@ function EditDialog({ entity: e, onClose, send, busy }: {
   return (
     <Modal
       open
-      title={<>Edit <span className="font-mono">{e.shortId}</span></>}
+      title={<>Edit {e.name}</>}
       onClose={onClose}
       footer={
         <>
@@ -960,7 +962,7 @@ function EntityView({
 
   const toggle = (v: string) => setSel((s) => { const n = new Set(s); if (n.has(v)) n.delete(v); else n.add(v); return n })
   const all = looks.length > 0 && chosen.length === looks.length
-  const viewItems = looks.map((l) => ({ src: assetUrl(l.path), title: `${e.shortId}/${l.variant}`, subtitle: `${e.name} · ${l.role}`, audio: isAudio(l.path) }))
+  const viewItems = looks.map((l) => ({ src: assetUrl(l.path), title: `${e.name} · look ${Number(l.variant.replace(/\D/g, ''))}`, subtitle: l.role, audio: isAudio(l.path) }))
   const copy = async (tokens: string[]) => { await navigator.clipboard.writeText(tokens.join(' ')); onToast('good', `Copied ${tokens.join(' ')}`, 3000) }
   // Looks that leave drop out of the selection by themselves (the effect above).
   const archive = (ls: typeof looks) => onArchive(asOps(ls))
@@ -1009,7 +1011,7 @@ function EntityView({
               </Button>
             ) : (
               <Button type="button" size="sm" tone="ghost" disabled={busy} onClick={() => onConfirm({
-                title: `Retire ${e.shortId}?`,
+                title: `Retire ${e.name}?`,
                 body: 'It disappears from pickers and can’t be used in new jobs. Its number and files are kept, and you can restore it from “Retired”.',
                 label: 'Retire',
                 run: () => send({ type: 'retire', entities: [e.id] }),

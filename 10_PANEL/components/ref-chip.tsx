@@ -16,6 +16,9 @@ export function RefChip({ r, className }: { r: RefView; className?: string }) {
   const { assetUrl, thumbUrl } = useAssetUrls()
   const [open, setOpen] = useState<number | null>(null)
   const label = r.token.replace(/^@/, '')
+  // What a person calls it: "Armayel · look 2". The id (CHR-007/V02) is for the worker.
+  const look = /\/V(\d+)/.exec(label)?.[1]
+  const said = r.name ? `${r.name}${look ? ` · look ${Number(look)}` : ''}` : label
 
   if (!r.path) {
     return (
@@ -27,7 +30,7 @@ export function RefChip({ r, className }: { r: RefView; className?: string }) {
         )}
       >
         <span className="grid size-4 place-items-center"><ImageOff aria-hidden className="size-3" /></span>
-        <span className="font-mono">{label}</span>
+        <span>{said}</span>
       </span>
     )
   }
@@ -37,7 +40,7 @@ export function RefChip({ r, className }: { r: RefView; className?: string }) {
       <button
         type="button"
         onClick={() => setOpen(0)}
-        title={r.name ? `${r.name} · ${label}` : label}
+        title={said}
         className={cn(
           'focus-ring mx-0.5 inline-flex h-6 translate-y-[-1px] cursor-zoom-in items-center gap-1.5 rounded-md border border-edge-strong bg-raise pr-2 pl-0.5 align-middle text-[12px] leading-none text-fg transition-colors duration-150 hover:border-muted',
           className,
@@ -45,11 +48,10 @@ export function RefChip({ r, className }: { r: RefView; className?: string }) {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={thumbUrl(r.path, 96)} alt="" loading="lazy" className="checker size-5 rounded-[4px] object-cover" />
-        <span className="font-mono text-[11px] text-muted">{label}</span>
-        {r.name && <span className="max-w-[16ch] truncate">{r.name}</span>}
+        <span className="max-w-[26ch] truncate">{said}</span>
       </button>
       <Lightbox
-        items={[{ src: assetUrl(r.path), title: label, subtitle: r.name ?? undefined }]}
+        items={[{ src: assetUrl(r.path), title: said }]}
         index={open}
         onIndex={setOpen}
         onClose={() => setOpen(null)}

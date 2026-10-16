@@ -9,8 +9,8 @@
   "concurrency": 1,
   "maxJobsPerRun": 12,
   "maxConcurrentGenerations": 8,
-  "perJobCostCeilingCredits": 250,
-  "costCeilingCredits": 3000,
+  "perJobCostCeilingCredits": 400,
+  "costCeilingCredits": 6000,
   "costWindowHours": 24,
   "waitTimeout": "25m",
   "waitInterval": "5s",
@@ -20,5 +20,6 @@
   "videoDraftResolution": "480p",
   "videoFinalResolution": "1080p",
   "videoDuration": 15,
-  "videoSound": true
+  "videoSound": true,
+  "useHiggsfieldDrafts": true
 }

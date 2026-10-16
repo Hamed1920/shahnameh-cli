@@ -1,0 +1,100 @@
+{
+  "jobId": "J-20261016-X3K",
+  "parentJobId": "J-20261016-ZBA",
+  "hfJobId": "ea36ecd8-5d0c-454e-96e7-8968c6756ff4",
+  "attempt": 1,
+  "stage": "final",
+  "label": "PLAN 03A",
+  "target": "SHM-EP015-SC014-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 03A | THE HEAD COOK OWNS THE ROOM\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_HEAD_COOK}}\n{{CHAR_KITCHEN_WORKER_A}}\n{{CHAR_KITCHEN_WORKER_B}}\nLOCATION REFERENCES\n{{LOC_KITCHEN}}\nPROP REFERENCES\n{{PROP_HEAD_COOK_WORK_CLOTH}}\n{{PROP_KITCHEN_WORK_UTENSILS}}\nCreate a 15-second horizontal 16:9 live-action cinematic block. Follow the timed shot boundaries exactly. Preserve the assigned identities, costumes, body proportions and rigid handmade masks. Mask surfaces and eye openings stay physically fixed; emotions register through visible eyes, breathing, hands and body weight. All performers are adults. Use tactile worn materials and physically motivated handheld camera movement. Each cut takes the camera to the specified new physical station. References anchor design; the written lighting governs exposure. Preserve readable action within the instability.\nLOCATION AND LIGHT\nA vast old Iranian masonry kitchen with rounded arches and restrained carved reliefs. Integrated hard neutral overhead work lamps create pools of light across worn metal benches; dimmer engineered service lights preserve the depth of the aisles. Light grazes the Head Cook’s rigid handmade mask and the stains on his referenced apron. Preserve realistic material texture and heavy shadow beneath his brow and shoulders.\nSTART STATE AND BLOCKING\nExactly three adults appear: Head Cook and two kitchen workers. Armayil and Garmayil are absent from this introductory block. A central aisle runs north-south between two benches. Head Cook starts at the north end and walks south toward the camera. Worker A occupies the west bench, initially screen left; Worker B occupies the east bench, initially screen right. Both workers remain smaller in the framing through distance and posture. The Head Cook has his established soiled work apron and one crumpled work cloth in his right hand.\n\nSHOT 03A-01 | 00s to 03s | 3 seconds\n24mm low handheld at waist height, south of the Head Cook, retreating down the central aisle as he walks directly toward it. His chest and mask face camera, filling the center while the long benches recede behind him. His pace is heavy, economical and impatient. Worker A at left rapidly pulls a projecting tool back onto the bench; Worker B at right steps sideways out of his path. The operator yields ground to his body, creating authority through proximity rather than an exaggerated heroic pose.\nSHOT 03A-02 | 03s to 06s | 3 seconds\n35mm handheld from the southwest corner of the west bench, looking northeast. Worker A is near left in profile facing right; Head Cook occupies center-right, turned left toward him. Head Cook stops abruptly and snaps his masked face toward Worker A. One short harsh wordless bark makes the worker jerk still. The camera jolts toward the Head Cook’s turn, then catches the worker lowering his head and drawing his elbows close to his body. The mask stays rigid; the intimidation comes from the sudden turn, breath and invaded distance.\nSHOT 03A-03 | 06s to 09s | 3 seconds\n40mm close two-shot from south of their east-west interaction axis. Head Cook right faces left; Worker A left faces right. The Head Cook flicks the single crumpled cloth from his right hand toward the worker’s upper chest, across less than one meter. Worker A catches it against his apron with both hands, immediately lowers his gaze and bends to wipe the work surface. Follow the short cloth path with one sharp handheld correction. The Head Cook watches without moving to help.\nSHOT 03A-04 | 09s to 12s | 3 seconds\n50mm close on Worker B from the southeast corner of the east bench, a genuinely new camera station. Worker B fills right foreground, facing diagonally left toward Head Cook, who is soft in the center-left distance. Worker B hurriedly straightens a bowl and gathers scattered utensils, then steps back with hands close to his apron. His anxious glance checks whether the Head Cook approves. Camera advances slightly with the worker’s quick movement, then stops when he stops.\nSHOT 03A-05 | 12s to 15s | 3 seconds\n28mm low three-shot from south-center. Head Cook dominates center foreground facing camera, Worker A left rear and Worker B right rear beside their respective benches. Both workers finish their adjustments and wait, masked heads inclined toward him. Head Cook slowly looks left, then right, claiming the silence. Camera retreats one small step as he resumes walking toward it. End while his authority has quieted the aisle; reserve his approving nod for the later inspection block.\nEND STATE AND EDIT\nHead Cook has established command over two frightened, deferential workers. Cut forward to the separate block in which Armayil and Garmayil work under his inspection. His approval there is earned against the authority established here.\nSOUND\nHeavy approaching steps, utensils hurriedly gathered, one abrupt nonverbal bark, cloth striking an apron, fast wiping, then subdued room tone and the workers’ restrained breath. The bark contains no intelligible words.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Head Chef (CHR-011 V02); match it wherever Head Chef appears.\n<<<image_2>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_3>>> is Zahhak Kitchen Black Tile (LOC-031 V01); match it wherever Zahhak Kitchen Black Tile appears.",
+  "basePrompt": "PLAN 03A | THE HEAD COOK OWNS THE ROOM\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_HEAD_COOK}}\n{{CHAR_KITCHEN_WORKER_A}}\n{{CHAR_KITCHEN_WORKER_B}}\nLOCATION REFERENCES\n{{LOC_KITCHEN}}\nPROP REFERENCES\n{{PROP_HEAD_COOK_WORK_CLOTH}}\n{{PROP_KITCHEN_WORK_UTENSILS}}\nCreate a 15-second horizontal 16:9 live-action cinematic block. Follow the timed shot boundaries exactly. Preserve the assigned identities, costumes, body proportions and rigid handmade masks. Mask surfaces and eye openings stay physically fixed; emotions register through visible eyes, breathing, hands and body weight. All performers are adults. Use tactile worn materials and physically motivated handheld camera movement. Each cut takes the camera to the specified new physical station. References anchor design; the written lighting governs exposure. Preserve readable action within the instability.\nLOCATION AND LIGHT\nA vast old Iranian masonry kitchen with rounded arches and restrained carved reliefs. Integrated hard neutral overhead work lamps create pools of light across worn metal benches; dimmer engineered service lights preserve the depth of the aisles. Light grazes the Head Cook’s rigid handmade mask and the stains on his referenced apron. Preserve realistic material texture and heavy shadow beneath his brow and shoulders.\nSTART STATE AND BLOCKING\nExactly three adults appear: Head Cook and two kitchen workers. Armayil and Garmayil are absent from this introductory block. A central aisle runs north-south between two benches. Head Cook starts at the north end and walks south toward the camera. Worker A occupies the west bench, initially screen left; Worker B occupies the east bench, initially screen right. Both workers remain smaller in the framing through distance and posture. The Head Cook has his established soiled work apron and one crumpled work cloth in his right hand.\n\nSHOT 03A-01 | 00s to 03s | 3 seconds\n24mm low handheld at waist height, south of the Head Cook, retreating down the central aisle as he walks directly toward it. His chest and mask face camera, filling the center while the long benches recede behind him. His pace is heavy, economical and impatient. Worker A at left rapidly pulls a projecting tool back onto the bench; Worker B at right steps sideways out of his path. The operator yields ground to his body, creating authority through proximity rather than an exaggerated heroic pose.\nSHOT 03A-02 | 03s to 06s | 3 seconds\n35mm handheld from the southwest corner of the west bench, looking northeast. Worker A is near left in profile facing right; Head Cook occupies center-right, turned left toward him. Head Cook stops abruptly and snaps his masked face toward Worker A. One short harsh wordless bark makes the worker jerk still. The camera jolts toward the Head Cook’s turn, then catches the worker lowering his head and drawing his elbows close to his body. The mask stays rigid; the intimidation comes from the sudden turn, breath and invaded distance.\nSHOT 03A-03 | 06s to 09s | 3 seconds\n40mm close two-shot from south of their east-west interaction axis. Head Cook right faces left; Worker A left faces right. The Head Cook flicks the single crumpled cloth from his right hand toward the worker’s upper chest, across less than one meter. Worker A catches it against his apron with both hands, immediately lowers his gaze and bends to wipe the work surface. Follow the short cloth path with one sharp handheld correction. The Head Cook watches without moving to help.\nSHOT 03A-04 | 09s to 12s | 3 seconds\n50mm close on Worker B from the southeast corner of the east bench, a genuinely new camera station. Worker B fills right foreground, facing diagonally left toward Head Cook, who is soft in the center-left distance. Worker B hurriedly straightens a bowl and gathers scattered utensils, then steps back with hands close to his apron. His anxious glance checks whether the Head Cook approves. Camera advances slightly with the worker’s quick movement, then stops when he stops.\nSHOT 03A-05 | 12s to 15s | 3 seconds\n28mm low three-shot from south-center. Head Cook dominates center foreground facing camera, Worker A left rear and Worker B right rear beside their respective benches. Both workers finish their adjustments and wait, masked heads inclined toward him. Head Cook slowly looks left, then right, claiming the silence. Camera retreats one small step as he resumes walking toward it. End while his authority has quieted the aisle; reserve his approving nod for the later inspection block.\nEND STATE AND EDIT\nHead Cook has established command over two frightened, deferential workers. Cut forward to the separate block in which Armayil and Garmayil work under his inspection. His approval there is earned against the authority established here.\nSOUND\nHeavy approaching steps, utensils hurriedly gathered, one abrupt nonverbal bark, cloth striking an apron, fast wiping, then subdued room tone and the workers’ restrained breath. The bark contains no intelligible words.\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@CHR-011/V02",
+    "@GRP-005/V01",
+    "@LOC-031/V01"
+  ],
+  "sentRefs": [
+    "@CHR-011/V02",
+    "@GRP-005/V01",
+    "@LOC-031/V01"
+  ],
+  "createdAt": "2026-10-16T11:10:03.952Z",
+  "costCredits": 240,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_110342_ea36ecd8-5d0c-454e-96e7-8968c6756ff4.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-16T11:03:42.803234Z",
+      "display_name": "Seedance 2.5",
+      "id": "ea36ecd8-5d0c-454e-96e7-8968c6756ff4",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "928df5ba-f2db-45f7-8dd5-50d3bc27e812",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/928df5ba-f2db-45f7-8dd5-50d3bc27e812.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "cff1918f-7310-4d44-9136-9684249e9408",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/cff1918f-7310-4d44-9136-9684249e9408.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "ad65d441-1606-4189-9446-3205020018f3",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/ad65d441-1606-4189-9446-3205020018f3.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 03A | THE HEAD COOK OWNS THE ROOM\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_HEAD_COOK}}\n{{CHAR_KITCHEN_WORKER_A}}\n{{CHAR_KITCHEN_WORKER_B}}\nLOCATION REFERENCES\n{{LOC_KITCHEN}}\nPROP REFERENCES\n{{PROP_HEAD_COOK_WORK_CLOTH}}\n{{PROP_KITCHEN_WORK_UTENSILS}}\nCreate a 15-second horizontal 16:9 live-action cinematic block. Follow the timed shot boundaries exactly. Preserve the assigned identities, costumes, body proportions and rigid handmade masks. Mask surfaces and eye openings stay physically fixed; emotions register through visible eyes, breathing, hands and body weight. All performers are adults. Use tactile worn materials and physically motivated handheld camera movement. Each cut takes the camera to the specified new physical station. References anchor design; the written lighting governs exposure. Preserve readable action within the instability.\nLOCATION AND LIGHT\nA vast old Iranian masonry kitchen with rounded arches and restrained carved reliefs. Integrated hard neutral overhead work lamps create pools of light across worn metal benches; dimmer engineered service lights preserve the depth of the aisles. Light grazes the Head Cook’s rigid handmade mask and the stains on his referenced apron. Preserve realistic material texture and heavy shadow beneath his brow and shoulders.\nSTART STATE AND BLOCKING\nExactly three adults appear: Head Cook and two kitchen workers. Armayil and Garmayil are absent from this introductory block. A central aisle runs north-south between two benches. Head Cook starts at the north end and walks south toward the camera. Worker A occupies the west bench, initially screen left; Worker B occupies the east bench, initially screen right. Both workers remain smaller in the framing through distance and posture. The Head Cook has his established soiled work apron and one crumpled work cloth in his right hand.\n\nSHOT 03A-01 | 00s to 03s | 3 seconds\n24mm low handheld at waist height, south of the Head Cook, retreating down the central aisle as he walks directly toward it. His chest and mask face camera, filling the center while the long benches recede behind him. His pace is heavy, economical and impatient. Worker A at left rapidly pulls a projecting tool back onto the bench; Worker B at right steps sideways out of his path. The operator yields ground to his body, creating authority through proximity rather than an exaggerated heroic pose.\nSHOT 03A-02 | 03s to 06s | 3 seconds\n35mm handheld from the southwest corner of the west bench, looking northeast. Worker A is near left in profile facing right; Head Cook occupies center-right, turned left toward him. Head Cook stops abruptly and snaps his masked face toward Worker A. One short harsh wordless bark makes the worker jerk still. The camera jolts toward the Head Cook’s turn, then catches the worker lowering his head and drawing his elbows close to his body. The mask stays rigid; the intimidation comes from the sudden turn, breath and invaded distance.\nSHOT 03A-03 | 06s to 09s | 3 seconds\n40mm close two-shot from south of their east-west interaction axis. Head Cook right faces left; Worker A left faces right. The Head Cook flicks the single crumpled cloth from his right hand toward the worker’s upper chest, across less than one meter. Worker A catches it against his apron with both hands, immediately lowers his gaze and bends to wipe the work surface. Follow the short cloth path with one sharp handheld correction. The Head Cook watches without moving to help.\nSHOT 03A-04 | 09s to 12s | 3 seconds\n50mm close on Worker B from the southeast corner of the east bench, a genuinely new camera station. Worker B fills right foreground, facing diagonally left toward Head Cook, who is soft in the center-left distance. Worker B hurriedly straightens a bowl and gathers scattered utensils, then steps back with hands close to his apron. His anxious glance checks whether the Head Cook approves. Camera advances slightly with the worker’s quick movement, then stops when he stops.\nSHOT 03A-05 | 12s to 15s | 3 seconds\n28mm low three-shot from south-center. Head Cook dominates center foreground facing camera, Worker A left rear and Worker B right rear beside their respective benches. Both workers finish their adjustments and wait, masked heads inclined toward him. Head Cook slowly looks left, then right, claiming the silence. Camera retreats one small step as he resumes walking toward it. End while his authority has quieted the aisle; reserve his approving nod for the later inspection block.\nEND STATE AND EDIT\nHead Cook has established command over two frightened, deferential workers. Cut forward to the separate block in which Armayil and Garmayil work under his inspection. His approval there is earned against the authority established here.\nSOUND\nHeavy approaching steps, utensils hurriedly gathered, one abrupt nonverbal bark, cloth striking an apron, fast wiping, then subdued room tone and the workers’ restrained breath. The bark contains no intelligible words.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Head Chef (CHR-011 V02); match it wherever Head Chef appears.\n<<<image_2>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_3>>> is Zahhak Kitchen Black Tile (LOC-031 V01); match it wherever Zahhak Kitchen Black Tile appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_110342_ea36ecd8-5d0c-454e-96e7-8968c6756ff4.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_110342_ea36ecd8-5d0c-454e-96e7-8968c6756ff4_thumbnail.webp"
+    }
+  ]
+}

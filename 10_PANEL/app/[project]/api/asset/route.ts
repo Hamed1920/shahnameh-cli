@@ -54,7 +54,12 @@ function parseRange(header: string, size: number): { start: number; end: number 
 }
 
 function stream(abs: string, opts?: { start: number; end: number }) {
-  return Readable.toWeb(createReadStream(abs, opts)) as ReadableStream<Uint8Array>
+  const file = createReadStream(abs, opts)
+  // A browser drops a video request as soon as it has the bytes it wanted (a seek, a scrub, the next
+  // shot starting). That closes this stream early, which is normal, and would otherwise be logged as
+  // "The destination stream closed early" on every one.
+  file.on('error', () => {})
+  return Readable.toWeb(file) as ReadableStream<Uint8Array>
 }
 
 export async function GET(request: Request, ctx: RouteContext<'/[project]/api/asset'>) {

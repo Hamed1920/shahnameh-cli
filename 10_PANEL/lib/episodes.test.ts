@@ -30,6 +30,21 @@ test('the block number out of a document heading, in either language', () => {
   assert.equal(blockNumber('PROMPT 3'), 'P03')
   assert.equal(blockNumber('P02 — the hall'), 'P02')
   assert.equal(blockNumber('پرامپت ۴'), 'P04')
+  assert.equal(blockNumber('PLAN 01'), 'P01')
+  assert.equal(blockNumber('پلان ۱۲'), 'P12')
+  // A prompt slotted between two others keeps its decimal.
+  assert.equal(blockNumber('PLAN 3.1'), 'P03.1')
+  assert.equal(blockNumber('P3.2 - the hall'), 'P03.2')
+  assert.equal(blockNumber('پلان ۳.۱'), 'P03.1')
+  assert.equal(blockNumber('PLAN 8A'), 'P08.1')
+  assert.equal(blockNumber('P8-B | the hall'), 'P08.2')
+  assert.equal(blockNumber('PLAN 8 version 2'), 'P08.2')
+  assert.equal(blockNumber('PLAN 8 v2'), 'P08.2')
+  // A word that merely starts with a letter is not a suffix.
+  assert.equal(blockNumber('PLAN 8 very quiet'), 'P08')
+  assert.equal(blockNumber('PLAN 8 A quiet room'), 'P08')
+  // A full stop after the number is punctuation, not a decimal.
+  assert.equal(blockNumber('P3. The hall'), 'P03')
   assert.equal(blockNumber('SHOT 2'), null)
   assert.equal(blockNumber('the wide one'), null)
   assert.equal(blockNumber(null), null)

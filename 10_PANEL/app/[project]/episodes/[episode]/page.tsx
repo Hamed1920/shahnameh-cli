@@ -7,6 +7,7 @@ import { Reveal } from '@/components/ui/reveal'
 import { Badge, PageHeader, SectionHeading } from '@/components/ui/text'
 import { EPISODE_RX, episodeLabel, shortEpisode, type EpisodeOption } from '@/lib/episodes'
 import { getAcceptedTakes, getEpisodeBoard } from '@/lib/episode-board'
+import { inPromptOrder, shotStops } from '@/lib/play-through'
 import { requireProject } from '@/lib/projects'
 import { getEpisodes, getPendingIndexOps } from '@/lib/store'
 import { EpisodePanel } from '../episode-panel'
@@ -73,6 +74,7 @@ export default async function EpisodePage({ params }: PageProps<'/[project]/epis
               }))}
               accepted={accepted}
               applying={applying}
+              stops={shotStops(inPromptOrder(ep.id, ep.scenes).map((s) => ({ shot: s.shot, title: shotLabel(s.scene), subtitle: s.label ?? undefined, outputs: s.outputs })))}
             />
           }
         >

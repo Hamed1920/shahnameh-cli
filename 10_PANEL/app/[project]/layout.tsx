@@ -62,7 +62,8 @@ export default async function ProjectLayout({ children, params }: LayoutProps<'/
           />
           {/* A size container, so a page's sticky bar can bleed to its full width (StickyHeader). */}
           <main className="scroll-pane @container flex-1">
-            <div className="mx-auto max-w-[1600px] px-6 pt-10 pb-24 lg:px-12">{children}</div>
+            {/* Wide, but not edge to edge: about 1840px, so a big screen keeps a margin and a long line stays readable. */}
+            <div className="mx-auto max-w-[1840px] px-6 pt-10 pb-24 lg:px-12">{children}</div>
           </main>
         </LiveRefresh>
       </CatalogSync>

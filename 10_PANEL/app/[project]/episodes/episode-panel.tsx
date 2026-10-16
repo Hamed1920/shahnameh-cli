@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Check, FileVideo, LoaderCircle, Pencil, Plus, Search, TriangleAlert, Upload, X } from 'lucide-react'
 import { assignToEpisode } from '@/app/[project]/shot-actions'
 import { MenuNote } from '@/components/item-menu'
+import { PlayThroughButton } from '@/components/play-through'
 import { useAssetUrls, useProject } from '@/components/project-context'
 import { Button } from '@/components/ui/button'
 import { Field, Input, Select } from '@/components/ui/field'
@@ -14,6 +15,7 @@ import { cn } from '@/lib/cn'
 import { shortEpisode } from '@/lib/episodes'
 import { shotLabel } from './scene-card'
 import { FOOTAGE_ACCEPT, FOOTAGE_EXT, MAX_FOOTAGE, MAX_FOOTAGE_BYTES } from '@/lib/indexing'
+import type { PlayStop } from '@/lib/play-through'
 import type { AcceptedTake } from '@/lib/types'
 import { addFootage, fileTakes, renameEpisode } from './actions'
 
@@ -46,12 +48,15 @@ export function EpisodePanel({
   accepted,
   /** True while the worker still has a request for this episode to apply. */
   applying,
+  stops,
 }: {
   episode: string
   title: string
   scenes: { id: string; label: string }[]
   accepted: AcceptedTake[]
   applying: boolean
+  /** The episode's shots, each with the takes worth watching, for Play through. */
+  stops: PlayStop[]
 }) {
   const [renaming, setRenaming] = useState(false)
   const [adding, setAdding] = useState(false)
@@ -75,6 +80,7 @@ export function EpisodePanel({
             the worker is applying a change
           </Badge>
         )}
+        <PlayThroughButton stops={stops} scope={`episode:${episode}`} />
         <Button type="button" size="sm" tone="outline" onClick={() => setRenaming(true)}>
           <Pencil aria-hidden className="size-3.5" /> Rename
         </Button>

@@ -1,6 +1,6 @@
 {
  "_comment": "Written by the worker from `higgsfield model list` / `model get` (worker/lib/models.mjs). Do not edit by hand; refresh from the Prompts page or restart a worker once it is a day old.",
- "fetchedAt": "2026-10-15T13:10:37.017Z",
+ "fetchedAt": "2026-10-16T13:12:55.483Z",
  "models": {
   "3d_jutsu_angles": {
    "job_type": "3d_jutsu_angles",
@@ -971,7 +971,9 @@
      "required": false,
      "enum": [
       "720p",
-      "1080p"
+      "1080p",
+      "2k",
+      "4k"
      ]
     },
     {
@@ -1003,10 +1005,12 @@
    },
    "stages": {
     "draft": "720p",
-    "final": "1080p",
+    "final": "4k",
     "options": [
      "720p",
-     "1080p"
+     "1080p",
+     "2k",
+     "4k"
     ]
    }
   },

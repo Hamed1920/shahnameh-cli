@@ -60,9 +60,34 @@ export function longEpisode(input: string): string | null {
  * else, which is most labels the reviewer types by hand.
  */
 export function blockNumber(label: string | null | undefined): string | null {
+  const seq = blockSequence(label)
+  return seq ? `P${String(seq[0]).padStart(2, '0')}${seq.slice(1).map((n) => `.${n}`).join('')}` : null
+}
+
+/**
+ * The same number as a list to compare: [3] for "PLAN 3", [3, 1] for "PLAN 3.1".
+ *
+ * A prompt written to go between PLAN 3 and PLAN 4 is called 3.1 (then 3.2, or
+ * 3.1.1 between 3.1 and 3.2), or 3A, 3B, or "3 v2" / "3 version 2" (A counts as 1, B as 2,
+ * so 3A and 3.1 are the same place and a tie falls back to the shot id). Compared part by part, a shorter number comes
+ * before its own sub-numbers, so the order is 3, 3.1, 3.2, 4 -- and 3.10 is
+ * after 3.9, not a tenth of the way to 3.2.
+ */
+export function blockSequence(label: string | null | undefined): number[] | null {
   const latin = String(label ?? '').replace(/[۰-۹]/g, (d) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
-  const m = /^\s*(?:#{1,6}\s*)?(?:P|PROMPT|BLOCK|پرامپت|بلاک)\s*[-–:.]?\s*(\d{1,3})(?!\d)/i.exec(latin)
-  return m ? `P${m[1].padStart(2, '0')}` : null
+  const m = /^\s*(?:#{1,6}\s*)?(?:P|PLAN|PROMPT|BLOCK|پلان|پرامپت|بلاک)\s*[-–:.]?\s*(\d{1,3}(?:\.\d{1,3})*)(?!\d)(?:[-_.]?([A-Za-z])(?![A-Za-z])|\s*[-_.]?\s*(?:version|ver|v)\s*\.?\s*(\d{1,2})(?!\d))?/i.exec(latin)
+  if (!m) return null
+  const seq = m[1].split('.').map(Number)
+  // 8A is the first thing slotted after 8, 8B the second; "8 v2" and "8 version 2" the second.
+  if (m[2]) seq.push(m[2].toUpperCase().charCodeAt(0) - 64)
+  else if (m[3]) seq.push(Number(m[3]))
+  return seq
+}
+
+/** -1, 0 or 1: block numbers part by part, the shorter first when one begins the other. */
+export function compareSequences(a: number[], b: number[]): number {
+  for (let i = 0; i < Math.min(a.length, b.length); i++) if (a[i] !== b[i]) return a[i] < b[i] ? -1 : 1
+  return a.length === b.length ? 0 : a.length < b.length ? -1 : 1
 }
 
 /**

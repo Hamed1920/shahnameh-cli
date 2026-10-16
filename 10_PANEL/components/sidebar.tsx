@@ -5,15 +5,46 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion } from 'motion/react'
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
-import { ArrowLeftRight, Bell } from 'lucide-react'
+import { ArrowLeftRight, Bell, Coins } from 'lucide-react'
 import { ActivitySheet, useActivity } from '@/components/activity'
 import { NAV, SIDEBAR_COOKIE, SIDEBAR_RAIL, SIDEBAR_WIDTH, navHref } from '@/components/nav-items'
 import { useProject } from '@/components/project-context'
 import { EASE, SPRING } from '@/components/ui/motion-tokens'
+import type { Account } from '@/lib/account'
 import type { ActivityItem } from '@/lib/activity'
 import type { WorkerStatus } from '@/lib/types'
 import { NOT_STARTING_MS, TONE_DOT, describeWorker } from '@/lib/worker-words'
 import { cn } from '@/lib/cn'
+
+/**
+ * The Higgsfield account this machine is signed into and its credits, asked of the panel's own route
+ * (lib/account.ts keeps the answer for a moment, so every tab shares one CLI call). Asked again when
+ * the tab is looked at again and every minute: credits go down while a generation runs.
+ */
+function useAccount(slug: string, pathname: string): Account | null {
+  const [account, setAccount] = useState<Account | null>(null)
+  useEffect(() => {
+    let live = true
+    const load = () => {
+      fetch(`/${slug}/api/account`, { cache: 'no-store' })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((j: Account | null) => { if (live && j) setAccount(j) })
+        .catch(() => {})
+    }
+    load()
+    const timer = setInterval(load, 60_000)
+    window.addEventListener('focus', load)
+    return () => {
+      live = false
+      clearInterval(timer)
+      window.removeEventListener('focus', load)
+    }
+    // A page change asks again too: it is cheap, and it is when someone has just spent something.
+  }, [slug, pathname])
+  return account
+}
+
+const credits = (n: number) => n.toLocaleString('en-US')
 
 /** Counts that are information, not something waiting on Hamed: drawn quietly. */
 const QUIET = new Set<string>(['/queue'])
@@ -72,6 +103,7 @@ export function Sidebar({
   const project = useProject()
   const home = navHref(project.slug, '')
   const { unread, markRead } = useActivity(project.slug, activity, pathname)
+  const account = useAccount(project.slug, pathname)
   const [sheet, setSheet] = useState(false)
   const openActivity = () => { setSheet(true); markRead() }
 
@@ -235,6 +267,65 @@ export function Sidebar({
       </nav>
 
       <div className="mt-auto p-2 pb-3">
+        {/* Whose credits these are: the account this machine generates on, and what it has left. */}
+        {account && (
+          <div
+            onMouseEnter={() => setHovered('account')}
+            onMouseLeave={() => setHovered(null)}
+            className="relative mb-1 flex h-12 items-center gap-3 overflow-hidden rounded-md px-3"
+            title={account.ok ? `${account.email}${account.plan ? ` · ${account.plan} plan` : ''}` : account.reason}
+          >
+            <Coins aria-hidden strokeWidth={1.75} className={cn('size-5 shrink-0', account.ok ? 'text-muted' : 'text-bad')} />
+            <AnimatePresence initial={false}>
+              {!collapsed && (
+                <motion.span {...fade} className="min-w-0 leading-tight">
+                  {account.ok ? (
+                    <>
+                      <span className="block truncate text-[12.5px] text-fg">{account.email}</span>
+                      <span className="block truncate font-mono text-[11px] text-muted tabular-nums">
+                        {account.credits !== null ? `${credits(account.credits)} credits` : 'credits unknown'}
+                        {account.plan ? ` · ${account.plan}` : ''}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="block text-[12.5px] text-bad">Higgsfield</span>
+                      <span className="block truncate text-[11px] text-bad/80">{account.reason}</span>
+                    </>
+                  )}
+                </motion.span>
+              )}
+            </AnimatePresence>
+            <AnimatePresence>
+              {collapsed && hovered === 'account' && (
+                <motion.span
+                  role="tooltip"
+                  initial={{ opacity: 0, x: -4, y: '-50%' }}
+                  animate={{ opacity: 1, x: 0, y: '-50%' }}
+                  exit={{ opacity: 0, x: -4, y: '-50%' }}
+                  transition={{ duration: 0.14, ease: EASE }}
+                  className={cn(
+                    'pointer-events-none absolute top-1/2 left-full z-50 ml-3',
+                    'rounded-md border border-edge-strong bg-raise px-2.5 py-1.5',
+                    'text-xs whitespace-nowrap text-fg',
+                  )}
+                >
+                  {account.ok ? (
+                    <>
+                      {account.email}
+                      <span className="block font-mono text-muted">
+                        {account.credits !== null ? `${credits(account.credits)} credits` : 'credits unknown'}
+                        {account.plan ? ` · ${account.plan}` : ''}
+                      </span>
+                    </>
+                  ) : (
+                    account.reason
+                  )}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
         {/* What the worker did with what was sent, and what it could not do (components/activity.tsx). */}
         <button
           type="button"

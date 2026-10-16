@@ -26,7 +26,7 @@ export default async function ProjectsPage() {
 
   return (
     <main className="scroll-pane flex-1">
-      <div className="mx-auto max-w-[1500px] px-6 pb-24 lg:px-14">
+      <div className="mx-auto max-w-[1740px] px-6 pb-24 lg:px-14">
         <Masthead spend={spend} count={films.length} />
 
         {films.map((film, i) => (

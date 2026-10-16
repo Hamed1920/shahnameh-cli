@@ -22,7 +22,19 @@ export const VIDEO_NAME_RX = /^(seedance|kling|veo|wan|hailuo|minimax|grok_video
 export const INTERNAL_PARAMS = new Set([
   'prompt', 'image_references', 'start_image', 'end_image', 'video_references', 'audio_references',
   'folder_id', 'mask', 'is_inpaint', 'input_video', 'urls', 'custom_reference_id', 'style_id', 'seed',
+  // Higgsfield's own draft mode: the worker decides when a job is a draft or the finishing of one (plan.mjs).
+  'draft', 'draft_job_id',
 ])
+
+/**
+ * Does this model have Higgsfield's draft mode: render a cheap draft (`draft`), and later finish exactly
+ * that draft at full quality (`draft_job_id`) instead of generating again? Read from the catalogue,
+ * never from a model's name.
+ */
+export function hasHiggsfieldDrafts(entry) {
+  const names = new Set((entry?.params ?? []).map((p) => p.name))
+  return names.has('draft') && names.has('draft_job_id')
+}
 
 /** A required param in this list can be filled from a job; any other makes the model unusable here. */
 const FILLABLE_REQUIRED = new Set(['prompt', 'aspect_ratio', 'image_references', 'start_image', 'mode'])

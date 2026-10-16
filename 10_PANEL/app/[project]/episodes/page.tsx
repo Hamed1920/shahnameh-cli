@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { ArrowRight, FolderOpen } from 'lucide-react'
+import { PlayThroughButton } from '@/components/play-through'
 import { Card, EmptyState, StatTile } from '@/components/ui/card'
+import { inPromptOrder, shotStops } from '@/lib/play-through'
 import { Reveal } from '@/components/ui/reveal'
 import { PageHeader, SectionHeading } from '@/components/ui/text'
 import { shortEpisode } from '@/lib/episodes'
@@ -10,7 +12,7 @@ import { getEpisodes } from '@/lib/store'
 import type { EpisodeBoard } from '@/lib/types'
 import { NewEpisode } from './new-episode'
 import { Progress } from './progress'
-import { credits } from './scene-card'
+import { credits, shotLabel } from './scene-card'
 
 export const dynamic = 'force-dynamic'
 
@@ -75,6 +77,17 @@ export default async function EpisodesPage({ params }: PageProps<'/[project]/epi
   const [board, episodeList] = await Promise.all([getEpisodeBoard(pr), getEpisodes(pr)])
   const taken = episodeList.slice(0, -1).map((e) => e.id)
   const next = episodeList[episodeList.length - 1].id
+  // Every episode in order, each shot once: the whole film as it stands.
+  const filmStops = shotStops(
+    board.flatMap((ep) =>
+      inPromptOrder(ep.id, ep.scenes).map((s) => ({
+        shot: s.shot,
+        title: `${shortEpisode(ep.id)} · ${shotLabel(s.scene)}`,
+        subtitle: s.label ?? undefined,
+        outputs: s.outputs,
+      })),
+    ),
+  )
 
   const total = board.reduce(
     (n, e) => ({
@@ -102,7 +115,12 @@ export default async function EpisodesPage({ params }: PageProps<'/[project]/epi
       <PageHeader
         title="Episodes"
         eyebrow="The film"
-        meta={<NewEpisode next={next} taken={taken} />}
+        meta={
+          <div className="flex flex-wrap items-center gap-2">
+            <PlayThroughButton label="Play the film" stops={filmStops} scope="film" />
+            <NewEpisode next={next} taken={taken} />
+          </div>
+        }
       >
         The shape of the film: which episodes exist and how far each has got. Open one to see its footage, add
         outputs, or rename it.

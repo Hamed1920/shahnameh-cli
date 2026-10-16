@@ -1,12 +1,14 @@
 'use client'
 
-import { useLayoutEffect, useRef, useState } from 'react'
-import { ChevronDown, Columns2, History } from 'lucide-react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { Check, ChevronDown, Columns2, Copy, GitBranch, History } from 'lucide-react'
+import { RegenerateButton, type RegenerateConfig } from '@/components/regenerate-button'
 import { Button } from '@/components/ui/button'
+import { ContextMenu, type MenuEntry } from '@/components/ui/context-menu'
 import { Badge } from '@/components/ui/text'
 import { TakeMedia } from '@/components/take-media'
 import { cn } from '@/lib/cn'
-import type { AttemptEntry } from '@/lib/types'
+import type { AttemptEntry, CatalogEntity } from '@/lib/types'
 
 // A fixed locale: with the default, the server (Node's locale) and the browser could
 // write the same date differently, and React would redraw the whole list to reconcile.
@@ -65,6 +67,41 @@ function ClampedNote({ text }: { text: string }) {
   )
 }
 
+/** Copies one attempt's prompt, and says so for a moment. */
+function CopyPrompt({ text }: { text: string }) {
+  const [state, setState] = useState<'idle' | 'copied' | 'failed'>('idle')
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  useEffect(() => () => { if (timer.current) clearTimeout(timer.current) }, [])
+
+  async function copy() {
+    let ok = false
+    try {
+      await navigator.clipboard.writeText(text)
+      ok = true
+    } catch {
+      // No clipboard permission (an address that is not localhost, say): the old way still works from a click.
+      const ghost = document.createElement('textarea')
+      ghost.value = text
+      ghost.style.position = 'fixed'
+      ghost.style.opacity = '0'
+      document.body.appendChild(ghost)
+      ghost.select()
+      try { ok = document.execCommand('copy') } catch { ok = false }
+      document.body.removeChild(ghost)
+    }
+    setState(ok ? 'copied' : 'failed')
+    if (timer.current) clearTimeout(timer.current)
+    timer.current = setTimeout(() => setState('idle'), 2000)
+  }
+
+  return (
+    <Button type="button" size="sm" tone="outline" onClick={copy} className="h-7" title="Copy this attempt's prompt as it was written">
+      {state === 'copied' ? <Check aria-hidden className="size-3.5" /> : <Copy aria-hidden className="size-3.5" />}
+      {state === 'copied' ? 'Copied' : state === 'failed' ? 'Could not copy' : 'Copy prompt'}
+    </Button>
+  )
+}
+
 /**
  * Every earlier attempt at this shot, oldest first: the video, what was
  * decided, and the note that sent it back. A revision makes no sense without
@@ -74,12 +111,45 @@ export function AttemptHistory({
   history,
   comparing,
   onCompare,
+  catalog,
+  cfg,
+  prices,
 }: {
   history: AttemptEntry[]
   comparing: string | null
   onCompare: (entry: AttemptEntry | null) => void
+  catalog: CatalogEntity[]
+  /** What the "Continue from here" panel offers. */
+  cfg: RegenerateConfig
+  prices: Record<string, number>
 }) {
+  // Right-click an attempt, or use its button: "Continue from here" opens the panel that fills in that
+  // attempt's prompt, references and settings. Nothing is queued until Generate is pressed inside it.
+  const [menu, setMenu] = useState<{ at: { x: number; y: number }; entries: MenuEntry[] } | null>(null)
+  const [continuing, setContinuing] = useState<AttemptEntry | null>(null)
+  const [copied, setCopied] = useState<string | null>(null)
   if (history.length === 0) return null
+
+  const menuFor = (h: AttemptEntry): MenuEntry[] => [
+    { heading: `Attempt ${h.number}` },
+    {
+      label: 'Continue from here',
+      icon: <GitBranch className="size-3.5" />,
+      onSelect: () => setContinuing(h),
+      ...(h.source ? {} : { disabled: true as const }),
+    },
+    {
+      label: 'Copy prompt',
+      icon: <Copy className="size-3.5" />,
+      onSelect: () => {
+        navigator.clipboard.writeText(h.prompt).then(() => { setCopied(h.jobId); setTimeout(() => setCopied(null), 1500) }, () => {})
+      },
+      ...(h.prompt ? {} : { disabled: true as const }),
+    },
+    ...(h.video
+      ? [{ label: comparing === h.jobId ? 'Stop comparing' : 'Compare with the current video', icon: <Columns2 className="size-3.5" />, onSelect: () => onCompare(comparing === h.jobId ? null : h) }]
+      : []),
+  ]
 
   return (
     <section>
@@ -96,6 +166,10 @@ export function AttemptHistory({
           return (
             <li
               key={h.jobId}
+              onContextMenu={(e) => {
+                e.preventDefault()
+                setMenu({ at: { x: e.clientX, y: e.clientY }, entries: menuFor(h) })
+              }}
               className={cn(
                 'lit flex flex-col gap-5 rounded-xl border bg-panel p-4 transition-colors duration-200 sm:flex-row',
                 on ? 'border-fg/60' : 'border-edge',
@@ -105,10 +179,10 @@ export function AttemptHistory({
                 <button
                   type="button"
                   onClick={() => onCompare(on ? null : h)}
-                  aria-label={`Compare attempt ${h.attempt} with the current video`}
+                  aria-label={`Compare attempt ${h.number} with the current video`}
                   className="focus-ring shrink-0 cursor-pointer overflow-hidden rounded-lg border border-edge transition-colors duration-150 hover:border-edge-strong sm:w-48"
                 >
-                  <TakeMedia file={h.video} alt={`Attempt ${h.attempt}`} controls={false} at={1} className="" />
+                  <TakeMedia file={h.video} alt={`Attempt ${h.number}`} controls={false} at={1} className="" />
                 </button>
               ) : (
                 <div className="grid aspect-video shrink-0 place-items-center rounded-lg border border-dashed border-edge-strong text-[11px] text-faint sm:w-48">
@@ -118,19 +192,28 @@ export function AttemptHistory({
 
               <div className="min-w-0 flex-1 space-y-2.5">
                 <div className="flex flex-wrap items-center gap-2 text-xs">
-                  <span className="font-display text-xl leading-none text-fg">Attempt {h.attempt}</span>
+                  <span className="font-display text-xl leading-none text-fg">Attempt {h.number}</span>
                   {h.stage && <span className="ml-1 font-mono text-[11px] text-muted">{h.stage}</span>}
                   {h.verdict === 'denied' && <Badge tone="bad">denied</Badge>}
                   {h.verdict === 'accepted' && <Badge tone="good">{h.stage === 'draft' ? 'draft approved' : 'accepted'}</Badge>}
                   {h.verdict === 'discarded' && <Badge tone="muted">discarded</Badge>}
                   {!h.verdict && <Badge tone="muted">not reviewed</Badge>}
                   {when(h.decidedAt) && <span suppressHydrationWarning className="font-mono text-[11px] text-faint">{when(h.decidedAt)}</span>}
-                  {h.video && (
-                    <Button type="button" size="sm" tone={on ? 'accent' : 'outline'} onClick={() => onCompare(on ? null : h)} className="ml-auto h-7">
-                      <Columns2 aria-hidden className="size-3.5" />
-                      {on ? 'Comparing' : 'Compare'}
-                    </Button>
-                  )}
+                  <span className="ml-auto flex items-center gap-1.5">
+                    {h.prompt && <CopyPrompt text={h.prompt} />}
+                    {h.source && (
+                      <Button type="button" size="sm" tone="outline" onClick={() => setContinuing(h)} className="h-7" title="Start the next attempt from this one: its prompt, references and settings, to look over first">
+                        <GitBranch aria-hidden className="size-3.5" />
+                        Continue from here
+                      </Button>
+                    )}
+                    {h.video && (
+                      <Button type="button" size="sm" tone={on ? 'accent' : 'outline'} onClick={() => onCompare(on ? null : h)} className="h-7">
+                        <Columns2 aria-hidden className="size-3.5" />
+                        {on ? 'Comparing' : 'Compare'}
+                      </Button>
+                    )}
+                  </span>
                 </div>
                 {h.notes ? (
                   <ClampedNote text={h.notes} />
@@ -154,6 +237,29 @@ export function AttemptHistory({
           )
         })}
       </ol>
+
+      <ContextMenu at={menu?.at ?? null} entries={menu?.entries ?? []} onClose={() => setMenu(null)} />
+
+      {/* The panel where everything is confirmed. It starts from the attempt chosen; only its Generate button queues anything. */}
+      {continuing && (
+        <RegenerateButton
+          key={continuing.jobId}
+          from="history"
+          hideTrigger
+          open
+          onOpenChange={(o) => { if (!o) setContinuing(null) }}
+          title={`Continue from attempt ${continuing.number}`}
+          jobId={continuing.jobId}
+          decisionId={continuing.decisionId}
+          credits={null}
+          source={continuing.source}
+          catalog={catalog}
+          cfg={cfg}
+          regenerations={[]}
+          prices={prices}
+        />
+      )}
+      {copied && <span className="sr-only" role="status">Prompt copied</span>}
     </section>
   )
 }

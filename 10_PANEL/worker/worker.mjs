@@ -32,9 +32,10 @@ import { cliProblem, cliReady, estimateCost, extractJobId, extractResultUrls, hf
 import { FilingError, checkUploads, discard, fileUpload, promote, reject } from './lib/promote.mjs'
 import { runIndexOps } from './lib/index-ops.mjs'
 import { planJob } from './lib/plan.mjs'
-import { isVideoModel, newJobId, stageResolution } from './lib/batch.mjs'
-import { soundOf } from './lib/model-schema.mjs'
-import { ensureFreshCatalog } from './lib/models.mjs'
+import { looksLikeWholePrompt } from './lib/note-shape.mjs'
+import { hasDraftStage, isVideoModel, newJobId, stageResolution } from './lib/batch.mjs'
+import { hasHiggsfieldDrafts, modelEntry, soundOf } from './lib/model-schema.mjs'
+import { ensureFreshCatalog, loadCatalog } from './lib/models.mjs'
 import { configure as configureRequests, priceBatches, priceStudioTries, runJobRequests } from './lib/job-requests.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
@@ -416,7 +417,7 @@ async function drainQueue(state) {
  * it writes is per job, except the ledger and state, which take turns.
  */
 async function runGeneration(state, job, plan, { credits, sound, adopting }) {
-  const { shot, entity, targetId, prompt, model, params } = plan
+  const { shot, entity, targetId, prompt, model, params, sentRefs, hfDraft } = plan
   const args = [
     'generate', 'create', model,
     ...paramsToArgs(params),
@@ -533,6 +534,13 @@ async function runGeneration(state, job, plan, { credits, sound, adopting }) {
     revisionNotes: job.revisionNotes ?? [],
     params: sentParams,
     refs: job.refs ?? [],
+    // Every image the model was given, the job's own and those a rule or note pulled in. With `prompt`
+    // (the text exactly as sent) this is what a final of this take reuses.
+    sentRefs,
+    // Made as a Higgsfield draft: approving it untouched finishes this very draft at full quality.
+    ...(hfDraft && { hfDraft: true }),
+    // A final that is a draft finished, not generated again.
+    ...(job.draftJobId && { convertedFrom: job.draftJobId }),
     createdAt: new Date().toISOString(),
     costCredits: credits ?? null,
     candidates,
@@ -753,6 +761,27 @@ async function enqueueFinal(decision, sidecar, refs) {
   const finalRes = stageResolution(sidecar.model, 'final', cfg)
   const params = { ...paramsFor(decision, sidecar), ...(finalRes && { resolution: finalRes }) }
 
+  // Nothing changed about the references (the list is always given; compare it with the draft's own).
+  const refsSame = JSON.stringify(refs ?? sidecar.refs ?? []) === JSON.stringify(sidecar.refs ?? [])
+  // The approved draft is what was approved, so its final sends the very same text and images:
+  // not the prompt rebuilt from today's notes and rules, and never an earlier version of it.
+  // Only when the reviewer changed the references on accepting is the text rebuilt, since its
+  // image numbers would no longer match. A take from before this was recorded rebuilds as before.
+  const reuse = refsSame && typeof sidecar.prompt === 'string' && sidecar.prompt.trim() && Array.isArray(sidecar.sentRefs)
+
+  // Finish the draft itself instead of generating again -- only when NOTHING meaningful changed. Any note,
+  // any change to the references, an added image, or a different sound setting means a new 1080p from
+  // scratch, as it always was. (The panel's "finish this draft" tick, when switched off, says the same.)
+  const entry = modelEntry(loadCatalog(), sidecar.model)
+  const wasSound = sidecar.params?.generate_audio === undefined ? true : String(sidecar.params.generate_audio) !== 'false'
+  const untouched =
+    !String(decision.notesEn || decision.notes || '').trim() &&
+    !(Array.isArray(decision.uploads) && decision.uploads.length > 0) &&
+    (typeof decision.sound !== 'boolean' || decision.sound === wasSound)
+  const convert =
+    cfg.useHiggsfieldDrafts !== false && decision.convert !== false && untouched && reuse &&
+    sidecar.hfDraft === true && Boolean(sidecar.hfJobId) && hasHiggsfieldDrafts(entry)
+
   await appendJsonl(P.queue, {
     jobId,
     parentJobId: sidecar.jobId,
@@ -764,13 +793,15 @@ async function enqueueFinal(decision, sidecar, refs) {
     prompt: sidecar.basePrompt ?? sidecar.prompt,
     basePrompt: sidecar.basePrompt ?? sidecar.prompt,
     params,
-    refs: refs ?? sidecar.refs ?? [],
+    ...(reuse && { sentPrompt: sidecar.prompt }),
+    ...(convert && { draftJobId: sidecar.hfJobId }),
+    refs: reuse ? sidecar.sentRefs : (refs ?? sidecar.refs ?? []),
     revisionNotes: sidecar.revisionNotes ?? [],
     label: sidecar.label ?? null,
     enqueuedAt: new Date().toISOString(),
     enqueuedBy: 'worker:final',
   })
-  await log(`FINAL QUEUED ${sidecar.jobId} -> ${jobId} at ${finalRes ?? 'its own resolution'}${'generate_audio' in params ? ` sound=${params.generate_audio}` : ''}`)
+  await log(`FINAL QUEUED ${sidecar.jobId} -> ${jobId} at ${finalRes ?? 'its own resolution'}${convert ? ' by finishing the approved draft itself (no new generation)' : reuse ? " as a new generation with the approved draft's exact prompt" : ''}${'generate_audio' in params ? ` sound=${params.generate_audio}` : ''}`)
 }
 
 async function enqueueRevision(decision, sidecar, entities, refs, uploadTokens = {}) {
@@ -791,20 +822,32 @@ async function enqueueRevision(decision, sidecar, entities, refs, uploadTokens =
   const note = filed(decision.notesEn || decision.notes || '')
   // "Replace prompt" on Review: the reviewer's prompt is the whole prompt. The notes
   // so far were written against the old one, so none of them is carried over.
-  const replaced = typeof decision.prompt === 'string' && decision.prompt.trim() ? filed(decision.prompt.trim()) : null
+  const typedPrompt = typeof decision.prompt === 'string' && decision.prompt.trim() ? filed(decision.prompt.trim()) : null
+  // A whole prompt pasted into the note box (it opens on "Add a note") is not a note: kept as one,
+  // the OLD prompt still leads and the new text is only a line of "fixes" under it -- and the final,
+  // built from the approved draft, repeats that. A note this long that opens like a prompt heading
+  // ("PLAN 08 | ...") is the new prompt.
+  const noteIsPrompt = !typedPrompt && looksLikeWholePrompt(note)
+  const replaced = typedPrompt ?? (noteIsPrompt ? note.trim() : null)
   const revisionNotes = replaced ? [] : [...priorNotes, note].filter(Boolean)
   const basePrompt = replaced ?? sidecar.basePrompt ?? sidecar.prompt
 
   const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, '')
   const jobId = `J-${stamp}-${Math.random().toString(36).slice(2, 5).toUpperCase()}`
+  // A rejected draft re-rolls as a draft: never escalate cost on a failure. A rejected FINAL goes the way
+  // the reviewer chose: Modify runs the same 1080p again with the changes, Deny falls back to a cheap
+  // draft, as for any rejected take. A decision that does not say (an older panel) keeps the stage it was.
+  let stage = sidecar.stage ?? null
+  if (sidecar.stage === 'final' && decision.regenStage === 'draft' && hasDraftStage(sidecar.model)) stage = 'draft'
   const params = paramsFor(decision, sidecar)
+  const resolution = stage ? stageResolution(sidecar.model, stage, cfg) : null
+  if (resolution) params.resolution = resolution
 
   await appendJsonl(P.queue, {
     jobId,
     parentJobId: sidecar.jobId,
     attempt,
-    // A rejected draft re-rolls as a draft. Never escalate cost on a failure.
-    stage: sidecar.stage ?? null,
+    stage,
     target: await currentShotId(sidecar.target),
     variant: sidecar.variant,
     model: sidecar.model,
@@ -817,7 +860,7 @@ async function enqueueRevision(decision, sidecar, entities, refs, uploadTokens =
     enqueuedAt: new Date().toISOString(),
     enqueuedBy: 'worker:revision',
   })
-  await log(`REQUEUED ${sidecar.jobId} -> ${jobId} (attempt ${attempt})${'generate_audio' in params ? ` sound=${params.generate_audio}` : ''}${replaced ? ' with a new prompt' : ''} reason: ${note || '(none)'}`)
+  await log(`REQUEUED ${sidecar.jobId} -> ${jobId} (attempt ${attempt})${'generate_audio' in params ? ` sound=${params.generate_audio}` : ''}${stage !== (sidecar.stage ?? null) ? ` as a ${stage} (was a ${sidecar.stage})` : sidecar.stage === 'final' ? ' as a final again (modify)' : ''}${replaced ? (noteIsPrompt ? ' with a new prompt (written in the note box)' : ' with a new prompt') : ''} reason: ${note || '(none)'}`)
 }
 
 // ---------------------------------------------------------------- main
