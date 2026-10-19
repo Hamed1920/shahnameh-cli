@@ -56,6 +56,16 @@ export async function generatedAnywhere(jobId, state) {
  * are never reused (INDEXING.md), which is why that order matters.
  */
 
+/**
+ * The revision notes a regenerated job carries. Notes are written against the prompt they were
+ * given for; once the prompt itself has been replaced they no longer describe it, and carried on
+ * they would sit under text they were never about (the Review page drops them the same way).
+ */
+export function regenerateNotes(src, basePrompt, note) {
+  const replaced = String(basePrompt) !== String(src.basePrompt ?? src.prompt ?? '')
+  return replaced ? [note].filter(Boolean) : [...(src.revisionNotes ?? []), note].filter(Boolean)
+}
+
 /** A request that breaks a rule. Retrying cannot help, so it is recorded as refused. */
 export class RequestError extends Error {}
 const fail = (msg) => { throw new RequestError(msg) }
@@ -431,7 +441,7 @@ const HANDLERS = {
       basePrompt,
       params,
       refs,
-      revisionNotes: [...(src.revisionNotes ?? []), note].filter(Boolean),
+      revisionNotes: regenerateNotes(src, basePrompt, note),
       label: src.label ?? null,
       enqueuedAt: new Date().toISOString(),
       enqueuedBy: 'panel:regenerate',

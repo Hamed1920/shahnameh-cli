@@ -117,6 +117,8 @@ Write a JSON array to `<project>/00_PROJECT/sync/batch-<name>.json`:
 ]
 ```
 
+`duration` is a setting, not a rule: 15 is the usual, but any length the model takes works (seedance_2_5 takes 4-30 s; the worker clamps a length outside the model's limits).
+
 Sound is **on** for every video unless a row says `"generate_audio": false` (the worker's
 `videoSound` default). Never write `"generate_audio": "false"` into a batch unless the shot is
 meant to be silent: that string is exactly what kept every EP001 block silent until 2026-09-15.

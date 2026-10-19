@@ -1,6 +1,6 @@
 import bundledJson from '../worker/MODEL_CATALOG.json'
 import {
-  INTERNAL_PARAMS, isVideo, mapParams, maxRefs, modelEntry, modelKind, modelProblem, usableModels,
+  INTERNAL_PARAMS, clampDurationOf, durationOptionsOf, isVideo, mapParams, maxRefs, modelEntry, modelKind, modelProblem, usableModels,
 } from '../worker/lib/model-schema.mjs'
 
 /**
@@ -91,6 +91,19 @@ export function durationsFor(model: string | null | undefined, fallback: number[
   if (!p) return null
   return p.enum ? p.enum.map(Number) : fallback
 }
+
+export type DurationOptions =
+  | { kind: 'enum'; values: number[] }
+  | { kind: 'range'; min: number; max: number; presets: number[] }
+  | { kind: 'list'; values: number[] }
+
+/** How this model's length is chosen; null when it has no duration (rules in worker/lib/model-schema.mjs). */
+export const durationOptions = (model: string | null | undefined, fallback: number[]): DurationOptions | null =>
+  durationOptionsOf(modelInfo(model), fallback) as DurationOptions | null
+
+/** A length this model takes: the value kept when it fits, else the nearest allowed one. */
+export const clampDuration = (model: string | null | undefined, value: number | null | undefined, fallback: number[]): number | null =>
+  clampDurationOf(modelInfo(model), value, fallback)
 
 export const hasSound = (model: string | null | undefined): boolean => {
   const info = modelInfo(model)

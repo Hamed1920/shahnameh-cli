@@ -275,9 +275,16 @@ export interface ResolvedReference {
 /** One earlier attempt at the same shot, for the review history. */
 export interface AttemptEntry {
   jobId: string
+  /** One per result (a job can have several): what the list is keyed by. */
+  key: string
+  /** The job ended without a take. Listed so the gap is explained; it has no number. */
+  failed: boolean
+  /** Why it failed, when the worker said. */
+  failReason: string | null
   /**
    * Which attempt at the PLAN this is, counting every one in the order it was made: 1, 2, 3. The worker's own
    * `attempt` is a revision counter that a 1080p final repeats from its draft, so it is not what to show.
+   * 0 for a failed job, which produced nothing to count.
    */
   number: number
   /** The decision recorded about this attempt, when there is one. */
@@ -292,8 +299,11 @@ export interface AttemptEntry {
    * its prompt, references, model, stage and settings. Null when the queue record is gone.
    */
   source: RegenerateSource | null
-  /** The prompt that attempt was written with (before the worker added rules and notes). Empty when the queue record is gone. */
-  prompt: string
+  /**
+   * The prompt that attempt was told: what was written plus its revision notes, as buildPrompt lays them out,
+   * without the learnings the worker adds. What Copy prompt copies. Empty when the queue record is gone.
+   */
+  effectivePrompt: string
   attempt: number
   stage: 'draft' | 'final' | null
   verdict: Verdict | null
@@ -316,6 +326,10 @@ export interface ReviewContext {
   beats: string[]
   /** Earlier attempts, oldest first. */
   history: AttemptEntry[]
+  /** Attempts made after this take, oldest first: this one is not the last. */
+  later: AttemptEntry[]
+  /** This take's prompt with its revision notes (see AttemptEntry.effectivePrompt). */
+  effectivePrompt: string
   /** This take's place among every attempt at the plan, history included: the number to show. */
   attemptNumber: number
   /** The attempt this take was continued from, when that is not simply the one before it. */

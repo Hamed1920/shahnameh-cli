@@ -34,7 +34,7 @@ import { runIndexOps } from './lib/index-ops.mjs'
 import { planJob } from './lib/plan.mjs'
 import { looksLikeWholePrompt } from './lib/note-shape.mjs'
 import { hasDraftStage, isVideoModel, newJobId, stageResolution } from './lib/batch.mjs'
-import { hasHiggsfieldDrafts, modelEntry, soundOf } from './lib/model-schema.mjs'
+import { finishesDraft, modelEntry, soundOf } from './lib/model-schema.mjs'
 import { ensureFreshCatalog, loadCatalog } from './lib/models.mjs'
 import { configure as configureRequests, priceBatches, priceStudioTries, runJobRequests } from './lib/job-requests.mjs'
 
@@ -799,26 +799,15 @@ async function enqueueFinal(decision, sidecar, refs) {
   const finalRes = stageResolution(sidecar.model, 'final', cfg)
   const params = { ...paramsFor(decision, sidecar), ...(finalRes && { resolution: finalRes }) }
 
-  // Nothing changed about the references (the list is always given; compare it with the draft's own).
-  const refsSame = JSON.stringify(refs ?? sidecar.refs ?? []) === JSON.stringify(sidecar.refs ?? [])
   // The approved draft is what was approved, so its final sends the very same text and images:
   // not the prompt rebuilt from today's notes and rules, and never an earlier version of it.
   // Only when the reviewer changed the references on accepting is the text rebuilt, since its
   // image numbers would no longer match. A take from before this was recorded rebuilds as before.
-  const reuse = refsSame && typeof sidecar.prompt === 'string' && sidecar.prompt.trim() && Array.isArray(sidecar.sentRefs)
-
-  // Finish the draft itself instead of generating again -- only when NOTHING meaningful changed. Any note,
-  // any change to the references, an added image, or a different sound setting means a new 1080p from
-  // scratch, as it always was. (The panel's "finish this draft" tick, when switched off, says the same.)
+  // Finish the draft itself instead of generating again unless the references, an upload or the sound
+  // changed, or the reviewer unticked "Finish this exact draft" (finishesDraft). A note typed on
+  // accepting is a remark kept in the review log: it neither blocks the finish nor reaches the final.
   const entry = modelEntry(loadCatalog(), sidecar.model)
-  const wasSound = sidecar.params?.generate_audio === undefined ? true : String(sidecar.params.generate_audio) !== 'false'
-  const untouched =
-    !String(decision.notesEn || decision.notes || '').trim() &&
-    !(Array.isArray(decision.uploads) && decision.uploads.length > 0) &&
-    (typeof decision.sound !== 'boolean' || decision.sound === wasSound)
-  const convert =
-    cfg.useHiggsfieldDrafts !== false && decision.convert !== false && untouched && reuse &&
-    sidecar.hfDraft === true && Boolean(sidecar.hfJobId) && hasHiggsfieldDrafts(entry)
+  const { convert, reuse } = finishesDraft({ decision, sidecar, refs, entry, cfg })
 
   await appendJsonl(P.queue, {
     jobId,

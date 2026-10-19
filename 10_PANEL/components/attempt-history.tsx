@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { Check, ChevronDown, Columns2, Copy, GitBranch, History } from 'lucide-react'
+import { Check, ChevronDown, Columns2, Copy, GitBranch, History, TriangleAlert } from 'lucide-react'
 import { RegenerateButton, type RegenerateConfig } from '@/components/regenerate-button'
 import { Button } from '@/components/ui/button'
 import { ContextMenu, type MenuEntry } from '@/components/ui/context-menu'
@@ -67,7 +67,7 @@ function ClampedNote({ text }: { text: string }) {
   )
 }
 
-/** Copies one attempt's prompt, and says so for a moment. */
+/** Copies one attempt's prompt (with its notes), and says so for a moment. */
 function CopyPrompt({ text }: { text: string }) {
   const [state, setState] = useState<'idle' | 'copied' | 'failed'>('idle')
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -95,7 +95,7 @@ function CopyPrompt({ text }: { text: string }) {
   }
 
   return (
-    <Button type="button" size="sm" tone="outline" onClick={copy} className="h-7" title="Copy this attempt's prompt as it was written">
+    <Button type="button" size="sm" tone="outline" onClick={copy} className="h-7" title="Copy the prompt this attempt was sent with, its revision notes included">
       {state === 'copied' ? <Check aria-hidden className="size-3.5" /> : <Copy aria-hidden className="size-3.5" />}
       {state === 'copied' ? 'Copied' : state === 'failed' ? 'Could not copy' : 'Copy prompt'}
     </Button>
@@ -103,19 +103,24 @@ function CopyPrompt({ text }: { text: string }) {
 }
 
 /**
- * Every earlier attempt at this shot, oldest first: the video, what was
- * decided, and the note that sent it back. A revision makes no sense without
- * knowing what it was meant to fix.
+ * Every other attempt at this shot, oldest first, in two lists around the take on screen: the video,
+ * what was decided, and the note that sent it back. A revision makes no sense without knowing what
+ * it was meant to fix. A job that made no video is listed as failed, with no number.
  */
 export function AttemptHistory({
   history,
+  later = [],
   comparing,
   onCompare,
   catalog,
   cfg,
   prices,
 }: {
+  /** Made before the take on screen. */
   history: AttemptEntry[]
+  /** Made after it. */
+  later?: AttemptEntry[]
+  /** The key of the attempt being compared. */
   comparing: string | null
   onCompare: (entry: AttemptEntry | null) => void
   catalog: CatalogEntity[]
@@ -128,10 +133,10 @@ export function AttemptHistory({
   const [menu, setMenu] = useState<{ at: { x: number; y: number }; entries: MenuEntry[] } | null>(null)
   const [continuing, setContinuing] = useState<AttemptEntry | null>(null)
   const [copied, setCopied] = useState<string | null>(null)
-  if (history.length === 0) return null
+  if (history.length === 0 && later.length === 0) return null
 
   const menuFor = (h: AttemptEntry): MenuEntry[] => [
-    { heading: `Attempt ${h.number}` },
+    { heading: h.failed ? 'Failed job' : `Attempt ${h.number}` },
     {
       label: 'Continue from here',
       icon: <GitBranch className="size-3.5" />,
@@ -142,114 +147,123 @@ export function AttemptHistory({
       label: 'Copy prompt',
       icon: <Copy className="size-3.5" />,
       onSelect: () => {
-        navigator.clipboard.writeText(h.prompt).then(() => { setCopied(h.jobId); setTimeout(() => setCopied(null), 1500) }, () => {})
+        navigator.clipboard.writeText(h.effectivePrompt).then(() => { setCopied(h.key); setTimeout(() => setCopied(null), 1500) }, () => {})
       },
-      ...(h.prompt ? {} : { disabled: true as const }),
+      ...(h.effectivePrompt ? {} : { disabled: true as const }),
     },
     ...(h.video
-      ? [{ label: comparing === h.jobId ? 'Stop comparing' : 'Compare with the current video', icon: <Columns2 className="size-3.5" />, onSelect: () => onCompare(comparing === h.jobId ? null : h) }]
+      ? [{ label: comparing === h.key ? 'Stop comparing' : 'Compare with the current video', icon: <Columns2 className="size-3.5" />, onSelect: () => onCompare(comparing === h.key ? null : h) }]
       : []),
   ]
 
-  return (
-    <section>
+  const group = (title: string, entries: AttemptEntry[]) => entries.length === 0 ? null : (
+    <div>
       <div className="mb-5 flex items-center gap-3">
         <History aria-hidden strokeWidth={1.75} className="size-3.5 text-fg/85" />
-        <span className="eyebrow text-fg/85">Earlier attempts</span>
-        <span className="font-mono text-[11px] leading-none text-faint">{history.length}</span>
+        <span className="eyebrow text-fg/85">{title}</span>
+        <span className="font-mono text-[11px] leading-none text-faint">{entries.length}</span>
         <span aria-hidden className="h-px flex-1 bg-edge" />
       </div>
 
       <ol className="space-y-3">
-        {history.map((h) => {
-          const on = comparing === h.jobId
-          return (
-            <li
-              key={h.jobId}
-              onContextMenu={(e) => {
-                e.preventDefault()
-                setMenu({ at: { x: e.clientX, y: e.clientY }, entries: menuFor(h) })
-              }}
-              className={cn(
-                'lit flex flex-col gap-5 rounded-xl border bg-panel p-4 transition-colors duration-200 sm:flex-row',
-                on ? 'border-fg/60' : 'border-edge',
-              )}
-            >
-              {h.video ? (
-                <button
-                  type="button"
-                  onClick={() => onCompare(on ? null : h)}
-                  aria-label={`Compare attempt ${h.number} with the current video`}
-                  className="focus-ring shrink-0 cursor-pointer overflow-hidden rounded-lg border border-edge transition-colors duration-150 hover:border-edge-strong sm:w-48"
-                >
-                  <TakeMedia file={h.video} alt={`Attempt ${h.number}`} controls={false} at={1} className="" />
-                </button>
-              ) : (
-                <div className="grid aspect-video shrink-0 place-items-center rounded-lg border border-dashed border-edge-strong text-[11px] text-faint sm:w-48">
-                  video not on disk
-                </div>
-              )}
-
-              <div className="min-w-0 flex-1 space-y-2.5">
-                <div className="flex flex-wrap items-center gap-2 text-xs">
-                  <span className="font-display text-xl leading-none text-fg">Attempt {h.number}</span>
-                  {h.from !== null && <Badge tone="accent">branched from attempt {h.from}</Badge>}
-                  {h.stage && <span className="ml-1 font-mono text-[11px] text-muted">{h.stage}</span>}
-                  {h.verdict === 'denied' && <Badge tone="bad">denied</Badge>}
-                  {h.verdict === 'accepted' && <Badge tone="good">{h.stage === 'draft' ? 'draft approved' : 'accepted'}</Badge>}
-                  {h.verdict === 'discarded' && <Badge tone="muted">discarded</Badge>}
-                  {!h.verdict && <Badge tone="muted">not reviewed</Badge>}
-                  {when(h.decidedAt) && <span suppressHydrationWarning className="font-mono text-[11px] text-faint">{when(h.decidedAt)}</span>}
-                  <span className="ml-auto flex items-center gap-1.5">
-                    {h.prompt && <CopyPrompt text={h.prompt} />}
-                    {h.source && (
-                      <Button type="button" size="sm" tone="outline" onClick={() => setContinuing(h)} className="h-7" title="Start the next attempt from this one: its prompt, references and settings, to look over first">
-                        <GitBranch aria-hidden className="size-3.5" />
-                        Continue from here
-                      </Button>
-                    )}
-                    {h.video && (
-                      <Button type="button" size="sm" tone={on ? 'accent' : 'outline'} onClick={() => onCompare(on ? null : h)} className="h-7">
-                        <Columns2 aria-hidden className="size-3.5" />
-                        {on ? 'Comparing' : 'Compare'}
-                      </Button>
-                    )}
-                  </span>
-                </div>
-                {h.notes ? (
-                  <ClampedNote text={h.notes} />
-                ) : (
-                  <p className="text-xs text-faint">No note.</p>
+          {entries.map((h) => {
+            const on = comparing === h.key
+            return (
+              <li
+                key={h.key}
+                onContextMenu={(e) => {
+                  e.preventDefault()
+                  setMenu({ at: { x: e.clientX, y: e.clientY }, entries: menuFor(h) })
+                }}
+                className={cn(
+                  'lit flex flex-col gap-5 rounded-xl border bg-panel p-4 transition-colors duration-200 sm:flex-row',
+                  on ? 'border-fg/60' : 'border-edge',
                 )}
-                {(h.tags.length > 0 || h.refs.length > 0) && (
-                  <div className="flex flex-wrap gap-1.5 pt-0.5">
-                    {h.tags.map((t) => (
-                      <Badge key={`t-${t}`} tone="muted">{t}</Badge>
-                    ))}
-                    {h.refs.map((r) => (
-                      <span key={`r-${r}`} className="inline-flex h-5 items-center rounded-[5px] bg-white/[0.06] px-1.5 font-mono text-[10.5px] text-muted">
-                        {r}
-                      </span>
-                    ))}
+              >
+                {h.video ? (
+                  <button
+                    type="button"
+                    onClick={() => onCompare(on ? null : h)}
+                    aria-label={`Compare attempt ${h.number} with the current video`}
+                    className="focus-ring shrink-0 cursor-pointer overflow-hidden rounded-lg border border-edge transition-colors duration-150 hover:border-edge-strong sm:w-48"
+                  >
+                    <TakeMedia file={h.video} alt={`Attempt ${h.number}`} controls={false} at={1} className="" />
+                  </button>
+                ) : (
+                  <div className="grid aspect-video shrink-0 place-items-center rounded-lg border border-dashed border-edge-strong text-[11px] text-faint sm:w-48">
+                    {h.failed ? 'no video made' : 'video not on disk'}
                   </div>
                 )}
-              </div>
-            </li>
-          )
-        })}
-      </ol>
+  
+                <div className="min-w-0 flex-1 space-y-2.5">
+                  <div className="flex flex-wrap items-center gap-2 text-xs">
+                    <span className="font-display text-xl leading-none text-fg">{h.failed ? 'Failed job' : `Attempt ${h.number}`}</span>
+                    {h.failed && <Badge tone="bad"><TriangleAlert aria-hidden className="mr-1 inline size-3" />failed, nothing made</Badge>}
+                    {h.from !== null && <Badge tone="accent">branched from attempt {h.from}</Badge>}
+                    {h.stage && <span className="ml-1 font-mono text-[11px] text-muted">{h.stage}</span>}
+                    {h.verdict === 'denied' && <Badge tone="bad">denied</Badge>}
+                    {h.verdict === 'accepted' && <Badge tone="good">{h.stage === 'draft' ? 'draft approved' : 'accepted'}</Badge>}
+                    {h.verdict === 'discarded' && <Badge tone="muted">discarded</Badge>}
+                    {!h.verdict && !h.failed && <Badge tone="muted">not reviewed</Badge>}
+                    {h.failed && <span className="font-mono text-[11px] text-faint">{h.jobId}</span>}
+                    {when(h.decidedAt) && <span suppressHydrationWarning className="font-mono text-[11px] text-faint">{when(h.decidedAt)}</span>}
+                    <span className="ml-auto flex items-center gap-1.5">
+                      {h.effectivePrompt && <CopyPrompt text={h.effectivePrompt} />}
+                      {h.source && (
+                        <Button type="button" size="sm" tone="outline" onClick={() => setContinuing(h)} className="h-7" title="Start the next attempt from this one: its prompt, references and settings, to look over first">
+                          <GitBranch aria-hidden className="size-3.5" />
+                          Continue from here
+                        </Button>
+                      )}
+                      {h.video && (
+                        <Button type="button" size="sm" tone={on ? 'accent' : 'outline'} onClick={() => onCompare(on ? null : h)} className="h-7">
+                          <Columns2 aria-hidden className="size-3.5" />
+                          {on ? 'Comparing' : 'Compare'}
+                        </Button>
+                      )}
+                    </span>
+                  </div>
+                  {h.notes ? (
+                    <ClampedNote text={h.notes} />
+                  ) : (
+                    <p className="text-xs text-faint">{h.failed ? (h.failReason || 'The job ended without a video.') : 'No note.'}</p>
+                  )}
+                  {(h.tags.length > 0 || h.refs.length > 0) && (
+                    <div className="flex flex-wrap gap-1.5 pt-0.5">
+                      {h.tags.map((t) => (
+                        <Badge key={`t-${t}`} tone="muted">{t}</Badge>
+                      ))}
+                      {h.refs.map((r) => (
+                        <span key={`r-${r}`} className="inline-flex h-5 items-center rounded-[5px] bg-white/[0.06] px-1.5 font-mono text-[10.5px] text-muted">
+                          {r}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </li>
+            )
+          })}
+        </ol>
+    </div>
+  )
+
+  return (
+    <section className="space-y-10">
+      {group('Earlier attempts', history)}
+      {group('Later attempts', later)}
 
       <ContextMenu at={menu?.at ?? null} entries={menu?.entries ?? []} onClose={() => setMenu(null)} />
 
       {/* The panel where everything is confirmed. It starts from the attempt chosen; only its Generate button queues anything. */}
       {continuing && (
         <RegenerateButton
-          key={continuing.jobId}
+          key={continuing.key}
           from="history"
           hideTrigger
           open
           onOpenChange={(o) => { if (!o) setContinuing(null) }}
-          title={`Continue from attempt ${continuing.number}`}
+          title={continuing.failed ? 'Continue from the failed job' : `Continue from attempt ${continuing.number}`}
           jobId={continuing.jobId}
           decisionId={continuing.decisionId}
           credits={null}

@@ -36,6 +36,29 @@ export function hasHiggsfieldDrafts(entry) {
   return names.has('draft') && names.has('draft_job_id')
 }
 
+/**
+ * Should approving this draft FINISH it (same Higgsfield job, rendered at full quality) rather than
+ * generate a new 1080p? "The tick decides": a note typed on an accepted draft is a remark, recorded in
+ * the review log and neither applied to the final nor a reason to regenerate. What does force a new
+ * generation is whatever would make the draft's images or audio stop matching: changed references, an
+ * added upload, a different sound setting, or the reviewer unticking "Finish this exact draft"
+ * (`decision.convert === false`). `reuse` is the approved draft's exact prompt and images being
+ * available (refs unchanged, prompt and sentRefs on the sidecar); finishing needs it.
+ */
+export function finishesDraft({ decision, sidecar, refs, entry, cfg }) {
+  const refsSame = JSON.stringify(refs ?? sidecar.refs ?? []) === JSON.stringify(sidecar.refs ?? [])
+  const reuse = Boolean(refsSame && typeof sidecar.prompt === 'string' && sidecar.prompt.trim() && Array.isArray(sidecar.sentRefs))
+  const wasSound = sidecar.params?.generate_audio === undefined ? true : String(sidecar.params.generate_audio) !== 'false'
+  const untouched =
+    !(Array.isArray(decision.uploads) && decision.uploads.length > 0) &&
+    (typeof decision.sound !== 'boolean' || decision.sound === wasSound)
+  const convert = Boolean(
+    cfg?.useHiggsfieldDrafts !== false && decision.convert !== false && untouched && reuse &&
+    sidecar.hfDraft === true && sidecar.hfJobId && hasHiggsfieldDrafts(entry),
+  )
+  return { convert, reuse }
+}
+
 /** A required param in this list can be filled from a job; any other makes the model unusable here. */
 const FILLABLE_REQUIRED = new Set(['prompt', 'aspect_ratio', 'image_references', 'start_image', 'mode'])
 
@@ -49,6 +72,44 @@ const resNumber = (v) => {
 }
 
 /**
+ * Duration limits Higgsfield only states in a rule's CEL (`params.duration >= 2`) or its message
+ * ("duration must be -1 (smart duration) or between 2 and 30"). Takes [{cel, message}].
+ * Returns { min?, max?, smart? }; smart is true when -1 is also accepted.
+ */
+export function parseDurationRules(details) {
+  const out = {}
+  const take = (k, n) => {
+    if (!Number.isFinite(n)) return
+    out[k] = k === 'min' ? Math.max(out.min ?? -Infinity, n) : Math.min(out.max ?? Infinity, n)
+  }
+  for (const r of details ?? []) {
+    const cel = String(r?.cel ?? '')
+    const msg = String(r?.message ?? '')
+    if (!/duration/i.test(cel + ' ' + msg)) continue
+    for (const m of cel.matchAll(/params\.duration\s*>=\s*(\d+)/g)) take('min', Number(m[1]))
+    for (const m of cel.matchAll(/params\.duration\s*<=\s*(\d+)/g)) take('max', Number(m[1]))
+    const between = msg.match(/between\s+(\d+)\s+and\s+(\d+)/i)
+    if (between) { take('min', Number(between[1])); take('max', Number(between[2])) }
+    if (/params\.duration\s*==\s*-1/.test(cel) || /(^|[^\d])-1\b/.test(msg)) out.smart = true
+  }
+  return out
+}
+
+/**
+ * What a `generate cost` validation error says about duration: "Input should be greater than or
+ * equal to 4" and "... less than or equal to 30". Returns { min?, max? }.
+ */
+export function parseDurationProbe(text) {
+  const out = {}
+  const s = String(text ?? '')
+  const lo = s.match(/greater than or equal to\s+(\d+)/i)
+  const hi = s.match(/less than or equal to\s+(\d+)/i)
+  if (lo) out.min = Number(lo[1])
+  if (hi) out.max = Number(hi[1])
+  return out
+}
+
+/**
  * Condense a `model get --json` answer into a catalogue entry. Keeps the raw
  * params (name, type, default, required, enum) so the panel can draw a form.
  */
@@ -59,8 +120,21 @@ export function summarizeModel(schema) {
     default: p.default ?? null,
     required: Boolean(p.required),
     ...(Array.isArray(p.enum) && { enum: p.enum.map((e) => (typeof e === 'number' ? e : String(e))) }),
+    // Limits, if a schema ever states them outright (Higgsfield's duration does not; see parseDurationRules).
+    ...(Number.isFinite(p.min ?? p.minimum) && { min: Number(p.min ?? p.minimum) }),
+    ...(Number.isFinite(p.max ?? p.maximum) && { max: Number(p.max ?? p.maximum) }),
+    ...(p.smart === true && { smart: true }),
   }))
-  const rules = (schema.rules ?? []).map((r) => String(r.cel ?? ''))
+  const ruleDetails = (schema.rules ?? []).map((r) => ({ cel: String(r.cel ?? ''), message: String(r.message ?? '') }))
+  const rules = ruleDetails.map((r) => r.cel)
+  // A duration with no list: the bounds Higgsfield states in its rules (a probe may add them later).
+  const durParam = params.find((p) => p.name === 'duration')
+  if (durParam && !durParam.enum) {
+    const b = parseDurationRules(ruleDetails)
+    if (b.min !== undefined) durParam.min = b.min
+    if (b.max !== undefined) durParam.max = b.max
+    if (b.smart) durParam.smart = true
+  }
   const has = (n) => params.some((p) => p.name === n)
   const param = (n) => params.find((p) => p.name === n)
 
@@ -131,10 +205,44 @@ export function summarizeModel(schema) {
     ...(why && { why }),
     params,
     rules,
+    ruleDetails,
     refs,
     sound,
     stages,
   }
+}
+
+const PRESETS = [5, 10, 15, 20, 30]
+
+/**
+ * How a model's length is chosen: from its own list (enum), within its limits (range), or, when the
+ * catalogue knows no limits, from the config's list. Null when the model has no duration.
+ */
+export function durationOptionsOf(entry, fallback) {
+  if (!entry) return { kind: 'list', values: fallback }
+  const p = entry.params.find((x) => x.name === 'duration')
+  if (!p) return null
+  if (p.enum) return { kind: 'enum', values: p.enum.map(Number) }
+  const lo = Number.isFinite(p.min) ? p.min : null
+  const hi = Number.isFinite(p.max) ? p.max : null
+  if (lo === null && hi === null) return { kind: 'list', values: fallback }
+  const min = lo ?? 1
+  const max = hi ?? Math.max(min, 60)
+  const presets = [...new Set([min, ...PRESETS.filter((n) => n >= min && n <= max), max])].sort((a, b) => a - b)
+  return { kind: 'range', min, max, presets }
+}
+
+/** A duration this model takes: the value kept when it fits, else the nearest allowed one (15 when none given). */
+export function clampDurationOf(entry, value, fallback) {
+  const opts = durationOptionsOf(entry, fallback)
+  if (!opts) return null
+  const v = Number(value)
+  const want = Number.isFinite(v) && v > 0 ? v : 15
+  if (opts.kind === 'range') return Math.min(opts.max, Math.max(opts.min, Math.round(want)))
+  const nums = [...opts.values].filter(Number.isFinite).sort((x, y) => x - y)
+  if (!nums.length) return want
+  if (nums.includes(want)) return want
+  return [...nums].reverse().find((n) => n <= want) ?? nums[0]
 }
 
 /** The catalogue entry for a model, or null. */
@@ -239,7 +347,18 @@ export function mapParams(entry, { refs = [], params = {}, stage = null, cfg = {
     warnings.push(`${entry.job_type} takes ${nums.join('/')} s; using ${pick}`)
     out.duration = pick
   }
-  if (dur && !dur.enum && out.duration !== undefined) out.duration = Number(out.duration)
+  if (dur && !dur.enum && out.duration !== undefined) {
+    out.duration = Number(out.duration)
+    // A range: -1 is Higgsfield's "smart duration" where the model allows it; anything else is held to the limits.
+    const n = out.duration
+    const lo = Number.isFinite(dur.min) ? dur.min : null
+    const hi = Number.isFinite(dur.max) ? dur.max : null
+    if (Number.isFinite(n) && !(dur.smart && n === -1) && ((lo !== null && n < lo) || (hi !== null && n > hi))) {
+      const pick = lo !== null && n < lo ? lo : hi
+      warnings.push(`${entry.job_type} takes ${[lo, hi].filter((v) => v !== null).join('-')} s; using ${pick}`)
+      out.duration = pick
+    }
+  }
 
   // Resolution follows the stage for video, unless the job pinned one.
   if (entry.stages && stage && out.resolution === undefined) {

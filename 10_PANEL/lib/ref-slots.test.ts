@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { detectAssets, detectByKeywords, registerDetector } from './asset-detect.ts'
 import {
-  manualSlot, mergeDetected, orderedSlots, placeDocRefs, placeToken, refsOf, removeToken, type RefSlot,
+  manualSlot, mergeDetected, orderedSlots, placeDocRefs, placeToken, refsOf, removeToken, slotTitle, type RefSlot,
 } from './ref-slots.ts'
 import type { CatalogEntity } from './types.ts'
 
@@ -76,6 +76,16 @@ test('hand-added slots are numbered per group', () => {
   const b = manualSlot([a], 'CHR')
   const c = manualSlot([a, b], 'VEH')
   assert.deepEqual([a.label, b.label, c.label], ['Character 1', 'Character 2', 'Prop 1'])
+})
+
+test('a hand-added slot is titled by what fills it; empty, or filled from a file, it keeps its placeholder', () => {
+  const empty = manualSlot([], 'CHR')
+  assert.equal(slotTitle(empty, CATALOG), 'Character 1')
+  const filled = placeToken([empty], [], '@CHR-002/V03', { slot: empty.key }).slots[0]
+  assert.equal(slotTitle(filled, CATALOG), 'Jamshid')
+  assert.equal(filled.label, 'Character 1')
+  const upload = placeToken([empty], [], 'upload:u1', { slot: empty.key }).slots[0]
+  assert.equal(slotTitle(upload, CATALOG), 'Character 1')
 })
 
 test('a registered detector can name new things; a failing one falls back to keywords', async () => {

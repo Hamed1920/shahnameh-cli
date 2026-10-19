@@ -364,3 +364,39 @@ test('a voice (VOX) takes a recording and nothing else takes one', async () => {
   await assert.rejects(() => checkUploads([up('u2', 'png', { mode: 'new', kind: 'VOX', name: 'Other Voice', description: 'x' })]), FilingError)
   await assert.rejects(() => checkUploads([up('u1', 'mp3', { mode: 'new', kind: 'CHR', name: 'Singer', description: 'x' })]), /only be filed under a voice/)
 })
+
+test('lengths other than 5/10/15 reach the CLI as written', () => {
+  assert.deepEqual(lib.hf.paramsToArgs({ duration: 7 }), ['--duration', '7'])
+  assert.deepEqual(lib.hf.paramsToArgs({ duration: 30 }), ['--duration', '30'])
+})
+
+test('a regenerate that replaces the prompt drops the old notes; one that keeps it carries them', () => {
+  const { regenerateNotes } = lib.requests
+  const src = { basePrompt: 'Old prompt', prompt: 'Old prompt', revisionNotes: ['darker'] }
+  assert.deepEqual(regenerateNotes(src, 'Old prompt', 'less fog'), ['darker', 'less fog'])
+  assert.deepEqual(regenerateNotes(src, 'Old prompt', ''), ['darker'])
+  assert.deepEqual(regenerateNotes(src, 'A whole new prompt', 'less fog'), ['less fog'])
+  assert.deepEqual(regenerateNotes(src, 'A whole new prompt', ''), [])
+})
+
+test('finishesDraft: the tick decides; a note does not, changed refs/uploads/sound do', async () => {
+  const { finishesDraft } = await import('./lib/model-schema.mjs')
+  const entry = { params: [{ name: 'draft' }, { name: 'draft_job_id' }] }
+  const cfg = { useHiggsfieldDrafts: true }
+  const sidecar = {
+    model: 'seedance_2_5', prompt: 'the prompt', hfDraft: true, hfJobId: 'hf-1',
+    refs: ['@CHR-001/V01'], sentRefs: ['@CHR-001/V01'], params: { generate_audio: true },
+  }
+  const go = (decision, over = {}) => finishesDraft({ decision: { verdict: 'accepted', ...decision }, sidecar: { ...sidecar, ...over }, refs: sidecar.refs, entry, cfg })
+  assert.equal(go({}).convert, true)
+  assert.equal(go({ notes: 'lovely, but watch the fog', notesEn: 'lovely' }).convert, true, 'a note is a remark')
+  assert.equal(go({ convert: false }).convert, false)
+  assert.equal(finishesDraft({ decision: {}, sidecar, refs: ['@CHR-002/V01'], entry, cfg }).convert, false, 'changed refs')
+  assert.equal(go({ uploads: [{ id: 'u1' }] }).convert, false, 'an added upload')
+  assert.equal(go({ sound: false }).convert, false, 'changed sound')
+  assert.equal(go({ sound: true }).convert, true, 'sound as it was')
+  assert.equal(go({}, { hfDraft: undefined }).convert, false, 'a draft not made as a Higgsfield draft')
+  assert.equal(go({}, { hfJobId: '' }).convert, false)
+  assert.equal(go({}, { sentRefs: undefined }).convert, false)
+  assert.equal(go({}, { hfDraft: true }).reuse, true)
+})

@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { idRx } from '../worker/lib/ids.mjs'
+import { rebaseFiledPath, takeNumber } from './filed-take'
 import type { Project } from './projects'
 import {
   getAssets, getDecisions, getFilings, getGeneratingJobIds, getPriceTable, getQueue, getRegenerations, getShotMoves,
@@ -137,6 +138,20 @@ export async function getDecidedEntries(pr: Project): Promise<DecidedEntry[]> {
     return shotFiles.get(folder)!
   }
 
+  // Episode folders as they are now, read once: a logged path can predate a rename of its folder.
+  let episodeDirs: Promise<string[]> | null = null
+  const liveEpisodeDirs = () => (episodeDirs ??= fs
+    .readdir(path.join(pr.P.root, '07_EPISODES'), { withFileTypes: true })
+    .then((es) => es.filter((e) => e.isDirectory()).map((e) => e.name))
+    .catch(() => [] as string[]))
+  /** `rel` if it exists, else the same file under its episode's current folder, else null. */
+  async function existingFile(rel: string): Promise<string | null> {
+    if (await exists(pr, rel)) return rel
+    if (!rel.startsWith('07_EPISODES')) return null
+    const moved = rebaseFiledPath(rel, await liveEpisodeDirs(), pr.code)
+    return moved && (await exists(pr, moved)) ? moved : null
+  }
+
   const entries = await Promise.all(
     decisions.map(async (d): Promise<DecidedEntry> => {
       const batch = path.basename(path.dirname(d.candidate))
@@ -162,7 +177,11 @@ export async function getDecidedEntries(pr: Project): Promise<DecidedEntry[]> {
         const row = assets.find((a) => a.original_filename === `${d.hfJobId}/${base}`)
         if (row) file = `${row.folder}/${row.filename}`
         else if (s && (s as StagingSidecar & { outputFolder?: string }).outputFolder) {
-          const folder = shotMoves.folder[d.target] ?? (s as StagingSidecar & { outputFolder?: string }).outputFolder!
+          let folder = shotMoves.folder[d.target] ?? (s as StagingSidecar & { outputFolder?: string }).outputFolder!
+          if (!(await exists(pr, folder))) {
+            const moved = rebaseFiledPath(`${folder}/x`, await liveEpisodeDirs(), pr.code)
+            if (moved) folder = moved.slice(0, -2)
+          }
           const stem = `${nowShot(d.target)}_${d.variant || 'V01'}`
           const hits = (await filesIn(folder)).filter((n) => n === stem + path.extname(base) || n.startsWith(stem + '_T'))
           if (hits.length === 1) file = `${folder}/${hits[0]}`
@@ -172,9 +191,13 @@ export async function getDecidedEntries(pr: Project): Promise<DecidedEntry[]> {
           } else missing = null
         }
       }
-      if (file && !(await exists(pr, file))) {
-        missing = status === 'waiting' ? 'Not on disk.' : `Not found at ${file}.`
-        file = null
+      if (file) {
+        const found = await existingFile(file)
+        if (found) file = found
+        else {
+          missing = status === 'waiting' ? 'Not on disk.' : `Not found at ${file}.`
+          file = null
+        }
       }
       if (!file && !missing) missing = 'The worker did not record where this went.'
 
@@ -260,12 +283,6 @@ export async function getDecidedEntries(pr: Project): Promise<DecidedEntry[]> {
   )
   pairUnidentifiedTakes(entries, claims, shotFiles)
   return entries.sort((a, b) => b.decision.ts.localeCompare(a.decision.ts))
-}
-
-/** `CODE-...-SH0010_V01.mp4` is take 1, `_T02` take 2, and so on. */
-function takeNumber(name: string, stem: string): number {
-  const m = name.slice(stem.length).match(/^_T(\d+)/)
-  return m ? parseInt(m[1], 10) : 1
 }
 
 /**

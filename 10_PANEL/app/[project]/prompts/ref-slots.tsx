@@ -10,7 +10,7 @@ import { cn } from '@/lib/cn'
 import { UPLOAD_ACCEPT } from '@/lib/indexing'
 import { lookPath } from '@/lib/ref-suggest'
 import {
-  SLOT_GROUPS, groupOf, manualSlot, orderedSlots, placeToken, refsOf, removeSlot, removeToken,
+  SLOT_GROUPS, groupOf, manualSlot, orderedSlots, placeToken, refsOf, removeSlot, removeToken, slotTitle,
   type Place, type RefSlot,
 } from '@/lib/ref-slots'
 import type { CatalogEntity } from '@/lib/types'
@@ -228,6 +228,7 @@ function SlotCard({
   onFiles: (files: File[]) => void
   onCreate?: () => void
 }) {
+  const title = slotTitle(slot, catalog)
   const entity = slot.entity ? catalog.find((e) => e.shortId === slot.entity) : null
   const noLook = entity && entity.variants.length === 0
   return (
@@ -246,12 +247,12 @@ function SlotCard({
       )}
     >
       <div className="flex items-center gap-1.5 px-2.5 pt-2">
-        <span className="min-w-0 flex-1 truncate text-[12.5px] text-fg" title={slot.label}>{slot.label}</span>
+        <span className="min-w-0 flex-1 truncate text-[12.5px] text-fg" title={title}>{title}</span>
         {slot.entity && <span className="font-mono text-[10.5px] text-faint">{slot.entity}</span>}
         {slot.proposal && <span className="rounded-[4px] border border-edge px-1 text-[10px] text-muted">new</span>}
         <button
           type="button"
-          aria-label={`Remove the slot ${slot.label}`}
+          aria-label={`Remove the slot ${title}`}
           onClick={onRemove}
           className="focus-ring grid size-5 cursor-pointer place-items-center rounded text-faint opacity-0 transition-opacity group-hover/slot:opacity-100 hover:text-fg focus-visible:opacity-100"
         >
@@ -281,7 +282,7 @@ function SlotCard({
         <SlotAction onClick={onPick} label="Pick from the index"><Library aria-hidden className="size-3.5" /></SlotAction>
         <FileButton onFiles={onFiles} label="" compact />
         {onCreate && (
-          <SlotAction onClick={onCreate} label={`Create a picture of ${slot.label}`} text="Create">
+          <SlotAction onClick={onCreate} label={`Create a picture of ${title}`} text="Create">
             <Sparkles aria-hidden className="size-3.5" />
           </SlotAction>
         )}

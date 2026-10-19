@@ -4,6 +4,7 @@ import {
   getBatches, getCatalog, getEpisodes, getGeneratingJobId, getKnownShots, getPromptLibrary, getRecentRefs, getWorkerConfig,
   getWorkerState, getWorkerStatus,
 } from '@/lib/store'
+import { clampDuration } from '@/lib/models'
 import { requireProject } from '@/lib/projects'
 import type { BatchDefaults } from '@/lib/types'
 import { Batches } from './batches'
@@ -27,10 +28,12 @@ export default async function PromptsPage({ params }: PageProps<'/[project]/prom
   const generating = await getGeneratingJobId(pr, new Set((state?.processedJobs ?? []) as string[]))
 
   const pinned = (cfg.pinnedModels as string[] | undefined) ?? []
+  const defaultModel = String(cfg.defaultVideoModel ?? cfg.defaultImageModel ?? '')
   const defaults: BatchDefaults = {
-    model: String(cfg.defaultVideoModel ?? cfg.defaultImageModel ?? ''),
+    model: defaultModel,
     aspect_ratio: '16:9',
-    duration: Number(cfg.videoDuration ?? 15),
+    // 15 s where the model allows it, else the nearest length it does.
+    duration: clampDuration(defaultModel, Number(cfg.videoDuration ?? 15), (cfg.videoDurations as number[]) ?? [5, 10, 15]) ?? Number(cfg.videoDuration ?? 15),
     stage: 'draft',
     generate_audio: cfg.videoSound !== false,
   }

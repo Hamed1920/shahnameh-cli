@@ -16,6 +16,7 @@ import { Modal } from '@/components/ui/modal'
 import { ContextMenu, type MenuEntry } from '@/components/ui/context-menu'
 import { MenuNote } from '@/components/item-menu'
 import { Badge, SectionHeading } from '@/components/ui/text'
+import { DurationField } from '@/components/duration-field'
 import { checkRow, initialTarget, isVideoModel, rowModel, shotRx, type DraftRow, type RowConfig, type RowUpload } from '@/lib/batch-rules'
 import { UploadCard, type UploadDraft } from '@/components/reference-editor'
 import { detectByKeywords } from '@/lib/asset-detect'
@@ -25,7 +26,7 @@ import { ReferenceStudio, type StudioTarget } from '@/components/reference-studi
 import { groupOf, type Place } from '@/lib/ref-slots'
 import { ModelPicker } from '@/components/model-picker'
 import { ModelParamFields, extraFor } from '@/components/generation-settings'
-import { aspectRatiosFor, durationsFor, hasDraft, hasSound, modelInfo, modelLabel, refLimit, stageResolutionFor } from '@/lib/models'
+import { aspectRatiosFor, clampDuration, durationOptions, hasDraft, hasSound, modelInfo, modelLabel, refLimit, stageResolutionFor } from '@/lib/models'
 import { targetCandidates } from '@/lib/ref-suggest'
 import { useAssetUrls, useProject } from '@/components/project-context'
 import { episodeLabel, shortEpisode, type EpisodeInfo } from '@/lib/episodes'
@@ -655,12 +656,12 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
                     pinned={cfg.pinned}
                     onChange={(m) => {
                       const a = aspectRatiosFor(m, cfg.aspectRatios)
-                      const d = durationsFor(m, cfg.videoDurations)
+                      const d = clampDuration(m, defaults.duration, cfg.videoDurations)
                       setDefaults({
                         ...defaults,
                         model: m,
                         aspect_ratio: a.includes(defaults.aspect_ratio) ? defaults.aspect_ratio : a[0] ?? defaults.aspect_ratio,
-                        duration: !d || d.includes(defaults.duration) ? defaults.duration : d[d.length - 1],
+                        duration: d ?? defaults.duration,
                         extra: extraFor(m, defaults.extra ?? {}),
                       })
                     }}
@@ -673,11 +674,14 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
                 </Field>
                 {isVideoModel(defaults.model) && (
                   <>
-                    {durationsFor(defaults.model, cfg.videoDurations) && (
+                    {durationOptions(defaults.model, cfg.videoDurations) && (
                       <Field label="Duration">
-                        <Select value={String(defaults.duration)} onChange={(e) => setDefaults({ ...defaults, duration: Number(e.target.value) })}>
-                          {durationsFor(defaults.model, cfg.videoDurations)!.map((d) => <option key={d} value={d}>{d} s</option>)}
-                        </Select>
+                        <DurationField
+                          model={defaults.model}
+                          fallback={cfg.videoDurations}
+                          value={defaults.duration > 0 ? String(defaults.duration) : ''}
+                          onChange={(v) => setDefaults({ ...defaults, duration: Number(v) || 0 })}
+                        />
                       </Field>
                     )}
                     {hasDraft(defaults.model) && (
@@ -883,7 +887,7 @@ function RowCard({
 }) {
   const model = rowModel(row, defaults)
   const video = isVideoModel(model)
-  const overrides = Object.entries(row.params)
+  const overrides = Object.entries(row.params).filter(([k]) => k !== 'duration')
   // What recent jobs used, for things this row has no picture of yet.
   const recent = useMemo(() => {
     const have = new Set(row.refs.map((t) => t.replace(/^@/, '').split('/')[0]))
@@ -942,6 +946,20 @@ function RowCard({
                 onChange={(m) => onChange({ model: m })}
                 className="w-auto min-w-44"
               />
+              {video && durationOptions(model, cfg.videoDurations) && (
+                <DurationField
+                  aria-label="Duration"
+                  model={model}
+                  fallback={cfg.videoDurations}
+                  value={row.params.duration ?? ''}
+                  placeholder={String(defaults.duration)}
+                  emptyLabel={`Batch default (${defaults.duration} s)`}
+                  onChange={(v) => {
+                    const { duration: _drop, ...rest } = row.params
+                    onChange({ params: v === '' ? rest : { ...rest, duration: v } })
+                  }}
+                />
+              )}
               {video && hasDraft(model) && (
                 <Select aria-label="First render" value={row.stage} onChange={(e) => onChange({ stage: e.target.value as DraftRow['stage'] })} className="w-auto min-w-36">
                   <option value="">Default render</option>

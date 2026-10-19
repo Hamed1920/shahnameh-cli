@@ -1,4 +1,5 @@
 import { findEntity, resolveRef } from './project.mjs'
+import { revisionHeading } from './note-shape.mjs'
 
 /**
  * The prompt a generation actually sends: the authored text, the reviewer's
@@ -93,12 +94,7 @@ export async function buildPrompt(base, learnings, revisionNotes, refs, entities
   const parts = [body]
 
   if (revisionNotes?.length) {
-    parts.push(
-      '',
-      revisionNotes.length > 1
-        ? 'Revision — earlier attempts were rejected for these reasons, oldest first. Fix all of them; where two notes disagree, the later note wins:'
-        : 'Revision — the previous attempt was rejected for these reasons. Fix them:',
-    )
+    parts.push('', revisionHeading(revisionNotes.length))
     for (const n of revisionNotes) parts.push(`- ${await annotate(n)}`)
   }
   if (learnings.length) {

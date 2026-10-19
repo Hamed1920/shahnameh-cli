@@ -85,6 +85,10 @@ export function manualSlot(slots: RefSlot[], kind: string): RefSlot {
   return { key: newSlotKey(), kind, label: nextLabel(slots, kind), token: null, entity: null, proposal: null, candidates: [], matched: null, source: 'manual', touched: true }
 }
 
+/** What a slot is called on the page: the name of what fills it, else its own label ("Character 1"). The label is left alone, since nextLabel numbers by it. */
+export const slotTitle = (slot: RefSlot, catalog: CatalogEntity[]): string =>
+  (slot.entity && catalog.find((e) => e.shortId === slot.entity)?.name) || slot.label
+
 const labelFor = (a: DetectedAsset, catalog: CatalogEntity[]) => {
   if (a.entity) return catalog.find((e) => e.shortId === a.entity)?.name ?? a.entity
   if (a.proposal) return a.proposal.name

@@ -98,8 +98,8 @@ export function ReviewStage({
   /** Next to the active one on the strip: load its video now, so moving to it is instant. */
   near?: boolean
   onQueue: (d: QueuedDecision) => void
-  /** Other takes of this same plan that are waiting for review as well. */
-  siblings?: { path: string; number: number; stage: 'draft' | 'final' | null; from: number | null }[]
+  /** Every take of this same plan waiting for review, this one included (`here`), oldest first. */
+  siblings?: { path: string; number: number; stage: 'draft' | 'final' | null; from: number | null; here?: boolean }[]
   onOpen?: (path: string) => void
 }) {
   // Every stage stays mounted so what was typed survives moving around, but a
@@ -127,11 +127,15 @@ export function ReviewStage({
   // An accepted draft made as a Higgsfield draft is, by default, finished as itself at 1080p -- no new generation --
   // provided nothing about it changes. Switching this off asks for a new 1080p from scratch instead.
   const [finish, setFinish] = useState(true)
-  const [draftPrompt, setDraftPrompt] = useState(s.basePrompt ?? s.prompt ?? '')
+  // The prompt with its revision notes written in, so replacing starts from what this take was told.
+  const startPrompt = ctx.effectivePrompt || (s.basePrompt ?? s.prompt ?? '')
+  const [draftPrompt, setDraftPrompt] = useState(startPrompt)
   // null: no choice to make (not a denial that regenerates); otherwise whether the prompt is replaced.
   const replacing = verdict === 'denied' && requeue ? promptMode === 'replace' : null
   // A whole prompt pasted into the note box: the worker uses it as the new prompt (see lib/note-shape.ts).
   const noteIsPrompt = replacing === false && looksLikeWholePrompt(notes)
+  // A note this long is more likely a prompt than a fix, whatever it opens with: offer to treat it as one.
+  const noteIsLong = replacing === false && !noteIsPrompt && notes.trim().length >= 600
   // Sound is on by default for whatever this decision queues, whatever this take had.
   const [sound, setSound] = useState(true)
   const [error, setError] = useState<string | null>(candidate.failedDecision?.reason ?? null)
@@ -235,13 +239,13 @@ export function ReviewStage({
   const right = useRef<HTMLVideoElement>(null)
   const both = (fn: (v: HTMLVideoElement) => void) => [left.current, right.current].forEach((v) => v && fn(v))
 
-  // Anything meaningful changed about an accepted draft means a new 1080p from scratch, never the draft finished.
+  // Whatever would make a draft's images or sound stop matching means a new 1080p from scratch, never the
+  // draft finished. A note on an accepted draft is only a remark: the tick decides, not the note.
   const changedWhy =
-    notes.trim() ? 'You added a note'
-      : edits.changed ? 'The references changed'
-        : edits.uploads.length > 0 ? 'An image was added'
-          : isVideoJob && sound !== !wasSilent ? 'The sound setting changed'
-            : null
+    edits.changed ? 'The references changed'
+      : edits.uploads.length > 0 ? 'An image was added'
+        : isVideoJob && sound !== !wasSilent ? 'The sound setting changed'
+          : null
   const canFinish = verdict === 'accepted' && s.stage === 'draft' && Boolean(s.hfDraft)
   const finishing = canFinish && finish && changedWhy === null
 
@@ -261,7 +265,8 @@ export function ReviewStage({
     if (s.stage === 'draft') {
       const c = ctx.cost.final
       const price = c != null ? `≈ ${c} credits` : 'priced by the worker before it runs'
-      if (finishing) return `Finishes this exact draft at 1080p, no new generation · ${price}`
+      // Higgsfield prices the finish like a fresh 1080p (checked with `generate cost`), so the figure is the same.
+      if (finishing) return `Finishes this exact draft at 1080p, no new generation. Priced like any 1080p of this length · ${price}`
       return `Generates a new 1080p from scratch · ${price}`
     }
     return 'Files the shot. No credits.'
@@ -302,15 +307,19 @@ export function ReviewStage({
         </header>
 
         {/* Other takes of this same plan waiting too: one plan, one page; switch between them here. */}
-        {siblings.length > 0 && (
+        {siblings.length > 1 && (
           <div className="flex flex-wrap items-center gap-2 rounded-lg border border-accent/30 bg-accent/[0.05] px-3 py-2 text-[12.5px]">
-            <span className="text-muted">Also waiting for review in this plan:</span>
+            <span className="text-muted">{siblings.length} takes waiting in this plan:</span>
             {siblings.map((x) => (
               <button
                 key={x.path}
                 type="button"
                 onClick={() => onOpen?.(x.path)}
-                className="focus-ring h-7 cursor-pointer rounded-md border border-edge-strong px-2.5 text-fg/90 transition-colors hover:border-[#505050] hover:bg-white/[0.04] hover:text-fg"
+                aria-current={x.here ? 'true' : undefined}
+                className={cn(
+                  'focus-ring h-7 cursor-pointer rounded-md border px-2.5 transition-colors',
+                  x.here ? 'border-fg bg-fg text-ink' : 'border-edge-strong text-fg/90 hover:border-[#505050] hover:bg-white/[0.04] hover:text-fg',
+                )}
               >
                 Attempt {x.number}
                 {x.stage === 'final' ? ' · 1080p final' : x.stage === 'draft' ? ' · draft' : ''}
@@ -352,7 +361,7 @@ export function ReviewStage({
           plate={item.plate}
         />
 
-        <AttemptHistory history={ctx.history} comparing={comparing?.jobId ?? null} onCompare={setComparing} catalog={catalog} cfg={regenCfg} prices={prices} />
+        <AttemptHistory history={ctx.history} later={ctx.later} comparing={comparing?.key ?? null} onCompare={setComparing} catalog={catalog} cfg={regenCfg} prices={prices} />
 
         <Disclosure summary="Full prompt sent to the model">
           <pre className="scroll-pane max-h-80 rounded-xl border border-edge bg-sunken p-5 font-mono text-xs leading-[1.7] whitespace-pre-wrap text-fg/80">
@@ -471,6 +480,19 @@ export function ReviewStage({
                         )}
                       </div>
                     )}
+                    {noteIsLong && (
+                      <div className="space-y-2 rounded-md border border-accent/40 bg-accent/[0.06] px-3 py-2.5 text-xs leading-relaxed text-fg/90">
+                        <p>This looks like a whole prompt. Use it as the new prompt instead?</p>
+                        <Button
+                          type="button"
+                          size="sm"
+                          tone="outline"
+                          onClick={() => { setDraftPrompt(notes.trim()); setNotes(''); setPromptMode('replace') }}
+                        >
+                          Use it as the new prompt
+                        </Button>
+                      </div>
+                    )}
                     {noteIsPrompt && (
                       <div className="space-y-2 rounded-md border border-accent/40 bg-accent/[0.06] px-3 py-2.5 text-xs leading-relaxed text-fg/90">
                         <p>
@@ -540,10 +562,10 @@ export function ReviewStage({
                         {!finish && <input type="hidden" name="convert" value="off" />}
                         <p className="text-xs leading-relaxed text-faint">
                           {finishing
-                            ? 'No new generation: this draft itself is rendered at full quality, so the 1080p is the video you approved.'
+                            ? `No new generation: this draft itself is rendered at full quality, so the 1080p is the video you approved.${notes.trim() ? ' Your note is kept in the review log; it is not applied to the 1080p.' : ''}`
                             : changedWhy
                               ? `${changedWhy}, so a new 1080p is generated from scratch.`
-                              : 'A new 1080p is generated from scratch.'}
+                              : 'A new 1080p is generated from scratch with the same prompt and images.'}
                         </p>
                       </div>
                     )}
@@ -594,7 +616,7 @@ export function ReviewStage({
             {(verdict || notes || tags || edits.changed || edits.uploads.length > 0) && (
               <button
                 type="button"
-                onClick={() => { setVerdict(null); setNotes(''); setTags(''); setRequeue(true); setSound(true); setPromptMode('note'); setRedo('draft'); setFinish(true); setDraftPrompt(s.basePrompt ?? s.prompt ?? ''); setError(null); edits.reset() }}
+                onClick={() => { setVerdict(null); setNotes(''); setTags(''); setRequeue(true); setSound(true); setPromptMode('note'); setRedo('draft'); setFinish(true); setDraftPrompt(startPrompt); setError(null); edits.reset() }}
                 className="focus-ring mx-auto mt-4 flex cursor-pointer items-center gap-1.5 rounded text-xs text-faint transition-colors duration-150 hover:text-fg"
               >
                 <RotateCcw aria-hidden className="size-3" /> Start over

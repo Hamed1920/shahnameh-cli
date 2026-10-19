@@ -1,6 +1,6 @@
 import { Invalid } from './uploads'
 import {
-  aspectRatiosFor, durationsFor, extraParams, hasDraft, hasSound, isVideoModel, modelInfo, modelProblemOf, refLimit,
+  aspectRatiosFor, durationOptions, extraParams, hasDraft, hasSound, isVideoModel, modelInfo, modelProblemOf, refLimit,
 } from './models'
 
 /**
@@ -40,9 +40,17 @@ export function readGenerationForm(formData: FormData, cfg: Record<string, unkno
       const s = String(formData.get('stage') ?? '')
       stage = s === 'final' ? 'final' : s === 'draft' ? 'draft' : null
     }
-    const durations = durationsFor(model, (cfg.videoDurations as number[] | undefined) ?? [])
+    const durations = durationOptions(model, (cfg.videoDurations as number[] | undefined) ?? [])
     const duration = Number(formData.get('duration') ?? '')
-    if (durations && Number.isFinite(duration) && duration > 0) params.duration = duration
+    if (durations && Number.isFinite(duration) && duration > 0) {
+      if (durations.kind === 'range' && (duration < durations.min || duration > durations.max || !Number.isInteger(duration))) {
+        throw new Invalid(`${model} takes a length of ${durations.min} to ${durations.max} seconds, not ${formData.get('duration')}.`)
+      }
+      if (durations.kind === 'enum' && !durations.values.includes(duration)) {
+        throw new Invalid(`${model} takes a length of ${durations.values.join(', ')} seconds, not ${duration}.`)
+      }
+      params.duration = duration
+    }
     if (hasSound(model)) sound = formData.get('sound') === 'on'
   }
 

@@ -1,6 +1,6 @@
 {
  "_comment": "Written by the worker from `higgsfield model list` / `model get` (worker/lib/models.mjs). Do not edit by hand; refresh from the Prompts page or restart a worker once it is a day old.",
- "fetchedAt": "2026-10-17T19:04:21.088Z",
+ "fetchedAt": "2026-10-19T14:22:31.845Z",
  "models": {
   "3d_jutsu_angles": {
    "job_type": "3d_jutsu_angles",
@@ -75,6 +75,12 @@
    "rules": [
     "size(params.image_references) <= 10"
    ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) <= 10",
+     "message": "at most 10 image_references are allowed"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 10,
@@ -124,7 +130,9 @@
      "name": "duration",
      "type": "integer",
      "default": 5,
-     "required": false
+     "required": false,
+     "min": 4,
+     "max": 30
     },
     {
      "name": "end_image",
@@ -207,6 +215,44 @@
     "size(params.image_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) <= 30",
     "params.mode == \"omni_reference\" || (params.start_image == null && params.end_image == null)"
    ],
+   "ruleDetails": [
+    {
+     "cel": "params.mode != \"t2v\" || size(params.image_references) + size(params.video_references) + size(params.audio_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) == 0",
+     "message": "mode 't2v' does not accept reference media"
+    },
+    {
+     "cel": "params.mode != \"omni_reference\" || size(params.image_references) + size(params.video_references) + size(params.audio_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) > 0",
+     "message": "mode 'omni_reference' requires at least one reference media item"
+    },
+    {
+     "cel": "size(params.image_references) + size(params.video_references) + size(params.audio_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) <= 50",
+     "message": "at most 50 reference media items are allowed in total"
+    },
+    {
+     "cel": "params.mode != \"video_edit\" || size(params.video_references) == 1",
+     "message": "mode 'video_edit' requires exactly one video reference"
+    },
+    {
+     "cel": "params.mode != \"video_extension\" || size(params.video_references) >= 1",
+     "message": "mode 'video_extension' requires at least one video reference"
+    },
+    {
+     "cel": "params.mode != \"video_extension\" || !(params.extension_mode == null)",
+     "message": "'extension_mode' is required for mode 'video_extension'"
+    },
+    {
+     "cel": "params.mode == \"video_extension\" || params.extension_mode == null",
+     "message": "'extension_mode' is only allowed for mode 'video_extension'"
+    },
+    {
+     "cel": "size(params.image_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) <= 30",
+     "message": "at most 30 images are allowed (counting start_image and end_image)"
+    },
+    {
+     "cel": "params.mode == \"omni_reference\" || (params.start_image == null && params.end_image == null)",
+     "message": "start_image and end_image are only allowed for mode 'omni_reference'"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 30,
@@ -288,6 +334,20 @@
     "size(params.video_references) == 1",
     "params.mode != \"sections\" || params.section != null",
     "params.mode == \"sections\" || params.section == null"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.video_references) == 1",
+     "message": "exactly one video_references entry is required"
+    },
+    {
+     "cel": "params.mode != \"sections\" || params.section != null",
+     "message": "section is required when mode is sections"
+    },
+    {
+     "cel": "params.mode == \"sections\" || params.section == null",
+     "message": "section is only allowed when mode is sections"
+    }
    ],
    "refs": {
     "param": "image_references",
@@ -419,6 +479,16 @@
     "params.kind != \"custom\" || (type(params.prompt) == string && size(params.prompt) > 0 && type(params.name) == string && size(params.name) > 0)",
     "params.kind == \"custom\" || (params.prompt == null && params.name == null)"
    ],
+   "ruleDetails": [
+    {
+     "cel": "params.kind != \"custom\" || (type(params.prompt) == string && size(params.prompt) > 0 && type(params.name) == string && size(params.name) > 0)",
+     "message": "prompt and name are required when kind is custom"
+    },
+    {
+     "cel": "params.kind == \"custom\" || (params.prompt == null && params.name == null)",
+     "message": "prompt and name are only supported when kind is custom"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -459,6 +529,12 @@
    ],
    "rules": [
     "size(params.image_references) == 1"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) == 1",
+     "message": "exactly one image_references entry is required"
+    }
    ],
    "refs": {
     "param": "image_references",
@@ -523,6 +599,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": null,
    "sound": null,
    "stages": {
@@ -637,6 +714,12 @@
    "rules": [
     "size(params.urls) == 1"
    ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.urls) == 1",
+     "message": "provide exactly one YouTube URL per Clipify job"
+    }
+   ],
    "refs": null,
    "sound": null,
    "stages": null
@@ -705,6 +788,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": null,
    "sound": null,
    "stages": {
@@ -772,6 +856,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -827,6 +912,16 @@
    "rules": [
     "size(params.image_references) == 1",
     "params.expand_top != 0 || params.expand_bottom != 0 || params.expand_left != 0 || params.expand_right != 0"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) == 1",
+     "message": "exactly one image_references entry is required"
+    },
+    {
+     "cel": "params.expand_top != 0 || params.expand_bottom != 0 || params.expand_left != 0 || params.expand_right != 0",
+     "message": "at least one expand side must be non-zero"
+    }
    ],
    "refs": {
     "param": "image_references",
@@ -904,6 +999,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -938,7 +1034,9 @@
      "name": "duration",
      "type": "integer",
      "default": 5,
-     "required": false
+     "required": false,
+     "min": 5,
+     "max": 20
     },
     {
      "name": "end_image",
@@ -994,6 +1092,20 @@
     "size(params.video_references) == 0 || (size(params.image_references) == 0 && params.start_image == null && params.end_image == null)",
     "params.end_image == null || !(params.start_image == null)"
    ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) <= 10",
+     "message": "at most 10 images are allowed across start_image, image_references, and end_image"
+    },
+    {
+     "cel": "size(params.video_references) == 0 || (size(params.image_references) == 0 && params.start_image == null && params.end_image == null)",
+     "message": "image inputs and video_references cannot be mixed"
+    },
+    {
+     "cel": "params.end_image == null || !(params.start_image == null)",
+     "message": "end_image requires start_image"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 10,
@@ -1041,6 +1153,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": null,
    "sound": null,
    "stages": null
@@ -1079,6 +1192,12 @@
    ],
    "rules": [
     "size(params.image_references) <= 4"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) <= 4",
+     "message": "at most 4 image_references are allowed"
+    }
    ],
    "refs": {
     "param": "image_references",
@@ -1121,6 +1240,12 @@
    "rules": [
     "params.variant != \"bytedance\" || params.fps >= 24"
    ],
+   "ruleDetails": [
+    {
+     "cel": "params.variant != \"bytedance\" || params.fps >= 24",
+     "message": "fps below 24 is only supported with variant \"topaz\""
+    }
+   ],
    "refs": null,
    "sound": null,
    "stages": null
@@ -1145,7 +1270,9 @@
      "name": "duration",
      "type": "integer",
      "default": 8,
-     "required": false
+     "required": false,
+     "min": 4,
+     "max": 10
     },
     {
      "name": "image_references",
@@ -1179,6 +1306,20 @@
     "size(params.video_references) <= 1",
     "size(params.video_references) == 0 || size(params.image_references) <= 5",
     "size(params.video_references) > 0 || size(params.image_references) <= 7"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.video_references) <= 1",
+     "message": "at most 1 video_references entry is allowed"
+    },
+    {
+     "cel": "size(params.video_references) == 0 || size(params.image_references) <= 5",
+     "message": "when a video reference is provided, at most 5 image_references are allowed"
+    },
+    {
+     "cel": "size(params.video_references) > 0 || size(params.image_references) <= 7",
+     "message": "at most 7 image_references are allowed"
+    }
    ],
    "refs": {
     "param": "image_references",
@@ -1272,6 +1413,32 @@
     "params.mode != \"edit\" || ((params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) == 0 && size(params.image_references) == 0 && size(params.video_references) == 1)",
     "size(params.video_references) == 0 || size(params.image_references) <= 5",
     "(params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) + size(params.image_references) + size(params.video_references) <= 8"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "params.mode != \"text-to-video\" || (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) + size(params.image_references) + size(params.video_references) == 0",
+     "message": "mode 'text-to-video' does not accept media"
+    },
+    {
+     "cel": "params.mode != \"image-to-video\" || (!(params.start_image == null) && size(params.image_references) == 0 && size(params.video_references) == 0)",
+     "message": "mode 'image-to-video' requires start_image, accepts an optional end_image, and does not accept reference media"
+    },
+    {
+     "cel": "params.mode != \"reference-to-video\" || ((params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) == 0 && size(params.image_references) + size(params.video_references) > 0)",
+     "message": "mode 'reference-to-video' requires at least one image_references or video_references item and does not accept start_image or end_image"
+    },
+    {
+     "cel": "params.mode != \"edit\" || ((params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) == 0 && size(params.image_references) == 0 && size(params.video_references) == 1)",
+     "message": "mode 'edit' requires exactly one video reference and no images"
+    },
+    {
+     "cel": "size(params.video_references) == 0 || size(params.image_references) <= 5",
+     "message": "when a video reference is provided, at most 5 image references are allowed"
+    },
+    {
+     "cel": "(params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) + size(params.image_references) + size(params.video_references) <= 8",
+     "message": "at most 8 media items are allowed in total"
+    }
    ],
    "refs": {
     "param": "image_references",
@@ -1374,6 +1541,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -1470,6 +1638,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -1536,6 +1705,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -1602,6 +1772,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -1631,7 +1802,8 @@
      "name": "duration",
      "type": "integer",
      "default": 5,
-     "required": false
+     "required": false,
+     "max": 15
     },
     {
      "name": "prompt",
@@ -1647,6 +1819,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "start_image",
     "max": 1,
@@ -1671,7 +1844,9 @@
      "name": "duration",
      "type": "integer",
      "default": 5,
-     "required": false
+     "required": false,
+     "min": 2,
+     "max": 15
     },
     {
      "name": "image_references",
@@ -1707,6 +1882,20 @@
     "params.start_image == null || (size(params.image_references) == 0 && size(params.audio_references) == 0)",
     "size(params.audio_references) == 0 || size(params.image_references) > 0",
     "(size(params.image_references) == 0 && size(params.audio_references) == 0) || params.resolution != \"1080p\""
+   ],
+   "ruleDetails": [
+    {
+     "cel": "params.start_image == null || (size(params.image_references) == 0 && size(params.audio_references) == 0)",
+     "message": "start_image cannot be combined with reference media"
+    },
+    {
+     "cel": "size(params.audio_references) == 0 || size(params.image_references) > 0",
+     "message": "audio_references require at least one image reference"
+    },
+    {
+     "cel": "(size(params.image_references) == 0 && size(params.audio_references) == 0) || params.resolution != \"1080p\"",
+     "message": "1080p is not available with reference media"
+    }
    ],
    "refs": {
     "param": "image_references",
@@ -1750,7 +1939,8 @@
      "name": "duration",
      "type": "integer",
      "default": 5,
-     "required": false
+     "required": false,
+     "max": 15
     },
     {
      "name": "prompt",
@@ -1777,6 +1967,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "start_image",
     "max": 1,
@@ -1816,7 +2007,9 @@
      "name": "duration",
      "type": "integer",
      "default": 5,
-     "required": false
+     "required": false,
+     "min": 3,
+     "max": 15
     },
     {
      "name": "prompt",
@@ -1842,6 +2035,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "start_image",
     "max": 1,
@@ -1897,6 +2091,16 @@
    "rules": [
     "size(params.image_references) >= 1",
     "size(params.video_references) == 1"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) >= 1",
+     "message": "at least one image_references entry is required"
+    },
+    {
+     "cel": "size(params.video_references) == 1",
+     "message": "exactly one video_references entry is required"
+    }
    ],
    "refs": {
     "param": "image_references",
@@ -1954,6 +2158,16 @@
    "rules": [
     "size(params.image_references) >= 1",
     "size(params.video_references) == 1"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) >= 1",
+     "message": "at least one image_references entry is required"
+    },
+    {
+     "cel": "size(params.video_references) == 1",
+     "message": "exactly one video_references entry is required"
+    }
    ],
    "refs": {
     "param": "image_references",
@@ -2078,6 +2292,20 @@
     "params.mask == null || (size(params.image_references) >= 1 && size(params.image_references) <= 4)",
     "params.mask != null || params.resolution != \"1k\" || params.aspect_ratio in [\"auto\", \"1:1\", \"1:2\", \"2:1\", \"2:3\", \"3:2\", \"4:5\", \"5:4\", \"9:16\", \"16:9\", \"5:8\", \"8:5\", \"3:4\", \"4:3\"]"
    ],
+   "ruleDetails": [
+    {
+     "cel": "params.quality != \"very_low\" || size(params.image_references) > 0",
+     "message": "Very low quality requires a source image."
+    },
+    {
+     "cel": "params.mask == null || (size(params.image_references) >= 1 && size(params.image_references) <= 4)",
+     "message": "A mask requires one to four source images."
+    },
+    {
+     "cel": "params.mask != null || params.resolution != \"1k\" || params.aspect_ratio in [\"auto\", \"1:1\", \"1:2\", \"2:1\", \"2:3\", \"3:2\", \"4:5\", \"5:4\", \"9:16\", \"16:9\", \"5:8\", \"8:5\", \"3:4\", \"4:3\"]",
+     "message": "This aspect ratio requires 2K resolution without a mask."
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -2121,6 +2349,12 @@
    "rules": [
     "size(params.image_references) <= 14"
    ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) <= 14",
+     "message": "at most 14 image references are allowed"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 14,
@@ -2145,6 +2379,12 @@
    ],
    "rules": [
     "size(params.image_references) == 1"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) == 1",
+     "message": "exactly one image_references entry is required"
+    }
    ],
    "refs": {
     "param": "image_references",
@@ -2233,6 +2473,16 @@
     "params.multi_shots == (size(params.multi_prompt) > 0)",
     "type(params.end_image) != map || type(params.start_image) == map"
    ],
+   "ruleDetails": [
+    {
+     "cel": "params.multi_shots == (size(params.multi_prompt) > 0)",
+     "message": "Provide multi_prompt exactly when multi_shots is true."
+    },
+    {
+     "cel": "type(params.end_image) != map || type(params.start_image) == map",
+     "message": "end_image requires start_image."
+    }
+   ],
    "refs": {
     "param": "start_image",
     "max": 2,
@@ -2316,6 +2566,12 @@
    "rules": [
     "params.multi_shots == (size(params.multi_prompt) > 0)"
    ],
+   "ruleDetails": [
+    {
+     "cel": "params.multi_shots == (size(params.multi_prompt) > 0)",
+     "message": "Provide multi_prompt exactly when multi_shots is true."
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -2377,6 +2633,16 @@
     "size(params.image_references) <= 10",
     "params.aspect_ratio != \"auto\" || size(params.image_references) > 0"
    ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) <= 10",
+     "message": "at most 10 image_references are allowed"
+    },
+    {
+     "cel": "params.aspect_ratio != \"auto\" || size(params.image_references) > 0",
+     "message": "aspect_ratio 'auto' requires at least one image_reference"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 10,
@@ -2423,6 +2689,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -2478,6 +2745,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "start_image",
     "max": 1,
@@ -2510,7 +2778,9 @@
      "name": "duration",
      "type": "integer",
      "default": 5,
-     "required": false
+     "required": false,
+     "min": 3,
+     "max": 15
     },
     {
      "name": "end_image",
@@ -2553,6 +2823,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "start_image",
     "max": 2,
@@ -2585,7 +2856,9 @@
      "name": "duration",
      "type": "integer",
      "default": 5,
-     "required": false
+     "required": false,
+     "min": 3,
+     "max": 15
     },
     {
      "name": "prompt",
@@ -2611,6 +2884,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "start_image",
     "max": 1,
@@ -2663,7 +2937,9 @@
      "name": "duration",
      "type": "integer",
      "default": 5,
-     "required": false
+     "required": false,
+     "min": 4,
+     "max": 15
     },
     {
      "name": "end_image",
@@ -2716,6 +2992,20 @@
     "(params.start_image == null && params.end_image == null) || (size(params.image_references) == 0 && size(params.video_references) == 0 && size(params.audio_references) == 0)",
     "size(params.audio_references) == 0 || size(params.image_references) > 0 || size(params.video_references) > 0"
    ],
+   "ruleDetails": [
+    {
+     "cel": "params.end_image == null || !(params.start_image == null)",
+     "message": "end_image requires start_image"
+    },
+    {
+     "cel": "(params.start_image == null && params.end_image == null) || (size(params.image_references) == 0 && size(params.video_references) == 0 && size(params.audio_references) == 0)",
+     "message": "start_image/end_image cannot be mixed with reference media"
+    },
+    {
+     "cel": "size(params.audio_references) == 0 || size(params.image_references) > 0 || size(params.video_references) > 0",
+     "message": "audio_references require at least one image or video reference"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -2761,7 +3051,9 @@
      "name": "duration",
      "type": "integer",
      "default": 5,
-     "required": false
+     "required": false,
+     "min": 5,
+     "max": 15
     },
     {
      "name": "end_image",
@@ -2815,6 +3107,24 @@
     "size(params.image_references) + size(params.video_references) + size(params.audio_references) == 0 || (params.start_image == null && params.end_image == null)",
     "size(params.image_references) + size(params.video_references) + size(params.audio_references) <= 12",
     "size(params.audio_references) == 0 || size(params.image_references) + size(params.video_references) > 0"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "params.end_image == null || !(params.start_image == null)",
+     "message": "end_image requires start_image"
+    },
+    {
+     "cel": "size(params.image_references) + size(params.video_references) + size(params.audio_references) == 0 || (params.start_image == null && params.end_image == null)",
+     "message": "reference media cannot be mixed with start_image or end_image"
+    },
+    {
+     "cel": "size(params.image_references) + size(params.video_references) + size(params.audio_references) <= 12",
+     "message": "at most 12 reference media items are allowed in total"
+    },
+    {
+     "cel": "size(params.audio_references) == 0 || size(params.image_references) + size(params.video_references) > 0",
+     "message": "reference audio requires a reference image or video"
+    }
    ],
    "refs": {
     "param": "image_references",
@@ -2896,6 +3206,28 @@
     "params.variant == \"minimax-2.3\" || !(params.start_image == null) || !(params.end_image == null)",
     "(params.variant != \"minimax-2.3\" && params.variant != \"minimax-2.3-fast\") || params.end_image == null"
    ],
+   "ruleDetails": [
+    {
+     "cel": "params.resolution != \"512\" || params.end_image == null",
+     "message": "resolution '512' is incompatible with end_image"
+    },
+    {
+     "cel": "(params.variant != \"minimax-2.3\" && params.variant != \"minimax-2.3-fast\") || params.resolution != \"512\"",
+     "message": "resolution '512' is not supported for 'minimax-2.3' or 'minimax-2.3-fast'"
+    },
+    {
+     "cel": "params.duration != 10 || params.resolution != \"1080\"",
+     "message": "resolution '1080' is not available for 10 second duration"
+    },
+    {
+     "cel": "params.variant == \"minimax-2.3\" || !(params.start_image == null) || !(params.end_image == null)",
+     "message": "start_image or end_image is required unless variant is 'minimax-2.3'"
+    },
+    {
+     "cel": "(params.variant != \"minimax-2.3\" && params.variant != \"minimax-2.3-fast\") || params.end_image == null",
+     "message": "end_image is not supported for 'minimax-2.3' or 'minimax-2.3-fast'"
+    }
+   ],
    "refs": {
     "param": "start_image",
     "max": 2,
@@ -2951,6 +3283,12 @@
    ],
    "rules": [
     "size(params.image_references) <= 8"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) <= 8",
+     "message": "at most 8 image_references are allowed"
+    }
    ],
    "refs": {
     "param": "image_references",
@@ -3064,6 +3402,16 @@
     "!params.is_inpaint || size(params.image_references) <= 13",
     "!params.is_inpaint || size(params.video_references) == 0"
    ],
+   "ruleDetails": [
+    {
+     "cel": "!params.is_inpaint || size(params.image_references) <= 13",
+     "message": "at most 14 image inputs including the mask are allowed"
+    },
+    {
+     "cel": "!params.is_inpaint || size(params.video_references) == 0",
+     "message": "video references are not supported for region inpaint"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -3118,6 +3466,12 @@
    ],
    "rules": [
     "(has(params.outfit_preset_ids) && size(params.outfit_preset_ids) > 0) || (has(params.user_outfit_ids) && size(params.user_outfit_ids) > 0)"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "(has(params.outfit_preset_ids) && size(params.outfit_preset_ids) > 0) || (has(params.user_outfit_ids) && size(params.user_outfit_ids) > 0)",
+     "message": "'outfit_preset_ids' or 'user_outfit_ids' is required"
+    }
    ],
    "refs": {
     "param": "image_references",
@@ -3200,6 +3554,20 @@
     "params.prompt != \"\" || size(params.image_references) > 0",
     "size(params.image_references) <= 14",
     "params.aspect_ratio != \"auto\" || size(params.image_references) > 0"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "params.prompt != \"\" || size(params.image_references) > 0",
+     "message": "a non-empty prompt or at least one image reference is required"
+    },
+    {
+     "cel": "size(params.image_references) <= 14",
+     "message": "at most 14 image references are allowed"
+    },
+    {
+     "cel": "params.aspect_ratio != \"auto\" || size(params.image_references) > 0",
+     "message": "aspect_ratio 'auto' requires at least one image reference"
+    }
    ],
    "refs": {
     "param": "image_references",
@@ -3287,6 +3655,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -3331,6 +3700,12 @@
    "rules": [
     "size(params.image_references) == 1"
    ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) == 1",
+     "message": "'image_references' must contain exactly one image"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 1,
@@ -3372,6 +3747,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -3442,6 +3818,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -3502,6 +3879,16 @@
     "params.prompt != \"\" || size(params.image_references) > 0",
     "size(params.image_references) <= 14"
    ],
+   "ruleDetails": [
+    {
+     "cel": "params.prompt != \"\" || size(params.image_references) > 0",
+     "message": "a non-empty prompt or at least one image reference is required"
+    },
+    {
+     "cel": "size(params.image_references) <= 14",
+     "message": "at most 14 image references are allowed"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 14,
@@ -3556,6 +3943,16 @@
     "params.aspect_ratio != \"auto\" || size(params.image_references) > 0",
     "size(params.image_references) <= 16"
    ],
+   "ruleDetails": [
+    {
+     "cel": "params.aspect_ratio != \"auto\" || size(params.image_references) > 0",
+     "message": "aspect_ratio 'auto' requires at least one image reference"
+    },
+    {
+     "cel": "size(params.image_references) <= 16",
+     "message": "at most 16 image references are allowed"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 16,
@@ -3605,6 +4002,12 @@
    ],
    "rules": [
     "size(params.image_references) == 1"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) == 1",
+     "message": "exactly one image_references entry is required"
+    }
    ],
    "refs": {
     "param": "image_references",
@@ -3682,6 +4085,84 @@
     "!has(params.colors) || params.colors.all(color, color.matches(\"^#[0-9A-Fa-f]{6}$\"))",
     "!has(params.background_color) || params.background_color == null || params.background_color.matches(\"^#[0-9A-Fa-f]{6}$\")"
    ],
+   "ruleDetails": [
+    {
+     "cel": "!has(params.colors) || params.colors.all(color, color.matches(\"^#[0-9A-Fa-f]{6}$\"))",
+     "message": "Each color in colors must be a #RRGGBB hex string (six hex digits, no alpha)."
+    },
+    {
+     "cel": "!has(params.background_color) || params.background_color == null || params.background_color.matches(\"^#[0-9A-Fa-f]{6}$\")",
+     "message": "background_color must be a #RRGGBB hex string (six hex digits, no alpha) or null."
+    }
+   ],
+   "refs": null,
+   "sound": null,
+   "stages": null
+  },
+  "recraft_v4_styles": {
+   "job_type": "recraft_v4_styles",
+   "display_name": "Recraft V4 Styles",
+   "type": "image",
+   "usable": false,
+   "why": "requires style_id",
+   "params": [
+    {
+     "name": "aspect_ratio",
+     "type": "string",
+     "default": "1:1",
+     "required": false,
+     "enum": [
+      "1:1",
+      "2:1",
+      "1:2",
+      "3:2",
+      "2:3",
+      "4:3",
+      "3:4",
+      "5:4",
+      "4:5",
+      "6:10",
+      "14:10",
+      "10:14",
+      "16:9",
+      "9:16"
+     ]
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "resolution",
+     "type": "string",
+     "default": "1k",
+     "required": false,
+     "enum": [
+      "1k",
+      "2k"
+     ]
+    },
+    {
+     "name": "style_id",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "style_match",
+     "type": "string",
+     "default": "precise",
+     "required": false,
+     "enum": [
+      "precise",
+      "flexible"
+     ]
+    }
+   ],
+   "rules": [],
+   "ruleDetails": [],
    "refs": null,
    "sound": null,
    "stages": null
@@ -3720,6 +4201,12 @@
    ],
    "rules": [
     "size(params.video_references) == 1"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.video_references) == 1",
+     "message": "exactly one video_references entry is required"
+    }
    ],
    "refs": null,
    "sound": null,
@@ -3766,7 +4253,9 @@
      "name": "duration",
      "type": "integer",
      "default": 5,
-     "required": false
+     "required": false,
+     "min": 4,
+     "max": 15
     },
     {
      "name": "end_image",
@@ -3850,6 +4339,32 @@
     "size(params.audio_references) == 0 || size(params.image_references) > 0 || size(params.video_references) > 0 || !(params.start_image == null) || !(params.end_image == null)",
     "params.mode != \"fast\" || !(params.resolution in [\"1080p\", \"4k\"])"
    ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) <= 9",
+     "message": "at most 9 image references are allowed (counting start_image and end_image)"
+    },
+    {
+     "cel": "size(params.video_references) <= 3",
+     "message": "at most 3 video_references are allowed"
+    },
+    {
+     "cel": "size(params.audio_references) <= 3",
+     "message": "at most 3 audio_references are allowed"
+    },
+    {
+     "cel": "size(params.image_references) + size(params.video_references) + size(params.audio_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) <= 12",
+     "message": "at most 12 reference files are allowed in total across images, videos, and audios (including start_image and end_image)"
+    },
+    {
+     "cel": "size(params.audio_references) == 0 || size(params.image_references) > 0 || size(params.video_references) > 0 || !(params.start_image == null) || !(params.end_image == null)",
+     "message": "audio_references require at least one image, video, start_image, or end_image"
+    },
+    {
+     "cel": "params.mode != \"fast\" || !(params.resolution in [\"1080p\", \"4k\"])",
+     "message": "mode 'fast' supports only 480p/720p; use mode 'std' for 1080p/4k"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 9,
@@ -3911,7 +4426,9 @@
      "name": "duration",
      "type": "integer",
      "default": 5,
-     "required": false
+     "required": false,
+     "min": 4,
+     "max": 15
     },
     {
      "name": "end_image",
@@ -3981,6 +4498,28 @@
     "size(params.audio_references) <= 3",
     "size(params.image_references) + size(params.video_references) + size(params.audio_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) <= 12",
     "size(params.audio_references) == 0 || size(params.image_references) > 0 || size(params.video_references) > 0 || !(params.start_image == null) || !(params.end_image == null)"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) <= 9",
+     "message": "at most 9 image references are allowed (counting start_image and end_image)"
+    },
+    {
+     "cel": "size(params.video_references) <= 3",
+     "message": "at most 3 video_references are allowed"
+    },
+    {
+     "cel": "size(params.audio_references) <= 3",
+     "message": "at most 3 audio_references are allowed"
+    },
+    {
+     "cel": "size(params.image_references) + size(params.video_references) + size(params.audio_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) <= 12",
+     "message": "at most 12 reference files are allowed in total across images, videos, and audios (including start_image and end_image)"
+    },
+    {
+     "cel": "size(params.audio_references) == 0 || size(params.image_references) > 0 || size(params.video_references) > 0 || !(params.start_image == null) || !(params.end_image == null)",
+     "message": "audio_references require at least one image, video, start_image, or end_image"
+    }
    ],
    "refs": {
     "param": "image_references",
@@ -4053,7 +4592,9 @@
      "name": "duration",
      "type": "integer",
      "default": 5,
-     "required": false
+     "required": false,
+     "min": 4,
+     "max": 30
     },
     {
      "name": "end_image",
@@ -4136,6 +4677,48 @@
     "size(params.image_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) <= 30",
     "params.mode == \"omni_reference\" || (params.start_image == null && params.end_image == null)",
     "!params.draft || params.draft_job_id == null"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "params.mode != \"t2v\" || size(params.image_references) + size(params.video_references) + size(params.audio_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) == 0",
+     "message": "mode 't2v' does not accept reference media"
+    },
+    {
+     "cel": "params.mode != \"omni_reference\" || size(params.image_references) + size(params.video_references) + size(params.audio_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) > 0",
+     "message": "mode 'omni_reference' requires at least one reference media item"
+    },
+    {
+     "cel": "size(params.image_references) + size(params.video_references) + size(params.audio_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) <= 50",
+     "message": "at most 50 reference media items are allowed in total"
+    },
+    {
+     "cel": "params.mode != \"video_edit\" || size(params.video_references) == 1",
+     "message": "mode 'video_edit' requires exactly one video reference"
+    },
+    {
+     "cel": "params.mode != \"video_extension\" || size(params.video_references) >= 1",
+     "message": "mode 'video_extension' requires at least one video reference"
+    },
+    {
+     "cel": "params.mode != \"video_extension\" || !(params.extension_mode == null)",
+     "message": "'extension_mode' is required for mode 'video_extension'"
+    },
+    {
+     "cel": "params.mode == \"video_extension\" || params.extension_mode == null",
+     "message": "'extension_mode' is only allowed for mode 'video_extension'"
+    },
+    {
+     "cel": "size(params.image_references) + (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) <= 30",
+     "message": "at most 30 images are allowed (counting start_image and end_image)"
+    },
+    {
+     "cel": "params.mode == \"omni_reference\" || (params.start_image == null && params.end_image == null)",
+     "message": "start_image and end_image are only allowed for mode 'omni_reference'"
+    },
+    {
+     "cel": "!params.draft || params.draft_job_id == null",
+     "message": "draft and draft_job_id are mutually exclusive"
+    }
    ],
    "refs": {
     "param": "image_references",
@@ -4227,6 +4810,12 @@
    "rules": [
     "params.end_image == null || !(params.start_image == null)"
    ],
+   "ruleDetails": [
+    {
+     "cel": "params.end_image == null || !(params.start_image == null)",
+     "message": "end_image requires start_image to be set"
+    }
+   ],
    "refs": {
     "param": "start_image",
     "max": 2,
@@ -4308,6 +4897,12 @@
    "rules": [
     "size(params.image_references) <= 10"
    ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) <= 10",
+     "message": "at most 10 image_references are allowed"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 10,
@@ -4364,6 +4959,12 @@
    "rules": [
     "size(params.image_references) <= 14"
    ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) <= 14",
+     "message": "at most 14 image_references are allowed"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 14,
@@ -4416,6 +5017,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -4497,6 +5099,12 @@
    "rules": [
     "size(params.image_references) <= 10"
    ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) <= 10",
+     "message": "at most 10 image_references are allowed"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 10,
@@ -4534,6 +5142,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": null,
    "sound": null,
    "stages": null
@@ -4592,6 +5201,12 @@
    "rules": [
     "size(params.image_references) <= 1"
    ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) <= 1",
+     "message": "at most one image reference is allowed"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 1,
@@ -4631,6 +5246,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": null,
    "sound": null,
    "stages": null
@@ -4701,6 +5317,16 @@
     "size(params.image_references) <= 1",
     "params.style_id == null || size(params.image_references) == 0"
    ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) <= 1",
+     "message": "at most one image reference is allowed"
+    },
+    {
+     "cel": "params.style_id == null || size(params.image_references) == 0",
+     "message": "style_id cannot be combined with image_references"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 1,
@@ -4735,6 +5361,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": null,
    "sound": null,
    "stages": null
@@ -4815,6 +5442,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -4916,6 +5544,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -4976,6 +5605,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": null,
    "sound": null,
    "stages": {
@@ -5027,6 +5657,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "start_image",
     "max": 1,
@@ -5097,6 +5728,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": {
     "param": "start_image",
     "max": 1,
@@ -5161,6 +5793,12 @@
    "rules": [
     "params.start_image == null || params.end_image == null || params.duration == 8"
    ],
+   "ruleDetails": [
+    {
+     "cel": "params.start_image == null || params.end_image == null || params.duration == 8",
+     "message": "duration must be 8 when both start_image and end_image are set"
+    }
+   ],
    "refs": {
     "param": "start_image",
     "max": 2,
@@ -5188,6 +5826,12 @@
    ],
    "rules": [
     "size(params.video_references) == 1"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.video_references) == 1",
+     "message": "exactly one video is required in video_references"
+    }
    ],
    "refs": null,
    "sound": null,
@@ -5220,6 +5864,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": null,
    "sound": null,
    "stages": null
@@ -5251,6 +5896,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": null,
    "sound": null,
    "stages": null
@@ -5321,6 +5967,12 @@
    "rules": [
     "size(params.video_references) == 0 || params.duration != 15"
    ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.video_references) == 0 || params.duration != 15",
+     "message": "reference-to-video (with video_references) supports only 5 or 10 second durations"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -5358,7 +6010,9 @@
      "name": "duration",
      "type": "integer",
      "default": 5,
-     "required": false
+     "required": false,
+     "min": 2,
+     "max": 15
     },
     {
      "name": "end_image",
@@ -5392,6 +6046,16 @@
    "rules": [
     "params.end_image == null || !(params.start_image == null)",
     "size(params.audio_references) <= 1"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "params.end_image == null || !(params.start_image == null)",
+     "message": "end_image requires start_image"
+    },
+    {
+     "cel": "size(params.audio_references) <= 1",
+     "message": "at most 1 audio reference is allowed"
+    }
    ],
    "refs": {
     "param": "start_image",
@@ -5438,7 +6102,10 @@
      "name": "duration",
      "type": "integer",
      "default": 5,
-     "required": false
+     "required": false,
+     "min": 2,
+     "max": 30,
+     "smart": true
     },
     {
      "name": "enable_thinking",
@@ -5498,6 +6165,20 @@
     "params.end_image == null || !(params.start_image == null)",
     "(params.start_image == null && params.end_image == null) || size(params.image_references) + size(params.video_references) + size(params.audio_references) == 0",
     "params.duration == -1 || params.duration >= 2"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "params.end_image == null || !(params.start_image == null)",
+     "message": "end_image requires start_image"
+    },
+    {
+     "cel": "(params.start_image == null && params.end_image == null) || size(params.image_references) + size(params.video_references) + size(params.audio_references) == 0",
+     "message": "start_image/end_image cannot be combined with reference media"
+    },
+    {
+     "cel": "params.duration == -1 || params.duration >= 2",
+     "message": "duration must be -1 (smart duration) or between 2 and 30"
+    }
    ],
    "refs": {
     "param": "image_references",
@@ -5548,7 +6229,10 @@
      "name": "duration",
      "type": "integer",
      "default": 5,
-     "required": false
+     "required": false,
+     "min": 2,
+     "max": 30,
+     "smart": true
     },
     {
      "name": "enable_thinking",
@@ -5609,6 +6293,20 @@
     "(params.start_image == null && params.end_image == null) || size(params.image_references) + size(params.video_references) + size(params.audio_references) == 0",
     "params.duration == -1 || params.duration >= 2"
    ],
+   "ruleDetails": [
+    {
+     "cel": "params.end_image == null || !(params.start_image == null)",
+     "message": "end_image requires start_image"
+    },
+    {
+     "cel": "(params.start_image == null && params.end_image == null) || size(params.image_references) + size(params.video_references) + size(params.audio_references) == 0",
+     "message": "start_image/end_image cannot be combined with reference media"
+    },
+    {
+     "cel": "params.duration == -1 || params.duration >= 2",
+     "message": "duration must be -1 (smart duration) or between 2 and 30"
+    }
+   ],
    "refs": {
     "param": "image_references",
     "max": 12,
@@ -5655,6 +6353,7 @@
     }
    ],
    "rules": [],
+   "ruleDetails": [],
    "refs": null,
    "sound": null,
    "stages": null

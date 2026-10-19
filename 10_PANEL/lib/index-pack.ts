@@ -146,7 +146,7 @@ function guide(doc: PdfWriter, pr: Project, nextScene: string) {
   doc.bullets([
     `IDs are ${pr.code}-KIND-NNN-SLUG; the short form KIND-NNN is what you write.` + ' Kinds: CHR character, GRP group or caste, LOC location, PRP prop, CRT creature, COS costume, VEH vehicle, FX effect, REF reference board, VOX voice (a recording, not a picture).',
     'A different physical object has a different number. The same object with a different look is the same number with a new look (V01, V02 ...). The same look generated again is a new take (T01, T02 ...).',
-    `Footage is filed under shot IDs: ${pr.code}-EP001-SC014-SH0010 is episode 1, scene 14, shot 10. One 15-second prompt is one scene.`,
+    `Footage is filed under shot IDs: ${pr.code}-EP001-SC014-SH0010 is episode 1, scene 14, shot 10. One prompt is one scene; its length is a setting (duration=, usually 15 seconds, within what the model takes).`,
   ])
 
   doc.heading('How to write a prompt document', 2)
@@ -161,7 +161,7 @@ function guide(doc: PdfWriter, pr: Project, nextScene: string) {
     'refs: @CHR-002/V03; @CRT-001/V02; @LOC-011/V01',
     'params: ar=16:9; duration=15',
     '',
-    'Create one 15-second horizontal 16:9 cinematic video block.',
+    'Create one horizontal 16:9 cinematic video block of the length set in params.',
     '@CHR-002/V03 runs into the underground chamber of @LOC-011/V01.',
     '@CRT-001/V02 turns its heavy head toward him ...',
     '',
@@ -184,7 +184,7 @@ function guide(doc: PdfWriter, pr: Project, nextScene: string) {
     'Every @ token exists in the index below, with that exact look.',
     'The tokens in refs: and in the text match character for character.',
     'No invented IDs, numbers or scenes.',
-    'One heading per prompt; one 15-second block per prompt.',
+    'One heading per prompt; one block per prompt, of the length its params give (15 seconds is the usual).',
   ])
 }
 

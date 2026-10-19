@@ -67,6 +67,7 @@ export function MentionTextarea({
 }) {
   const area = useRef<HTMLTextAreaElement>(null)
   const search = useRef<HTMLInputElement>(null)
+  const popup = useRef<HTMLDivElement>(null)
   // Where the "@" that opened the picker sits (in the box's own text), or null when opened by button; and the spot on screen to hang the popup from.
   const [open, setOpen] = useState<{ at: number | null; caret: number; anchor: CaretBox } | null>(null)
   const [query, setQuery] = useState('')
@@ -92,10 +93,19 @@ export function MentionTextarea({
     if (open) requestAnimationFrame(() => search.current?.focus())
   }, [open])
 
+  // The arrow keys move the highlight; keep it in view when the list scrolls.
+  useEffect(() => {
+    if (open) document.getElementById(`${listId}-${active}`)?.scrollIntoView({ block: 'nearest' })
+  }, [open, active, listId])
+
   // A popup hung at a spot on the screen stays there; if the page moves under it, it goes.
+  // Its own list scrolling is not the page moving.
   useEffect(() => {
     if (!open) return
-    const away = () => setOpen(null)
+    const away = (e?: Event) => {
+      if (e && popup.current?.contains(e.target as Node)) return
+      setOpen(null)
+    }
     window.addEventListener('scroll', away, true)
     window.addEventListener('resize', away)
     return () => {
@@ -240,6 +250,7 @@ export function MentionTextarea({
             {open && place && (
               <motion.div
                 key="mention-popup"
+                ref={popup}
                 dir="ltr"
                 initial={{ opacity: 0, y: place.flip ? 4 : -4 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -256,6 +267,7 @@ export function MentionTextarea({
                     role="combobox"
                     aria-expanded="true"
                     aria-controls={listId}
+                    aria-activedescendant={shown[active] ? `${listId}-${active}` : undefined}
                     aria-label="Search the references for this job"
                     placeholder="Search by name"
                     className="h-7 py-1 pl-7 text-[12.5px]"
@@ -270,14 +282,14 @@ export function MentionTextarea({
                   />
                 </div>
 
-                <ul id={listId} role="listbox" className="scroll-pane max-h-60 overflow-y-auto p-1">
+                <ul id={listId} role="listbox" className="scroll-pane max-h-60 overflow-y-auto overscroll-contain p-1">
                   {shown.length === 0 ? (
                     <li className="px-2 py-3 text-center text-xs text-muted">
                       Nothing attached matches. Add it under References first.
                     </li>
                   ) : (
                     shown.map((o, i) => (
-                      <li key={o.token} role="option" aria-selected={i === active}>
+                      <li key={o.token} id={`${listId}-${i}`} role="option" aria-selected={i === active}>
                         <button
                           type="button"
                           // mousedown, not click: a click would blur the search box first.

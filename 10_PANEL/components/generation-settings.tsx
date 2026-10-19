@@ -4,12 +4,13 @@ import { Plus, X } from 'lucide-react'
 import { IndexPicker } from '@/components/index-picker'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { DurationField } from '@/components/duration-field'
 import { Field, Input, Select } from '@/components/ui/field'
 import { ModelPicker } from '@/components/model-picker'
 import { priceKey } from '@/lib/batch-rules'
 import { cn } from '@/lib/cn'
 import {
-  aspectRatiosFor, durationsFor, extraParams, hasDraft, hasSound, isVideoModel, stageResolutionFor, type ModelParam,
+  aspectRatiosFor, clampDuration, durationOptions, extraParams, hasDraft, hasSound, isVideoModel, stageResolutionFor, type ModelParam,
 } from '@/lib/models'
 import type { CatalogEntity } from '@/lib/types'
 
@@ -126,7 +127,7 @@ export function settingsFrom(
     variant: job?.variant ?? 'V01',
     aspect: String(job?.params?.aspect_ratio ?? cfg.aspectRatios[0] ?? '16:9'),
     stage: job?.stage ?? 'draft',
-    duration: String(job?.params?.duration ?? cfg.videoDurations[0] ?? 15),
+    duration: String(job?.params?.duration ?? clampDuration(job?.model, 15, cfg.videoDurations) ?? 15),
     sound: job ? String(job.params?.generate_audio) !== 'false' : true,
     extra: extraFrom(job?.model ?? '', job?.params),
   }
@@ -218,7 +219,7 @@ export function GenerationSettings({
 }) {
   const { refs, model, variant, aspect, stage, duration, sound, extra } = value
   const aspects = aspectRatiosFor(model, cfg.aspectRatios)
-  const durations = durationsFor(model, cfg.videoDurations)
+  const durations = durationOptions(model, cfg.videoDurations)
   const refName = (token: string) => {
     const [id, v] = token.replace(/^@/, '').split('/')
     const e = catalog.find((x) => x.id === id || x.shortId === id)
@@ -261,7 +262,8 @@ export function GenerationSettings({
           onChange={(m) => {
             // Keep the aspect ratio when the new model takes it, else its first one.
             const a = aspectRatiosFor(m, cfg.aspectRatios)
-            onChange({ model: m, aspect: a.includes(aspect) ? aspect : a[0] ?? aspect, extra: extraFor(m, extra) })
+            const d = clampDuration(m, Number(duration), cfg.videoDurations)
+            onChange({ model: m, aspect: a.includes(aspect) ? aspect : a[0] ?? aspect, extra: extraFor(m, extra), ...(d !== null && { duration: String(d) }) })
           }}
         />
       </Field>
@@ -291,10 +293,7 @@ export function GenerationSettings({
           )}
           {durations && (
             <Field label="Duration">
-              <Select value={duration} onChange={(e) => onChange({ duration: e.target.value })}>
-                {durations.map((d) => <option key={d} value={String(d)}>{d} s</option>)}
-                {!durations.map(String).includes(duration) && <option value={duration}>{duration} s</option>}
-              </Select>
+              <DurationField model={model} fallback={cfg.videoDurations} value={duration} onChange={(v) => onChange({ duration: v })} />
             </Field>
           )}
           {hasSound(model) && <Checkbox checked={sound} onChange={(e) => onChange({ sound: e.target.checked })} label="Sound" />}

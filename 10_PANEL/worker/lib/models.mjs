@@ -4,7 +4,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { cliProblem, hfJson } from './hf.mjs'
 import { acquireFileLock, releaseFileLock } from './locks.mjs'
-import { summarizeModel } from './model-schema.mjs'
+import { parseDurationProbe, summarizeModel } from './model-schema.mjs'
 
 /**
  * The Higgsfield model catalogue: every image and video model the account can
@@ -58,6 +58,36 @@ export function catalogAge(catalog = loadCatalog()) {
 }
 
 /**
+ * Higgsfield's `model get` gives a duration as a bare integer; the limits only show in `generate cost`
+ * validation errors. Two free calls (duration 1 and 999) read them. Returns { min?, max? }; a failed or
+ * odd answer leaves the bound out and never throws.
+ */
+export async function probeDurationBounds(model) {
+  const out = {}
+  for (const d of [1, 999]) {
+    try {
+      const r = await hfJson(['generate', 'cost', model, '--prompt', 'x', '--duration', String(d)], { timeoutMs: 60_000 })
+      if (r.code === 0) continue // accepted: no bound on this side
+      Object.assign(out, parseDurationProbe(`${r.stderr}\n${r.stdout}`))
+    } catch { /* leave it unset */ }
+  }
+  return out
+}
+
+/** Give a video model's unlisted, unbounded duration the bounds a probe finds, else the previous catalogue's. */
+async function withDurationBounds(entry, previous) {
+  const dur = entry.type === 'video' ? entry.params.find((p) => p.name === 'duration') : null
+  if (!dur || dur.enum || dur.min !== undefined || dur.max !== undefined) return entry
+  const probed = await probeDurationBounds(entry.job_type)
+  const prev = previous?.params?.find((p) => p.name === 'duration')
+  const min = probed.min ?? prev?.min
+  const max = probed.max ?? prev?.max
+  if (min !== undefined) dur.min = min
+  if (max !== undefined) dur.max = max
+  return entry
+}
+
+/**
  * Fetch the list and every image/video model's params. Returns
  * { ok, count, skipped, error }. Writes nothing unless the list came back, and
  * keeps a model's previous entry when its `model get` fails, so one flaky call
@@ -80,7 +110,8 @@ export async function refreshCatalog({ lockDir, log = async () => {} } = {}) {
       await Promise.all(wanted.slice(i, i + 8).map(async (m) => {
         const r = await hfJson(['model', 'get', m.job_type], { timeoutMs: 60_000 })
         if (r.code === 0 && r.json && Array.isArray(r.json.params)) {
-          models[m.job_type] = summarizeModel({ ...r.json, type: r.json.type ?? m.type, display_name: r.json.display_name ?? m.display_name })
+          const entry = summarizeModel({ ...r.json, type: r.json.type ?? m.type, display_name: r.json.display_name ?? m.display_name })
+          models[m.job_type] = await withDurationBounds(entry, previous[m.job_type])
         } else if (previous[m.job_type]) {
           models[m.job_type] = previous[m.job_type]
           skipped.push(m.job_type)

@@ -1,5 +1,7 @@
 /**
- * A note long enough to be a prompt, opening with a prompt heading: PLAN 08 | ..., P3, PROMPT 2.
+ * A note long enough to be a prompt, opening the way a prompt does: a heading with or without a
+ * number (PLAN 08 | ..., P3, PROMPT 2, PLAN — THE LIFT, a markdown heading), or a sentence that
+ * orders a video ("Create one 15-second ...").
  *
  * The worker applies the same test (worker/lib/note-shape.mjs -- keep the two in step) to a
  * denial's note, and uses such a note as the new prompt rather than as a line of fixes added
@@ -7,5 +9,8 @@
  */
 export function looksLikeWholePrompt(text: string | null | undefined): boolean {
   const t = String(text ?? '').trim()
-  return t.length >= 600 && /^(?:#{1,6}\s*)?(?:P|PLAN|PROMPT|BLOCK|پلان|پرامپت|بلاک)\s*[-–:.]?\s*[\d۰-۹]/i.test(t)
+  if (t.length < 600) return false
+  const heading = /^(?:#{1,6}\s*)?(?:P|PLAN|PROMPT|BLOCK|پلان|پرامپت|بلاک)(?![\p{L}])\s*(?:[-–—:.|]|[\d۰-۹]|$|\r?\n)/iu
+  const order = /^(?:create|generate|make|produce|render)\s+(?:one|a|an|the)\s/i
+  return heading.test(t) || order.test(t) || /^#{1,6}\s+\S/.test(t)
 }

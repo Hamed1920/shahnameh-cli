@@ -95,7 +95,7 @@ export function compareSequences(a: number[], b: number[]): number {
  *
  * The block number comes from the document's heading. A prompt whose heading
  * was not a block number falls back to its scene, which is the same count by
- * another name -- one 15-second block is one scene.
+ * another name -- one video block is one scene (15 seconds is the usual length; it is a setting).
  */
 export function promptHandle(
   episode: string | null,

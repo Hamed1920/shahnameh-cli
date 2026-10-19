@@ -237,7 +237,7 @@ export function toJobInput(row: DraftRow, defaults: BatchDefaults): BatchJobInpu
   const info = modelInfo(model)
   const params: Record<string, string | number | boolean> = { aspect_ratio: defaults.aspect_ratio }
   if (video) {
-    if (!info || info.params.some((p) => p.name === 'duration')) params.duration = defaults.duration
+    if ((!info || info.params.some((p) => p.name === 'duration')) && defaults.duration > 0) params.duration = defaults.duration
     if (hasSound(model)) params.generate_audio = defaults.generate_audio
   }
   // The batch's model settings apply to rows on the batch's model; another model has other settings.

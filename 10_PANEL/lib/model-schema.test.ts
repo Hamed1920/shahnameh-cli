@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import path from 'node:path'
 import {
-  isVideo, mapParams, maxRefs, modelKind, modelProblem, summarizeModel, usableModels,
+  isVideo, mapParams, maxRefs, modelKind, modelProblem, parseDurationProbe, parseDurationRules, summarizeModel, usableModels,
 } from '../worker/lib/model-schema.mjs'
 
 // Real `model get` answers, captured 2026-09-24 (the stub CLI serves the same file).
@@ -75,4 +75,49 @@ test('image models: no sound, no duration, and the reference cap from their rule
 test('no catalogue entry: params pass through with the references attached, as before', () => {
   const r = mapParams(null, { refs: ['a.png'], params: { aspect_ratio: '16:9' }, cfg: { ...cfg, model: 'seedance_9' } })
   assert.deepEqual(r.params, { aspect_ratio: '16:9', generate_audio: true, image_references: ['a.png'] })
+})
+
+test('duration limits: read from rule CEL and messages, and from a price probe\'s error', () => {
+  assert.deepEqual(parseDurationRules([{ cel: 'params.duration >= 3', message: '' }, { cel: 'params.duration <= 15', message: '' }]), { min: 3, max: 15 })
+  // wan3_0, as Higgsfield words it
+  assert.deepEqual(
+    parseDurationRules([{ cel: 'params.duration == -1 || params.duration >= 2', message: 'duration must be -1 (smart duration) or between 2 and 30' }]),
+    { min: 2, max: 30, smart: true })
+  assert.deepEqual(parseDurationRules([{ cel: 'size(params.image_references) <= 50', message: 'at most 50 reference media items are allowed in total' }]), {})
+  assert.deepEqual(parseDurationProbe('Error: duration: Input should be greater than or equal to 4'), { min: 4 })
+  assert.deepEqual(parseDurationProbe('Error: duration: Input should be less than or equal to 30'), { max: 30 })
+  assert.deepEqual(parseDurationProbe('Error: duration: Input should be greater than or equal to 4\nInput should be less than or equal to 30'), { min: 4, max: 30 })
+  assert.deepEqual(parseDurationProbe('Error: No workspace selected.'), {})
+  assert.deepEqual(parseDurationProbe(undefined), {})
+})
+
+const rangeModel = (extra: Record<string, unknown> = {}, rules: unknown[] = []) => summarizeModel({
+  job_type: 'range_video', display_name: 'Range video', type: 'video', rules,
+  params: [
+    { name: 'prompt', type: 'string', required: true },
+    { name: 'duration', type: 'integer', default: 5, required: false, ...extra },
+  ],
+})
+
+test('summaries keep each rule\'s message beside its cel, and a duration\'s bounds from the rules', () => {
+  const s = rangeModel({}, [{ cel: 'params.duration == -1 || params.duration >= 2', message: 'duration must be -1 (smart duration) or between 2 and 30' }])
+  assert.deepEqual(s.rules, ['params.duration == -1 || params.duration >= 2'])
+  assert.match(s.ruleDetails[0].message, /between 2 and 30/)
+  const d = s.params.find((p: any) => p.name === 'duration')
+  assert.deepEqual([d.min, d.max, d.smart], [2, 30, true])
+  assert.equal(e('seedance_2_5').ruleDetails.length, e('seedance_2_5').rules.length)
+})
+
+test('mapParams passes lengths inside a range and clamps those outside it, saying so', () => {
+  const m = rangeModel({ min: 4, max: 30 })
+  assert.equal(mapParams(m, { params: { duration: 7 }, cfg }).params.duration, 7)
+  assert.equal(mapParams(m, { params: { duration: 30 }, cfg }).params.duration, 30)
+  const over = mapParams(m, { params: { duration: 31 }, cfg })
+  assert.equal(over.params.duration, 30)
+  assert.match(over.warnings.join(' '), /takes 4-30 s; using 30/)
+  assert.equal(mapParams(m, { params: { duration: 2 }, cfg }).params.duration, 4)
+  // the configured default is clamped too
+  assert.equal(mapParams(rangeModel({ min: 4, max: 10 }), { params: {}, cfg }).params.duration, 10)
+  // smart duration stays where the model allows it
+  assert.equal(mapParams(rangeModel({ min: 2, max: 30, smart: true }), { params: { duration: -1 }, cfg }).params.duration, -1)
 })

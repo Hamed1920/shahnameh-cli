@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Copy, Film } from 'lucide-react'
 import { useHoldLiveRefresh } from '@/components/live-refresh'
 import { PlayThroughButton, usePlayOrder } from '@/components/play-through'
@@ -86,7 +86,7 @@ export function ReviewWorkspace({ items, catalog, episodeTitles, regenCfg, price
     waiting.filter((i) => (episode === 'none' ? i.context.episode === null : i.context.episode === episode)).length
   const current = queue.find((i) => i.candidate.path === currentPath) ?? queue[0] ?? null
   // One place per plan. A plan with more than one take waiting (an attempt continued from an earlier one, say)
-  // is still one row and one page: the other takes are chips on it, not rows of their own.
+  // is still one row; each take is a button under it, and a switcher on the page, so none is out of reach.
   const plans = (() => {
     const groups = new Map<string, ReviewItem[]>()
     for (const i of queue) {
@@ -95,7 +95,7 @@ export function ReviewWorkspace({ items, catalog, episodeTitles, regenCfg, price
       if (group) group.push(i)
       else groups.set(key, [i])
     }
-    return [...groups.values()]
+    return [...groups.values()].map((g) => g.sort((a, b) => a.context.attemptNumber - b.context.attemptNumber))
   })()
   const planOf = (item: ReviewItem | null) => (item ? plans.find((g) => g.includes(item)) ?? null : null)
   /** The take a plan opens on: the one on screen if it is this plan's, else the newest waiting. */
@@ -356,8 +356,8 @@ export function ReviewWorkspace({ items, catalog, episodeTitles, regenCfg, price
               const on = group.includes(current as ReviewItem)
               const c = i.context
               return (
+                <Fragment key={i.candidate.sidecar.target}>
                 <button
-                  key={i.candidate.sidecar.target}
                   type="button"
                   onClick={() => setCurrentPath(i.candidate.path)}
                   onContextMenu={(ev) => { ev.preventDefault(); ev.stopPropagation(); setMenu({ at: { x: ev.clientX, y: ev.clientY }, entries: menuFor(i) }) }}
@@ -393,6 +393,26 @@ export function ReviewWorkspace({ items, catalog, episodeTitles, regenCfg, price
                     <span className={cn('rounded-full px-1.5 font-mono text-[10px] leading-[16px]', on ? 'bg-ink/15 text-ink' : 'bg-accent/15 text-accent')} title={`${group.length} takes of this plan are waiting`}>{group.length}</span>
                   )}
                 </button>
+                {on && group.length > 1 && (
+                  <div className="flex shrink-0 flex-wrap items-center gap-1 lg:pb-1 lg:pl-3" role="group" aria-label="Takes of this plan waiting for review">
+                    {group.map((x) => (
+                      <button
+                        key={x.candidate.path}
+                        type="button"
+                        onClick={() => setCurrentPath(x.candidate.path)}
+                        aria-current={x === current ? 'true' : undefined}
+                        title={`Attempt ${x.context.attemptNumber}${x.candidate.sidecar.stage ? ` · ${x.candidate.sidecar.stage}` : ''}`}
+                        className={cn(
+                          'focus-ring h-6 cursor-pointer rounded border px-1.5 font-mono text-[11px] transition-colors duration-150',
+                          x === current ? 'border-fg text-fg' : 'border-edge text-muted hover:border-edge-strong hover:text-fg',
+                        )}
+                      >
+                        #{x.context.attemptNumber}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                </Fragment>
               )
             })}
           </nav>
@@ -434,7 +454,7 @@ export function ReviewWorkspace({ items, catalog, episodeTitles, regenCfg, price
           active={i === current}
           near={planIndex >= 0 && Boolean(planOf(i)) && Math.abs(plans.indexOf(planOf(i)!) - planIndex) <= 1}
           onQueue={onQueue}
-          siblings={(planOf(i) ?? []).filter((x) => x !== i).map((x) => ({ path: x.candidate.path, number: x.context.attemptNumber, stage: x.candidate.sidecar.stage, from: x.context.attemptFrom }))}
+          siblings={(planOf(i) ?? []).map((x) => ({ path: x.candidate.path, number: x.context.attemptNumber, stage: x.candidate.sidecar.stage, from: x.context.attemptFrom, here: x === i }))}
           onOpen={setCurrentPath}
         />
       ))}
