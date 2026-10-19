@@ -1,0 +1,91 @@
+{
+  "jobId": "J-20261016-QMM",
+  "parentJobId": "J-20261016-DFD",
+  "hfJobId": "240cced5-8171-4456-8c17-ea870c651542",
+  "attempt": 1,
+  "stage": "final",
+  "label": "PLAN 11A",
+  "target": "SHM-EP015-SC017-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 11A | RUNNING TOWARD THE CAMERA\nDURATION 15 SECONDS | HORIZONTAL 16:9\nONE CONTINUOUS HANDHELD SHOT\n\nCHARACTER REFERENCES\n{{CHAR_YOUNGER_ESCAPE}}\n\nLOCATION REFERENCES\n{{LOC_ESCAPE_EXTERIOR}}\n\nPROP REFERENCES\n{{PROP_ESCAPE_ROBE}}\n\nCreate one continuous 15-second horizontal 16:9 cinematic shot following the fleeing Younger Brother FROM THE FRONT.\n\nPreserve his exact referenced identity, handmade mask, original clothing and escape covering. The covering remains draped and secured exactly as shown in the reference, leaving the same areas of his mask and face visible.\n\nHis mask is a rigid physical object fixed to his head. Its features and eye openings retain their shape. Fear and grief are performed through visible eyes, breath, head movement, shoulders and running effort.\n\nLOCATION AND LIGHT\n\nAn open, uneven plain beyond the rear of the palace complex, before sunrise.\n\nCold blue-gray skylight softly illuminates the landscape and the front of the running man. The distant rear buildings and city remain behind him, visible in the background whenever framing allows.\n\nThe mountains and his escape destination lie behind the camera.\n\nPreserve restrained exposure, tactile clothing, faint moisture on exposed skin and natural movement of the escape covering in the wind.\n\nSTART STATE AND CAMERA GEOMETRY\n\nThe Younger Brother is already running away from the city.\n\nThe camera is directly AHEAD of him, facing BACK toward him and the distant city.\n\nHis face, chest and front shoulders face the camera throughout.\n\nHe runs forward toward the retreating lens. The operator moves backward along the same escape route, matching his speed while allowing the distance to fluctuate naturally.\n\nBegin in a MEDIUM SHOT, framed approximately from his waist upward, using a 40mm lens.\n\nKeep his body near the center with imperfect lateral drift. He looks along his escape route, past the camera, rather than performing to the lens.\n\nSHOT 11A-01 | 00s to 15s | 15 seconds\n\n00–04s:\nTrack backward at his running speed.\n\nHis chest heaves. His arms pump unevenly; one hand briefly catches the escape covering against his chest before releasing it to run again.\n\nThe camera bounces with the operator’s backward footfalls. Small corrections keep his masked face readable as he drifts toward either side of the frame.\n\nHis breathing is already broken by exhaustion and crying.\n\n04–08s:\nHe searches the ground ahead with quick downward glances, then looks past the camera toward the open escape route.\n\nOne step lands badly. His torso pitches forward, but he catches his balance and continues running.\n\nThe camera retreats unevenly in response, briefly letting him come closer. Focus slips toward the near edge of his covering, then recovers on his mask and visible eyes.\n\nHis fear remains mixed with grief: a breath catches in his throat, his shoulders tighten and his next exhale becomes a restrained sob.\n\n08–12s:\nThe operator loses a little distance as the runner closes the gap.\n\nThe framing naturally tightens into a MEDIUM CLOSE-UP, from upper chest to head, through the changing physical distance.\n\nHis head remains oriented forward. His eyes briefly search to one side of the lens, then return to the route ahead.\n\nWind presses the covering against one shoulder and pulls its loose edge backward. Preserve the weight and drag of the fabric.\n\n12–15s:\nHe forces himself through another burst of running despite his failing breath.\n\nThe camera regains his pace and holds the close frontal framing with visible handheld effort.\n\nLet his shoulders rise and fall unevenly. His face remains forward, his attention beyond the lens, his body struggling to keep moving.\n\nEnd while both the runner and camera are still moving.\n\nCAMERA AND PERFORMANCE\n\nThe operator is running backward, physically struggling to hold the image.\n\nUse irregular footfall bounce, short lateral corrections and brief focus delays. Recover focus promptly on the mask and visible eyes.\n\nThe movement stays urgent and human. His running is exhausted and uneven, driven by fear rather than athletic confidence.\n\nEND STATE AND EDIT\n\nThe Younger Brother continues running toward the mountains, front-facing to the retreating camera.\n\nHis mask, escape covering and clothing remain unchanged.\n\nThis is frontal editorial coverage of an ongoing escape. End on active running so the shot can cut into rear coverage or another moment along the route.\n\nSOUND\n\nClose broken breathing.\nRestrained nonverbal sobs.\nUneven shoes striking the ground.\nWind pulling at heavy fabric.\nThe covering rubbing against his chest and arms.\nDistant exterior ambience behind the close bodily sounds.\n\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Little Brother (CHR-010 V04); match it wherever Little Brother appears.\n<<<image_2>>> is Dawn Plain Mountain Foot (LOC-029 V01); match it wherever Dawn Plain Mountain Foot appears.",
+  "basePrompt": "PLAN 11A | RUNNING TOWARD THE CAMERA\nDURATION 15 SECONDS | HORIZONTAL 16:9\nONE CONTINUOUS HANDHELD SHOT\n\nCHARACTER REFERENCES\n{{CHAR_YOUNGER_ESCAPE}}\n\nLOCATION REFERENCES\n{{LOC_ESCAPE_EXTERIOR}}\n\nPROP REFERENCES\n{{PROP_ESCAPE_ROBE}}\n\nCreate one continuous 15-second horizontal 16:9 cinematic shot following the fleeing Younger Brother FROM THE FRONT.\n\nPreserve his exact referenced identity, handmade mask, original clothing and escape covering. The covering remains draped and secured exactly as shown in the reference, leaving the same areas of his mask and face visible.\n\nHis mask is a rigid physical object fixed to his head. Its features and eye openings retain their shape. Fear and grief are performed through visible eyes, breath, head movement, shoulders and running effort.\n\nLOCATION AND LIGHT\n\nAn open, uneven plain beyond the rear of the palace complex, before sunrise.\n\nCold blue-gray skylight softly illuminates the landscape and the front of the running man. The distant rear buildings and city remain behind him, visible in the background whenever framing allows.\n\nThe mountains and his escape destination lie behind the camera.\n\nPreserve restrained exposure, tactile clothing, faint moisture on exposed skin and natural movement of the escape covering in the wind.\n\nSTART STATE AND CAMERA GEOMETRY\n\nThe Younger Brother is already running away from the city.\n\nThe camera is directly AHEAD of him, facing BACK toward him and the distant city.\n\nHis face, chest and front shoulders face the camera throughout.\n\nHe runs forward toward the retreating lens. The operator moves backward along the same escape route, matching his speed while allowing the distance to fluctuate naturally.\n\nBegin in a MEDIUM SHOT, framed approximately from his waist upward, using a 40mm lens.\n\nKeep his body near the center with imperfect lateral drift. He looks along his escape route, past the camera, rather than performing to the lens.\n\nSHOT 11A-01 | 00s to 15s | 15 seconds\n\n00–04s:\nTrack backward at his running speed.\n\nHis chest heaves. His arms pump unevenly; one hand briefly catches the escape covering against his chest before releasing it to run again.\n\nThe camera bounces with the operator’s backward footfalls. Small corrections keep his masked face readable as he drifts toward either side of the frame.\n\nHis breathing is already broken by exhaustion and crying.\n\n04–08s:\nHe searches the ground ahead with quick downward glances, then looks past the camera toward the open escape route.\n\nOne step lands badly. His torso pitches forward, but he catches his balance and continues running.\n\nThe camera retreats unevenly in response, briefly letting him come closer. Focus slips toward the near edge of his covering, then recovers on his mask and visible eyes.\n\nHis fear remains mixed with grief: a breath catches in his throat, his shoulders tighten and his next exhale becomes a restrained sob.\n\n08–12s:\nThe operator loses a little distance as the runner closes the gap.\n\nThe framing naturally tightens into a MEDIUM CLOSE-UP, from upper chest to head, through the changing physical distance.\n\nHis head remains oriented forward. His eyes briefly search to one side of the lens, then return to the route ahead.\n\nWind presses the covering against one shoulder and pulls its loose edge backward. Preserve the weight and drag of the fabric.\n\n12–15s:\nHe forces himself through another burst of running despite his failing breath.\n\nThe camera regains his pace and holds the close frontal framing with visible handheld effort.\n\nLet his shoulders rise and fall unevenly. His face remains forward, his attention beyond the lens, his body struggling to keep moving.\n\nEnd while both the runner and camera are still moving.\n\nCAMERA AND PERFORMANCE\n\nThe operator is running backward, physically struggling to hold the image.\n\nUse irregular footfall bounce, short lateral corrections and brief focus delays. Recover focus promptly on the mask and visible eyes.\n\nThe movement stays urgent and human. His running is exhausted and uneven, driven by fear rather than athletic confidence.\n\nEND STATE AND EDIT\n\nThe Younger Brother continues running toward the mountains, front-facing to the retreating camera.\n\nHis mask, escape covering and clothing remain unchanged.\n\nThis is frontal editorial coverage of an ongoing escape. End on active running so the shot can cut into rear coverage or another moment along the route.\n\nSOUND\n\nClose broken breathing.\nRestrained nonverbal sobs.\nUneven shoes striking the ground.\nWind pulling at heavy fabric.\nThe covering rubbing against his chest and arms.\nDistant exterior ambience behind the close bodily sounds.\n\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@CHR-010/V04",
+    "@LOC-029/V01"
+  ],
+  "sentRefs": [
+    "@CHR-010/V04",
+    "@LOC-029/V01"
+  ],
+  "convertedFrom": "660dd08a-e060-4749-b574-30d9fc6e5367",
+  "createdAt": "2026-10-16T20:06:41.827Z",
+  "costCredits": 240,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_200506_240cced5-8171-4456-8c17-ea870c651542.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-16T20:05:06.041446Z",
+      "display_name": "Seedance 2.5",
+      "id": "240cced5-8171-4456-8c17-ea870c651542",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": "660dd08a-e060-4749-b574-30d9fc6e5367",
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "5bbed224-1f84-48c6-9621-903ca9727f89",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/5bbed224-1f84-48c6-9621-903ca9727f89.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a10eae8b-e254-4278-a0fe-9ee2727d63d1",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/a10eae8b-e254-4278-a0fe-9ee2727d63d1.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 11A | RUNNING TOWARD THE CAMERA\nDURATION 15 SECONDS | HORIZONTAL 16:9\nONE CONTINUOUS HANDHELD SHOT\n\nCHARACTER REFERENCES\n{{CHAR_YOUNGER_ESCAPE}}\n\nLOCATION REFERENCES\n{{LOC_ESCAPE_EXTERIOR}}\n\nPROP REFERENCES\n{{PROP_ESCAPE_ROBE}}\n\nCreate one continuous 15-second horizontal 16:9 cinematic shot following the fleeing Younger Brother FROM THE FRONT.\n\nPreserve his exact referenced identity, handmade mask, original clothing and escape covering. The covering remains draped and secured exactly as shown in the reference, leaving the same areas of his mask and face visible.\n\nHis mask is a rigid physical object fixed to his head. Its features and eye openings retain their shape. Fear and grief are performed through visible eyes, breath, head movement, shoulders and running effort.\n\nLOCATION AND LIGHT\n\nAn open, uneven plain beyond the rear of the palace complex, before sunrise.\n\nCold blue-gray skylight softly illuminates the landscape and the front of the running man. The distant rear buildings and city remain behind him, visible in the background whenever framing allows.\n\nThe mountains and his escape destination lie behind the camera.\n\nPreserve restrained exposure, tactile clothing, faint moisture on exposed skin and natural movement of the escape covering in the wind.\n\nSTART STATE AND CAMERA GEOMETRY\n\nThe Younger Brother is already running away from the city.\n\nThe camera is directly AHEAD of him, facing BACK toward him and the distant city.\n\nHis face, chest and front shoulders face the camera throughout.\n\nHe runs forward toward the retreating lens. The operator moves backward along the same escape route, matching his speed while allowing the distance to fluctuate naturally.\n\nBegin in a MEDIUM SHOT, framed approximately from his waist upward, using a 40mm lens.\n\nKeep his body near the center with imperfect lateral drift. He looks along his escape route, past the camera, rather than performing to the lens.\n\nSHOT 11A-01 | 00s to 15s | 15 seconds\n\n00–04s:\nTrack backward at his running speed.\n\nHis chest heaves. His arms pump unevenly; one hand briefly catches the escape covering against his chest before releasing it to run again.\n\nThe camera bounces with the operator’s backward footfalls. Small corrections keep his masked face readable as he drifts toward either side of the frame.\n\nHis breathing is already broken by exhaustion and crying.\n\n04–08s:\nHe searches the ground ahead with quick downward glances, then looks past the camera toward the open escape route.\n\nOne step lands badly. His torso pitches forward, but he catches his balance and continues running.\n\nThe camera retreats unevenly in response, briefly letting him come closer. Focus slips toward the near edge of his covering, then recovers on his mask and visible eyes.\n\nHis fear remains mixed with grief: a breath catches in his throat, his shoulders tighten and his next exhale becomes a restrained sob.\n\n08–12s:\nThe operator loses a little distance as the runner closes the gap.\n\nThe framing naturally tightens into a MEDIUM CLOSE-UP, from upper chest to head, through the changing physical distance.\n\nHis head remains oriented forward. His eyes briefly search to one side of the lens, then return to the route ahead.\n\nWind presses the covering against one shoulder and pulls its loose edge backward. Preserve the weight and drag of the fabric.\n\n12–15s:\nHe forces himself through another burst of running despite his failing breath.\n\nThe camera regains his pace and holds the close frontal framing with visible handheld effort.\n\nLet his shoulders rise and fall unevenly. His face remains forward, his attention beyond the lens, his body struggling to keep moving.\n\nEnd while both the runner and camera are still moving.\n\nCAMERA AND PERFORMANCE\n\nThe operator is running backward, physically struggling to hold the image.\n\nUse irregular footfall bounce, short lateral corrections and brief focus delays. Recover focus promptly on the mask and visible eyes.\n\nThe movement stays urgent and human. His running is exhausted and uneven, driven by fear rather than athletic confidence.\n\nEND STATE AND EDIT\n\nThe Younger Brother continues running toward the mountains, front-facing to the retreating camera.\n\nHis mask, escape covering and clothing remain unchanged.\n\nThis is frontal editorial coverage of an ongoing escape. End on active running so the shot can cut into rear coverage or another moment along the route.\n\nSOUND\n\nClose broken breathing.\nRestrained nonverbal sobs.\nUneven shoes striking the ground.\nWind pulling at heavy fabric.\nThe covering rubbing against his chest and arms.\nDistant exterior ambience behind the close bodily sounds.\n\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Little Brother (CHR-010 V04); match it wherever Little Brother appears.\n<<<image_2>>> is Dawn Plain Mountain Foot (LOC-029 V01); match it wherever Dawn Plain Mountain Foot appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_200506_240cced5-8171-4456-8c17-ea870c651542.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_200506_240cced5-8171-4456-8c17-ea870c651542_thumbnail.webp"
+    }
+  ]
+}

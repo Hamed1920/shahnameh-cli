@@ -146,11 +146,13 @@ function recordFailure(state, jobId, reason) {
  * response after the job was accepted leaves a job made and charged that the
  * worker never heard about (2026-09-28, EP014 SC014). Look for it: the same
  * model, the exact prompt sent, created since the attempt began, and in no
- * ledger row yet. Returns the Higgsfield job, or null.
+ * ledger row yet. Returns the Higgsfield job, or null. Throws when it could not
+ * look: that is not "nothing landed" (2026-10-16, EP015 SC011, a session that
+ * expired mid-create hid a finished take), so the caller looks again later.
  */
 async function findLanded(model, prompt, sinceMs) {
   const list = await hfJson(['generate', 'list'], { timeoutMs: 60_000 })
-  if (list.code !== 0) return null
+  if (list.code !== 0) throw new Error(cliProblem(list.stderr || list.stdout))
   const raw = list.json
   const items = Array.isArray(raw) ? raw : (raw?.items ?? raw?.jobs ?? raw?.data ?? [])
   const { rows } = await readCsv(P.ledger)
@@ -167,6 +169,43 @@ async function fetchLanded(hfJobId) {
   const status = String(got.json?.status ?? '').toLowerCase()
   if (got.code !== 0 || ['completed', 'failed', 'nsfw', 'canceled', 'cancelled'].includes(status)) return got
   return hfJson(['generate', 'wait', hfJobId, '--timeout', cfg.waitTimeout, '--interval', cfg.waitInterval], { timeoutMs: GENERATE_KILL_MS })
+}
+
+/** Queue a failed job's landed Higgsfield job as an adoption (retryOf: Retry is refused for it). */
+async function adoptLanded(job, landed) {
+  if ((await readJsonl(P.queue)).some((q) => q.adoptHfJobId === landed.id)) return
+  const { machine: _m, enqueuedAt: _e, enqueuedBy: _b, ...rest } = job
+  const adoptId = newJobId()
+  await appendJsonl(P.queue, {
+    ...rest, jobId: adoptId, parentJobId: job.jobId, retryOf: job.jobId, adoptHfJobId: landed.id,
+    enqueuedAt: new Date().toISOString(), enqueuedBy: 'worker:landed',
+  })
+  await log(`LANDED ${job.jobId}: the CLI reported an error, but Higgsfield made ${landed.id}; adopting it as ${adoptId}`)
+}
+
+/**
+ * Failed jobs whose landed-check could not run (state.landedChecks): looked at again
+ * once the CLI answers, and adopted if Higgsfield made them. Checked once a minute at
+ * most; dropped after a day, by when Higgsfield's job list has long moved on.
+ */
+let landedCheckedAt = 0
+async function recheckLanded(state) {
+  const checks = Object.entries(state.landedChecks ?? {})
+  if (DRY || checks.length === 0 || Date.now() - landedCheckedAt < 60_000) return
+  landedCheckedAt = Date.now()
+  if (!(await cliReady()).ok) return
+  for (const [jobId, { model, prompt, since }] of checks) {
+    let landed = null
+    if (Date.now() - since < 24 * 3_600_000) {
+      try { landed = await findLanded(model, prompt, since) } catch { return } // still cannot look
+      const job = (await readJsonl(P.queue)).find((q) => q.jobId === jobId)
+      if (landed && job) await adoptLanded(job, landed)
+      else await log(`LANDED? ${jobId}: Higgsfield has no job for it; it stays failed`)
+    }
+    const { [jobId]: _done, ...left } = state.landedChecks
+    state.landedChecks = left
+  }
+  await writeState(state)
 }
 
 // ---------------------------------------------------------------- generate
@@ -307,6 +346,7 @@ async function drainQueue(state) {
     done.add(job.jobId)
     await log(`SKIP ${job.jobId}: ${OLD_PANEL}`)
   }
+  await recheckLanded(state)
   // Only this machine's jobs: another machine generates its own, on its own account.
   const queue = all.filter((q) => ownerOf(q) === 'mine')
   // Holds for jobs that are no longer pending (processed, or gone) are stale.
@@ -459,15 +499,13 @@ async function runGeneration(state, job, plan, { credits, sound, adopting }) {
     // Did it land anyway? Then it is adopted as the next job instead of being lost
     // (and Retry is refused for it: retryOf). Never for an adoption that failed.
     if (!adopting && !extractJobId(res.json)) {
-      const landed = await findLanded(model, prompt, startedAt).catch(() => null)
-      if (landed) {
-        const { machine: _m, enqueuedAt: _e, enqueuedBy: _b, ...rest } = job
-        const adoptId = newJobId()
-        await appendJsonl(P.queue, {
-          ...rest, jobId: adoptId, parentJobId: job.jobId, retryOf: job.jobId, adoptHfJobId: landed.id,
-          enqueuedAt: new Date().toISOString(), enqueuedBy: 'worker:landed',
-        })
-        await log(`LANDED ${job.jobId}: the CLI reported an error, but Higgsfield made ${landed.id}; adopting it as ${adoptId}`)
+      try {
+        const landed = await findLanded(model, prompt, startedAt)
+        if (landed) await adoptLanded(job, landed)
+      } catch (e) {
+        // Could not look (signed out, say): look again once the CLI works (recheckLanded).
+        state.landedChecks = { ...(state.landedChecks ?? {}), [job.jobId]: { model, prompt, since: startedAt } }
+        await log(`LANDED? ${job.jobId}: could not check whether Higgsfield made it anyway (${e.message}); checking again once the CLI answers`)
       }
     }
     await writeState(state)

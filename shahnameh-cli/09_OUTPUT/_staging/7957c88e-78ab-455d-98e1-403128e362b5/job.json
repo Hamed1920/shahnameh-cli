@@ -1,0 +1,130 @@
+{
+  "jobId": "J-20261016-1HQ",
+  "parentJobId": "J-20261016-RWV",
+  "hfJobId": "7957c88e-78ab-455d-98e1-403128e362b5",
+  "attempt": 3,
+  "stage": "final",
+  "label": "PLAN 12",
+  "target": "SHM-EP015-SC012-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 12 | WELCOME AND THE DISTANT PALACE\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_LAST_ARRIVAL}} @Townsfolk Masked (look 10) \r\n{{CHAR_YOUNGER_LEADER}} @Little Brother (look 3) \r\n{{GROUP_SURVIVORS_35}} @Rescued Survivors (look 1) @Rescued Survivors (look 2) \r\n\r\nLOCATION REFERENCES\r\n{{LOC_MOUNTAIN_COMMUNITY}} @Fugitive Camp Gorge (look 1) \r\n{{LOC_CITY_PALACE_VIEW}} @Zahhak Citadel Distant View (look 1) \r\n\r\nPROP REFERENCES\r\n{{PROP_COMMUNITY_KIT}}\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence with the precisely timed shots below. Preserve each referenced identity, body proportions, costume and rigid handmade mask. Masks stay fixed to the head with stable features and eye openings; emotion is performed through the body, eyes where visible, breath and hands. All characters are adults. Each listed cut changes the specified physical camera position, lens or viewpoint. Handheld movement responds to the actor and follows a possible path in the set; keep the key action readable and focus engaged. Use hard cuts at listed shot boundaries. References anchor design; the written lighting defines exposure and illumination. Preserve the tactile Iranian-inspired world and restrained natural exposure.\r\n\r\nLOCATION AND LIGHT\r\nLater in time, early cool mountain daylight with soft sky illumination. Shelters and people lie north on the terrace; the city and Zahhak’s distant palace lie south across the valley. Modest cooking fires remain secondary. The leader’s frontal close-up receives the same soft sky light, with textured mask and eyes as established by his reference.\r\n\r\nSTART STATE AND BLOCKING\r\nA different adult Last Arrival approaches from screen left along the ridge toward the community at right. Younger Leader is the same former fugitive, now visibly more mature in posture and wear: exact original mask and body identity, same escape robe weathered and repaired. Approximately 35 survivors live among the shelters. A low shelter roof initially occludes the settlement; camera moves around its existing edge. The final look axis is north-south: leader looks south toward the city, community behind him to the north.\r\n\r\n\r\nSHOT 12A | 0s to 8s | 8 seconds\r\n24mm continuous handheld following shot behind Last Arrival, whose back occupies lower left. Camera moves right around the low shelter roof corner and reveals the inhabited terrace in depth: people cooking, carrying water and repairing clothes. Last Arrival moves toward center-right and slows. Younger Leader enters from the community at screen right, turns left to face the newcomer and steps into his path. He takes the newcomer’s shoulders and embraces him in a brief firm welcome. Camera moves closer within the same shot, preserving both identities. He releases the newcomer toward the settlement, then takes two steps toward the near southern edge, separating himself from the group.\r\n\r\nSHOT 12B | 8s to 10s | 2 seconds\r\n35mm short over-the-back view from NORTH of Younger Leader looking SOUTH. His back and rigid mask’s rear silhouette occupy center foreground; the city and Zahhak’s palace are visibly far across the valley ahead. He faces directly toward them. The palace is the distant architectural reference, not a nearby building. This shot explicitly establishes what he is looking at.\r\n\r\nSHOT 12C | 10s to 15s | 5 seconds\r\n65mm frontal medium-close from SOUTH of Younger Leader, facing NORTH toward him. His face and chest face camera, with his eyes aimed just past the lens toward the distant city behind the operator. He stands several meters apart from the community, which remains far behind his shoulders and softly out of focus. A very slow handheld push-in approaches his mask and unwavering gaze. His breathing settles, jaw and mask stay physically fixed, one hand closes around the worn robe edge. He holds contained grief and revenge rather than performing a victory gesture. End on his sustained look; cut to black at 15s.\r\n\r\nEND STATE AND EDIT\r\nThe former younger brother stands apart from the community, facing the distant city and palace. Last Arrival has joined the people behind him. Preserve the leader’s exact identity from the escape, changed only by time and approved wardrobe wear.\r\n\r\nSOUND\r\nMountain wind, quiet tools and cooking activity, footsteps and clothing during the embrace. In the final close-up, distant community sounds recede beneath the leader’s measured breath. Cut to silence with black.\r\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Little Brother (CHR-010 V03); match it wherever Little Brother appears.\n<<<image_2>>> is Townsfolk Masked (GRP-009 V10); match it wherever Townsfolk Masked appears.\n<<<image_3>>> is Fugitive Camp Gorge (LOC-032 V01); match it wherever Fugitive Camp Gorge appears.\n<<<image_4>>> is Zahhak Citadel Distant View (LOC-033 V01); match it wherever Zahhak Citadel Distant View appears.\n<<<image_5>>> is Rescued Survivors (GRP-010 V01); match it wherever Rescued Survivors appears.\n<<<image_6>>> is Rescued Survivors (GRP-010 V02); match it wherever Rescued Survivors appears.",
+  "basePrompt": "PLAN 12 | WELCOME AND THE DISTANT PALACE\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_LAST_ARRIVAL}} @Townsfolk Masked (look 10) \r\n{{CHAR_YOUNGER_LEADER}} @Little Brother (look 3) \r\n{{GROUP_SURVIVORS_35}} @Rescued Survivors (look 1) @Rescued Survivors (look 2) \r\n\r\nLOCATION REFERENCES\r\n{{LOC_MOUNTAIN_COMMUNITY}} @Fugitive Camp Gorge (look 1) \r\n{{LOC_CITY_PALACE_VIEW}} @Zahhak Citadel Distant View (look 1) \r\n\r\nPROP REFERENCES\r\n{{PROP_COMMUNITY_KIT}}\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence with the precisely timed shots below. Preserve each referenced identity, body proportions, costume and rigid handmade mask. Masks stay fixed to the head with stable features and eye openings; emotion is performed through the body, eyes where visible, breath and hands. All characters are adults. Each listed cut changes the specified physical camera position, lens or viewpoint. Handheld movement responds to the actor and follows a possible path in the set; keep the key action readable and focus engaged. Use hard cuts at listed shot boundaries. References anchor design; the written lighting defines exposure and illumination. Preserve the tactile Iranian-inspired world and restrained natural exposure.\r\n\r\nLOCATION AND LIGHT\r\nLater in time, early cool mountain daylight with soft sky illumination. Shelters and people lie north on the terrace; the city and Zahhak’s distant palace lie south across the valley. Modest cooking fires remain secondary. The leader’s frontal close-up receives the same soft sky light, with textured mask and eyes as established by his reference.\r\n\r\nSTART STATE AND BLOCKING\r\nA different adult Last Arrival approaches from screen left along the ridge toward the community at right. Younger Leader is the same former fugitive, now visibly more mature in posture and wear: exact original mask and body identity, same escape robe weathered and repaired. Approximately 35 survivors live among the shelters. A low shelter roof initially occludes the settlement; camera moves around its existing edge. The final look axis is north-south: leader looks south toward the city, community behind him to the north.\r\n\r\n\r\nSHOT 12A | 0s to 8s | 8 seconds\r\n24mm continuous handheld following shot behind Last Arrival, whose back occupies lower left. Camera moves right around the low shelter roof corner and reveals the inhabited terrace in depth: people cooking, carrying water and repairing clothes. Last Arrival moves toward center-right and slows. Younger Leader enters from the community at screen right, turns left to face the newcomer and steps into his path. He takes the newcomer’s shoulders and embraces him in a brief firm welcome. Camera moves closer within the same shot, preserving both identities. He releases the newcomer toward the settlement, then takes two steps toward the near southern edge, separating himself from the group.\r\n\r\nSHOT 12B | 8s to 10s | 2 seconds\r\n35mm short over-the-back view from NORTH of Younger Leader looking SOUTH. His back and rigid mask’s rear silhouette occupy center foreground; the city and Zahhak’s palace are visibly far across the valley ahead. He faces directly toward them. The palace is the distant architectural reference, not a nearby building. This shot explicitly establishes what he is looking at.\r\n\r\nSHOT 12C | 10s to 15s | 5 seconds\r\n65mm frontal medium-close from SOUTH of Younger Leader, facing NORTH toward him. His face and chest face camera, with his eyes aimed just past the lens toward the distant city behind the operator. He stands several meters apart from the community, which remains far behind his shoulders and softly out of focus. A very slow handheld push-in approaches his mask and unwavering gaze. His breathing settles, jaw and mask stay physically fixed, one hand closes around the worn robe edge. He holds contained grief and revenge rather than performing a victory gesture. End on his sustained look; cut to black at 15s.\r\n\r\nEND STATE AND EDIT\r\nThe former younger brother stands apart from the community, facing the distant city and palace. Last Arrival has joined the people behind him. Preserve the leader’s exact identity from the escape, changed only by time and approved wardrobe wear.\r\n\r\nSOUND\r\nMountain wind, quiet tools and cooking activity, footsteps and clothing during the embrace. In the final close-up, distant community sounds recede beneath the leader’s measured breath. Cut to silence with black.\r\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@CHR-010/V03",
+    "@GRP-009/V10",
+    "@LOC-032/V01",
+    "@LOC-033/V01",
+    "@GRP-010/V01",
+    "@GRP-010/V02"
+  ],
+  "sentRefs": [
+    "@CHR-010/V03",
+    "@GRP-009/V10",
+    "@LOC-032/V01",
+    "@LOC-033/V01",
+    "@GRP-010/V01",
+    "@GRP-010/V02"
+  ],
+  "createdAt": "2026-10-16T17:07:16.528Z",
+  "costCredits": 240,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_165925_7957c88e-78ab-455d-98e1-403128e362b5.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-16T16:59:25.804636Z",
+      "display_name": "Seedance 2.5",
+      "id": "7957c88e-78ab-455d-98e1-403128e362b5",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "9f5b7633-51cd-4994-b1bf-7b56afe8522a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/9f5b7633-51cd-4994-b1bf-7b56afe8522a.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "5bbf79b5-ac93-4f74-bab6-c11fd4602423",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/5bbf79b5-ac93-4f74-bab6-c11fd4602423.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "5ce4f7e7-9910-45bb-9a90-1fe599f14c40",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/5ce4f7e7-9910-45bb-9a90-1fe599f14c40.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "371bf2c8-d5ce-4c50-8654-946cc38f6328",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/371bf2c8-d5ce-4c50-8654-946cc38f6328.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a5d1979b-f94a-4f5c-9137-f0d19050c303",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/a5d1979b-f94a-4f5c-9137-f0d19050c303.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "5b27443c-0c45-4f61-b946-a697d910f549",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/5b27443c-0c45-4f61-b946-a697d910f549.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 12 | WELCOME AND THE DISTANT PALACE\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_LAST_ARRIVAL}} @Townsfolk Masked (look 10) \r\n{{CHAR_YOUNGER_LEADER}} @Little Brother (look 3) \r\n{{GROUP_SURVIVORS_35}} @Rescued Survivors (look 1) @Rescued Survivors (look 2) \r\n\r\nLOCATION REFERENCES\r\n{{LOC_MOUNTAIN_COMMUNITY}} @Fugitive Camp Gorge (look 1) \r\n{{LOC_CITY_PALACE_VIEW}} @Zahhak Citadel Distant View (look 1) \r\n\r\nPROP REFERENCES\r\n{{PROP_COMMUNITY_KIT}}\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence with the precisely timed shots below. Preserve each referenced identity, body proportions, costume and rigid handmade mask. Masks stay fixed to the head with stable features and eye openings; emotion is performed through the body, eyes where visible, breath and hands. All characters are adults. Each listed cut changes the specified physical camera position, lens or viewpoint. Handheld movement responds to the actor and follows a possible path in the set; keep the key action readable and focus engaged. Use hard cuts at listed shot boundaries. References anchor design; the written lighting defines exposure and illumination. Preserve the tactile Iranian-inspired world and restrained natural exposure.\r\n\r\nLOCATION AND LIGHT\r\nLater in time, early cool mountain daylight with soft sky illumination. Shelters and people lie north on the terrace; the city and Zahhak’s distant palace lie south across the valley. Modest cooking fires remain secondary. The leader’s frontal close-up receives the same soft sky light, with textured mask and eyes as established by his reference.\r\n\r\nSTART STATE AND BLOCKING\r\nA different adult Last Arrival approaches from screen left along the ridge toward the community at right. Younger Leader is the same former fugitive, now visibly more mature in posture and wear: exact original mask and body identity, same escape robe weathered and repaired. Approximately 35 survivors live among the shelters. A low shelter roof initially occludes the settlement; camera moves around its existing edge. The final look axis is north-south: leader looks south toward the city, community behind him to the north.\r\n\r\n\r\nSHOT 12A | 0s to 8s | 8 seconds\r\n24mm continuous handheld following shot behind Last Arrival, whose back occupies lower left. Camera moves right around the low shelter roof corner and reveals the inhabited terrace in depth: people cooking, carrying water and repairing clothes. Last Arrival moves toward center-right and slows. Younger Leader enters from the community at screen right, turns left to face the newcomer and steps into his path. He takes the newcomer’s shoulders and embraces him in a brief firm welcome. Camera moves closer within the same shot, preserving both identities. He releases the newcomer toward the settlement, then takes two steps toward the near southern edge, separating himself from the group.\r\n\r\nSHOT 12B | 8s to 10s | 2 seconds\r\n35mm short over-the-back view from NORTH of Younger Leader looking SOUTH. His back and rigid mask’s rear silhouette occupy center foreground; the city and Zahhak’s palace are visibly far across the valley ahead. He faces directly toward them. The palace is the distant architectural reference, not a nearby building. This shot explicitly establishes what he is looking at.\r\n\r\nSHOT 12C | 10s to 15s | 5 seconds\r\n65mm frontal medium-close from SOUTH of Younger Leader, facing NORTH toward him. His face and chest face camera, with his eyes aimed just past the lens toward the distant city behind the operator. He stands several meters apart from the community, which remains far behind his shoulders and softly out of focus. A very slow handheld push-in approaches his mask and unwavering gaze. His breathing settles, jaw and mask stay physically fixed, one hand closes around the worn robe edge. He holds contained grief and revenge rather than performing a victory gesture. End on his sustained look; cut to black at 15s.\r\n\r\nEND STATE AND EDIT\r\nThe former younger brother stands apart from the community, facing the distant city and palace. Last Arrival has joined the people behind him. Preserve the leader’s exact identity from the escape, changed only by time and approved wardrobe wear.\r\n\r\nSOUND\r\nMountain wind, quiet tools and cooking activity, footsteps and clothing during the embrace. In the final close-up, distant community sounds recede beneath the leader’s measured breath. Cut to silence with black.\r\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Little Brother (CHR-010 V03); match it wherever Little Brother appears.\n<<<image_2>>> is Townsfolk Masked (GRP-009 V10); match it wherever Townsfolk Masked appears.\n<<<image_3>>> is Fugitive Camp Gorge (LOC-032 V01); match it wherever Fugitive Camp Gorge appears.\n<<<image_4>>> is Zahhak Citadel Distant View (LOC-033 V01); match it wherever Zahhak Citadel Distant View appears.\n<<<image_5>>> is Rescued Survivors (GRP-010 V01); match it wherever Rescued Survivors appears.\n<<<image_6>>> is Rescued Survivors (GRP-010 V02); match it wherever Rescued Survivors appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_165925_7957c88e-78ab-455d-98e1-403128e362b5.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_165925_7957c88e-78ab-455d-98e1-403128e362b5_thumbnail.webp"
+    }
+  ]
+}

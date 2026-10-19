@@ -1,0 +1,131 @@
+{
+  "jobId": "J-20261016-QSG",
+  "parentJobId": "J-20261016-TYZ",
+  "hfJobId": "519401f2-74e0-4a89-adf8-f18292d6b292",
+  "attempt": 4,
+  "stage": "draft",
+  "label": "PLAN 08",
+  "target": "SHM-EP015-SC008-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 08 | TWO FEARS IN PARALLEL\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_ARMAYIL_COOK}} @Armayel (look 2) \r\n{{CHAR_OLDER_BROTHER}} @Big Brother (look 1) \r\n{{CHAR_YOUNGER_ESCAPE}} @Little Brother (look 4) \r\n\r\nLOCATION REFERENCES\r\n{{LOC_PREP_ROOM}} @Slaughter Prep Room (look 1) \r\n{{LOC_ESCAPE_PASSAGE}} @Narrow Escape Passage (look 1) \r\n\r\nPROP REFERENCES\r\n{{PROP_PREP_KNIFE}} @Cleaver Butcher Wide (look 1) \r\n{{PROP_WORK_STOOL}}\r\n{{PROP_ESCAPE_ROBE}}\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence with the precisely timed shots below. Preserve each referenced identity, body proportions, costume and rigid handmade mask. Masks stay fixed to the head with stable features and eye openings; emotion is performed through the body, eyes where visible, breath and hands. All characters are adults. Each listed cut changes the specified physical camera position, lens or viewpoint. Handheld movement responds to the actor and follows a possible path in the set; keep the key action readable and focus engaged. Use hard cuts at listed shot boundaries. References anchor design; the written lighting defines exposure and illumination. Preserve the tactile Iranian-inspired world and restrained natural exposure.\r\n\r\nLOCATION AND LIGHT\r\nEnclosed preparation room with a NORTH main door, EAST work counter and WEST narrow service exit. One hard neutral ceiling practical and weak warmer west-wall spill illuminate a continuous level floor. Old Iranian masonry, rounded openings and engineered lamps. Keep fixed exposure and light direction across all angles. A plain low wooden work stool stands near the central floor. The west service exit leads into a person-width passage, then a low constriction and a rear building outlet onto open ground. Sparse recessed cold utility lights leave deep intervals of darkness; cool predawn sky becomes visible only near the exterior outlet. The city stays behind the fugitive; mountains lie ahead.\r\n\r\nSTART STATE AND BLOCKING\r\nPreparation room: Older sits center-left on the low stool facing south, Armayil stands behind him and slightly east/right. Garmayil is off camera near the kitchen access. One preparation knife rests on the east counter. Separate passage: Younger alone wears his fastened escape robe and moves away from the palace room toward the rear outlet. Cuts alternate these two spaces; each keeps its own illumination.\r\n\r\n\r\nSHOT 08A | 0s to 4s | 4 seconds\r\n50mm handheld close from southwest at Older’s seated eye height. Older is foreground left, Armayil behind/right. Older’s hands shake against his knees; he breathes rapidly, then deliberately bows his masked head to make the task easier for Armayil. Camera eases closer with the bow. Armayil remains visibly reluctant behind him.\r\n\r\nSHOT 08B | 4s to 7s | 3 seconds\r\n24mm close from a small widening ahead of Younger in the narrow passage. He faces camera and advances toward it, turns one shoulder sideways through a constriction and drags the robe clear with his hand. Camera backs a single step in the available space, brushing close to the wall. He is crying and exhausted; his movement has real friction.\r\n\r\nSHOT 08C | 7s to 12s | 5 seconds\r\n50mm close oblique view from southeast of the stool. Older remains seated left foreground, head bowed; Armayil right/rear faces his back. Armayil has taken the knife in his right hand from the nearby east counter. His left hand trembles, then settles gently on the crown/back of Older’s rigid mask, steadying his lowered head. Armayil’s right wrist begins lifting the knife beside his own torso. Camera advances a few centimeters toward the shaking hand. Cut while the blade is still separated from Older; the fatal action occurs entirely in the omitted interval.\r\n\r\nSHOT 08D | 12s to 15s | 3 seconds\r\n35mm tight handheld from behind Younger within the passage. His back fills center frame as he squeezes through a low opening, catches his robe on the edge and pulls free. Camera ducks with him. Sound is his breathing and cloth against stone; the hidden event in the other room has no accompanying sound.\r\n\r\nEND STATE AND EDIT\r\nYounger continues toward the exterior, unaware of the precise moment inside the room. The last view of Older was seated with head bowed and Armayil’s left hand gently on his mask. A deliberate time ellipsis leads to the kitchen task; the act itself remains off-screen.\r\n\r\nSOUND\r\nBroken breathing in the room; trembling clothing and a light hand touching the mask. On passage shots, close sobs, foot scrapes and fabric against masonry. The omitted act is silent.\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Big Brother (CHR-009 V01); match it wherever Big Brother appears.\n<<<image_2>>> is Little Brother (CHR-010 V04); match it wherever Little Brother appears.\n<<<image_3>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_4>>> is Slaughter Prep Room (LOC-026 V01); match it wherever Slaughter Prep Room appears.\n<<<image_5>>> is Cleaver Butcher Wide (PRP-022 V01); match it wherever Cleaver Butcher Wide appears.\n<<<image_6>>> is Narrow Escape Passage (LOC-030 V01); match it wherever Narrow Escape Passage appears.",
+  "basePrompt": "PLAN 08 | TWO FEARS IN PARALLEL\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_ARMAYIL_COOK}} @Armayel (look 2) \r\n{{CHAR_OLDER_BROTHER}} @Big Brother (look 1) \r\n{{CHAR_YOUNGER_ESCAPE}} @Little Brother (look 4) \r\n\r\nLOCATION REFERENCES\r\n{{LOC_PREP_ROOM}} @Slaughter Prep Room (look 1) \r\n{{LOC_ESCAPE_PASSAGE}} @Narrow Escape Passage (look 1) \r\n\r\nPROP REFERENCES\r\n{{PROP_PREP_KNIFE}} @Cleaver Butcher Wide (look 1) \r\n{{PROP_WORK_STOOL}}\r\n{{PROP_ESCAPE_ROBE}}\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence with the precisely timed shots below. Preserve each referenced identity, body proportions, costume and rigid handmade mask. Masks stay fixed to the head with stable features and eye openings; emotion is performed through the body, eyes where visible, breath and hands. All characters are adults. Each listed cut changes the specified physical camera position, lens or viewpoint. Handheld movement responds to the actor and follows a possible path in the set; keep the key action readable and focus engaged. Use hard cuts at listed shot boundaries. References anchor design; the written lighting defines exposure and illumination. Preserve the tactile Iranian-inspired world and restrained natural exposure.\r\n\r\nLOCATION AND LIGHT\r\nEnclosed preparation room with a NORTH main door, EAST work counter and WEST narrow service exit. One hard neutral ceiling practical and weak warmer west-wall spill illuminate a continuous level floor. Old Iranian masonry, rounded openings and engineered lamps. Keep fixed exposure and light direction across all angles. A plain low wooden work stool stands near the central floor. The west service exit leads into a person-width passage, then a low constriction and a rear building outlet onto open ground. Sparse recessed cold utility lights leave deep intervals of darkness; cool predawn sky becomes visible only near the exterior outlet. The city stays behind the fugitive; mountains lie ahead.\r\n\r\nSTART STATE AND BLOCKING\r\nPreparation room: Older sits center-left on the low stool facing south, Armayil stands behind him and slightly east/right. Garmayil is off camera near the kitchen access. One preparation knife rests on the east counter. Separate passage: Younger alone wears his fastened escape robe and moves away from the palace room toward the rear outlet. Cuts alternate these two spaces; each keeps its own illumination.\r\n\r\n\r\nSHOT 08A | 0s to 4s | 4 seconds\r\n50mm handheld close from southwest at Older’s seated eye height. Older is foreground left, Armayil behind/right. Older’s hands shake against his knees; he breathes rapidly, then deliberately bows his masked head to make the task easier for Armayil. Camera eases closer with the bow. Armayil remains visibly reluctant behind him.\r\n\r\nSHOT 08B | 4s to 7s | 3 seconds\r\n24mm close from a small widening ahead of Younger in the narrow passage. He faces camera and advances toward it, turns one shoulder sideways through a constriction and drags the robe clear with his hand. Camera backs a single step in the available space, brushing close to the wall. He is crying and exhausted; his movement has real friction.\r\n\r\nSHOT 08C | 7s to 12s | 5 seconds\r\n50mm close oblique view from southeast of the stool. Older remains seated left foreground, head bowed; Armayil right/rear faces his back. Armayil has taken the knife in his right hand from the nearby east counter. His left hand trembles, then settles gently on the crown/back of Older’s rigid mask, steadying his lowered head. Armayil’s right wrist begins lifting the knife beside his own torso. Camera advances a few centimeters toward the shaking hand. Cut while the blade is still separated from Older; the fatal action occurs entirely in the omitted interval.\r\n\r\nSHOT 08D | 12s to 15s | 3 seconds\r\n35mm tight handheld from behind Younger within the passage. His back fills center frame as he squeezes through a low opening, catches his robe on the edge and pulls free. Camera ducks with him. Sound is his breathing and cloth against stone; the hidden event in the other room has no accompanying sound.\r\n\r\nEND STATE AND EDIT\r\nYounger continues toward the exterior, unaware of the precise moment inside the room. The last view of Older was seated with head bowed and Armayil’s left hand gently on his mask. A deliberate time ellipsis leads to the kitchen task; the act itself remains off-screen.\r\n\r\nSOUND\r\nBroken breathing in the room; trembling clothing and a light hand touching the mask. On passage shots, close sobs, foot scrapes and fabric against masonry. The omitted act is silent.\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-009/V01",
+    "@CHR-010/V04",
+    "@CHR-007/V02",
+    "@LOC-026/V01",
+    "@PRP-022/V01",
+    "@LOC-030/V01"
+  ],
+  "sentRefs": [
+    "@CHR-009/V01",
+    "@CHR-010/V04",
+    "@CHR-007/V02",
+    "@LOC-026/V01",
+    "@PRP-022/V01",
+    "@LOC-030/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-10-16T18:41:56.044Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_183954_519401f2-74e0-4a89-adf8-f18292d6b292.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-16T18:39:54.905436Z",
+      "display_name": "Seedance 2.5",
+      "id": "519401f2-74e0-4a89-adf8-f18292d6b292",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "c26b1d81-6429-4fe2-9f38-f7d902cdfca7",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/c26b1d81-6429-4fe2-9f38-f7d902cdfca7.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "3f2fb618-b6cd-4162-a67a-54caa0d1087d",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/3f2fb618-b6cd-4162-a67a-54caa0d1087d.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "277551ef-8235-499a-9c97-8d24d2993839",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/277551ef-8235-499a-9c97-8d24d2993839.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "2e511f1e-3fcf-45f8-b692-86b18c8894a5",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/2e511f1e-3fcf-45f8-b692-86b18c8894a5.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "39caad4a-c131-4c8a-9c86-5726bb2aad10",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/39caad4a-c131-4c8a-9c86-5726bb2aad10.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "b313a30d-a72a-4ca3-862a-4c890957f58a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/b313a30d-a72a-4ca3-862a-4c890957f58a.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 08 | TWO FEARS IN PARALLEL\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_ARMAYIL_COOK}} @Armayel (look 2) \r\n{{CHAR_OLDER_BROTHER}} @Big Brother (look 1) \r\n{{CHAR_YOUNGER_ESCAPE}} @Little Brother (look 4) \r\n\r\nLOCATION REFERENCES\r\n{{LOC_PREP_ROOM}} @Slaughter Prep Room (look 1) \r\n{{LOC_ESCAPE_PASSAGE}} @Narrow Escape Passage (look 1) \r\n\r\nPROP REFERENCES\r\n{{PROP_PREP_KNIFE}} @Cleaver Butcher Wide (look 1) \r\n{{PROP_WORK_STOOL}}\r\n{{PROP_ESCAPE_ROBE}}\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence with the precisely timed shots below. Preserve each referenced identity, body proportions, costume and rigid handmade mask. Masks stay fixed to the head with stable features and eye openings; emotion is performed through the body, eyes where visible, breath and hands. All characters are adults. Each listed cut changes the specified physical camera position, lens or viewpoint. Handheld movement responds to the actor and follows a possible path in the set; keep the key action readable and focus engaged. Use hard cuts at listed shot boundaries. References anchor design; the written lighting defines exposure and illumination. Preserve the tactile Iranian-inspired world and restrained natural exposure.\r\n\r\nLOCATION AND LIGHT\r\nEnclosed preparation room with a NORTH main door, EAST work counter and WEST narrow service exit. One hard neutral ceiling practical and weak warmer west-wall spill illuminate a continuous level floor. Old Iranian masonry, rounded openings and engineered lamps. Keep fixed exposure and light direction across all angles. A plain low wooden work stool stands near the central floor. The west service exit leads into a person-width passage, then a low constriction and a rear building outlet onto open ground. Sparse recessed cold utility lights leave deep intervals of darkness; cool predawn sky becomes visible only near the exterior outlet. The city stays behind the fugitive; mountains lie ahead.\r\n\r\nSTART STATE AND BLOCKING\r\nPreparation room: Older sits center-left on the low stool facing south, Armayil stands behind him and slightly east/right. Garmayil is off camera near the kitchen access. One preparation knife rests on the east counter. Separate passage: Younger alone wears his fastened escape robe and moves away from the palace room toward the rear outlet. Cuts alternate these two spaces; each keeps its own illumination.\r\n\r\n\r\nSHOT 08A | 0s to 4s | 4 seconds\r\n50mm handheld close from southwest at Older’s seated eye height. Older is foreground left, Armayil behind/right. Older’s hands shake against his knees; he breathes rapidly, then deliberately bows his masked head to make the task easier for Armayil. Camera eases closer with the bow. Armayil remains visibly reluctant behind him.\r\n\r\nSHOT 08B | 4s to 7s | 3 seconds\r\n24mm close from a small widening ahead of Younger in the narrow passage. He faces camera and advances toward it, turns one shoulder sideways through a constriction and drags the robe clear with his hand. Camera backs a single step in the available space, brushing close to the wall. He is crying and exhausted; his movement has real friction.\r\n\r\nSHOT 08C | 7s to 12s | 5 seconds\r\n50mm close oblique view from southeast of the stool. Older remains seated left foreground, head bowed; Armayil right/rear faces his back. Armayil has taken the knife in his right hand from the nearby east counter. His left hand trembles, then settles gently on the crown/back of Older’s rigid mask, steadying his lowered head. Armayil’s right wrist begins lifting the knife beside his own torso. Camera advances a few centimeters toward the shaking hand. Cut while the blade is still separated from Older; the fatal action occurs entirely in the omitted interval.\r\n\r\nSHOT 08D | 12s to 15s | 3 seconds\r\n35mm tight handheld from behind Younger within the passage. His back fills center frame as he squeezes through a low opening, catches his robe on the edge and pulls free. Camera ducks with him. Sound is his breathing and cloth against stone; the hidden event in the other room has no accompanying sound.\r\n\r\nEND STATE AND EDIT\r\nYounger continues toward the exterior, unaware of the precise moment inside the room. The last view of Older was seated with head bowed and Armayil’s left hand gently on his mask. A deliberate time ellipsis leads to the kitchen task; the act itself remains off-screen.\r\n\r\nSOUND\r\nBroken breathing in the room; trembling clothing and a light hand touching the mask. On passage shots, close sobs, foot scrapes and fabric against masonry. The omitted act is silent.\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Big Brother (CHR-009 V01); match it wherever Big Brother appears.\n<<<image_2>>> is Little Brother (CHR-010 V04); match it wherever Little Brother appears.\n<<<image_3>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_4>>> is Slaughter Prep Room (LOC-026 V01); match it wherever Slaughter Prep Room appears.\n<<<image_5>>> is Cleaver Butcher Wide (PRP-022 V01); match it wherever Cleaver Butcher Wide appears.\n<<<image_6>>> is Narrow Escape Passage (LOC-030 V01); match it wherever Narrow Escape Passage appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_183954_519401f2-74e0-4a89-adf8-f18292d6b292.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_183954_519401f2-74e0-4a89-adf8-f18292d6b292_thumbnail.webp"
+    }
+  ]
+}

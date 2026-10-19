@@ -1,0 +1,133 @@
+{
+  "jobId": "J-20261016-WEJ",
+  "parentJobId": "J-20261016-M1R",
+  "hfJobId": "cd72b47f-cc15-4c28-b0f3-6854177339bd",
+  "attempt": 3,
+  "stage": "final",
+  "label": "PLAN 11B",
+  "target": "SHM-EP015-SC018-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 11B | RUNNING AWAY FROM THE CAMERA\nDURATION 15 SECONDS | HORIZONTAL 16:9\nONE CONTINUOUS HANDHELD SHOT\n\nCHARACTER REFERENCES\n{{CHAR_YOUNGER_ESCAPE}}\n\nLOCATION REFERENCES\n{{LOC_ESCAPE_EXTERIOR}}\n\nPROP REFERENCES\n{{PROP_ESCAPE_ROBE}}\n\nCreate one continuous 15-second horizontal 16:9 cinematic shot following the fleeing Younger Brother FROM BEHIND.\n\nPreserve his exact referenced identity, body proportions, handmade mask, original clothes and escape covering. The covering remains secured in its established reference arrangement, moving with his running body.\n\nHis mask stays physically fixed to his head, including during the backward glances.\n\nLOCATION AND LIGHT\n\nAn open, uneven plain beyond the palace complex, before sunrise.\n\nCold blue-gray skylight reveals the ground, the runner’s silhouette and the heavy moving fabric. The mountains lie ahead of him in the distance.\n\nThe city and palace are behind the camera, outside the forward-facing composition.\n\nMaintain soft natural predawn illumination, restrained exposure and tactile ground detail.\n\nSTART STATE AND CAMERA GEOMETRY\n\nThe Younger Brother is already running forward toward the mountains.\n\nThe camera is directly BEHIND him, approximately four to five meters away, facing in the SAME direction as his travel.\n\nHis BACK faces the camera.\n\nUse a 28mm lens at approximately the runner’s lower-chest height.\n\nMaintain a FULL SHOT: his entire body, from the top of his head to both feet, stays within the composition, with visible ground beneath his shoes.\n\nHis figure remains prominent, occupying roughly two-thirds of the image height. The surrounding landscape provides escape space while his whole-body effort remains readable.\n\nThe operator runs forward behind him, maintaining the rear position throughout.\n\nSHOT 11B-01 | 00s to 15s | 15 seconds\n\n00–04s:\nFollow directly behind as he runs across the uneven ground.\n\nHis stride is irregular and heavy. The covering swings behind his calves, pulls across his back and briefly catches against one leg before his next step frees it.\n\nCamera movement carries the operator’s running footfalls: vertical bounce, slight lateral sway and small corrections to keep both feet inside the frame.\n\n04–07s:\nWithout stopping, he turns his HEAD over his RIGHT shoulder to check the route behind him.\n\nHis upper torso twists only slightly; his hips and feet continue moving toward the mountains.\n\nFrom the rear camera position, briefly reveal the side edge of his mask and the visible eye opening as his gaze searches past the camera toward the unseen city.\n\nThe camera remains behind him. His frightened backward glance makes his next two steps less coordinated.\n\nHe turns his head forward again.\n\n07–11s:\nHe accelerates for a few strained steps, then loses strength.\n\nOne foot catches on the uneven ground. He stumbles forward, throws one arm outward to recover his balance and keeps running.\n\nThe camera lurches sideways in response, momentarily placing him off-center, then catches up and restores the full-body framing.\n\nHis bowed shoulders and shaking upper back convey crying even while his face is turned away.\n\n11–13s:\nHe makes a second, shorter glance over the SAME right shoulder.\n\nHis body continues forward. His right hand grips the covering at his chest, keeping it from slipping as he checks behind.\n\nHold enough rear three-quarter detail to read the turn while retaining his entire body in frame.\n\n13–15s:\nHe snaps his attention forward and forces himself onward.\n\nThe camera follows at the same rear distance, with the mountains still ahead and the empty route stretching around him.\n\nEnd mid-stride, his back toward the lens, the covering moving heavily behind him.\n\nCAMERA AND PERFORMANCE\n\nMaintain rear full-body coverage throughout.\n\nThe operator follows along a real running path, matching the runner’s speed. Small distance changes are natural, but retain head-to-feet framing.\n\nUse responsive handheld movement and brief focus corrections after the stumble. Keep his feet, backward glances and struggle with the covering legible.\n\nHis fear appears in repeated checking, disrupted balance and the effort to continue despite exhaustion.\n\nEND STATE AND EDIT\n\nThe Younger Brother continues away from the camera toward the mountains.\n\nHis head has returned forward after the final backward glance.\n\nThis is rear editorial coverage of the same escape situation. Preserve the established costume, covering and predawn conditions when intercutting with frontal coverage.\n\nSOUND\n\nUneven running footsteps.\nBreathing and nonverbal sobs heard from behind.\nHeavy fabric snapping and dragging against clothing.\nA brief shoe scrape during the stumble.\nOpen-air wind across the plain.\n\nNO MUSIC. NO DIALOGUE.\n\nRevision — earlier attempts were rejected for these reasons, oldest first. Fix all of them; where two notes disagree, the later note wins:\n- this is the younger brother @\n- Keep everything else strictly identical and preserved as is; only switch between the provided characters every 3 seconds.\r\n\r\nthe provided characters  @Townsfolk Masked (look 2) @Townsfolk Masked (look 1) @Townsfolk Masked (look 7) @Townsfolk Masked (look 5) @Townsfolk Masked (look 11)\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Townsfolk Masked (GRP-009 V02); match it wherever Townsfolk Masked appears.\n<<<image_2>>> is Dawn Plain Mountain Foot (LOC-029 V01); match it wherever Dawn Plain Mountain Foot appears.\n<<<image_3>>> is Townsfolk Masked (GRP-009 V01); match it wherever Townsfolk Masked appears.\n<<<image_4>>> is Townsfolk Masked (GRP-009 V07); match it wherever Townsfolk Masked appears.\n<<<image_5>>> is Townsfolk Masked (GRP-009 V05); match it wherever Townsfolk Masked appears.\n<<<image_6>>> is Townsfolk Masked (GRP-009 V11); match it wherever Townsfolk Masked appears.",
+  "basePrompt": "PLAN 11B | RUNNING AWAY FROM THE CAMERA\nDURATION 15 SECONDS | HORIZONTAL 16:9\nONE CONTINUOUS HANDHELD SHOT\n\nCHARACTER REFERENCES\n{{CHAR_YOUNGER_ESCAPE}}\n\nLOCATION REFERENCES\n{{LOC_ESCAPE_EXTERIOR}}\n\nPROP REFERENCES\n{{PROP_ESCAPE_ROBE}}\n\nCreate one continuous 15-second horizontal 16:9 cinematic shot following the fleeing Younger Brother FROM BEHIND.\n\nPreserve his exact referenced identity, body proportions, handmade mask, original clothes and escape covering. The covering remains secured in its established reference arrangement, moving with his running body.\n\nHis mask stays physically fixed to his head, including during the backward glances.\n\nLOCATION AND LIGHT\n\nAn open, uneven plain beyond the palace complex, before sunrise.\n\nCold blue-gray skylight reveals the ground, the runner’s silhouette and the heavy moving fabric. The mountains lie ahead of him in the distance.\n\nThe city and palace are behind the camera, outside the forward-facing composition.\n\nMaintain soft natural predawn illumination, restrained exposure and tactile ground detail.\n\nSTART STATE AND CAMERA GEOMETRY\n\nThe Younger Brother is already running forward toward the mountains.\n\nThe camera is directly BEHIND him, approximately four to five meters away, facing in the SAME direction as his travel.\n\nHis BACK faces the camera.\n\nUse a 28mm lens at approximately the runner’s lower-chest height.\n\nMaintain a FULL SHOT: his entire body, from the top of his head to both feet, stays within the composition, with visible ground beneath his shoes.\n\nHis figure remains prominent, occupying roughly two-thirds of the image height. The surrounding landscape provides escape space while his whole-body effort remains readable.\n\nThe operator runs forward behind him, maintaining the rear position throughout.\n\nSHOT 11B-01 | 00s to 15s | 15 seconds\n\n00–04s:\nFollow directly behind as he runs across the uneven ground.\n\nHis stride is irregular and heavy. The covering swings behind his calves, pulls across his back and briefly catches against one leg before his next step frees it.\n\nCamera movement carries the operator’s running footfalls: vertical bounce, slight lateral sway and small corrections to keep both feet inside the frame.\n\n04–07s:\nWithout stopping, he turns his HEAD over his RIGHT shoulder to check the route behind him.\n\nHis upper torso twists only slightly; his hips and feet continue moving toward the mountains.\n\nFrom the rear camera position, briefly reveal the side edge of his mask and the visible eye opening as his gaze searches past the camera toward the unseen city.\n\nThe camera remains behind him. His frightened backward glance makes his next two steps less coordinated.\n\nHe turns his head forward again.\n\n07–11s:\nHe accelerates for a few strained steps, then loses strength.\n\nOne foot catches on the uneven ground. He stumbles forward, throws one arm outward to recover his balance and keeps running.\n\nThe camera lurches sideways in response, momentarily placing him off-center, then catches up and restores the full-body framing.\n\nHis bowed shoulders and shaking upper back convey crying even while his face is turned away.\n\n11–13s:\nHe makes a second, shorter glance over the SAME right shoulder.\n\nHis body continues forward. His right hand grips the covering at his chest, keeping it from slipping as he checks behind.\n\nHold enough rear three-quarter detail to read the turn while retaining his entire body in frame.\n\n13–15s:\nHe snaps his attention forward and forces himself onward.\n\nThe camera follows at the same rear distance, with the mountains still ahead and the empty route stretching around him.\n\nEnd mid-stride, his back toward the lens, the covering moving heavily behind him.\n\nCAMERA AND PERFORMANCE\n\nMaintain rear full-body coverage throughout.\n\nThe operator follows along a real running path, matching the runner’s speed. Small distance changes are natural, but retain head-to-feet framing.\n\nUse responsive handheld movement and brief focus corrections after the stumble. Keep his feet, backward glances and struggle with the covering legible.\n\nHis fear appears in repeated checking, disrupted balance and the effort to continue despite exhaustion.\n\nEND STATE AND EDIT\n\nThe Younger Brother continues away from the camera toward the mountains.\n\nHis head has returned forward after the final backward glance.\n\nThis is rear editorial coverage of the same escape situation. Preserve the established costume, covering and predawn conditions when intercutting with frontal coverage.\n\nSOUND\n\nUneven running footsteps.\nBreathing and nonverbal sobs heard from behind.\nHeavy fabric snapping and dragging against clothing.\nA brief shoe scrape during the stumble.\nOpen-air wind across the plain.\n\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [
+    "this is the younger brother @",
+    "Keep everything else strictly identical and preserved as is; only switch between the provided characters every 3 seconds.\r\n\r\nthe provided characters  @Townsfolk Masked (look 2) @Townsfolk Masked (look 1) @Townsfolk Masked (look 7) @Townsfolk Masked (look 5) @Townsfolk Masked (look 11)"
+  ],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@GRP-009/V02",
+    "@LOC-029/V01",
+    "@GRP-009/V01",
+    "@GRP-009/V07",
+    "@GRP-009/V05",
+    "@GRP-009/V11"
+  ],
+  "sentRefs": [
+    "@GRP-009/V02",
+    "@LOC-029/V01",
+    "@GRP-009/V01",
+    "@GRP-009/V07",
+    "@GRP-009/V05",
+    "@GRP-009/V11"
+  ],
+  "createdAt": "2026-10-16T20:46:01.579Z",
+  "costCredits": 240,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_203914_cd72b47f-cc15-4c28-b0f3-6854177339bd.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-16T20:39:14.567784Z",
+      "display_name": "Seedance 2.5",
+      "id": "cd72b47f-cc15-4c28-b0f3-6854177339bd",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "fac44414-d7d3-4c65-aa41-b317ac8e837d",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/fac44414-d7d3-4c65-aa41-b317ac8e837d.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "734d7b1c-0021-40dc-9c1c-89b9a6a06268",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/734d7b1c-0021-40dc-9c1c-89b9a6a06268.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "defa7612-b45c-45fc-870f-d5ecdb27634f",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/defa7612-b45c-45fc-870f-d5ecdb27634f.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "b0b2a549-b94d-47d0-a7ca-4c6721efa4ab",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/b0b2a549-b94d-47d0-a7ca-4c6721efa4ab.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "f4367167-df05-43a4-9d7d-5a9e5edcb585",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/f4367167-df05-43a4-9d7d-5a9e5edcb585.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a6824d31-10be-4798-8568-0dc4ba6c8247",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/a6824d31-10be-4798-8568-0dc4ba6c8247.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 11B | RUNNING AWAY FROM THE CAMERA\nDURATION 15 SECONDS | HORIZONTAL 16:9\nONE CONTINUOUS HANDHELD SHOT\n\nCHARACTER REFERENCES\n{{CHAR_YOUNGER_ESCAPE}}\n\nLOCATION REFERENCES\n{{LOC_ESCAPE_EXTERIOR}}\n\nPROP REFERENCES\n{{PROP_ESCAPE_ROBE}}\n\nCreate one continuous 15-second horizontal 16:9 cinematic shot following the fleeing Younger Brother FROM BEHIND.\n\nPreserve his exact referenced identity, body proportions, handmade mask, original clothes and escape covering. The covering remains secured in its established reference arrangement, moving with his running body.\n\nHis mask stays physically fixed to his head, including during the backward glances.\n\nLOCATION AND LIGHT\n\nAn open, uneven plain beyond the palace complex, before sunrise.\n\nCold blue-gray skylight reveals the ground, the runner’s silhouette and the heavy moving fabric. The mountains lie ahead of him in the distance.\n\nThe city and palace are behind the camera, outside the forward-facing composition.\n\nMaintain soft natural predawn illumination, restrained exposure and tactile ground detail.\n\nSTART STATE AND CAMERA GEOMETRY\n\nThe Younger Brother is already running forward toward the mountains.\n\nThe camera is directly BEHIND him, approximately four to five meters away, facing in the SAME direction as his travel.\n\nHis BACK faces the camera.\n\nUse a 28mm lens at approximately the runner’s lower-chest height.\n\nMaintain a FULL SHOT: his entire body, from the top of his head to both feet, stays within the composition, with visible ground beneath his shoes.\n\nHis figure remains prominent, occupying roughly two-thirds of the image height. The surrounding landscape provides escape space while his whole-body effort remains readable.\n\nThe operator runs forward behind him, maintaining the rear position throughout.\n\nSHOT 11B-01 | 00s to 15s | 15 seconds\n\n00–04s:\nFollow directly behind as he runs across the uneven ground.\n\nHis stride is irregular and heavy. The covering swings behind his calves, pulls across his back and briefly catches against one leg before his next step frees it.\n\nCamera movement carries the operator’s running footfalls: vertical bounce, slight lateral sway and small corrections to keep both feet inside the frame.\n\n04–07s:\nWithout stopping, he turns his HEAD over his RIGHT shoulder to check the route behind him.\n\nHis upper torso twists only slightly; his hips and feet continue moving toward the mountains.\n\nFrom the rear camera position, briefly reveal the side edge of his mask and the visible eye opening as his gaze searches past the camera toward the unseen city.\n\nThe camera remains behind him. His frightened backward glance makes his next two steps less coordinated.\n\nHe turns his head forward again.\n\n07–11s:\nHe accelerates for a few strained steps, then loses strength.\n\nOne foot catches on the uneven ground. He stumbles forward, throws one arm outward to recover his balance and keeps running.\n\nThe camera lurches sideways in response, momentarily placing him off-center, then catches up and restores the full-body framing.\n\nHis bowed shoulders and shaking upper back convey crying even while his face is turned away.\n\n11–13s:\nHe makes a second, shorter glance over the SAME right shoulder.\n\nHis body continues forward. His right hand grips the covering at his chest, keeping it from slipping as he checks behind.\n\nHold enough rear three-quarter detail to read the turn while retaining his entire body in frame.\n\n13–15s:\nHe snaps his attention forward and forces himself onward.\n\nThe camera follows at the same rear distance, with the mountains still ahead and the empty route stretching around him.\n\nEnd mid-stride, his back toward the lens, the covering moving heavily behind him.\n\nCAMERA AND PERFORMANCE\n\nMaintain rear full-body coverage throughout.\n\nThe operator follows along a real running path, matching the runner’s speed. Small distance changes are natural, but retain head-to-feet framing.\n\nUse responsive handheld movement and brief focus corrections after the stumble. Keep his feet, backward glances and struggle with the covering legible.\n\nHis fear appears in repeated checking, disrupted balance and the effort to continue despite exhaustion.\n\nEND STATE AND EDIT\n\nThe Younger Brother continues away from the camera toward the mountains.\n\nHis head has returned forward after the final backward glance.\n\nThis is rear editorial coverage of the same escape situation. Preserve the established costume, covering and predawn conditions when intercutting with frontal coverage.\n\nSOUND\n\nUneven running footsteps.\nBreathing and nonverbal sobs heard from behind.\nHeavy fabric snapping and dragging against clothing.\nA brief shoe scrape during the stumble.\nOpen-air wind across the plain.\n\nNO MUSIC. NO DIALOGUE.\n\nRevision — earlier attempts were rejected for these reasons, oldest first. Fix all of them; where two notes disagree, the later note wins:\n- this is the younger brother @\n- Keep everything else strictly identical and preserved as is; only switch between the provided characters every 3 seconds.\r\n\r\nthe provided characters  @Townsfolk Masked (look 2) @Townsfolk Masked (look 1) @Townsfolk Masked (look 7) @Townsfolk Masked (look 5) @Townsfolk Masked (look 11)\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Townsfolk Masked (GRP-009 V02); match it wherever Townsfolk Masked appears.\n<<<image_2>>> is Dawn Plain Mountain Foot (LOC-029 V01); match it wherever Dawn Plain Mountain Foot appears.\n<<<image_3>>> is Townsfolk Masked (GRP-009 V01); match it wherever Townsfolk Masked appears.\n<<<image_4>>> is Townsfolk Masked (GRP-009 V07); match it wherever Townsfolk Masked appears.\n<<<image_5>>> is Townsfolk Masked (GRP-009 V05); match it wherever Townsfolk Masked appears.\n<<<image_6>>> is Townsfolk Masked (GRP-009 V11); match it wherever Townsfolk Masked appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_203914_cd72b47f-cc15-4c28-b0f3-6854177339bd.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_203914_cd72b47f-cc15-4c28-b0f3-6854177339bd_thumbnail.webp"
+    }
+  ]
+}

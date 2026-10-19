@@ -1,0 +1,128 @@
+{
+  "jobId": "J-20261016-AUK",
+  "parentJobId": "J-20261016-517",
+  "hfJobId": "1a77cc17-198f-4cee-acb4-175012464be7",
+  "attempt": 3,
+  "stage": "final",
+  "label": "PLAN 10",
+  "target": "SHM-EP015-SC010-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 10 | HIS HANDS BREAK BEFORE HIS BODY\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_GARMAYIL_COOK}} <<<image_2>>> \r\n{{CHAR_YOUNGER_ESCAPE}} <<<image_1>>> \r\n\r\nLOCATION REFERENCES\r\n{{LOC_KITCHEN}} <<<image_3>>> \r\n{{LOC_ESCAPE_PASSAGE}} <<<image_4>>> \r\n{{LOC_ESCAPE_EXTERIOR}} <<<image_6>>> \r\n\r\nPROP REFERENCES\r\n{{PROP_MIXING_SET}}\r\n{{PROP_ESCAPE_ROBE}}\r\n{{PROP_KITCHEN_WORK_UTENSILS}}\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic block. Follow the timed shot boundaries exactly. Preserve the assigned identities, costumes, body proportions and rigid handmade masks. Mask surfaces and eye openings stay physically fixed; emotions register through visible eyes, breathing, hands and body weight. All performers are adults. Use tactile worn materials and physically motivated handheld camera movement. Each cut takes the camera to the specified new physical station. References anchor design; the written lighting governs exposure. Preserve readable action within the instability.\r\n\r\nLOCATION AND LIGHT\r\nVast old Iranian masonry kitchen with rounded arches, restrained carved reliefs, functional metal counters and integrated lamps. A hard neutral overhead fixture illuminates the central bench; distant utility lamps reveal the architecture at low exposure. The floor remains continuous and level. Garmayil is the only person in this kitchen. The west service exit leads into a person-width passage, then a low constriction and a rear building outlet onto open ground. Sparse recessed cold utility lights leave deep intervals of darkness; cool predawn sky becomes visible only near the exterior outlet. The city stays behind the fugitive; mountains lie ahead. Exterior predawn light is cool and soft; the rear facade is dim behind the fugitive.\r\n\r\nSTART STATE AND BLOCKING\r\nKitchen: Garmayil alone stands north of the central east-west bench facing south. Mixing is already complete. One OPEN mixing bowl remains at the center of the bench; two source bowls remain behind it toward the north edge. The spoon is in his right hand. Secondary utensils and a loose cloth occupy the west end; a clear striking area is at the east/right end, at least half a meter from the main bowls. All three main bowls stay upright and stationary. Garmayil stands with knees visible beyond the east end so the high-angle view can see his full descent. Separately, Younger approaches the low rear outlet wearing his same escape robe.\r\n\r\n\r\nSHOT 10-01 | 00s to 04s | 4 seconds\r\n40mm close handheld from south-east, framing Garmayil’s face, torso and the clear right end of the bench. At 0–1s he drops the spoon onto the work surface beside the completed open mixing bowl. At 1–3s he turns slightly toward the clear area and pounds it TWICE with his RIGHT fist, the second blow heavier, while his left palm braces on the edge. His shoulders convulse with anger and grief; the camera recoils with each blow, then tilts down toward his failing body. The main bowls remain stationary and upright at center-left, safely separated from the strikes. At 3–4s the anger drains out of him: his fingers slide off the edge and his knees begin folding. Cut on the beginning of this downward motion.\r\n\r\nSHOT 10-02 | 04s to 08s | 4 seconds\r\n12mm extreme-wide VERY HIGH ANGLE from the south upper service gallery, looking steeply down over the entire kitchen. Match the downward body motion at the SAME east end of the SAME bench: Garmayil drops onto both knees, sits back toward his heels and folds forward, sobbing. His descent continues from the preceding shot, without restarting the fall. He is small and completely alone among the immense benches and empty aisles. The completed OPEN mixing bowl and the two source bowls remain on the bench exactly where they were; the spoon lies beside them. Hold the collapsed body and trembling shoulders with barely perceptible camera vibration.\r\n\r\nSHOT 10-03 | 08s to 11s | 3 seconds\r\n28mm low handheld outside the rear building outlet, camera west of the opening. Younger emerges from screen left toward right, stooping under the low lintel, catching the wall with one hand, then stumbling onto the level ground. Camera retreats diagonally right to make room; the dark passage stays behind him at left.\r\n\r\nSHOT 10-04 | 11s to 15s | 4 seconds\r\n35mm lateral handheld tracking at Younger’s chest height. He accelerates from a stagger into a broken run from screen left to right onto the open plain. Rear facade and distant palace mass remain behind at screen left, mountains ahead right. Camera runs beside him with uneven footfall bounce, keeping his weight and breath visible.\r\n\r\nEND STATE AND EDIT\r\nGarmayil remains kneeling alone beside the east end of the kitchen bench, crying. The completed open mixing bowl, two source bowls and spoon remain on the worktop. Younger is outside, running rightward across the plain. Continue with the existing fugitive-only block 11.\r\n\r\nSOUND\r\nSpoon contacting metal, TWO distinct fist impacts, broken nonverbal cries, clothing against the bench edge, knees contacting the floor, then sobs in the wide kitchen. Cut to shoes clearing the rear outlet, open-air wind and the fugitive’s running breath.\r\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_5>>> is Vessel Set Brain Prep (PRP-023 V01); match it wherever Vessel Set Brain Prep appears.",
+  "basePrompt": "PLAN 10 | HIS HANDS BREAK BEFORE HIS BODY\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_GARMAYIL_COOK}} @CHR-008/V02 \r\n{{CHAR_YOUNGER_ESCAPE}} @CHR-010/V04 \r\n\r\nLOCATION REFERENCES\r\n{{LOC_KITCHEN}} @LOC-026/V01 \r\n{{LOC_ESCAPE_PASSAGE}} @LOC-030/V01 \r\n{{LOC_ESCAPE_EXTERIOR}} @LOC-028/V01 \r\n\r\nPROP REFERENCES\r\n{{PROP_MIXING_SET}}\r\n{{PROP_ESCAPE_ROBE}}\r\n{{PROP_KITCHEN_WORK_UTENSILS}}\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic block. Follow the timed shot boundaries exactly. Preserve the assigned identities, costumes, body proportions and rigid handmade masks. Mask surfaces and eye openings stay physically fixed; emotions register through visible eyes, breathing, hands and body weight. All performers are adults. Use tactile worn materials and physically motivated handheld camera movement. Each cut takes the camera to the specified new physical station. References anchor design; the written lighting governs exposure. Preserve readable action within the instability.\r\n\r\nLOCATION AND LIGHT\r\nVast old Iranian masonry kitchen with rounded arches, restrained carved reliefs, functional metal counters and integrated lamps. A hard neutral overhead fixture illuminates the central bench; distant utility lamps reveal the architecture at low exposure. The floor remains continuous and level. Garmayil is the only person in this kitchen. The west service exit leads into a person-width passage, then a low constriction and a rear building outlet onto open ground. Sparse recessed cold utility lights leave deep intervals of darkness; cool predawn sky becomes visible only near the exterior outlet. The city stays behind the fugitive; mountains lie ahead. Exterior predawn light is cool and soft; the rear facade is dim behind the fugitive.\r\n\r\nSTART STATE AND BLOCKING\r\nKitchen: Garmayil alone stands north of the central east-west bench facing south. Mixing is already complete. One OPEN mixing bowl remains at the center of the bench; two source bowls remain behind it toward the north edge. The spoon is in his right hand. Secondary utensils and a loose cloth occupy the west end; a clear striking area is at the east/right end, at least half a meter from the main bowls. All three main bowls stay upright and stationary. Garmayil stands with knees visible beyond the east end so the high-angle view can see his full descent. Separately, Younger approaches the low rear outlet wearing his same escape robe.\r\n\r\n\r\nSHOT 10-01 | 00s to 04s | 4 seconds\r\n40mm close handheld from south-east, framing Garmayil’s face, torso and the clear right end of the bench. At 0–1s he drops the spoon onto the work surface beside the completed open mixing bowl. At 1–3s he turns slightly toward the clear area and pounds it TWICE with his RIGHT fist, the second blow heavier, while his left palm braces on the edge. His shoulders convulse with anger and grief; the camera recoils with each blow, then tilts down toward his failing body. The main bowls remain stationary and upright at center-left, safely separated from the strikes. At 3–4s the anger drains out of him: his fingers slide off the edge and his knees begin folding. Cut on the beginning of this downward motion.\r\n\r\nSHOT 10-02 | 04s to 08s | 4 seconds\r\n12mm extreme-wide VERY HIGH ANGLE from the south upper service gallery, looking steeply down over the entire kitchen. Match the downward body motion at the SAME east end of the SAME bench: Garmayil drops onto both knees, sits back toward his heels and folds forward, sobbing. His descent continues from the preceding shot, without restarting the fall. He is small and completely alone among the immense benches and empty aisles. The completed OPEN mixing bowl and the two source bowls remain on the bench exactly where they were; the spoon lies beside them. Hold the collapsed body and trembling shoulders with barely perceptible camera vibration.\r\n\r\nSHOT 10-03 | 08s to 11s | 3 seconds\r\n28mm low handheld outside the rear building outlet, camera west of the opening. Younger emerges from screen left toward right, stooping under the low lintel, catching the wall with one hand, then stumbling onto the level ground. Camera retreats diagonally right to make room; the dark passage stays behind him at left.\r\n\r\nSHOT 10-04 | 11s to 15s | 4 seconds\r\n35mm lateral handheld tracking at Younger’s chest height. He accelerates from a stagger into a broken run from screen left to right onto the open plain. Rear facade and distant palace mass remain behind at screen left, mountains ahead right. Camera runs beside him with uneven footfall bounce, keeping his weight and breath visible.\r\n\r\nEND STATE AND EDIT\r\nGarmayil remains kneeling alone beside the east end of the kitchen bench, crying. The completed open mixing bowl, two source bowls and spoon remain on the worktop. Younger is outside, running rightward across the plain. Continue with the existing fugitive-only block 11.\r\n\r\nSOUND\r\nSpoon contacting metal, TWO distinct fist impacts, broken nonverbal cries, clothing against the bench edge, knees contacting the floor, then sobs in the wide kitchen. Cut to shoes clearing the rear outlet, open-air wind and the fugitive’s running breath.\r\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@CHR-010/V04",
+    "@CHR-008/V02",
+    "@LOC-026/V01",
+    "@LOC-030/V01",
+    "@PRP-023/V01",
+    "@LOC-028/V01"
+  ],
+  "sentRefs": [
+    "@CHR-010/V04",
+    "@CHR-008/V02",
+    "@LOC-026/V01",
+    "@LOC-030/V01",
+    "@PRP-023/V01",
+    "@LOC-028/V01"
+  ],
+  "createdAt": "2026-10-16T17:27:57.488Z",
+  "costCredits": 240,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_171851_1a77cc17-198f-4cee-acb4-175012464be7.mp4"
+    }
+  ],
+  "rawResponse": {
+    "created_at": "2026-10-16T17:18:51.057227Z",
+    "display_name": "Seedance 2.5",
+    "id": "1a77cc17-198f-4cee-acb4-175012464be7",
+    "job_type": "seedance_2_5",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "bitrate_mode": "standard",
+      "draft": false,
+      "draft_job_id": null,
+      "duration": 15,
+      "extension_mode": null,
+      "generate_audio": true,
+      "genre": "auto",
+      "height": 1080,
+      "medias": [
+        {
+          "data": {
+            "id": "384f1eb9-4182-4e2e-88f1-c72cadd8855e",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/384f1eb9-4182-4e2e-88f1-c72cadd8855e.png"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "90a65522-563d-401c-9afc-f2f2090c70a5",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/90a65522-563d-401c-9afc-f2f2090c70a5.jpg"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "6dcd5fc9-b882-4b29-833a-e533cd501494",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/6dcd5fc9-b882-4b29-833a-e533cd501494.png"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "4a803365-29ce-4eb7-b485-4e54e1e19dbb",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/4a803365-29ce-4eb7-b485-4e54e1e19dbb.png"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "e473d628-2267-49f2-9368-b3867c30508a",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/e473d628-2267-49f2-9368-b3867c30508a.png"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "e76d0392-42a6-4a58-a344-b2208892272b",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/e76d0392-42a6-4a58-a344-b2208892272b.png"
+          },
+          "role": "image"
+        }
+      ],
+      "model": "default",
+      "multi_prompt": [],
+      "multi_shot_mode": "custom",
+      "multi_shots": false,
+      "prompt": "PLAN 10 | HIS HANDS BREAK BEFORE HIS BODY\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_GARMAYIL_COOK}} <<<image_2>>> \r\n{{CHAR_YOUNGER_ESCAPE}} <<<image_1>>> \r\n\r\nLOCATION REFERENCES\r\n{{LOC_KITCHEN}} <<<image_3>>> \r\n{{LOC_ESCAPE_PASSAGE}} <<<image_4>>> \r\n{{LOC_ESCAPE_EXTERIOR}} <<<image_6>>> \r\n\r\nPROP REFERENCES\r\n{{PROP_MIXING_SET}}\r\n{{PROP_ESCAPE_ROBE}}\r\n{{PROP_KITCHEN_WORK_UTENSILS}}\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic block. Follow the timed shot boundaries exactly. Preserve the assigned identities, costumes, body proportions and rigid handmade masks. Mask surfaces and eye openings stay physically fixed; emotions register through visible eyes, breathing, hands and body weight. All performers are adults. Use tactile worn materials and physically motivated handheld camera movement. Each cut takes the camera to the specified new physical station. References anchor design; the written lighting governs exposure. Preserve readable action within the instability.\r\n\r\nLOCATION AND LIGHT\r\nVast old Iranian masonry kitchen with rounded arches, restrained carved reliefs, functional metal counters and integrated lamps. A hard neutral overhead fixture illuminates the central bench; distant utility lamps reveal the architecture at low exposure. The floor remains continuous and level. Garmayil is the only person in this kitchen. The west service exit leads into a person-width passage, then a low constriction and a rear building outlet onto open ground. Sparse recessed cold utility lights leave deep intervals of darkness; cool predawn sky becomes visible only near the exterior outlet. The city stays behind the fugitive; mountains lie ahead. Exterior predawn light is cool and soft; the rear facade is dim behind the fugitive.\r\n\r\nSTART STATE AND BLOCKING\r\nKitchen: Garmayil alone stands north of the central east-west bench facing south. Mixing is already complete. One OPEN mixing bowl remains at the center of the bench; two source bowls remain behind it toward the north edge. The spoon is in his right hand. Secondary utensils and a loose cloth occupy the west end; a clear striking area is at the east/right end, at least half a meter from the main bowls. All three main bowls stay upright and stationary. Garmayil stands with knees visible beyond the east end so the high-angle view can see his full descent. Separately, Younger approaches the low rear outlet wearing his same escape robe.\r\n\r\n\r\nSHOT 10-01 | 00s to 04s | 4 seconds\r\n40mm close handheld from south-east, framing Garmayil’s face, torso and the clear right end of the bench. At 0–1s he drops the spoon onto the work surface beside the completed open mixing bowl. At 1–3s he turns slightly toward the clear area and pounds it TWICE with his RIGHT fist, the second blow heavier, while his left palm braces on the edge. His shoulders convulse with anger and grief; the camera recoils with each blow, then tilts down toward his failing body. The main bowls remain stationary and upright at center-left, safely separated from the strikes. At 3–4s the anger drains out of him: his fingers slide off the edge and his knees begin folding. Cut on the beginning of this downward motion.\r\n\r\nSHOT 10-02 | 04s to 08s | 4 seconds\r\n12mm extreme-wide VERY HIGH ANGLE from the south upper service gallery, looking steeply down over the entire kitchen. Match the downward body motion at the SAME east end of the SAME bench: Garmayil drops onto both knees, sits back toward his heels and folds forward, sobbing. His descent continues from the preceding shot, without restarting the fall. He is small and completely alone among the immense benches and empty aisles. The completed OPEN mixing bowl and the two source bowls remain on the bench exactly where they were; the spoon lies beside them. Hold the collapsed body and trembling shoulders with barely perceptible camera vibration.\r\n\r\nSHOT 10-03 | 08s to 11s | 3 seconds\r\n28mm low handheld outside the rear building outlet, camera west of the opening. Younger emerges from screen left toward right, stooping under the low lintel, catching the wall with one hand, then stumbling onto the level ground. Camera retreats diagonally right to make room; the dark passage stays behind him at left.\r\n\r\nSHOT 10-04 | 11s to 15s | 4 seconds\r\n35mm lateral handheld tracking at Younger’s chest height. He accelerates from a stagger into a broken run from screen left to right onto the open plain. Rear facade and distant palace mass remain behind at screen left, mountains ahead right. Camera runs beside him with uneven footfall bounce, keeping his weight and breath visible.\r\n\r\nEND STATE AND EDIT\r\nGarmayil remains kneeling alone beside the east end of the kitchen bench, crying. The completed open mixing bowl, two source bowls and spoon remain on the worktop. Younger is outside, running rightward across the plain. Continue with the existing fugitive-only block 11.\r\n\r\nSOUND\r\nSpoon contacting metal, TWO distinct fist impacts, broken nonverbal cries, clothing against the bench edge, knees contacting the floor, then sobs in the wide kitchen. Cut to shoes clearing the rear outlet, open-air wind and the fugitive’s running breath.\r\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_5>>> is Vessel Set Brain Prep (PRP-023 V01); match it wherever Vessel Set Brain Prep appears.",
+      "prompt_language": "en",
+      "reference_elements": [],
+      "resolution": "1080p",
+      "speedramp": "auto",
+      "width": 1920
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_171851_1a77cc17-198f-4cee-acb4-175012464be7.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_171851_1a77cc17-198f-4cee-acb4-175012464be7_thumbnail.webp"
+  }
+}

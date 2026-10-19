@@ -164,3 +164,20 @@
 {"batchId":"B-20261016-0OM","reqId":"jr_mvatl3taxr8d","event":"queued","jobIds":{"r1":"J-20261016-ZBA","r2":"J-20261016-44E"},"assigned":[{"key":"r1","proposal":"NEXT/EP015","id":"SHM-EP015-SC014-SH0010","shortId":"EP015-SC014-SH0010"},{"key":"r2","proposal":"NEXT/EP015","id":"SHM-EP015-SC015-SH0010","shortId":"EP015-SC015-SH0010"}],"total":90,"ts":"2026-10-16T10:23:39.398Z"}
 {"batchId":null,"reqId":"jr_mvatsz2bd8gg","event":"rejected","scope":"request","reason":"job J-20261015-IEN has not generated yet","ts":"2026-10-16T10:29:46.528Z"}
 {"batchId":null,"reqId":"jr_mvaz63dx69e9","event":"queued","jobIds":{"J-20261015-G6A":"J-20261016-216"},"assigned":[],"total":null,"ts":"2026-10-16T12:59:56.474Z"}
+{"batchId":null,"reqId":"jr_mvb8k0c7zz66","event":"queued","jobIds":{"J-20261016-JBM":"J-20261016-4PA"},"assigned":[],"total":null,"ts":"2026-10-16T17:22:43.040Z"}
+{"batchId":"B-20261016-Y8S","reqId":"jr_mvbc3vxattcs","event":"validated","jobs":[{"key":"r18","ok":true,"target":"NEXT/EP015","jobId":"J-20261016-2LK"}],"newEntities":[],"ts":"2026-10-16T19:02:07.256Z"}
+{"batchId":"B-20261016-Y8S","event":"price","key":"r18","credits":45,"ts":"2026-10-16T19:02:14.577Z"}
+{"batchId":"B-20261016-Y8S","event":"priced","total":45,"unpriced":0,"ts":"2026-10-16T19:02:14.579Z"}
+{"batchId":"B-20261016-Y8S","reqId":"jr_mvbc90p5myvp","event":"queued","jobIds":{"r18":"J-20261016-2LK"},"assigned":[{"key":"r18","proposal":"NEXT/EP015","id":"SHM-EP015-SC016-SH0010","shortId":"EP015-SC016-SH0010"}],"total":45,"ts":"2026-10-16T19:06:11.004Z"}
+{"batchId":"B-20261016-CAK","reqId":"jr_mvbdfogqr3gz","event":"validated","jobs":[{"key":"r20","ok":true,"target":"NEXT/EP015","jobId":"J-20261016-DFD"}],"newEntities":[],"ts":"2026-10-16T19:39:17.901Z"}
+{"batchId":"B-20261016-CAK","event":"price","key":"r20","credits":45,"ts":"2026-10-16T19:39:24.725Z"}
+{"batchId":"B-20261016-CAK","event":"priced","total":45,"unpriced":0,"ts":"2026-10-16T19:39:24.726Z"}
+{"batchId":"B-20261016-CAK","reqId":"jr_mvbdg5iamos4","event":"queued","jobIds":{"r20":"J-20261016-DFD"},"assigned":[{"key":"r20","proposal":"NEXT/EP015","id":"SHM-EP015-SC017-SH0010","shortId":"EP015-SC017-SH0010"}],"total":45,"ts":"2026-10-16T19:39:41.605Z"}
+{"batchId":"B-20261016-V04","reqId":"jr_mvbdh3o27c2n","event":"validated","jobs":[{"key":"r22","ok":true,"target":"NEXT/EP015","jobId":"J-20261016-PGZ"}],"newEntities":[],"ts":"2026-10-16T19:40:23.729Z"}
+{"batchId":"B-20261016-V04","event":"price","key":"r22","credits":45,"ts":"2026-10-16T19:40:30.163Z"}
+{"batchId":"B-20261016-V04","event":"priced","total":45,"unpriced":0,"ts":"2026-10-16T19:40:30.164Z"}
+{"batchId":"B-20261016-V04","reqId":"jr_mvbdhamdbbkr","event":"queued","jobIds":{"r22":"J-20261016-PGZ"},"assigned":[{"key":"r22","proposal":"NEXT/EP015","id":"SHM-EP015-SC018-SH0010","shortId":"EP015-SC018-SH0010"}],"total":45,"ts":"2026-10-16T19:40:33.227Z"}
+{"batchId":"B-20261018-GZL","reqId":"jr_mvdllpspg1fg","event":"validated","jobs":[{"key":"r1","ok":true,"target":"NEXT/EP015","jobId":"J-20261018-8HW"}],"newEntities":[],"ts":"2026-10-18T09:03:30.110Z"}
+{"batchId":"B-20261018-GZL","event":"price","key":"r1","credits":45,"ts":"2026-10-18T09:03:44.557Z"}
+{"batchId":"B-20261018-GZL","event":"priced","total":45,"unpriced":0,"ts":"2026-10-18T09:03:44.559Z"}
+{"batchId":"B-20261018-GZL","reqId":"jr_mvdlmbmht6se","event":"queued","jobIds":{"r1":"J-20261018-8HW"},"assigned":[{"key":"r1","proposal":"NEXT/EP015","id":"SHM-EP015-SC019-SH0010","shortId":"EP015-SC019-SH0010"}],"total":45,"ts":"2026-10-18T09:03:59.616Z"}

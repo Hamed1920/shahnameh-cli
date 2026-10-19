@@ -1,0 +1,130 @@
+{
+  "jobId": "J-20261016-RWH",
+  "parentJobId": "J-20261016-K5Q",
+  "hfJobId": "bc65ca2c-a667-4c50-82f0-286896ff4d19",
+  "attempt": 4,
+  "stage": "final",
+  "label": "PLAN 09",
+  "target": "SHM-EP015-SC009-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 09 | THE MIXTURE AND THE PASSAGE\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_GARMAYIL_COOK}} @Garmayel (look 2) \r\n{{CHAR_YOUNGER_ESCAPE}} @Little Brother (look 4) \r\n\r\nLOCATION REFERENCES\r\n{{LOC_KITCHEN}} @Slaughter Prep Room (look 1) \r\n{{LOC_ESCAPE_PASSAGE}} @Narrow Escape Passage (look 1) \r\n\r\nPROP REFERENCES\r\n{{PROP_MIXING_SET}} @Vessel Set Brain Prep (look 1) \r\n{{PROP_ESCAPE_ROBE}}\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence with the precisely timed shots below. Preserve each referenced identity, body proportions, costume and rigid handmade mask. Masks stay fixed to the head with stable features and eye openings; emotion is performed through the body, eyes where visible, breath and hands. All characters are adults. Each listed cut changes the specified physical camera position, lens or viewpoint. Handheld movement responds to the actor and follows a possible path in the set; keep the key action readable and focus engaged. Use hard cuts at listed shot boundaries. References anchor design; the written lighting defines exposure and illumination. Preserve the tactile Iranian-inspired world and restrained natural exposure.\r\n\r\nLOCATION AND LIGHT\r\nVast old Iranian masonry kitchen with rounded arches, restrained carved reliefs, functional metal counters and integrated lamps. A hard neutral overhead fixture illuminates the central bench; distant utility lamps reveal the architecture at low exposure. The floor remains continuous and level. Garmayil is the only person in this kitchen. The west service exit leads into a person-width passage, then a low constriction and a rear building outlet onto open ground. Sparse recessed cold utility lights leave deep intervals of darkness; cool predawn sky becomes visible only near the exterior outlet. The city stays behind the fugitive; mountains lie ahead.\r\n\r\nSTART STATE AND BLOCKING\r\nKitchen after an explicit time ellipsis: Garmayil alone stands north of an east-west central bench, facing south toward camera. Two open source bowls sit to his left and right; one central mixing bowl and a heavy spoon are ready. Production identities: source A contains the older victim’s prepared brain material, source B the sheep substitute. These are reference metadata, not visible labels. Prepared pale soft lobed material is visible at a restrained scale. Passage: Younger alone continues toward the rear exit in his fastened robe.\r\n\r\n\r\nSHOT 09A | 0s to 3s | 3 seconds\r\n35mm chest-height handheld from south-west of the bench. Garmayil hunches over the bowls, shoulders shaking with sobs. He uses the spoon to transfer prepared material from source A into the center bowl. Camera moves in and right toward his hands; his distress drives the motion.\r\n\r\nSHOT 09B | 3s to 6s | 3 seconds\r\n28mm close side view from an existing narrow recess in the passage. Younger travels left to right, turns sideways to force his chest through a person-width gap and braces both palms against opposing walls. Camera pans with him from that recess; the lens stays out of the solid wall. Tears and exhaustion are expressed through breath, trembling arms and the struggle to move.\r\n\r\nSHOT 09C | 6s to 9s | 3 seconds\r\n65mm oblique detail from south-east at rim height. Garmayil transfers a spoonful from source B into the same central bowl, then begins folding the two pale soft materials together. The two source bowls remain distinct behind it. Camera shakes with his hurried hand movement but keeps spoon-to-bowl contact readable. Anatomical detail remains subdued at this scale.\r\n\r\nSHOT 09D | 9s to 12s | 3 seconds\r\n24mm from ahead of Younger near the low final bend. He crouches through, loses strength and steadies himself on one palm, then forces himself upright toward the faint exterior light behind camera. Camera lowers with his stumble and retreats as he approaches.\r\n\r\nSHOT 09E | 12s to 15s | 3 seconds\r\n40mm medium-close from south-center on Garmayil. He mixes with faster, angry strokes, gripping the bowl firmly with his left hand and the spoon with his right. Camera makes a nervous 30-degree arc toward southeast within the open aisle; keep the bowl center foreground and his masked face above it. His torso convulses with one sob while the mixing continues.\r\n\r\nEND STATE AND EDIT\r\nThe central bowl contains the combined material; Garmayil is still working, close to breaking down. Younger has reached the last bend before the rear exit but remains inside. The older brother and Armayil are absent from these frames.\r\n\r\nSOUND\r\nSpoon scraping, wet subdued mixing, bowl friction, Garmayil’s sobs; hard sound cuts to Younger’s breath and walls scraping his robe. NO added sound from the omitted act.\r\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Little Brother (CHR-010 V04); match it wherever Little Brother appears.\n<<<image_2>>> is Garmayel (CHR-008 V02); match it wherever Garmayel appears.\n<<<image_3>>> is Slaughter Prep Room (LOC-026 V01); match it wherever Slaughter Prep Room appears.\n<<<image_4>>> is Cleaver Butcher Wide (PRP-022 V01); match it wherever Cleaver Butcher Wide appears.\n<<<image_5>>> is Vessel Set Brain Prep (PRP-023 V01); match it wherever Vessel Set Brain Prep appears.\n<<<image_6>>> is Narrow Escape Passage (LOC-030 V01); match it wherever Narrow Escape Passage appears.",
+  "basePrompt": "PLAN 09 | THE MIXTURE AND THE PASSAGE\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_GARMAYIL_COOK}} @Garmayel (look 2) \r\n{{CHAR_YOUNGER_ESCAPE}} @Little Brother (look 4) \r\n\r\nLOCATION REFERENCES\r\n{{LOC_KITCHEN}} @Slaughter Prep Room (look 1) \r\n{{LOC_ESCAPE_PASSAGE}} @Narrow Escape Passage (look 1) \r\n\r\nPROP REFERENCES\r\n{{PROP_MIXING_SET}} @Vessel Set Brain Prep (look 1) \r\n{{PROP_ESCAPE_ROBE}}\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence with the precisely timed shots below. Preserve each referenced identity, body proportions, costume and rigid handmade mask. Masks stay fixed to the head with stable features and eye openings; emotion is performed through the body, eyes where visible, breath and hands. All characters are adults. Each listed cut changes the specified physical camera position, lens or viewpoint. Handheld movement responds to the actor and follows a possible path in the set; keep the key action readable and focus engaged. Use hard cuts at listed shot boundaries. References anchor design; the written lighting defines exposure and illumination. Preserve the tactile Iranian-inspired world and restrained natural exposure.\r\n\r\nLOCATION AND LIGHT\r\nVast old Iranian masonry kitchen with rounded arches, restrained carved reliefs, functional metal counters and integrated lamps. A hard neutral overhead fixture illuminates the central bench; distant utility lamps reveal the architecture at low exposure. The floor remains continuous and level. Garmayil is the only person in this kitchen. The west service exit leads into a person-width passage, then a low constriction and a rear building outlet onto open ground. Sparse recessed cold utility lights leave deep intervals of darkness; cool predawn sky becomes visible only near the exterior outlet. The city stays behind the fugitive; mountains lie ahead.\r\n\r\nSTART STATE AND BLOCKING\r\nKitchen after an explicit time ellipsis: Garmayil alone stands north of an east-west central bench, facing south toward camera. Two open source bowls sit to his left and right; one central mixing bowl and a heavy spoon are ready. Production identities: source A contains the older victim’s prepared brain material, source B the sheep substitute. These are reference metadata, not visible labels. Prepared pale soft lobed material is visible at a restrained scale. Passage: Younger alone continues toward the rear exit in his fastened robe.\r\n\r\n\r\nSHOT 09A | 0s to 3s | 3 seconds\r\n35mm chest-height handheld from south-west of the bench. Garmayil hunches over the bowls, shoulders shaking with sobs. He uses the spoon to transfer prepared material from source A into the center bowl. Camera moves in and right toward his hands; his distress drives the motion.\r\n\r\nSHOT 09B | 3s to 6s | 3 seconds\r\n28mm close side view from an existing narrow recess in the passage. Younger travels left to right, turns sideways to force his chest through a person-width gap and braces both palms against opposing walls. Camera pans with him from that recess; the lens stays out of the solid wall. Tears and exhaustion are expressed through breath, trembling arms and the struggle to move.\r\n\r\nSHOT 09C | 6s to 9s | 3 seconds\r\n65mm oblique detail from south-east at rim height. Garmayil transfers a spoonful from source B into the same central bowl, then begins folding the two pale soft materials together. The two source bowls remain distinct behind it. Camera shakes with his hurried hand movement but keeps spoon-to-bowl contact readable. Anatomical detail remains subdued at this scale.\r\n\r\nSHOT 09D | 9s to 12s | 3 seconds\r\n24mm from ahead of Younger near the low final bend. He crouches through, loses strength and steadies himself on one palm, then forces himself upright toward the faint exterior light behind camera. Camera lowers with his stumble and retreats as he approaches.\r\n\r\nSHOT 09E | 12s to 15s | 3 seconds\r\n40mm medium-close from south-center on Garmayil. He mixes with faster, angry strokes, gripping the bowl firmly with his left hand and the spoon with his right. Camera makes a nervous 30-degree arc toward southeast within the open aisle; keep the bowl center foreground and his masked face above it. His torso convulses with one sob while the mixing continues.\r\n\r\nEND STATE AND EDIT\r\nThe central bowl contains the combined material; Garmayil is still working, close to breaking down. Younger has reached the last bend before the rear exit but remains inside. The older brother and Armayil are absent from these frames.\r\n\r\nSOUND\r\nSpoon scraping, wet subdued mixing, bowl friction, Garmayil’s sobs; hard sound cuts to Younger’s breath and walls scraping his robe. NO added sound from the omitted act.\r\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@CHR-010/V04",
+    "@CHR-008/V02",
+    "@LOC-026/V01",
+    "@PRP-022/V01",
+    "@PRP-023/V01",
+    "@LOC-030/V01"
+  ],
+  "sentRefs": [
+    "@CHR-010/V04",
+    "@CHR-008/V02",
+    "@LOC-026/V01",
+    "@PRP-022/V01",
+    "@PRP-023/V01",
+    "@LOC-030/V01"
+  ],
+  "createdAt": "2026-10-16T18:51:04.775Z",
+  "costCredits": 240,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_184314_bc65ca2c-a667-4c50-82f0-286896ff4d19.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-16T18:43:14.014431Z",
+      "display_name": "Seedance 2.5",
+      "id": "bc65ca2c-a667-4c50-82f0-286896ff4d19",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "11759563-0968-435a-b49f-f4a20a9a08f5",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/11759563-0968-435a-b49f-f4a20a9a08f5.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "e03c8e08-48dc-457d-ae5f-fcdd1fae51aa",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/e03c8e08-48dc-457d-ae5f-fcdd1fae51aa.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "620a0f6b-9c4a-45c2-bfcb-44e388fb2437",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/620a0f6b-9c4a-45c2-bfcb-44e388fb2437.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "7654f720-712a-47ed-b67c-e974f7d8bfed",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/7654f720-712a-47ed-b67c-e974f7d8bfed.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "e024174b-63b0-4667-94b4-78230b898346",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/e024174b-63b0-4667-94b4-78230b898346.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "172273a3-a18d-4b0a-b744-8b1b33d03e2f",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/172273a3-a18d-4b0a-b744-8b1b33d03e2f.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 09 | THE MIXTURE AND THE PASSAGE\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_GARMAYIL_COOK}} @Garmayel (look 2) \r\n{{CHAR_YOUNGER_ESCAPE}} @Little Brother (look 4) \r\n\r\nLOCATION REFERENCES\r\n{{LOC_KITCHEN}} @Slaughter Prep Room (look 1) \r\n{{LOC_ESCAPE_PASSAGE}} @Narrow Escape Passage (look 1) \r\n\r\nPROP REFERENCES\r\n{{PROP_MIXING_SET}} @Vessel Set Brain Prep (look 1) \r\n{{PROP_ESCAPE_ROBE}}\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence with the precisely timed shots below. Preserve each referenced identity, body proportions, costume and rigid handmade mask. Masks stay fixed to the head with stable features and eye openings; emotion is performed through the body, eyes where visible, breath and hands. All characters are adults. Each listed cut changes the specified physical camera position, lens or viewpoint. Handheld movement responds to the actor and follows a possible path in the set; keep the key action readable and focus engaged. Use hard cuts at listed shot boundaries. References anchor design; the written lighting defines exposure and illumination. Preserve the tactile Iranian-inspired world and restrained natural exposure.\r\n\r\nLOCATION AND LIGHT\r\nVast old Iranian masonry kitchen with rounded arches, restrained carved reliefs, functional metal counters and integrated lamps. A hard neutral overhead fixture illuminates the central bench; distant utility lamps reveal the architecture at low exposure. The floor remains continuous and level. Garmayil is the only person in this kitchen. The west service exit leads into a person-width passage, then a low constriction and a rear building outlet onto open ground. Sparse recessed cold utility lights leave deep intervals of darkness; cool predawn sky becomes visible only near the exterior outlet. The city stays behind the fugitive; mountains lie ahead.\r\n\r\nSTART STATE AND BLOCKING\r\nKitchen after an explicit time ellipsis: Garmayil alone stands north of an east-west central bench, facing south toward camera. Two open source bowls sit to his left and right; one central mixing bowl and a heavy spoon are ready. Production identities: source A contains the older victim’s prepared brain material, source B the sheep substitute. These are reference metadata, not visible labels. Prepared pale soft lobed material is visible at a restrained scale. Passage: Younger alone continues toward the rear exit in his fastened robe.\r\n\r\n\r\nSHOT 09A | 0s to 3s | 3 seconds\r\n35mm chest-height handheld from south-west of the bench. Garmayil hunches over the bowls, shoulders shaking with sobs. He uses the spoon to transfer prepared material from source A into the center bowl. Camera moves in and right toward his hands; his distress drives the motion.\r\n\r\nSHOT 09B | 3s to 6s | 3 seconds\r\n28mm close side view from an existing narrow recess in the passage. Younger travels left to right, turns sideways to force his chest through a person-width gap and braces both palms against opposing walls. Camera pans with him from that recess; the lens stays out of the solid wall. Tears and exhaustion are expressed through breath, trembling arms and the struggle to move.\r\n\r\nSHOT 09C | 6s to 9s | 3 seconds\r\n65mm oblique detail from south-east at rim height. Garmayil transfers a spoonful from source B into the same central bowl, then begins folding the two pale soft materials together. The two source bowls remain distinct behind it. Camera shakes with his hurried hand movement but keeps spoon-to-bowl contact readable. Anatomical detail remains subdued at this scale.\r\n\r\nSHOT 09D | 9s to 12s | 3 seconds\r\n24mm from ahead of Younger near the low final bend. He crouches through, loses strength and steadies himself on one palm, then forces himself upright toward the faint exterior light behind camera. Camera lowers with his stumble and retreats as he approaches.\r\n\r\nSHOT 09E | 12s to 15s | 3 seconds\r\n40mm medium-close from south-center on Garmayil. He mixes with faster, angry strokes, gripping the bowl firmly with his left hand and the spoon with his right. Camera makes a nervous 30-degree arc toward southeast within the open aisle; keep the bowl center foreground and his masked face above it. His torso convulses with one sob while the mixing continues.\r\n\r\nEND STATE AND EDIT\r\nThe central bowl contains the combined material; Garmayil is still working, close to breaking down. Younger has reached the last bend before the rear exit but remains inside. The older brother and Armayil are absent from these frames.\r\n\r\nSOUND\r\nSpoon scraping, wet subdued mixing, bowl friction, Garmayil’s sobs; hard sound cuts to Younger’s breath and walls scraping his robe. NO added sound from the omitted act.\r\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Little Brother (CHR-010 V04); match it wherever Little Brother appears.\n<<<image_2>>> is Garmayel (CHR-008 V02); match it wherever Garmayel appears.\n<<<image_3>>> is Slaughter Prep Room (LOC-026 V01); match it wherever Slaughter Prep Room appears.\n<<<image_4>>> is Cleaver Butcher Wide (PRP-022 V01); match it wherever Cleaver Butcher Wide appears.\n<<<image_5>>> is Vessel Set Brain Prep (PRP-023 V01); match it wherever Vessel Set Brain Prep appears.\n<<<image_6>>> is Narrow Escape Passage (LOC-030 V01); match it wherever Narrow Escape Passage appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_184314_bc65ca2c-a667-4c50-82f0-286896ff4d19.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_184314_bc65ca2c-a667-4c50-82f0-286896ff4d19_thumbnail.webp"
+    }
+  ]
+}

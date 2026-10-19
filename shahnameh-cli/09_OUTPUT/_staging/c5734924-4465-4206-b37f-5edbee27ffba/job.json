@@ -1,0 +1,141 @@
+{
+  "jobId": "J-20261016-TYZ",
+  "parentJobId": "J-20261016-BF8",
+  "hfJobId": "c5734924-4465-4206-b37f-5edbee27ffba",
+  "attempt": 3,
+  "stage": "draft",
+  "label": "PLAN 08",
+  "target": "SHM-EP015-SC008-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 08 | THE OMITTED ACT\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\nREFERENCE ASSIGNMENTS\r\nCHARACTER REFERENCES\r\n{{CHAR_ARMAYIL_COOK}} @Armayel (look 2) \r\n{{CHAR_GARMAYIL_COOK}} @Garmayel (look 2) \r\n{{CHAR_OLDER_BROTHER}} @Big Brother (look 1) \r\n{{CHAR_YOUNGER_BROTHER}} @Little Brother (look 4) \r\nLOCATION REFERENCES\r\n{{LOC_PREP_ROOM}} \r\n{{LOC_KITCHEN}} \r\nPROP REFERENCES\r\n{{PROP_ESCAPE_ROBE}}\r\n{{PROP_PREP_KNIFE}} @Cleaver Butcher Wide (look 1) \r\n{{PROP_COVER_CLOTH}}\r\n{{PROP_MIXING_SET}}\r\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\r\nLOCATION AND LIGHT\r\nPreparation room: hard neutral overhead light, warmer left-wall practical spill, rear door and east counter. Kitchen after the cut: a vast old masonry space with rounded openings and Iranian reliefs, one isolated neutral work fixture above the central bench; distant engineered lights are dim. Preserve these two distinct lighting setups.\r\nSTART STATE AND BLOCKING\r\nIn the room, camera south: Older center-left faces right; Armayil center-right faces left, knife low in right hand. Younger and Garmayil rear-right near the counter. One escape robe lies on that counter. A plain cover cloth rests separately on a lower shelf. This cloth is not the escape robe.\r\n\r\nSHOT 08A | 00s to 05s | 5 seconds\r\n50mm intimate two-shot from south. Older left places his open hand gently on Armayil’s empty left forearm. Armayil right almost withdraws again, then stops. His knife stays low, below the frame. Older lowers his head; Armayil’s breath catches. This is the last living image of Older.\r\nSHOT 08B | 05s to 07s | 2 seconds\r\n35mm tight same-side view. Garmayil lifts the separate plain cloth from the lower shelf and crosses near the camera from right to left. His sleeve and the cloth physically fill the lens. Cut at full occlusion. The omitted interval is silent; the fatal act is neither shown nor heard.\r\nSHOT 08C | 07s to 11s | 4 seconds\r\n40mm after an explicit time ellipsis, from the same south side. A single adult body is fully covered on the center-left floor. Younger kneels beside it and holds the cloth over the shoulder area. Armayil sits against the right counter, empty hands shaking. The one knife lies on that counter, blade turned away. Garmayil stands at the rear doorway, looks back once, then exits toward the kitchen.\r\nSHOT 08D | 11s to 15s | 4 seconds\r\n14mm extreme-wide from the kitchen entrance. Later: Garmayil alone at a central workbench, small within the huge architecture. Two covered source bowls, one empty mixing bowl and one spoon rest on the bench. He stands behind it, facing camera-side but looking down. Slow, almost imperceptible handheld advance.\r\nEND STATE AND EDIT\r\nOlder remains covered in the adjacent preparation room with Younger and Armayil. Garmayil is alone at the kitchen bench, before opening the bowls.\r\nSOUND\r\nOne interrupted breath, cloth passing the microphone, absolute silence over the omitted interval; afterward quiet grief breaths, then the large kitchen’s ventilation and a distant drip.\r\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Big Brother (CHR-009 V01); match it wherever Big Brother appears.\n<<<image_2>>> is Little Brother (CHR-010 V04); match it wherever Little Brother appears.\n<<<image_3>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_4>>> is Garmayel (CHR-008 V02); match it wherever Garmayel appears.\n<<<image_5>>> is Slaughter Prep Room (LOC-026 V01); match it wherever Slaughter Prep Room appears.\n<<<image_6>>> is Cleaver Butcher Wide (PRP-022 V01); match it wherever Cleaver Butcher Wide appears.\n<<<image_7>>> is Narrow Escape Passage (LOC-030 V01); match it wherever Narrow Escape Passage appears.",
+  "basePrompt": "PLAN 08 | THE OMITTED ACT\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\nREFERENCE ASSIGNMENTS\r\nCHARACTER REFERENCES\r\n{{CHAR_ARMAYIL_COOK}} @Armayel (look 2) \r\n{{CHAR_GARMAYIL_COOK}} @Garmayel (look 2) \r\n{{CHAR_OLDER_BROTHER}} @Big Brother (look 1) \r\n{{CHAR_YOUNGER_BROTHER}} @Little Brother (look 4) \r\nLOCATION REFERENCES\r\n{{LOC_PREP_ROOM}} \r\n{{LOC_KITCHEN}} \r\nPROP REFERENCES\r\n{{PROP_ESCAPE_ROBE}}\r\n{{PROP_PREP_KNIFE}} @Cleaver Butcher Wide (look 1) \r\n{{PROP_COVER_CLOTH}}\r\n{{PROP_MIXING_SET}}\r\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\r\nLOCATION AND LIGHT\r\nPreparation room: hard neutral overhead light, warmer left-wall practical spill, rear door and east counter. Kitchen after the cut: a vast old masonry space with rounded openings and Iranian reliefs, one isolated neutral work fixture above the central bench; distant engineered lights are dim. Preserve these two distinct lighting setups.\r\nSTART STATE AND BLOCKING\r\nIn the room, camera south: Older center-left faces right; Armayil center-right faces left, knife low in right hand. Younger and Garmayil rear-right near the counter. One escape robe lies on that counter. A plain cover cloth rests separately on a lower shelf. This cloth is not the escape robe.\r\n\r\nSHOT 08A | 00s to 05s | 5 seconds\r\n50mm intimate two-shot from south. Older left places his open hand gently on Armayil’s empty left forearm. Armayil right almost withdraws again, then stops. His knife stays low, below the frame. Older lowers his head; Armayil’s breath catches. This is the last living image of Older.\r\nSHOT 08B | 05s to 07s | 2 seconds\r\n35mm tight same-side view. Garmayil lifts the separate plain cloth from the lower shelf and crosses near the camera from right to left. His sleeve and the cloth physically fill the lens. Cut at full occlusion. The omitted interval is silent; the fatal act is neither shown nor heard.\r\nSHOT 08C | 07s to 11s | 4 seconds\r\n40mm after an explicit time ellipsis, from the same south side. A single adult body is fully covered on the center-left floor. Younger kneels beside it and holds the cloth over the shoulder area. Armayil sits against the right counter, empty hands shaking. The one knife lies on that counter, blade turned away. Garmayil stands at the rear doorway, looks back once, then exits toward the kitchen.\r\nSHOT 08D | 11s to 15s | 4 seconds\r\n14mm extreme-wide from the kitchen entrance. Later: Garmayil alone at a central workbench, small within the huge architecture. Two covered source bowls, one empty mixing bowl and one spoon rest on the bench. He stands behind it, facing camera-side but looking down. Slow, almost imperceptible handheld advance.\r\nEND STATE AND EDIT\r\nOlder remains covered in the adjacent preparation room with Younger and Armayil. Garmayil is alone at the kitchen bench, before opening the bowls.\r\nSOUND\r\nOne interrupted breath, cloth passing the microphone, absolute silence over the omitted interval; afterward quiet grief breaths, then the large kitchen’s ventilation and a distant drip.\r\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-009/V01",
+    "@CHR-010/V04",
+    "@CHR-007/V02",
+    "@CHR-008/V02",
+    "@LOC-026/V01",
+    "@PRP-022/V01",
+    "@LOC-030/V01"
+  ],
+  "sentRefs": [
+    "@CHR-009/V01",
+    "@CHR-010/V04",
+    "@CHR-007/V02",
+    "@CHR-008/V02",
+    "@LOC-026/V01",
+    "@PRP-022/V01",
+    "@LOC-030/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-10-16T16:11:22.729Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_160851_c5734924-4465-4206-b37f-5edbee27ffba.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-16T16:08:51.807193Z",
+      "display_name": "Seedance 2.5",
+      "id": "c5734924-4465-4206-b37f-5edbee27ffba",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "0d35283f-3cf0-4f2a-aebb-6c5b7bd9826a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/0d35283f-3cf0-4f2a-aebb-6c5b7bd9826a.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "d71530af-1b93-4af8-a9dd-a7a811b9fbaa",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/d71530af-1b93-4af8-a9dd-a7a811b9fbaa.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "e08d44b5-b239-44b6-bbeb-964f4f069418",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/e08d44b5-b239-44b6-bbeb-964f4f069418.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "fa914b29-0db5-495f-938d-3524be38e92e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/fa914b29-0db5-495f-938d-3524be38e92e.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "63f08014-18df-4e41-a927-92af110cd920",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/63f08014-18df-4e41-a927-92af110cd920.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "9571fcc4-b1ea-40ee-9adf-6ff630e4bfb0",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/9571fcc4-b1ea-40ee-9adf-6ff630e4bfb0.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "c8f0706f-7d29-49dd-a192-c1598db58c30",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/c8f0706f-7d29-49dd-a192-c1598db58c30.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 08 | THE OMITTED ACT\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\nREFERENCE ASSIGNMENTS\r\nCHARACTER REFERENCES\r\n{{CHAR_ARMAYIL_COOK}} @Armayel (look 2) \r\n{{CHAR_GARMAYIL_COOK}} @Garmayel (look 2) \r\n{{CHAR_OLDER_BROTHER}} @Big Brother (look 1) \r\n{{CHAR_YOUNGER_BROTHER}} @Little Brother (look 4) \r\nLOCATION REFERENCES\r\n{{LOC_PREP_ROOM}} \r\n{{LOC_KITCHEN}} \r\nPROP REFERENCES\r\n{{PROP_ESCAPE_ROBE}}\r\n{{PROP_PREP_KNIFE}} @Cleaver Butcher Wide (look 1) \r\n{{PROP_COVER_CLOTH}}\r\n{{PROP_MIXING_SET}}\r\nCreate a 15-second horizontal 16:9 live-action cinematic block with the exact timed shots below. Hard cuts occur only at the listed shot boundaries. Preserve assigned character identities, rigid handmade masks, body proportions and reference costume states. Masks remain inanimate; emotion comes through breathing, posture, hands and timing. Maintain tactile worn materials, restrained exposure and imperfect human camera balance. All performers are adults. Camera movement is physically motivated by the specified action. References anchor design; the written lighting governs illumination. No readable titles or dialogue are generated.\r\nLOCATION AND LIGHT\r\nPreparation room: hard neutral overhead light, warmer left-wall practical spill, rear door and east counter. Kitchen after the cut: a vast old masonry space with rounded openings and Iranian reliefs, one isolated neutral work fixture above the central bench; distant engineered lights are dim. Preserve these two distinct lighting setups.\r\nSTART STATE AND BLOCKING\r\nIn the room, camera south: Older center-left faces right; Armayil center-right faces left, knife low in right hand. Younger and Garmayil rear-right near the counter. One escape robe lies on that counter. A plain cover cloth rests separately on a lower shelf. This cloth is not the escape robe.\r\n\r\nSHOT 08A | 00s to 05s | 5 seconds\r\n50mm intimate two-shot from south. Older left places his open hand gently on Armayil’s empty left forearm. Armayil right almost withdraws again, then stops. His knife stays low, below the frame. Older lowers his head; Armayil’s breath catches. This is the last living image of Older.\r\nSHOT 08B | 05s to 07s | 2 seconds\r\n35mm tight same-side view. Garmayil lifts the separate plain cloth from the lower shelf and crosses near the camera from right to left. His sleeve and the cloth physically fill the lens. Cut at full occlusion. The omitted interval is silent; the fatal act is neither shown nor heard.\r\nSHOT 08C | 07s to 11s | 4 seconds\r\n40mm after an explicit time ellipsis, from the same south side. A single adult body is fully covered on the center-left floor. Younger kneels beside it and holds the cloth over the shoulder area. Armayil sits against the right counter, empty hands shaking. The one knife lies on that counter, blade turned away. Garmayil stands at the rear doorway, looks back once, then exits toward the kitchen.\r\nSHOT 08D | 11s to 15s | 4 seconds\r\n14mm extreme-wide from the kitchen entrance. Later: Garmayil alone at a central workbench, small within the huge architecture. Two covered source bowls, one empty mixing bowl and one spoon rest on the bench. He stands behind it, facing camera-side but looking down. Slow, almost imperceptible handheld advance.\r\nEND STATE AND EDIT\r\nOlder remains covered in the adjacent preparation room with Younger and Armayil. Garmayil is alone at the kitchen bench, before opening the bowls.\r\nSOUND\r\nOne interrupted breath, cloth passing the microphone, absolute silence over the omitted interval; afterward quiet grief breaths, then the large kitchen’s ventilation and a distant drip.\r\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Big Brother (CHR-009 V01); match it wherever Big Brother appears.\n<<<image_2>>> is Little Brother (CHR-010 V04); match it wherever Little Brother appears.\n<<<image_3>>> is Armayel (CHR-007 V02); match it wherever Armayel appears.\n<<<image_4>>> is Garmayel (CHR-008 V02); match it wherever Garmayel appears.\n<<<image_5>>> is Slaughter Prep Room (LOC-026 V01); match it wherever Slaughter Prep Room appears.\n<<<image_6>>> is Cleaver Butcher Wide (PRP-022 V01); match it wherever Cleaver Butcher Wide appears.\n<<<image_7>>> is Narrow Escape Passage (LOC-030 V01); match it wherever Narrow Escape Passage appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_160851_c5734924-4465-4206-b37f-5edbee27ffba.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261016_160851_c5734924-4465-4206-b37f-5edbee27ffba_thumbnail.webp"
+    }
+  ]
+}

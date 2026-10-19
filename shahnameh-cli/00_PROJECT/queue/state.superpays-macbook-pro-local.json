@@ -111,7 +111,30 @@
     "J-20261015-B87",
     "J-20261015-XN1",
     "J-20261015-G6A",
-    "J-20261015-G9P"
+    "J-20261015-G9P",
+    "J-20261016-TYZ",
+    "J-20261016-K5Q",
+    "J-20261016-JBM",
+    "J-20261016-1HQ",
+    "J-20261016-517",
+    "J-20261016-4PA",
+    "J-20261016-AUK",
+    "J-20261016-80Q",
+    "J-20261016-QSG",
+    "J-20261016-RWH",
+    "J-20261016-2LK",
+    "J-20261016-EJB",
+    "J-20261016-9OY",
+    "J-20261016-DFD",
+    "J-20261016-PGZ",
+    "J-20261016-QMM",
+    "J-20261016-W2Y",
+    "J-20261016-1T7",
+    "J-20261016-M1R",
+    "J-20261016-XIL",
+    "J-20261016-WEJ",
+    "J-20261018-8HW",
+    "J-20261018-5QG"
   ],
   "processedDecisions": [
     "rev_mtljtubxafk9",
@@ -204,10 +227,27 @@
     "rev_mv9yluzz1ytt",
     "rev_mv9yo1gqorp2",
     "rev_mv9yqbuviojx",
-    "rev_mv9ytlfpyfx7"
+    "rev_mv9ytlfpyfx7",
+    "rev_mvb5w73iatzd",
+    "rev_mvb5yr5tkqv0",
+    "rev_mvb7kig6rib9",
+    "rev_mvb7pbbh8lce",
+    "rev_mvb8eb2ndurb",
+    "rev_mvbaneb2axx8",
+    "rev_mvbbalt2z44i",
+    "rev_mvbbeuqbbvy9",
+    "rev_mvbcfixjj56d",
+    "rev_mvbcmpfqxdoa",
+    "rev_mvbecfxpdqsv",
+    "rev_mvbecwbe57g3",
+    "rev_mvbejw099kwp",
+    "rev_mvbellmh8ful",
+    "rev_mvbf8uihj300",
+    "rev_mvbfk3f50wri",
+    "rev_mvdluqpdfx3s"
   ],
-  "spentCredits": 7507.5,
-  "updatedAt": "2026-10-15T20:07:48.444Z",
+  "spentCredits": 11182.5,
+  "updatedAt": "2026-10-18T09:12:43.962Z",
   "failedDecisions": {},
   "processedOps": [
     "op_mu18d6axozqm",
@@ -252,7 +292,8 @@
     "op_mukbyf2cnog9",
     "op_mukbynxmeaiq",
     "op_mukc20rkkdim",
-    "op_muprkbpw2zvx"
+    "op_muprkbpw2zvx",
+    "op_mvdlc0rkpb66vg"
   ],
   "learnWatermark": "rev_mu19vrjsbra1",
   "processedRequests": [
@@ -300,7 +341,17 @@
     "jr_mupxhnskj8uv",
     "jr_mupxlvexl96b",
     "jr_mv9um11dlc0g",
-    "jr_mv9umkq3xwfu"
+    "jr_mv9umkq3xwfu",
+    "jr_mvb8k0c7zz66",
+    "jr_mvbc3vxattcs",
+    "jr_mvbc90p5myvp",
+    "jr_mvbdfogqr3gz",
+    "jr_mvbdg5iamos4",
+    "jr_mvbdh3o27c2n",
+    "jr_mvbdhamdbbkr",
+    "jr_mvdllpspg1fg",
+    "jr_mvdlmbmht6se",
+    "jr_mvdlonntajzf"
   ],
   "held": {},
   "failedJobs": {
@@ -343,6 +394,14 @@
     "J-20260928-1KN": {
       "reason": "Error: Higgsfield API error (HTTP 503). request failed with status 503 Service Unavailable",
       "at": "2026-09-28T18:06:04.542Z"
+    },
+    "J-20261016-JBM": {
+      "reason": "Error: Session expired.",
+      "at": "2026-10-16T16:56:13.120Z"
+    },
+    "J-20261016-517": {
+      "reason": "Error: Higgsfield API error (HTTP 503). request failed with status 503 Service Unavailable",
+      "at": "2026-10-16T17:19:31.449Z"
     }
   }
 }
