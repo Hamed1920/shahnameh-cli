@@ -134,7 +134,12 @@
     "J-20261016-XIL",
     "J-20261016-WEJ",
     "J-20261018-8HW",
-    "J-20261018-5QG"
+    "J-20261018-5QG",
+    "J-20261019-FEQ",
+    "J-20261019-03S",
+    "J-20261019-PDJ",
+    "J-20261019-ELX",
+    "J-20261019-I6L"
   ],
   "processedDecisions": [
     "rev_mtljtubxafk9",
@@ -244,10 +249,32 @@
     "rev_mvbellmh8ful",
     "rev_mvbf8uihj300",
     "rev_mvbfk3f50wri",
-    "rev_mvdluqpdfx3s"
+    "rev_mvdluqpdfx3s",
+    "rev_mvfn82fzjhwd",
+    "rev_mvfn857v8n92",
+    "rev_mvfn8ik53c54",
+    "rev_mvfn8o1xdjl3",
+    "rev_mvfn8r0r0mlc",
+    "rev_mvfn8swfg02i",
+    "rev_mvfn8vkdm17z",
+    "rev_mvfn8z84azsv",
+    "rev_mvfn90x3zhkx",
+    "rev_mvfn9hiaxq15",
+    "rev_mvfn9laq68yt",
+    "rev_mvfn9nqwb00d",
+    "rev_mvfn9qj4aphq",
+    "rev_mvfn9smykgyb",
+    "rev_mvfn9um27xft",
+    "rev_mvfn9wvi3gnx",
+    "rev_mvfn9z94q0o4",
+    "rev_mvfna1384y1y",
+    "rev_mvfna2wfmy48",
+    "rev_mvfoz8w7utan",
+    "rev_mvfpe0lltvgx",
+    "rev_mvfpnj77ho5r"
   ],
-  "spentCredits": 11182.5,
-  "updatedAt": "2026-10-18T09:12:43.962Z",
+  "spentCredits": 11422.5,
+  "updatedAt": "2026-10-19T20:34:54.615Z",
   "failedDecisions": {},
   "processedOps": [
     "op_mu18d6axozqm",
@@ -293,7 +320,9 @@
     "op_mukbynxmeaiq",
     "op_mukc20rkkdim",
     "op_muprkbpw2zvx",
-    "op_mvdlc0rkpb66vg"
+    "op_mvdlc0rkpb66vg",
+    "op_voxcounting02",
+    "op_mvfo88j6mpfj"
   ],
   "learnWatermark": "rev_mu19vrjsbra1",
   "processedRequests": [
@@ -351,7 +380,10 @@
     "jr_mvbdhamdbbkr",
     "jr_mvdllpspg1fg",
     "jr_mvdlmbmht6se",
-    "jr_mvdlonntajzf"
+    "jr_mvdlonntajzf",
+    "jr_mvfo9h6700su",
+    "jr_mvfo9x6k1ejq",
+    "jr_mvfofgqjud1j"
   ],
   "held": {},
   "failedJobs": {
@@ -402,6 +434,10 @@
     "J-20261016-517": {
       "reason": "Error: Higgsfield API error (HTTP 503). request failed with status 503 Service Unavailable",
       "at": "2026-10-16T17:19:31.449Z"
+    },
+    "J-20261019-FEQ": {
+      "reason": "Error: Higgsfield API error (HTTP 520). failed to PUT media bytes to upload_url: 520",
+      "at": "2026-10-19T19:54:05.189Z"
     }
   }
 }

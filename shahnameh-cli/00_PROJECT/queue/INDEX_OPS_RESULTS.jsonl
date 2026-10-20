@@ -57,3 +57,5 @@
 {"opId":"op_mvapp6dzzhyt","ok":true,"summary":"LOC-027 main look -> V03","ts":"2026-10-16T08:34:52.132Z"}
 {"opId":"op_mv1b7fileints","ok":true,"summary":"added @LOC-031/V01, @LOC-032/V01, @LOC-027/V05, @LOC-027/V06, @LOC-027/V07, @GRP-010/V01, @GRP-010/V02, @LOC-033/V01, @LOC-026/V02, @PRP-023/V01, @CHR-010/V04","ts":"2026-10-16T09:43:16.030Z"}
 {"opId":"op_mvdlc0rkpb66vg","ok":true,"summary":"added @LOC-034/V01","ts":"2026-10-18T08:55:58.214Z"}
+{"opId":"op_voxcounting02","ok":true,"summary":"added @VOX-001/V01, @VOX-002/V01","ts":"2026-10-19T19:47:22.680Z"}
+{"opId":"op_mvfo88j6mpfj","ok":true,"summary":"retired VOX-001","ts":"2026-10-19T19:52:33.795Z"}

@@ -51,12 +51,14 @@ export async function planJob(job, entities, assets, { cfg, dry = false, priceOn
   // Resolve reference tokens to real paths before spending anything.
   const refPaths = []
   const refInfo = []
+  const audioPaths = []
   for (const token of job.refs ?? []) {
     const r = await resolveRef(token, entities, assets)
     if (!r.ok) return { skip: `unresolved ref ${token}: ${r.reason}` }
-    // A voice is a recording: sending it as an image reference would fail or mislead the model.
+    // A voice is a recording: never an image reference. It goes as an audio reference (mapParams
+    // sends it where the model has audio_references, and says so when it does not).
     if (isAudioFile(r.path)) {
-      if (!priceOnly) await log(`SKIP REF ${job.jobId}: ${token} is a recording, not a picture; not sent`)
+      if (!audioPaths.includes(r.path)) audioPaths.push(r.path)
       continue
     }
     refPaths.push(r.path)
@@ -106,9 +108,14 @@ export async function planJob(job, entities, assets, { cfg, dry = false, priceOn
   // for video unless the job says otherwise (generate_audio, or Kling's sound
   // on|off), references as a list or a first frame, Seedance's omni_reference
   // mode when references are attached, and nothing the model does not accept.
-  const mapped = mapParams(entry, { refs: refPaths, params: job.params ?? {}, stage: job.stage ?? null, cfg: { ...cfg, model } })
+  const mapped = mapParams(entry, { refs: refPaths, audio: audioPaths, params: job.params ?? {}, stage: job.stage ?? null, cfg: { ...cfg, model } })
   if (mapped.errors.length) return { skip: mapped.errors.join('; ') }
   if (mapped.warnings.length && !priceOnly) await log(`PARAMS ${job.jobId}: ${mapped.warnings.join('; ')}`)
+  if (audioPaths.length && !priceOnly) {
+    await log(mapped.params.audio_references
+      ? `AUDIO ${job.jobId}: ${audioPaths.length} recording${audioPaths.length === 1 ? '' : 's'} sent as audio_references`
+      : `AUDIO ${job.jobId}: ${model} takes no audio references; ${audioPaths.length} recording${audioPaths.length === 1 ? '' : 's'} not sent`)
+  }
   // Higgsfield's draft mode, where the model has it. A draft is made as a real draft, so that if it is
   // approved untouched it can be finished at full quality as itself (`draft_job_id`) rather than generated
   // again and coming out different. `draft` has to be said explicitly (false) beside a draft_job_id: the
@@ -125,5 +132,5 @@ export async function planJob(job, entities, assets, { cfg, dry = false, priceOn
   }
   const params = { prompt, ...mapped.params }
   const sentRefs = [...(job.refs ?? []), ...extra.map((x) => x.token).filter(Boolean)]
-  return { shot, entity, targetId, refPaths, prompt, model, params, entry, sentRefs, hfDraft }
+  return { shot, entity, targetId, refPaths, audioPaths, prompt, model, params, entry, sentRefs, hfDraft }
 }

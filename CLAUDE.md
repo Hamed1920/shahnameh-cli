@@ -214,6 +214,12 @@ npm run worker -- --project <slug>    # one project by hand; add --dry-run to pr
 npm test           # panel lib + worker tests (Node 22.6+)
 ```
 
+**"start server" — HARD INSTRUCTION.** Every single time the user says "start server" in a chat,
+start the panel (`npm run up` from `10_PANEL`, in the background) **and open a new Google Chrome
+tab on `http://localhost:3000` yourself**. Never leave opening it to the user, and never skip it
+because the server was already running. On macOS: `open -a "Google Chrome" http://localhost:3000`;
+on Windows: `Start-Process chrome "http://localhost:3000"`.
+
 Hamed's normal path for new prompts is the panel's **Prompts** page (paste or drop a document, fix
 targets, submit, approve the priced total). `/run-prompts` and `/sync-in` remain for documents that
 need judgement or non-generation SHM-JOB types.

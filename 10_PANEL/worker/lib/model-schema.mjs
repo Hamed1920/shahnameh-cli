@@ -304,10 +304,10 @@ export function soundIntent(params) {
  * attached, which is how every job worked before the catalogue existed.
  *
  * @param {any} entry
- * @param {{ refs?: string[], params?: Record<string, any>, stage?: string | null, cfg?: Record<string, any> }} [opts]
+ * @param {{ refs?: string[], audio?: string[], params?: Record<string, any>, stage?: string | null, cfg?: Record<string, any> }} [opts]
  * @returns {{ params: Record<string, any>, warnings: string[], errors: string[] }}
  */
-export function mapParams(entry, { refs = [], params = {}, stage = null, cfg = {} } = {}) {
+export function mapParams(entry, { refs = [], audio = [], params = {}, stage = null, cfg = {} } = {}) {
   const warnings = []
   const errors = []
   const inParams = { ...params }
@@ -319,6 +319,7 @@ export function mapParams(entry, { refs = [], params = {}, stage = null, cfg = {
     const out = { ...inParams }
     if (wantSound !== undefined || VIDEO_NAME_RX.test(String(cfg.model ?? ''))) out.generate_audio = wantSound ?? (cfg.videoSound ?? true)
     if (refs.length) out.image_references = [...refs]
+    if (audio.length) out.audio_references = [...audio]
     return { params: out, warnings, errors }
   }
 
@@ -385,6 +386,11 @@ export function mapParams(entry, { refs = [], params = {}, stage = null, cfg = {
       if (refs[1]) out.end_image = refs[1]
     }
   }
+  // Recordings (a voice's looks) go as audio references where the model has them.
+  if (audio.length) {
+    if (byName.has('audio_references')) out.audio_references = [...audio]
+    else warnings.push(`${entry.job_type} takes no audio references; ${audio.length} recording${audio.length === 1 ? '' : 's'} not sent`)
+  }
   if (entry.refs && refs.length < entry.refs.min) {
     errors.push(`${entry.display_name} needs at least ${entry.refs.min} reference image${entry.refs.min === 1 ? '' : 's'}`)
   }
@@ -396,7 +402,7 @@ export function mapParams(entry, { refs = [], params = {}, stage = null, cfg = {
     const t2vMode = T2V_MODES.find((m) => mode.enum.includes(m))
     const isRefOrT2v = out.mode === undefined || REF_MODES.includes(out.mode) || T2V_MODES.includes(out.mode)
     if (isRefOrT2v && refMode && t2vMode && entry.refs?.param === 'image_references') {
-      out.mode = refs.length ? refMode : t2vMode
+      out.mode = refs.length || out.audio_references?.length ? refMode : t2vMode
     } else if (out.mode === undefined && mode.required) {
       out.mode = mode.default ?? mode.enum[0]
     }

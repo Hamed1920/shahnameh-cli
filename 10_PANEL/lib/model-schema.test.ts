@@ -121,3 +121,15 @@ test('mapParams passes lengths inside a range and clamps those outside it, sayin
   // smart duration stays where the model allows it
   assert.equal(mapParams(rangeModel({ min: 2, max: 30, smart: true }), { params: { duration: -1 }, cfg }).params.duration, -1)
 })
+
+test('a voice recording goes as audio_references where the model has them, with the mode in reference mode', () => {
+  const r = mapParams(e('seedance_2_5'), { refs: ['a.png'], audio: ['v.m4a', 'w.mp3'], params: {}, stage: 'draft', cfg })
+  assert.deepEqual(r.params.audio_references, ['v.m4a', 'w.mp3'])
+  assert.deepEqual(r.params.image_references, ['a.png'])
+  assert.equal(r.params.mode, 'omni_reference')
+  const only = mapParams(e('seedance_2_5'), { refs: [], audio: ['v.m4a'], params: {}, stage: 'draft', cfg })
+  assert.equal(only.params.mode, 'omni_reference')
+  const none = mapParams(e('nano_banana_pro'), { refs: ['a.png'], audio: ['v.m4a'], params: {}, cfg })
+  assert.equal(none.params.audio_references, undefined)
+  assert.match(none.warnings.join(' '), /no audio references/)
+})

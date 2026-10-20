@@ -69,8 +69,9 @@ Read every `SHM-` below as `<CODE>-` for the project you are working in.
 | `VOX` | Voice — a recording (MP3, WAV or M4A) of how someone sings or speaks | `10_VOICES/` |
 
 A `VOX` look is a recording, never a picture, and no other kind takes a recording. A voice is
-never sent to a model as an image reference: the worker drops an audio file from a job's
-references, and `@VOX-…` is not an @-mention. Its slug must differ from its character's
+never sent to a model as an image reference: the worker sends a job's audio files as the model's
+`audio_references` instead (and says in the log when the model has none), and `@VOX-…` is not an
+@-mention. Its slug must differ from its character's
 (slugs are unique across the project), e.g. `SHA-VOX-001-HOMAYOUN-SHAJARIAN-VOICE`.
 
 ### Short IDs

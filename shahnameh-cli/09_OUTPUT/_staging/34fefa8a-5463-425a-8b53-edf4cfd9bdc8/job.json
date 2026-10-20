@@ -1,0 +1,133 @@
+{
+  "jobId": "J-20261019-03S",
+  "parentJobId": "J-20261019-FEQ",
+  "hfJobId": "34fefa8a-5463-425a-8b53-edf4cfd9bdc8",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "T01",
+  "target": "SHM-EP015-SC020-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "AUDIO REFERENCE\n{{AUDIO_PRISON_PA_COUNTING}}\n\nAUDIO SOURCE AND SPATIAL TREATMENT\n\nUse the uploaded Persian counting recording as the performance reference for the prison's overhead public-address system.\n\nThe counting comes from fixed institutional loudspeakers mounted high along the corridor outside the cell. Its source remains off-screen.\n\nPreserve the supplied words, pronunciation, irregular rhythm, deliberate pauses and casually playful delivery.\n\nProcess the recording as an amplified announcement transmitted through an old institutional PA system:\na slightly narrow frequency range,\nmild compression,\na restrained metallic speaker coloration,\nand clearly audible reflections from the stone corridor.\n\nLet a quieter, delayed reflection follow the direct amplified voice, suggesting sound traveling along the corridor and returning from distant walls. Keep the original words intelligible.\n\nThe announcement reaches everyone in the cell. Its impersonal, public quality makes the counting feel like an established prison routine.\n\nKeep the sound anchored to the overhead corridor speakers across all camera angles. From inside the cell, hear it arriving through the barred opening with more reflected room sound. From the corridor, hear a clearer direct speaker signal.\n\nThe lead guard remains silent. He listens and moves his right index finger between prisoners in time with the counting accents. During the recorded pauses, he holds his finger on a prisoner and studies the reaction.\n\nHis pointing hand performs the selection; the loudspeaker supplies the counting.\n\nTIMING\n\n0–4 seconds:\nPrison ambience and captive breathing.\n\n4–17 seconds:\nThe uploaded counting performance plays through the PA system. Synchronize the guard's gestures and deliberate hesitations with its rhythm.\n\n17–19 seconds:\nThe announcement has ended. Its final reverberation fades into the room while the guard holds his finger on the selected prisoner.\n\n19–20 seconds:\nThe lock releases with one dry metallic click.\nCut immediately to black and silence.\n\nSOUND MIX\n\nKeep captive breathing, fabric movement and footsteps beneath the amplified counting. Let these small human sounds become more noticeable during its pauses.\n\nThe supplied recording is the only spoken content.\nAll visible characters remain silent.\n\nNO MUSIC.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_2>>> is Townsfolk Masked (GRP-009 V01); match it wherever Townsfolk Masked appears.\n<<<image_3>>> is Rescued Survivors (GRP-010 V01); match it wherever Rescued Survivors appears.\n<<<image_4>>> is Rescued Survivors (GRP-010 V02); match it wherever Rescued Survivors appears.\n<<<image_5>>> is Townsfolk Masked (GRP-009 V10); match it wherever Townsfolk Masked appears.\n<<<image_6>>> is Zahhak Prison (LOC-034 V01); match it wherever Zahhak Prison appears.",
+  "basePrompt": "AUDIO REFERENCE\n{{AUDIO_PRISON_PA_COUNTING}}\n\nAUDIO SOURCE AND SPATIAL TREATMENT\n\nUse the uploaded Persian counting recording as the performance reference for the prison's overhead public-address system.\n\nThe counting comes from fixed institutional loudspeakers mounted high along the corridor outside the cell. Its source remains off-screen.\n\nPreserve the supplied words, pronunciation, irregular rhythm, deliberate pauses and casually playful delivery.\n\nProcess the recording as an amplified announcement transmitted through an old institutional PA system:\na slightly narrow frequency range,\nmild compression,\na restrained metallic speaker coloration,\nand clearly audible reflections from the stone corridor.\n\nLet a quieter, delayed reflection follow the direct amplified voice, suggesting sound traveling along the corridor and returning from distant walls. Keep the original words intelligible.\n\nThe announcement reaches everyone in the cell. Its impersonal, public quality makes the counting feel like an established prison routine.\n\nKeep the sound anchored to the overhead corridor speakers across all camera angles. From inside the cell, hear it arriving through the barred opening with more reflected room sound. From the corridor, hear a clearer direct speaker signal.\n\nThe lead guard remains silent. He listens and moves his right index finger between prisoners in time with the counting accents. During the recorded pauses, he holds his finger on a prisoner and studies the reaction.\n\nHis pointing hand performs the selection; the loudspeaker supplies the counting.\n\nTIMING\n\n0–4 seconds:\nPrison ambience and captive breathing.\n\n4–17 seconds:\nThe uploaded counting performance plays through the PA system. Synchronize the guard's gestures and deliberate hesitations with its rhythm.\n\n17–19 seconds:\nThe announcement has ended. Its final reverberation fades into the room while the guard holds his finger on the selected prisoner.\n\n19–20 seconds:\nThe lock releases with one dry metallic click.\nCut immediately to black and silence.\n\nSOUND MIX\n\nKeep captive breathing, fabric movement and footsteps beneath the amplified counting. Let these small human sounds become more noticeable during its pauses.\n\nThe supplied recording is the only spoken content.\nAll visible characters remain silent.\n\nNO MUSIC.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 20,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@GRP-005/V01",
+    "@GRP-009/V01",
+    "@GRP-010/V01",
+    "@GRP-010/V02",
+    "@GRP-009/V10",
+    "@LOC-034/V01",
+    "@VOX-002/V01"
+  ],
+  "sentRefs": [
+    "@GRP-005/V01",
+    "@GRP-009/V01",
+    "@GRP-010/V01",
+    "@GRP-010/V02",
+    "@GRP-009/V10",
+    "@LOC-034/V01",
+    "@VOX-002/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-10-19T20:02:00.061Z",
+  "costCredits": 60,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261019_195839_34fefa8a-5463-425a-8b53-edf4cfd9bdc8.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-19T19:58:39.545553Z",
+      "display_name": "Seedance 2.5",
+      "id": "34fefa8a-5463-425a-8b53-edf4cfd9bdc8",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 20,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "3784880d-ff2a-4c3d-801b-28edcb2cad7e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/3784880d-ff2a-4c3d-801b-28edcb2cad7e.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "dc9d13a7-c987-4000-8e94-9b7fb52cede1",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/dc9d13a7-c987-4000-8e94-9b7fb52cede1.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "4393fc92-1e5d-4a2b-beec-2c2806e83476",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/4393fc92-1e5d-4a2b-beec-2c2806e83476.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "0fb0927b-8520-4d98-a8a0-4cfb522c7789",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/0fb0927b-8520-4d98-a8a0-4cfb522c7789.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "8a3c0d96-39db-41c1-a190-38a6ddc06cb6",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/8a3c0d96-39db-41c1-a190-38a6ddc06cb6.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "f25e67a1-770f-4cb8-b72b-cc0be7c60dcd",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/f25e67a1-770f-4cb8-b72b-cc0be7c60dcd.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "AUDIO REFERENCE\n{{AUDIO_PRISON_PA_COUNTING}}\n\nAUDIO SOURCE AND SPATIAL TREATMENT\n\nUse the uploaded Persian counting recording as the performance reference for the prison's overhead public-address system.\n\nThe counting comes from fixed institutional loudspeakers mounted high along the corridor outside the cell. Its source remains off-screen.\n\nPreserve the supplied words, pronunciation, irregular rhythm, deliberate pauses and casually playful delivery.\n\nProcess the recording as an amplified announcement transmitted through an old institutional PA system:\na slightly narrow frequency range,\nmild compression,\na restrained metallic speaker coloration,\nand clearly audible reflections from the stone corridor.\n\nLet a quieter, delayed reflection follow the direct amplified voice, suggesting sound traveling along the corridor and returning from distant walls. Keep the original words intelligible.\n\nThe announcement reaches everyone in the cell. Its impersonal, public quality makes the counting feel like an established prison routine.\n\nKeep the sound anchored to the overhead corridor speakers across all camera angles. From inside the cell, hear it arriving through the barred opening with more reflected room sound. From the corridor, hear a clearer direct speaker signal.\n\nThe lead guard remains silent. He listens and moves his right index finger between prisoners in time with the counting accents. During the recorded pauses, he holds his finger on a prisoner and studies the reaction.\n\nHis pointing hand performs the selection; the loudspeaker supplies the counting.\n\nTIMING\n\n0–4 seconds:\nPrison ambience and captive breathing.\n\n4–17 seconds:\nThe uploaded counting performance plays through the PA system. Synchronize the guard's gestures and deliberate hesitations with its rhythm.\n\n17–19 seconds:\nThe announcement has ended. Its final reverberation fades into the room while the guard holds his finger on the selected prisoner.\n\n19–20 seconds:\nThe lock releases with one dry metallic click.\nCut immediately to black and silence.\n\nSOUND MIX\n\nKeep captive breathing, fabric movement and footsteps beneath the amplified counting. Let these small human sounds become more noticeable during its pauses.\n\nThe supplied recording is the only spoken content.\nAll visible characters remain silent.\n\nNO MUSIC.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_2>>> is Townsfolk Masked (GRP-009 V01); match it wherever Townsfolk Masked appears.\n<<<image_3>>> is Rescued Survivors (GRP-010 V01); match it wherever Rescued Survivors appears.\n<<<image_4>>> is Rescued Survivors (GRP-010 V02); match it wherever Rescued Survivors appears.\n<<<image_5>>> is Townsfolk Masked (GRP-009 V10); match it wherever Townsfolk Masked appears.\n<<<image_6>>> is Zahhak Prison (LOC-034 V01); match it wherever Zahhak Prison appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261019_195839_34fefa8a-5463-425a-8b53-edf4cfd9bdc8.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261019_195839_34fefa8a-5463-425a-8b53-edf4cfd9bdc8_thumbnail.webp"
+    }
+  ]
+}
