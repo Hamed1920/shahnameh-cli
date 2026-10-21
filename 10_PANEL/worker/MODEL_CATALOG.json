@@ -1,6 +1,6 @@
 {
  "_comment": "Written by the worker from `higgsfield model list` / `model get` (worker/lib/models.mjs). Do not edit by hand; refresh from the Prompts page or restart a worker once it is a day old.",
- "fetchedAt": "2026-10-19T14:22:31.845Z",
+ "fetchedAt": "2026-10-20T19:35:09.521Z",
  "models": {
   "3d_jutsu_angles": {
    "job_type": "3d_jutsu_angles",
@@ -2118,9 +2118,143 @@
     ]
    }
   },
+  "hf_mult_motion_control_flash": {
+   "job_type": "hf_mult_motion_control_flash",
+   "display_name": "Genjutsu Lite",
+   "type": "video",
+   "usable": false,
+   "why": "edits a video",
+   "params": [
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "prompt",
+     "type": "string|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "resolution",
+     "type": "string",
+     "default": "720p",
+     "required": false,
+     "enum": [
+      "480p",
+      "720p",
+      "1080p"
+     ]
+    },
+    {
+     "name": "video_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    }
+   ],
+   "rules": [
+    "size(params.image_references) >= 1",
+    "size(params.video_references) == 1"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) >= 1",
+     "message": "at least one image_references entry is required"
+    },
+    {
+     "cel": "size(params.video_references) == 1",
+     "message": "exactly one video_references entry is required"
+    }
+   ],
+   "refs": {
+    "param": "image_references",
+    "max": 12,
+    "min": 1
+   },
+   "sound": null,
+   "stages": {
+    "draft": "480p",
+    "final": "1080p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ]
+   }
+  },
   "hf_mult_replace_object": {
    "job_type": "hf_mult_replace_object",
    "display_name": "Genjutsu",
+   "type": "video",
+   "usable": false,
+   "why": "edits a video",
+   "params": [
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "prompt",
+     "type": "string|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "resolution",
+     "type": "string",
+     "default": "720p",
+     "required": false,
+     "enum": [
+      "480p",
+      "720p",
+      "1080p"
+     ]
+    },
+    {
+     "name": "video_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    }
+   ],
+   "rules": [
+    "size(params.image_references) >= 1",
+    "size(params.video_references) == 1"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) >= 1",
+     "message": "at least one image_references entry is required"
+    },
+    {
+     "cel": "size(params.video_references) == 1",
+     "message": "exactly one video_references entry is required"
+    }
+   ],
+   "refs": {
+    "param": "image_references",
+    "max": 12,
+    "min": 1
+   },
+   "sound": null,
+   "stages": {
+    "draft": "480p",
+    "final": "1080p",
+    "options": [
+     "480p",
+     "720p",
+     "1080p"
+    ]
+   }
+  },
+  "hf_mult_replace_object_flash": {
+   "job_type": "hf_mult_replace_object_flash",
+   "display_name": "Genjutsu Lite",
    "type": "video",
    "usable": false,
    "why": "edits a video",
