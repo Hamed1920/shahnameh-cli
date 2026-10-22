@@ -217,6 +217,8 @@ export default async function DecidedPage({ params, searchParams }: PageProps<'/
   const accepted = entries.filter((e) => e.decision.verdict === 'accepted')
   const denied = entries.filter((e) => e.decision.verdict === 'denied')
   const discarded = entries.filter((e) => e.decision.verdict === 'discarded')
+  // getDecidedEntries sorts newest first; every verdict is one click from its card.
+  const latest = entries.slice(0, 6)
 
   return (
     <div className="space-y-16">
@@ -245,6 +247,28 @@ export default async function DecidedPage({ params, searchParams }: PageProps<'/
         countOf={(episode) => (episode ? all.filter((e) => (episode === 'none' ? e.episode === null : e.episode === episode)).length : all.length)}
       />
 
+      {latest.length > 0 && (
+        <section>
+          <SectionHeading tone="muted" count={latest.length}>Latest decisions</SectionHeading>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {latest.map((e) => (
+              <a
+                key={e.decision.id}
+                href={`#d-${e.decision.id}`}
+                className="focus-ring flex min-w-0 items-center gap-2.5 rounded-lg border border-edge px-3 py-2 text-[13px] transition hover:border-edge-strong"
+              >
+                <Badge tone={e.decision.verdict === 'accepted' ? 'good' : e.decision.verdict === 'denied' ? 'bad' : 'muted'}>
+                  {e.decision.verdict}
+                </Badge>
+                <span className="min-w-0 flex-1 truncate text-fg" dir="auto">{e.title}</span>
+                <span className="shrink-0 font-mono text-[11px] text-faint">{e.where}</span>
+                <span className="shrink-0 font-mono text-[11px] text-faint tabular-nums">{when(e.decision.ts)}</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
       <section>
         <SectionHeading tone="good" count={accepted.length}>Accepted</SectionHeading>
         {accepted.length === 0 ? (
@@ -252,7 +276,7 @@ export default async function DecidedPage({ params, searchParams }: PageProps<'/
         ) : (
           <div className="grid gap-5 lg:grid-cols-2">
             {accepted.map((e, i) => (
-              <Reveal key={e.decision.id} index={i}>
+              <Reveal key={e.decision.id} id={`d-${e.decision.id}`} index={i}>
                 <ItemMenu actions={menuFor(e, pr.slug, ep, allEpisodes, nextEpisode, titles, moves.pending)}>
                 <Card interactive className="space-y-4 p-5">
                   <Media entry={e} project={pr.slug} />
@@ -292,7 +316,7 @@ export default async function DecidedPage({ params, searchParams }: PageProps<'/
         ) : (
           <div className="space-y-3">
             {denied.map((e, i) => (
-              <Reveal key={e.decision.id} index={i}>
+              <Reveal key={e.decision.id} id={`d-${e.decision.id}`} index={i}>
                 <ItemMenu actions={menuFor(e, pr.slug, ep, allEpisodes, nextEpisode, titles, moves.pending)}>
                 <Card interactive className="flex flex-col gap-6 p-5 sm:flex-row">
                   <div className="shrink-0 sm:w-72">
@@ -321,7 +345,7 @@ export default async function DecidedPage({ params, searchParams }: PageProps<'/
           <SectionHeading tone="muted" count={discarded.length}>Discarded</SectionHeading>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {discarded.map((e, i) => (
-              <Reveal key={e.decision.id} index={i}>
+              <Reveal key={e.decision.id} id={`d-${e.decision.id}`} index={i}>
                 <Card className="space-y-3 p-4">
                   <Media entry={e} project={pr.slug} />
                   <Heading entry={e} />

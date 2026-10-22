@@ -91,6 +91,19 @@ async function sidecars(pr: Project): Promise<Map<string, StagingSidecar>> {
   return out
 }
 
+/**
+ * A name for a take whose job carried no block label: the prompt's first real
+ * line ("PLAN TEASER 00 | THE LIGHT CHOOSES"), so the card is not just a shot id.
+ */
+export function titleFromPrompt(prompt: string | null | undefined): string | null {
+  for (const raw of String(prompt ?? '').split(/\r?\n/)) {
+    const line = raw.trim()
+    if (!line || /^(begin|end) prompt$/i.test(line)) continue
+    return line.length > 60 ? `${line.slice(0, 57).trimEnd()}...` : line
+  }
+  return null
+}
+
 export async function getDecidedEntries(pr: Project): Promise<DecidedEntry[]> {
   const [decisions, filings, state, queue, assets, moves, byBatch, regenerations, prices, resolve, shotMoves] = await Promise.all([
     getDecisions(pr), getFilings(pr), getWorkerState(pr), getQueue(pr), getAssets(pr), movesFromLog(pr), sidecars(pr), getRegenerations(pr), getPriceTable(),
@@ -261,7 +274,7 @@ export async function getDecidedEntries(pr: Project): Promise<DecidedEntry[]> {
       const where = m ? [m[1], m[2], m[3]].filter(Boolean).join(' · ') : target
       return {
         decision: d,
-        title: labelFor(d.jobId) ?? m?.[2] ?? target,
+        title: labelFor(d.jobId) ?? titleFromPrompt(q?.basePrompt ?? q?.prompt ?? s?.prompt) ?? m?.[2] ?? target,
         where,
         target,
         episode: m?.[1] ?? null,

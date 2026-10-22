@@ -13,11 +13,14 @@ import { EASE } from '@/components/ui/motion-tokens'
 export function Reveal({
   index = 0,
   lift = false,
+  id,
   className,
   children,
 }: {
   index?: number
   lift?: boolean
+  /** Anchor for a link to this item (the Decided page's latest strip). */
+  id?: string
   className?: string
   children: React.ReactNode
 }) {
@@ -32,7 +35,8 @@ export function Reveal({
         delay: Math.min(index * 0.025, 0.12),
       }}
       whileHover={lift ? { y: -2, transition: { duration: 0.15, ease: EASE } } : undefined}
-      className={className}
+      id={id}
+      className={id ? `${className ?? ''} scroll-mt-24`.trim() : className}
     >
       {children}
     </motion.div>
