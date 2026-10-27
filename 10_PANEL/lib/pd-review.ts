@@ -16,6 +16,7 @@ import { audit } from './audit.ts'
 import { getDb } from './db/client.ts'
 import { block, blockFinal, feedback, feedbackRead, generation, reviewSubmission, sequence, user } from './db/schema.ts'
 import { resolveGenerationFiles } from './pd-generations.ts'
+import { displayOf } from './pd/keys.ts'
 import { gLabel } from './pd/numbering.ts'
 import {
   alreadyActive, canAddNote, canSetResolution, categoryFor, checkDecision, checkNote, checkTimecode, isResolution,
@@ -127,12 +128,12 @@ export interface NeighbourBlock { id: string; sequenceId: string; title: string 
 /** The block before and after this one in film order (sequences first, then blocks), across sequences. */
 async function neighbours(db: Db, project: string, blockId: string): Promise<{ prev: NeighbourBlock | null; next: NeighbourBlock | null }> {
   const rows = await db
-    .select({ id: block.id, sequenceId: block.sequenceId, title: block.title, bo: block.displayOrder, bn: block.number, so: sequence.displayOrder, sn: sequence.number })
+    .select({ key: block.id, id: block.displayId, sequenceId: sequence.displayId, title: block.title, bo: block.displayOrder, bn: block.number, so: sequence.displayOrder, sn: sequence.number })
     .from(block)
     .innerJoin(sequence, eq(sequence.id, block.sequenceId))
     .where(and(eq(block.projectSlug, project), isNull(block.retiredAt), isNull(sequence.retiredAt)))
   rows.sort((a, b) => a.so - b.so || a.sn - b.sn || a.bo - b.bo || a.bn - b.bn)
-  const i = rows.findIndex((r) => r.id === blockId)
+  const i = rows.findIndex((r) => r.key === blockId)
   const pick = (r?: (typeof rows)[number]) => (r ? { id: r.id, sequenceId: r.sequenceId, title: r.title } : null)
   return { prev: i > 0 ? pick(rows[i - 1]) : null, next: i >= 0 ? pick(rows[i + 1]) : null }
 }
@@ -149,27 +150,28 @@ export interface ReviewerBlockView {
 }
 
 /** The reviewer's view of one block. No prompt, no cost, no generation that was not sent. */
-export async function reviewBlock(project: string, blockId: string, viewerId: string): Promise<ReviewerBlockView | null> {
+export async function reviewBlock(project: string, displayId: string, viewerId: string): Promise<ReviewerBlockView | null> {
   const db = getDb()
   const [row] = await db
-    .select({ b: block, st: sequence.title })
+    .select({ b: block, st: sequence.title, sd: sequence.displayId })
     .from(block).innerJoin(sequence, eq(sequence.id, block.sequenceId))
-    .where(and(eq(block.projectSlug, project), eq(block.id, blockId), isNull(block.retiredAt)))
+    .where(and(eq(block.projectSlug, project), eq(block.displayId, displayId), isNull(block.retiredAt)))
   if (!row) return null
+  const blockId = row.b.id
   const all = (await loadSubmissions(db, blockId, viewerId)).map((s) => ({ ...s, generationId: '' }))
   const active = pickActiveSubmission(all)
   const [fin] = await db.select({ s: reviewSubmission.status }).from(blockFinal).innerJoin(reviewSubmission, eq(reviewSubmission.id, blockFinal.submissionId)).where(eq(blockFinal.blockId, blockId))
   const status = blockStatus({ generations: all.length, activeSubmission: active ? { status: active.status } : null, final: !!fin, finalApproved: fin?.s === 'approved' })
   const near = await neighbours(db, project, blockId)
   return {
-    block: { id: row.b.id, title: row.b.title, targetDurationSeconds: row.b.targetDurationSeconds, displayOrder: row.b.displayOrder, sequenceId: row.b.sequenceId, sequenceTitle: row.st },
+    block: { id: row.b.displayId, title: row.b.title, targetDurationSeconds: row.b.targetDurationSeconds, displayOrder: row.b.displayOrder, sequenceId: row.sd, sequenceTitle: row.st },
     status, active, history: all.filter((s) => s !== active), ...near,
   }
 }
 
 /** Past rounds only: what was sent before the active one. Never an unsent generation. */
-export async function reviewHistory(project: string, blockId: string, viewerId: string): Promise<SubmissionView[]> {
-  return (await reviewBlock(project, blockId, viewerId))?.history ?? []
+export async function reviewHistory(project: string, displayId: string, viewerId: string): Promise<SubmissionView[]> {
+  return (await reviewBlock(project, displayId, viewerId))?.history ?? []
 }
 
 export interface FinalView { generationId: string; gLabel: string; submissionId: string; round: number | null; byName: string; at: Date }
@@ -232,7 +234,7 @@ export async function submit(pr: Project, blockId: string, generationId: string,
       blockId, generationId, roundNumber: round, submittedBy: actor.id, status: 'pending', isActive: true, fileSha256: sha,
     }).returning()
     await audit({
-      project: pr.slug, actor, action: 'submission.create', objectType: 'block', objectId: blockId,
+      project: pr.slug, actor, action: 'submission.create', objectType: 'block', objectId: displayOf(blockId),
       detail: { submissionId: row.id, round, generation: gLabel(g.gNumber), replacedRound: active?.roundNumber ?? null, replacedStatus: active?.status ?? null, sha256: sha },
     }, tx)
     return { ok: true as const, round, gLabel: gLabel(g.gNumber), submissionId: row.id }
@@ -275,7 +277,7 @@ export async function directorDecide(
       const [f] = await tx.insert(feedback).values({ submissionId: s.id, authorId: actor.id, authorRole: actor.role, category: 'director', body: text }).returning({ id: feedback.id })
       noteId = f.id
     }
-    await audit({ project, actor, action: c.decision === 'approved' ? 'submission.approve' : 'submission.revision', objectType: 'submission', objectId: s.id, detail: { block: s.blockId, round: s.roundNumber, noteId } }, tx)
+    await audit({ project, actor, action: c.decision === 'approved' ? 'submission.approve' : 'submission.revision', objectType: 'submission', objectId: s.id, detail: { block: displayOf(s.blockId), round: s.roundNumber, noteId } }, tx)
     return { ok: true as const }
   })
 }
@@ -301,7 +303,7 @@ export async function addFeedback(
       submissionId: s.id, authorId: actor.id, authorRole: actor.role, category: cat, body: n.body,
       timecodeSeconds: t.seconds === null ? null : String(t.seconds),
     }).returning({ id: feedback.id })
-    await audit({ project, actor, action: 'feedback.create', objectType: 'submission', objectId: s.id, detail: { feedbackId: f.id, category: cat, block: s.blockId, round: s.roundNumber } }, tx)
+    await audit({ project, actor, action: 'feedback.create', objectType: 'submission', objectId: s.id, detail: { feedbackId: f.id, category: cat, block: displayOf(s.blockId), round: s.roundNumber } }, tx)
     return { ok: true as const, id: f.id }
   })
 }
@@ -324,7 +326,7 @@ export async function setResolution(project: string, feedbackId: string, status:
     await tx.update(feedback).set({
       resolutionStatus: status, resolvedBy: status === 'resolved' ? actor.id : null, resolvedAt: status === 'resolved' ? new Date() : null,
     }).where(eq(feedback.id, feedbackId))
-    await audit({ project, actor, action: 'feedback.resolution', objectType: 'feedback', objectId: feedbackId, detail: { block: row.blockId, from: row.f.resolutionStatus, to: status } }, tx)
+    await audit({ project, actor, action: 'feedback.resolution', objectType: 'feedback', objectId: feedbackId, detail: { block: displayOf(row.blockId), from: row.f.resolutionStatus, to: status } }, tx)
     return { ok: true as const }
   })
 }
@@ -370,7 +372,7 @@ export async function setFinal(project: string, blockId: string, generationId: s
       .where(and(eq(reviewSubmission.blockId, blockId), eq(feedback.category, 'continuity'), sql`${feedback.resolutionStatus} <> 'resolved'`))
     const warning = continuityWarning(open.length)
     await audit({
-      project, actor, action: 'final.set', objectType: 'block', objectId: blockId,
+      project, actor, action: 'final.set', objectType: 'block', objectId: displayOf(blockId),
       detail: {
         generation: gLabel(g.gNumber), submissionId: sub.id, round: sub.roundNumber, openContinuity: open.length,
         previous: prev ? { generation: gLabel(prev.g), generationId: prev.f.generationId, submissionId: prev.f.submissionId, finalizedBy: prev.f.finalizedBy, finalizedAt: prev.f.finalizedAt } : null,

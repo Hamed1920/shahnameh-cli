@@ -6,7 +6,7 @@ const gen = (n: number, over: Partial<TreeGeneration> = {}): TreeGeneration => (
   id: `g${n}`, gNumber: n, gLabel: `G0${n}`, createdAt: `2026-10-0${n}T10:00:00Z`, createdBy: 'Agent', verdict: 'pending', rounds: [], isFinal: false, ...over,
 })
 const blk = (seq: number, n: number, over: Partial<TreeBlock> = {}): TreeBlock => ({
-  id: `PD-S0${seq}-B00${n}`, sequenceId: `PD-S0${seq}`, title: `Block ${n}`, number: n, displayOrder: n, status: 'not_started', generations: [], ...over,
+  id: `PD-S0${seq}-B00${n}`, key: `p:PD-S0${seq}-B00${n}`, sequenceId: `PD-S0${seq}`, title: `Block ${n}`, number: n, displayOrder: n, status: 'not_started', generations: [], ...over,
 })
 const seqs: TreeSequence[] = [
   { id: 'PD-S02', title: 'Second', number: 2, displayOrder: 1 },

@@ -7,6 +7,7 @@ import { audit } from './audit.ts'
 import { getDb } from './db/client.ts'
 import { block, promptVersion } from './db/schema.ts'
 import { shouldSaveVersion } from './pd-gen-map.ts'
+import { displayOf } from './pd/keys.ts'
 
 export type PromptVersionRow = typeof promptVersion.$inferSelect
 export type Result<T = object> = ({ ok: true } & T) | { ok: false; error: string }
@@ -38,7 +39,7 @@ export async function savePromptVersion(
       blockId, versionNumber: (latest?.versionNumber ?? 0) + 1, promptText: body, promptHash: hash, refs: cleanRefs,
       createdBy: actor.id === 'local' ? null : actor.id,
     }).returning()
-    await audit({ project, actor, action: 'prompt.version', objectType: 'block', objectId: blockId, detail: { version: row.versionNumber } }, tx)
+    await audit({ project, actor, action: 'prompt.version', objectType: 'block', objectId: displayOf(blockId), detail: { version: row.versionNumber } }, tx)
     return { ok: true as const, version: row, created: true }
   })
 }

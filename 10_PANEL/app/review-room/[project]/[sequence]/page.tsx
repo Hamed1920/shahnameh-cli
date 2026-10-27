@@ -21,17 +21,17 @@ export default async function ReviewSequencePage({ params }: PageProps<'/review-
   if (!seq) notFound()
   const blocks = await listBlocks(seq.id, actor)
   const { playlistBlocks } = await import('@/lib/pd-playlist')
-  const stops = buildPlaylist(pr.slug, await playlistBlocks(pr, seq.id, false), 'submitted', (id) => `/review-room/${pr.slug}/${seq.id}/${id}`)
+  const stops = buildPlaylist(pr.slug, await playlistBlocks(pr, seq.id, false), 'submitted', (id) => `/review-room/${pr.slug}/${seq.displayId}/${id}`)
 
   return (
     <main className="scroll-pane flex-1">
       <div className="mx-auto max-w-4xl px-6 py-10">
-        <ReviewHeader project={pr.slug} eyebrow={`${pr.name} · ${seq.id}`} title={seq.title} back={{ href: `/review-room/${pr.slug}`, label: 'Review room' }} name={actor.name} />
+        <ReviewHeader project={pr.slug} eyebrow={`${pr.name} · ${seq.displayId}`} title={seq.title} back={{ href: `/review-room/${pr.slug}`, label: 'Review room' }} name={actor.name} />
 
         {blocks.length > 0 && (
           <div className="mt-10">
             <ProjectProvider project={publicInfo(pr)}>
-              <SequencePlayback scope={`review:${seq.id}`} sources={[{ id: 'submitted', label: 'Submitted', hint: 'What was sent to the director', stops }]} />
+              <SequencePlayback scope={`review:${seq.displayId}`} sources={[{ id: 'submitted', label: 'Submitted', hint: 'What was sent to the director', stops }]} />
             </ProjectProvider>
           </div>
         )}
@@ -42,7 +42,7 @@ export default async function ReviewSequencePage({ params }: PageProps<'/review-
           <ul className="mt-10 divide-y divide-edge rounded-xl border border-edge bg-panel">
             {blocks.map((b) => (
               <li key={b.id}>
-                <Link href={`/review-room/${pr.slug}/${seq.id}/${b.id}`} className="focus-ring flex flex-wrap items-center gap-x-4 gap-y-1.5 px-4 py-3.5 hover:bg-white/[0.03]" data-block={b.id}>
+                <Link href={`/review-room/${pr.slug}/${seq.displayId}/${b.id}`} className="focus-ring flex flex-wrap items-center gap-x-4 gap-y-1.5 px-4 py-3.5 hover:bg-white/[0.03]" data-block={b.id}>
                   <span className="font-mono text-[12.5px] text-muted">{b.id}</span>
                   <span className="min-w-0 flex-1 text-[15px] text-fg" dir="auto">{b.title}</span>
                   {b.round === null ? (

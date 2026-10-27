@@ -7,25 +7,26 @@
 // re-read every time (resolveGenerationFiles).
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { and, asc, eq, isNull, sql } from 'drizzle-orm'
+import { and, asc, eq, inArray, isNull, sql } from 'drizzle-orm'
 import type { Actor } from './actor-core.ts'
 import { audit } from './audit.ts'
 import { getDb } from './db/client.ts'
-import { block, generation, promptVersion } from './db/schema.ts'
+import { block, generation, promptVersion, user } from './db/schema.ts'
 import { getDecidedEntries } from './decided'
 import {
-  mapOutputs, matchPromptVersion, numberNewOutputs, outputKey, splitByBlock,
-  type MappedOutput, type RawDecision, type RawJob, type RawSidecar,
+  isSystemName, mapOutputs, matchPromptVersion, numberNewOutputs, outputKey, splitByBlock,
+  type MappedOutput, type RawDecision, type RawJob, type RawRequest, type RawSidecar,
 } from './pd-gen-map.ts'
 import type { Project } from './projects'
-import { getDecisions, getQueue, getShotMoves, getWorkerState, readText } from './store'
+import { getDecisions, getJobRequests, getQueue, getShotMoves, getWorkerState, readText } from './store'
+import { displayOf } from './pd/keys.ts'
 
 export type GenerationRow = typeof generation.$inferSelect
 export type Result<T = object> = ({ ok: true } & T) | { ok: false; error: string }
 
 /** Every output the project's files describe right now. */
 export async function readOutputs(pr: Project): Promise<MappedOutput[]> {
-  const [queue, decisions, state, moves] = await Promise.all([getQueue(pr), getDecisions(pr), getWorkerState(pr), getShotMoves(pr)])
+  const [queue, decisions, state, moves, requests] = await Promise.all([getQueue(pr), getDecisions(pr), getWorkerState(pr), getShotMoves(pr), getJobRequests(pr)])
   let dirs: string[] = []
   try { dirs = (await fs.readdir(pr.P.staging, { withFileTypes: true })).filter((e) => e.isDirectory()).map((e) => e.name) } catch { /* no staging yet */ }
   const sidecars: RawSidecar[] = []
@@ -33,7 +34,7 @@ export async function readOutputs(pr: Project): Promise<MappedOutput[]> {
     try { sidecars.push(JSON.parse(await readText(path.join(pr.P.staging, d, 'job.json')))) } catch { /* not a batch */ }
   }))
   const failed = new Set(Object.keys((state?.failedDecisions ?? {}) as Record<string, string>))
-  const outs = mapOutputs(queue as unknown as RawJob[], sidecars, decisions as unknown as RawDecision[], failed)
+  const outs = mapOutputs(queue as unknown as RawJob[], sidecars, decisions as unknown as RawDecision[], failed, requests as unknown as RawRequest[])
   // Read forward through any move of the footage to another shot.
   return outs.map((o) => ({ ...o, target: moves.shot[o.target] ?? o.target }))
 }
@@ -63,6 +64,33 @@ async function doSync(pr: Project): Promise<void> {
   const { byBlock } = splitByBlock(outputs, live, assigned)
   for (const [blockId, outs] of byBlock) await writeNew(pr.slug, blockId, outs, null)
   await linkVersions(pr.slug, outputs)
+  await namePeople(pr.slug, rows, outputs)
+}
+
+/** Account ids to display names, for the people the records name. */
+async function namesOf(db: Pick<ReturnType<typeof getDb>, 'select'>, ids: (string | null)[]): Promise<Map<string, string>> {
+  const want = [...new Set(ids.filter((x): x is string => !!x))]
+  if (want.length === 0) return new Map()
+  return new Map((await db.select({ id: user.id, name: user.name }).from(user).where(inArray(user.id, want))).map((u) => [u.id, u.name]))
+}
+
+/**
+ * Rows made before a person could be told from the records hold the system name the job was queued
+ * under (panel:batch, worker:final ...). Once one can be resolved, the row holds the person instead.
+ * Only created_by changes: a G number never does.
+ */
+async function namePeople(project: string, rows: GenerationRow[], outputs: MappedOutput[]): Promise<void> {
+  const stale = rows.filter((r) => r.createdBy && isSystemName(r.createdBy))
+  if (stale.length === 0) return
+  const db = getDb()
+  const byKey = new Map(outputs.map((o) => [o.key, o]))
+  const outOf = (r: GenerationRow) => byKey.get(outputKey(r.hfJobId ?? '', r.candidate ?? ''))
+  const names = await namesOf(db, stale.map((r) => outOf(r)?.createdById ?? null))
+  for (const r of stale) {
+    const o = outOf(r)
+    const who = (o?.createdById ? names.get(o.createdById) : undefined) ?? o?.createdBy
+    if (who && !isSystemName(who) && who !== r.createdBy) await db.update(generation).set({ createdBy: who }).where(and(eq(generation.id, r.id), eq(generation.projectSlug, project)))
+  }
 }
 
 async function writeNew(project: string, blockId: string, outs: MappedOutput[], actor: Actor | null): Promise<GenerationRow[]> {
@@ -73,20 +101,21 @@ async function writeNew(project: string, blockId: string, outs: MappedOutput[], 
     if (fresh.length === 0) return []
     const versions = await tx.select({ id: promptVersion.id, versionNumber: promptVersion.versionNumber, promptHash: promptVersion.promptHash }).from(promptVersion).where(eq(promptVersion.blockId, blockId))
     const inserted: GenerationRow[] = []
+    const names = await namesOf(tx, fresh.map((f) => f.createdById))
     for (const o of fresh) {
-      const pv = matchPromptVersion(o.promptHash, o.label, blockId, versions)
+      const pv = matchPromptVersion(o.promptHash, o.label, displayOf(blockId), versions)
       const [row] = await tx.insert(generation).values({
         projectSlug: project, blockId, gNumber: o.g, hfJobId: o.hfJobId, jobId: o.jobId, candidate: o.candidate, parentJobId: o.parentJobId,
         stage: o.stage, model: o.model, resolution: o.resolution,
         durationSeconds: o.durationSeconds === null ? null : String(o.durationSeconds),
         costCredits: o.costCredits === null ? null : String(o.costCredits),
-        operationType: o.operationType, promptVersionId: pv?.id ?? null, createdBy: o.createdBy,
+        operationType: o.operationType, promptVersionId: pv?.id ?? null, createdBy: (o.createdById ? names.get(o.createdById) : undefined) ?? o.createdBy,
         createdAt: new Date(o.createdAt || Date.now()),
       }).onConflictDoNothing().returning()
       if (row) inserted.push(row)
     }
     if (actor && inserted.length) {
-      await audit({ project, actor, action: 'generation.assign', objectType: 'block', objectId: blockId, detail: { keys: fresh.map((f) => f.key) } }, tx)
+      await audit({ project, actor, action: 'generation.assign', objectType: 'block', objectId: displayOf(blockId), detail: { keys: fresh.map((f) => f.key) } }, tx)
     }
     return inserted
   })
@@ -105,7 +134,7 @@ async function linkVersions(project: string, outputs: MappedOutput[]): Promise<v
     if (!versionsByBlock.has(g.blockId)) {
       versionsByBlock.set(g.blockId, await db.select({ id: promptVersion.id, versionNumber: promptVersion.versionNumber, promptHash: promptVersion.promptHash }).from(promptVersion).where(eq(promptVersion.blockId, g.blockId)))
     }
-    const pv = matchPromptVersion(o.promptHash, o.label, g.blockId, versionsByBlock.get(g.blockId)!)
+    const pv = matchPromptVersion(o.promptHash, o.label, displayOf(g.blockId), versionsByBlock.get(g.blockId)!)
     if (pv) await db.update(generation).set({ promptVersionId: pv.id }).where(eq(generation.id, g.id))
   }
 }

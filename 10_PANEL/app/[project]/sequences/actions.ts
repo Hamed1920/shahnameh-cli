@@ -71,7 +71,7 @@ export async function addSequence(project: string, title: string, description = 
   if (!r.ok) return fail(r.error)
   await requestFolder(g.pr, g.actor, r.sequence.number, r.sequence.title)
   refresh(g.pr)
-  return { ok: true, id: r.sequence.id }
+  return { ok: true, id: r.sequence.displayId }
 }
 
 export async function renameSequenceAction(project: string, id: string, title: string): Promise<SeqResult> {
@@ -107,11 +107,12 @@ export async function addBlock(project: string, sequenceId: string, title: strin
   if ('error' in g) return fail(g.error)
   const s = store()
   // The sequence must belong to this project: an id from another project is refused.
-  if (!(await (await s).getSequence(g.pr.slug, sequenceId))) return fail('That sequence does not exist.')
-  const r = await (await s).createBlock(sequenceId, title, targetDuration, g.actor)
+  const seq = await (await s).getSequence(g.pr.slug, sequenceId)
+  if (!seq) return fail('That sequence does not exist.')
+  const r = await (await s).createBlock(seq.id, title, targetDuration, g.actor)
   if (!r.ok) return fail(r.error)
   refresh(g.pr, sequenceId)
-  return { ok: true, id: r.block.id }
+  return { ok: true, id: r.block.displayId }
 }
 
 export async function renameBlockAction(project: string, sequenceId: string, id: string, title: string): Promise<SeqResult> {

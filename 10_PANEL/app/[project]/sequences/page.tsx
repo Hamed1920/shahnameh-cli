@@ -30,7 +30,7 @@ export default async function SequencesPage({ params, searchParams }: PageProps<
   const ids = sequences.map((s) => s.id)
 
   const hits = q
-    ? (await Promise.all(sequences.map(async (s) => (await listBlocks(s.id, actor)).map((b) => ({ s, b })))))
+    ? (await Promise.all(sequences.map(async (s) => (await listBlocks(s.key, actor)).map((b) => ({ s, b })))))
         .flat()
         .filter(({ b }) => [b.id, b.title, b.status, BLOCK_STATUS_LABEL[b.status]].some((t) => t.toLowerCase().includes(q)))
     : []

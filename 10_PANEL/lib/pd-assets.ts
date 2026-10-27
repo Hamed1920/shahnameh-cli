@@ -6,6 +6,7 @@ import { audit } from './audit.ts'
 import { getDb } from './db/client.ts'
 import { block, blockAssetLink } from './db/schema.ts'
 import type { Result } from './pd-prompts.ts'
+import { displayOf } from './pd/keys.ts'
 
 export type AssetLinkRow = typeof blockAssetLink.$inferSelect
 export const LINK_ROLES = ['character', 'location', 'prop', 'reference', 'state', 'voice'] as const
@@ -28,7 +29,7 @@ export async function addAssetLink(
       .where(and(eq(blockAssetLink.blockId, blockId), eq(blockAssetLink.entityId, entityId), sql`coalesce(${blockAssetLink.variant}, '') = ${v ?? ''}`))
     if (dup.length) return { ok: false as const, error: 'That asset is already linked.' }
     const [link] = await tx.insert(blockAssetLink).values({ blockId, entityId, variant: v, role: r, createdBy: actor.id === 'local' ? null : actor.id }).returning()
-    await audit({ project, actor, action: 'asset.link', objectType: 'block', objectId: blockId, detail: { entityId, variant: v, role: r } }, tx)
+    await audit({ project, actor, action: 'asset.link', objectType: 'block', objectId: displayOf(blockId), detail: { entityId, variant: v, role: r } }, tx)
     return { ok: true as const, link }
   })
 }
@@ -39,7 +40,7 @@ export async function removeAssetLink(project: string, blockId: string, linkId: 
       .where(and(eq(blockAssetLink.id, linkId), eq(blockAssetLink.blockId, blockId), eq(block.projectSlug, project)))
     if (!row) return { ok: false as const, error: 'That link does not exist.' }
     await tx.delete(blockAssetLink).where(eq(blockAssetLink.id, linkId))
-    await audit({ project, actor, action: 'asset.unlink', objectType: 'block', objectId: blockId, detail: { entityId: row.l.entityId, variant: row.l.variant, role: row.l.role } }, tx)
+    await audit({ project, actor, action: 'asset.unlink', objectType: 'block', objectId: displayOf(blockId), detail: { entityId: row.l.entityId, variant: row.l.variant, role: row.l.role } }, tx)
     return { ok: true as const }
   })
 }

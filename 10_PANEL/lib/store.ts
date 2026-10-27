@@ -134,6 +134,11 @@ export async function getCatalog(pr: Project): Promise<CatalogEntity[]> {
     .sort((a, b) => a.id.localeCompare(b.id))
 }
 
+/** Every request in JOB_REQUESTS.jsonl, oldest first (who approved a batch, who asked to regenerate). */
+export async function getJobRequests(pr: Project): Promise<JobRequest[]> {
+  return readJsonl<JobRequest>(pr.P.jobRequests)
+}
+
 export async function getQueue(pr: Project): Promise<QueueItem[]> {
   return readJsonl<QueueItem>(pr.P.queue)
 }

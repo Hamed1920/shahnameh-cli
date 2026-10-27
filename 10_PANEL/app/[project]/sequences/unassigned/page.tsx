@@ -17,7 +17,7 @@ export default async function UnassignedPage({ params }: { params: Promise<{ pro
   const { listSequences, listBlocks } = await import('@/lib/pd-store')
   const outputs = await gens.unassignedOutputs(pr)
   const states = await gens.resolveGenerationFiles(pr, outputs.map((o) => ({ hfJobId: o.hfJobId, candidate: o.candidate })))
-  const options = (await Promise.all((await listSequences(pr.slug)).map(async (s) => (await listBlocks(s.id, null)).map((b) => ({ id: b.id, label: `${b.id} ${b.title}` }))))).flat()
+  const options = (await Promise.all((await listSequences(pr.slug)).map(async (s) => (await listBlocks(s.key, null)).map((b) => ({ id: b.key, label: `${b.id} ${b.title}` }))))).flat()
 
   return (
     <div className="space-y-12">

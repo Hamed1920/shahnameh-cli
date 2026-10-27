@@ -19,6 +19,7 @@ export interface RawJob {
   label?: string | null;
   enqueuedAt?: string | null;
   enqueuedBy?: string | null;
+  batchId?: string | null;
   studio?: unknown;
 }
 
@@ -44,10 +45,25 @@ export interface RawDecision {
   id?: string;
   ts: string;
   reviewer?: string;
+  actorId?: string | null;
+  /** The queue job the take came from, and whether a denial asked for a new try. */
+  jobId?: string | null;
+  requeue?: boolean;
   candidate: string;
   hfJobId: string;
   take?: string;
   verdict: 'accepted' | 'denied' | 'discarded' | string;
+}
+
+/** A record of JOB_REQUESTS.jsonl, as far as who-made-it needs. */
+export interface RawRequest {
+  ts: string;
+  type: string;
+  reviewer?: string | null;
+  actorId?: string | null;
+  batchId?: string | null;
+  /** For a regenerate: the job it was made from. */
+  jobId?: string | null;
 }
 
 export type Verdict = 'accepted' | 'denied' | 'discarded';
@@ -68,7 +84,10 @@ export interface MappedOutput {
   durationSeconds: number | null;
   costCredits: number | null;
   operationType: OperationType;
+  /** The person who made it (see creatorOf), else the system name the job was queued under. */
   createdBy: string | null;
+  /** The account id of that person when the records name one: the sync turns it into a display name. */
+  createdById: string | null;
   createdAt: string;
   /** Hash of the prompt as written (basePrompt), to find its version. Null when unknown. */
   promptHash: string | null;
@@ -101,6 +120,7 @@ export function mapOutputs(
   sidecars: RawSidecar[],
   decisions: RawDecision[],
   failed: ReadonlySet<string> = new Set(),
+  requests: RawRequest[] = [],
 ): MappedOutput[] {
   const jobById = new Map(jobs.map((j) => [j.jobId, j]));
   const sidecarByJob = new Map(sidecars.map((s) => [s.jobId, s]));
@@ -155,7 +175,8 @@ export function mapOutputs(
           enqueuedBy: str(job?.enqueuedBy),
           retryOf: str(job?.retryOf),
         }),
-        createdBy: str(job?.enqueuedBy),
+        createdBy: job ? creatorOf(job, jobs, decisions, requests).name : null,
+        createdById: job ? creatorOf(job, jobs, decisions, requests).id : null,
         createdAt: str(s.createdAt) ?? str(job?.enqueuedAt) ?? '',
         promptHash: basePrompt ? promptHash(basePrompt) : null,
         label: str(job?.label) ?? str(s.label),
@@ -165,6 +186,60 @@ export function mapOutputs(
   }
   out.sort((a, b) => (a.createdAt < b.createdAt ? -1 : a.createdAt > b.createdAt ? 1 : a.key < b.key ? -1 : a.key > b.key ? 1 : 0));
   return out;
+}
+
+export const isSystemName = (v: string | null | undefined): boolean => !v || /^(panel|worker):/.test(v);
+
+const byTs = <T extends { ts: string }>(a: T, b: T) => (a.ts < b.ts ? -1 : a.ts > b.ts ? 1 : 0);
+const person = (r: { reviewer?: string | null; actorId?: string | null }) => ({ name: str(r.reviewer), id: str(r.actorId) });
+
+/**
+ * The person behind a job, from the append-only records alone (the queue's `enqueuedBy` only names
+ * the system part that wrote it: panel:batch, worker:final ...):
+ *  - a batch job: whoever approved the batch (the spend), else whoever submitted it;
+ *  - a final of an accepted draft: whoever accepted that draft; a revision: whoever denied it and asked
+ *    for another try; both fall back to the parent job's person;
+ *  - a regenerate: whoever asked for it.
+ * Anything else keeps the name it was queued under. Pure.
+ */
+export function creatorOf(
+  job: RawJob,
+  jobs: RawJob[],
+  decisions: RawDecision[],
+  requests: RawRequest[],
+  depth = 0,
+): { name: string | null; id: string | null } {
+  const by = str(job.enqueuedBy);
+  const fallback = { name: by, id: null as string | null };
+  const before = <T extends { ts: string }>(list: T[]): T[] => {
+    const at = str(job.enqueuedAt);
+    return list.filter((r) => !at || r.ts <= at).sort(byTs);
+  };
+  const batchId = str(job.batchId);
+  if (batchId) {
+    const mine = requests.filter((r) => r.batchId === batchId);
+    const hit = mine.find((r) => r.type === 'batch.approve' && str(r.reviewer)) ?? mine.find((r) => r.type === 'batch.submit' && str(r.reviewer));
+    return hit ? person(hit) : fallback;
+  }
+  const parentId = str(job.parentJobId);
+  const parent = () => {
+    const p = jobs.find((j) => j.jobId === parentId);
+    return p && depth < 10 ? creatorOf(p, jobs, decisions, requests, depth + 1) : null;
+  };
+  if (by === 'worker:final' || by === 'worker:revision') {
+    const mine = before(decisions).filter((d) => d.jobId === parentId && str(d.reviewer));
+    const hit = by === 'worker:final'
+      ? mine.filter((d) => d.verdict === 'accepted').pop()
+      : mine.filter((d) => d.verdict !== 'accepted' && d.requeue !== false).pop();
+    if (hit) return person(hit);
+    const p = parent();
+    return p && !isSystemName(p.name) ? p : fallback;
+  }
+  if (by === 'panel:regenerate') {
+    const hit = before(requests).filter((r) => r.type === 'regenerate' && r.jobId === parentId && str(r.reviewer)).pop();
+    return hit ? person(hit) : fallback;
+  }
+  return fallback;
 }
 
 /** Group outputs by the block that owns their target. Targets that are no block are returned apart. */

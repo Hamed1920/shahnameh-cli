@@ -42,7 +42,7 @@ export default async function BlockPage({ params }: PageProps<'/[project]/sequen
   await gens.syncGenerations(pr)
   const [{ listPromptVersions }, { listAssetLinks }] = await Promise.all([import('@/lib/pd-prompts'), import('@/lib/pd-assets')])
   const [line, versions, links, rows, catalog, batches, cfg] = await Promise.all([
-    listBlocks(seq.id, actor).then((l) => l.find((b) => b.id === block.id)),
+    listBlocks(seq.id, actor).then((l) => l.find((b) => b.id === block.displayId)),
     listPromptVersions(block.id),
     listAssetLinks(block.id),
     gens.listGenerations(block.id),
@@ -82,13 +82,13 @@ export default async function BlockPage({ params }: PageProps<'/[project]/sequen
         <Breadcrumb
           items={[
             { label: pr.name, href: `/${pr.slug}/sequences` },
-            { label: `${seq.id} ${seq.title}`, href: `/${pr.slug}/sequences/${seq.id}` },
-            { label: block.id },
+            { label: `${seq.displayId} ${seq.title}`, href: `/${pr.slug}/sequences/${seq.displayId}` },
+            { label: block.displayId },
           ]}
         />
-        <PageHeader title={block.title} eyebrow={block.id}>
+        <PageHeader title={block.title} eyebrow={block.displayId}>
           <span className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
-            <span>{seq.id} · position {block.displayOrder}</span>
+            <span>{seq.displayId} · position {block.displayOrder}</span>
             <span>{block.targetDurationSeconds ? `Target ${block.targetDurationSeconds} s` : 'No target duration'}</span>
             {line && <StatusLabel status={line.status} />}
             <span className="tabular-nums">{rows.length} generation{rows.length === 1 ? '' : 's'}</span>
@@ -124,7 +124,7 @@ export default async function BlockPage({ params }: PageProps<'/[project]/sequen
               return (
                 <Card key={g.id} className="space-y-3 p-4" data-g={gLabel(g.gNumber)}>
                   {st?.file ? (
-                    <TakeMedia file={st.file} alt={`${gLabel(g.gNumber)} of ${block.id}`} />
+                    <TakeMedia file={st.file} alt={`${gLabel(g.gNumber)} of ${block.displayId}`} />
                   ) : (
                     <div className="grid aspect-video place-items-center rounded-lg border border-dashed border-edge text-xs text-muted">File not found</div>
                   )}

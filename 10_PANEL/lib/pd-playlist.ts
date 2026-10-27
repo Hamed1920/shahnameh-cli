@@ -38,7 +38,7 @@ export async function playlistBlocks(pr: Project, sequenceId: string, withAccept
     const f = finals.find((x) => x.blockId === b.id)
     const fs = f ? subById.get(f.submissionId) : undefined
     return {
-      id: b.id, title: b.title, number: b.number, displayOrder: b.displayOrder,
+      id: b.displayId, title: b.title, number: b.number, displayOrder: b.displayOrder,
       active: a ? { submissionId: a.id, round: a.roundNumber, gLabel: gLabel(gNum.get(a.generationId) ?? 0) } : null,
       final: f ? { submissionId: f.submissionId, round: fs?.roundNumber ?? null, gLabel: gLabel(gNum.get(f.generationId) ?? 0) } : null,
       accepted: accepted.get(b.id) ?? null,

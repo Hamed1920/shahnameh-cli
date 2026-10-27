@@ -22,6 +22,13 @@
       "when": 1793114503204,
       "tag": "0002_production_panel",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793119912186,
+      "tag": "0003_pd_project_scoped_ids",
+      "breakpoints": true
     }
   ]
 }

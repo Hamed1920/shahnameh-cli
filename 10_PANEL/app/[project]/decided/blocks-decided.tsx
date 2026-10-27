@@ -52,7 +52,7 @@ async function BlockDetail({ pr, actor, b, view, href }: {
   pr: Project; actor: Actor; b: TreeBlock; view: string; href: (over: Record<string, string>) => string
 }) {
   const { productionReview } = await import('@/lib/pd-review')
-  const review = await productionReview(b.id, actor.id)
+  const review = await productionReview(b.key, actor.id)
   const notes = review.submissions.flatMap((s) => s.notes)
   const by = { open: 0, in_progress: 0, resolved: 0 }
   for (const n of notes) by[n.resolutionStatus]++

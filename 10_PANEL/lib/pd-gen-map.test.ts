@@ -1,8 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  blockJobLabel, mapOutputs, matchPromptVersion, numberNewOutputs, outputKey, shouldSaveVersion, splitByBlock,
-  type RawDecision, type RawJob, type RawSidecar,
+  blockJobLabel, creatorOf, isSystemName, mapOutputs, matchPromptVersion, numberNewOutputs, outputKey, shouldSaveVersion, splitByBlock,
+  type RawDecision, type RawJob, type RawRequest, type RawSidecar,
 } from './pd-gen-map.ts';
 import { promptHash } from './pd/prompt-hash.ts';
 import { gLabel } from './pd/numbering.ts';
@@ -106,4 +106,36 @@ test('prompt version is new only when the normalized text changed', () => {
 
 test('block job label', () => {
   assert.equal(blockJobLabel('PD-S01-B003', 2), 'PD-S01-B003 pv2');
+});
+
+test('creatorOf names the person, not the system part that queued the job', () => {
+  const requests: RawRequest[] = [
+    { ts: '2026-10-01T10:00:00Z', type: 'batch.submit', batchId: 'B1', reviewer: 'sub', actorId: 'u-sub' },
+    { ts: '2026-10-01T10:01:00Z', type: 'batch.approve', batchId: 'B1', reviewer: 'appr', actorId: 'u-appr' },
+    { ts: '2026-10-01T10:00:00Z', type: 'batch.submit', batchId: 'B2', reviewer: 'only-sub', actorId: 'u-only' },
+    { ts: '2026-10-03T10:00:00Z', type: 'regenerate', jobId: 'J2', reviewer: 'regen', actorId: 'u-regen' },
+  ];
+  const decisions: RawDecision[] = [
+    { ts: '2026-10-02T10:00:00Z', reviewer: 'acc', actorId: 'u-acc', jobId: 'J1', candidate: 'c', hfJobId: 'h', verdict: 'accepted' },
+    { ts: '2026-10-02T11:00:00Z', reviewer: 'den', actorId: 'u-den', jobId: 'J2', candidate: 'c', hfJobId: 'h', verdict: 'denied', requeue: true },
+  ];
+  const J: RawJob[] = [
+    { jobId: 'J1', batchId: 'B1', enqueuedBy: 'panel:batch', enqueuedAt: '2026-10-01T10:02:00Z' },
+    { jobId: 'J2', batchId: 'B2', enqueuedBy: 'panel:batch', enqueuedAt: '2026-10-01T10:02:00Z' },
+    { jobId: 'F1', parentJobId: 'J1', enqueuedBy: 'worker:final', enqueuedAt: '2026-10-02T10:01:00Z' },
+    { jobId: 'R2', parentJobId: 'J2', enqueuedBy: 'worker:revision', enqueuedAt: '2026-10-02T11:01:00Z' },
+    { jobId: 'G2', parentJobId: 'J2', enqueuedBy: 'panel:regenerate', enqueuedAt: '2026-10-03T10:01:00Z' },
+    { jobId: 'Y', enqueuedBy: 'cli' },
+  ];
+  const of = (id: string, d = decisions, r = requests) => creatorOf(J.find((j) => j.jobId === id)!, J, d, r);
+  assert.deepEqual(of('J1'), { name: 'appr', id: 'u-appr' }); // the approver, not the submitter
+  assert.deepEqual(of('J2'), { name: 'only-sub', id: 'u-only' }); // never approved in the records: the submitter
+  assert.deepEqual(of('F1'), { name: 'acc', id: 'u-acc' }); // whoever accepted the draft
+  assert.deepEqual(of('R2'), { name: 'den', id: 'u-den' }); // whoever denied it with a requeue
+  assert.deepEqual(of('G2'), { name: 'regen', id: 'u-regen' });
+  assert.deepEqual(of('F1', [], requests), { name: 'appr', id: 'u-appr' }); // no decision: the parent's person
+  assert.deepEqual(of('Y'), { name: 'cli', id: null });
+  assert.deepEqual(of('G2', decisions, []), { name: 'panel:regenerate', id: null }); // nothing to read: unchanged
+  assert.equal(isSystemName('worker:final'), true);
+  assert.equal(isSystemName('Test Agent'), false);
 });

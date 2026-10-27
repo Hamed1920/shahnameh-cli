@@ -28,13 +28,13 @@ export default async function SequencePage({ params }: PageProps<'/[project]/seq
   const ids = blocks.map((b) => b.id)
   const { playlistBlocks } = await import('@/lib/pd-playlist')
   const pl = await playlistBlocks(pr, seq.id, true)
-  const hrefFor = (id: string) => `/${pr.slug}/sequences/${seq.id}/${id}`
+  const hrefFor = (id: string) => `/${pr.slug}/sequences/${seq.displayId}/${id}`
 
   return (
     <div className="space-y-12">
       <div>
-        <Breadcrumb items={[{ label: pr.name, href: `/${pr.slug}/sequences` }, { label: `${seq.id} ${seq.title}` }]} />
-        <PageHeader title={seq.title} eyebrow={seq.id} meta={<NewBlock project={pr.slug} sequence={seq.id} />}>
+        <Breadcrumb items={[{ label: pr.name, href: `/${pr.slug}/sequences` }, { label: `${seq.displayId} ${seq.title}` }]} />
+        <PageHeader title={seq.title} eyebrow={seq.displayId} meta={<NewBlock project={pr.slug} sequence={seq.displayId} />}>
           {seq.description || 'The blocks of this sequence, in the order they play.'}
         </PageHeader>
       </div>
@@ -43,7 +43,7 @@ export default async function SequencePage({ params }: PageProps<'/[project]/seq
         <section>
           <SectionHeading count={blocks.length}>Playback</SectionHeading>
           <SequencePlayback
-            scope={`production:${seq.id}`}
+            scope={`production:${seq.displayId}`}
             sources={[
               { id: 'submitted', label: 'Submitted', hint: 'Active submissions, as the director sees them', stops: buildPlaylist(pr.slug, pl, 'submitted', hrefFor) },
               { id: 'best', label: 'Best available', hint: 'Final if set, else the active submission, else the latest accepted generation', stops: buildPlaylist(pr.slug, pl, 'best', hrefFor) },
@@ -67,10 +67,10 @@ export default async function SequencePage({ params }: PageProps<'/[project]/seq
               {blocks.map((b) => (
                 <Tr key={b.id}>
                   <Td className="font-mono text-[12.5px] whitespace-nowrap">
-                    <Link href={`/${pr.slug}/sequences/${seq.id}/${b.id}`} className="focus-ring rounded text-fg hover:underline">{b.id}</Link>
+                    <Link href={`/${pr.slug}/sequences/${seq.displayId}/${b.id}`} className="focus-ring rounded text-fg hover:underline">{b.id}</Link>
                   </Td>
                   <Td className="text-fg/90" dir="auto">{b.title}</Td>
-                  <Td><DurationEdit project={pr.slug} sequence={seq.id} id={b.id} seconds={b.targetDurationSeconds} /></Td>
+                  <Td><DurationEdit project={pr.slug} sequence={seq.displayId} id={b.id} seconds={b.targetDurationSeconds} /></Td>
                   <Td><StatusLabel status={b.status} /></Td>
                   <Td className="font-mono text-[12.5px] whitespace-nowrap text-muted">{b.round === null ? '—' : `Round ${b.round}`}</Td>
                   <Td>
@@ -82,7 +82,7 @@ export default async function SequencePage({ params }: PageProps<'/[project]/seq
                       {b.open === 0 && b.unread === 0 && <span className="text-faint">—</span>}
                     </span>
                   </Td>
-                  <Td className="text-right"><BlockTools project={pr.slug} sequence={seq.id} ids={ids} id={b.id} title={b.title} /></Td>
+                  <Td className="text-right"><BlockTools project={pr.slug} sequence={seq.displayId} ids={ids} id={b.id} title={b.title} /></Td>
                 </Tr>
               ))}
             </tbody>

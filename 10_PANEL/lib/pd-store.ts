@@ -11,6 +11,7 @@ import { audit } from './audit.ts'
 import { getDb } from './db/client.ts'
 import { block, blockFinal, feedback, feedbackRead, generation, reviewSubmission, sequence } from './db/schema.ts'
 import { checkDuration, checkTitle, sameIds } from './pd-order.ts'
+import { displayOf, scopedKey } from './pd/keys.ts'
 import { nextNumber } from './pd/numbering.ts'
 import { blockStatus, feedbackCounts, type BlockStatus } from './pd/status.ts'
 import { blockDisplayId, blockInternalId, sequenceDisplayId, sequenceInternalId } from './structure.ts'
@@ -32,8 +33,15 @@ async function lock(tx: Tx, key: string): Promise<void> {
 export type SequenceRow = typeof sequence.$inferSelect
 export type BlockRow = typeof block.$inferSelect
 
+// Ids. A row's `id` is the database key (`<project>:<display id>`, lib/pd/keys.ts); `displayId` is what
+// people and URLs see. The summaries below are for screens: their `id` is the display id and `key` the
+// database key. Everything that takes a project and an id from a screen takes the display id and
+// resolves it inside that project.
+
 export interface SequenceSummary {
   id: string
+  /** The database key, for listBlocks and the like. */
+  key: string
   number: number
   title: string
   description: string | null
@@ -44,6 +52,8 @@ export interface SequenceSummary {
 
 export interface BlockLine {
   id: string
+  /** The database key, for the review and generation functions. */
+  key: string
   number: number
   title: string
   internalId: string | null
@@ -111,13 +121,13 @@ export async function listSequences(project: string): Promise<SequenceSummary[]>
       else if (st === 'revision_required') counts.revision++
       else if (st === 'final_ready') counts.final++
     }
-    return { id: s.id, number: s.number, title: s.title, description: s.description, internalId: s.internalId, displayOrder: s.displayOrder, counts }
+    return { id: s.displayId, key: s.id, number: s.number, title: s.title, description: s.description, internalId: s.internalId, displayOrder: s.displayOrder, counts }
   })
 }
 
-/** A live sequence of this project by its display id (PD-S01), or null. */
+/** A live sequence of this project by its display id (PD-S01), or null. The row's `id` is its key. */
 export async function getSequence(project: string, id: string): Promise<SequenceRow | null> {
-  const [row] = await getDb().select().from(sequence).where(and(eq(sequence.projectSlug, project), eq(sequence.id, id), isNull(sequence.retiredAt))).limit(1)
+  const [row] = await getDb().select().from(sequence).where(and(eq(sequence.projectSlug, project), eq(sequence.displayId, id), isNull(sequence.retiredAt))).limit(1)
   return row ?? null
 }
 
@@ -135,10 +145,10 @@ export async function createSequence(
     if (n > MAX_NUMBER) return { ok: false as const, error: `A project can have at most ${MAX_NUMBER} sequences.` }
     const order = Math.max(0, ...rows.map((r) => r.o)) + 1
     const [row] = await tx.insert(sequence).values({
-      id: sequenceDisplayId(code, n), projectSlug: project, number: n, title: t.title, description: desc,
+      id: scopedKey(project, sequenceDisplayId(code, n)), displayId: sequenceDisplayId(code, n), projectSlug: project, number: n, title: t.title, description: desc,
       displayOrder: order, internalId: sequenceInternalId(code, n), createdBy: actor.id === 'local' ? null : actor.id,
     }).returning()
-    await audit({ project, actor, action: 'sequence.create', objectType: 'sequence', objectId: row.id, detail: { title: row.title, internalId: row.internalId } }, tx)
+    await audit({ project, actor, action: 'sequence.create', objectType: 'sequence', objectId: row.displayId, detail: { title: row.title, internalId: row.internalId } }, tx)
     return { ok: true as const, sequence: row }
   })
 }
@@ -147,10 +157,10 @@ export async function renameSequence(project: string, id: string, title: string,
   const t = checkTitle(title)
   if (!t.ok) return t
   return getDb().transaction(async (tx) => {
-    const [row] = await tx.select().from(sequence).where(and(eq(sequence.projectSlug, project), eq(sequence.id, id), isNull(sequence.retiredAt))).for('update')
+    const [row] = await tx.select().from(sequence).where(and(eq(sequence.projectSlug, project), eq(sequence.displayId, id), isNull(sequence.retiredAt))).for('update')
     if (!row) return { ok: false as const, error: 'That sequence does not exist.' }
     if (row.title === t.title) return { ok: true as const }
-    await tx.update(sequence).set({ title: t.title }).where(eq(sequence.id, id))
+    await tx.update(sequence).set({ title: t.title }).where(eq(sequence.id, row.id))
     await audit({ project, actor, action: 'sequence.rename', objectType: 'sequence', objectId: id, detail: { from: row.title, to: t.title } }, tx)
     return { ok: true as const }
   })
@@ -160,10 +170,10 @@ export async function renameSequence(project: string, id: string, title: string,
 export async function reorderSequences(project: string, orderedIds: string[], actor: Actor): Promise<Result> {
   return getDb().transaction(async (tx) => {
     await lock(tx, `pd-seq:${project}`)
-    const live = await tx.select({ id: sequence.id }).from(sequence).where(and(eq(sequence.projectSlug, project), isNull(sequence.retiredAt)))
+    const live = await tx.select({ id: sequence.displayId }).from(sequence).where(and(eq(sequence.projectSlug, project), isNull(sequence.retiredAt)))
     if (!sameIds(live.map((r) => r.id), orderedIds)) return { ok: false as const, error: 'The list changed. Reload and try again.' }
     for (let i = 0; i < orderedIds.length; i++) {
-      await tx.update(sequence).set({ displayOrder: i + 1 }).where(and(eq(sequence.projectSlug, project), eq(sequence.id, orderedIds[i])))
+      await tx.update(sequence).set({ displayOrder: i + 1 }).where(and(eq(sequence.projectSlug, project), eq(sequence.displayId, orderedIds[i])))
     }
     await audit({ project, actor, action: 'sequence.reorder', objectType: 'project', objectId: project, detail: { order: orderedIds } }, tx)
     return { ok: true as const }
@@ -173,11 +183,11 @@ export async function reorderSequences(project: string, orderedIds: string[], ac
 /** Soft delete. Refused while the sequence still has live blocks: retire those first. The number stays spent. */
 export async function retireSequence(project: string, id: string, actor: Actor): Promise<Result> {
   return getDb().transaction(async (tx) => {
-    const [row] = await tx.select().from(sequence).where(and(eq(sequence.projectSlug, project), eq(sequence.id, id), isNull(sequence.retiredAt))).for('update')
+    const [row] = await tx.select().from(sequence).where(and(eq(sequence.projectSlug, project), eq(sequence.displayId, id), isNull(sequence.retiredAt))).for('update')
     if (!row) return { ok: false as const, error: 'That sequence does not exist.' }
-    const [{ n }] = await tx.select({ n: count() }).from(block).where(and(eq(block.sequenceId, id), isNull(block.retiredAt)))
+    const [{ n }] = await tx.select({ n: count() }).from(block).where(and(eq(block.sequenceId, row.id), isNull(block.retiredAt)))
     if (Number(n) > 0) return { ok: false as const, error: `${id} still has ${n} block${Number(n) === 1 ? '' : 's'}. Retire them first.` }
-    await tx.update(sequence).set({ retiredAt: new Date() }).where(eq(sequence.id, id))
+    await tx.update(sequence).set({ retiredAt: new Date() }).where(eq(sequence.id, row.id))
     await audit({ project, actor, action: 'sequence.retire', objectType: 'sequence', objectId: id, detail: { title: row.title } }, tx)
     return { ok: true as const }
   })
@@ -185,6 +195,7 @@ export async function retireSequence(project: string, id: string, actor: Actor):
 
 // ---- blocks --------------------------------------------------------------------------------
 
+/** The live blocks of a sequence, by the sequence's key (its row's `id`). */
 export async function listBlocks(sequenceId: string, viewer: Actor | null): Promise<BlockLine[]> {
   const db = getDb()
   const rows = await db.select().from(block).where(and(eq(block.sequenceId, sequenceId), isNull(block.retiredAt))).orderBy(asc(block.displayOrder), asc(block.number))
@@ -213,7 +224,7 @@ export async function listBlocks(sequenceId: string, viewer: Actor | null): Prom
     const c = feedbackCounts(mine, read)
     const unreadBy = (cat: string) => (viewer ? ofBlock.filter((n) => n.category === cat && !read.has(n.id)).length : 0)
     return {
-      id: b.id, number: b.number, title: b.title, internalId: b.internalId, displayOrder: b.displayOrder,
+      id: b.displayId, key: b.id, number: b.number, title: b.title, internalId: b.internalId, displayOrder: b.displayOrder,
       targetDurationSeconds: b.targetDurationSeconds, status: statusOf(f), generations: f.generations,
       round: f.active?.round ?? null, open: c.open, unread: viewer ? c.unread : 0,
       unreadDirector: unreadBy('director'), unreadContinuity: unreadBy('continuity'),
@@ -221,12 +232,13 @@ export async function listBlocks(sequenceId: string, viewer: Actor | null): Prom
   })
 }
 
-/** A live block of this project by its display id (PD-S01-B003), or null. */
+/** A live block of this project by its display id (PD-S01-B003), or null. The row's `id` is its key. */
 export async function getBlock(project: string, id: string): Promise<BlockRow | null> {
-  const [row] = await getDb().select().from(block).where(and(eq(block.projectSlug, project), eq(block.id, id), isNull(block.retiredAt))).limit(1)
+  const [row] = await getDb().select().from(block).where(and(eq(block.projectSlug, project), eq(block.displayId, id), isNull(block.retiredAt))).limit(1)
   return row ?? null
 }
 
+/** `sequenceId` is the sequence's key (the `id` of the row getSequence returns). */
 export async function createBlock(
   sequenceId: string, title: string, targetDuration: unknown, actor: Actor,
 ): Promise<Result<{ block: BlockRow }>> {
@@ -242,19 +254,19 @@ export async function createBlock(
     const n = nextNumber(rows.map((r) => r.n))
     if (n > MAX_NUMBER) return { ok: false as const, error: `A sequence can have at most ${MAX_NUMBER} blocks.` }
     const order = Math.max(0, ...rows.map((r) => r.o)) + 1
-    const code = seq.id.replace(/-S\d+$/, '')
+    const code = seq.displayId.replace(/-S\d+$/, '')
     const [row] = await tx.insert(block).values({
-      id: blockDisplayId(code, seq.number, n), projectSlug: seq.projectSlug, sequenceId, number: n,
+      id: scopedKey(seq.projectSlug, blockDisplayId(code, seq.number, n)), displayId: blockDisplayId(code, seq.number, n), projectSlug: seq.projectSlug, sequenceId, number: n,
       internalId: blockInternalId(code, seq.number, n), title: t.title, displayOrder: order,
       targetDurationSeconds: d.seconds, createdBy: actor.id === 'local' ? null : actor.id,
     }).returning()
-    await audit({ project: seq.projectSlug, actor, action: 'block.create', objectType: 'block', objectId: row.id, detail: { title: row.title, internalId: row.internalId, targetDurationSeconds: d.seconds } }, tx)
+    await audit({ project: seq.projectSlug, actor, action: 'block.create', objectType: 'block', objectId: row.displayId, detail: { title: row.title, internalId: row.internalId, targetDurationSeconds: d.seconds } }, tx)
     return { ok: true as const, block: row }
   })
 }
 
 async function liveBlock(tx: Tx, project: string, id: string): Promise<BlockRow | null> {
-  const [row] = await tx.select().from(block).where(and(eq(block.projectSlug, project), eq(block.id, id), isNull(block.retiredAt))).for('update')
+  const [row] = await tx.select().from(block).where(and(eq(block.projectSlug, project), eq(block.displayId, id), isNull(block.retiredAt))).for('update')
   return row ?? null
 }
 
@@ -265,7 +277,7 @@ export async function renameBlock(project: string, id: string, title: string, ac
     const row = await liveBlock(tx, project, id)
     if (!row) return { ok: false as const, error: 'That block does not exist.' }
     if (row.title === t.title) return { ok: true as const }
-    await tx.update(block).set({ title: t.title }).where(eq(block.id, id))
+    await tx.update(block).set({ title: t.title }).where(eq(block.id, row.id))
     await audit({ project, actor, action: 'block.rename', objectType: 'block', objectId: id, detail: { from: row.title, to: t.title } }, tx)
     return { ok: true as const }
   })
@@ -278,7 +290,7 @@ export async function setTargetDuration(project: string, id: string, duration: u
     const row = await liveBlock(tx, project, id)
     if (!row) return { ok: false as const, error: 'That block does not exist.' }
     if (row.targetDurationSeconds === d.seconds) return { ok: true as const }
-    await tx.update(block).set({ targetDurationSeconds: d.seconds }).where(eq(block.id, id))
+    await tx.update(block).set({ targetDurationSeconds: d.seconds }).where(eq(block.id, row.id))
     await audit({ project, actor, action: 'block.duration', objectType: 'block', objectId: id, detail: { from: row.targetDurationSeconds, to: d.seconds } }, tx)
     return { ok: true as const }
   })
@@ -287,11 +299,13 @@ export async function setTargetDuration(project: string, id: string, duration: u
 /** Film order of the live blocks of one sequence. Changes display_order only: ids and numbers stay. */
 export async function reorderBlocks(project: string, sequenceId: string, orderedIds: string[], actor: Actor): Promise<Result> {
   return getDb().transaction(async (tx) => {
-    await lock(tx, `pd-block:${sequenceId}`)
-    const live = await tx.select({ id: block.id }).from(block).where(and(eq(block.projectSlug, project), eq(block.sequenceId, sequenceId), isNull(block.retiredAt)))
+    const [seq] = await tx.select().from(sequence).where(and(eq(sequence.projectSlug, project), eq(sequence.displayId, sequenceId)))
+    if (!seq) return { ok: false as const, error: 'That sequence does not exist.' }
+    await lock(tx, `pd-block:${seq.id}`)
+    const live = await tx.select({ id: block.displayId }).from(block).where(and(eq(block.projectSlug, project), eq(block.sequenceId, seq.id), isNull(block.retiredAt)))
     if (!sameIds(live.map((r) => r.id), orderedIds)) return { ok: false as const, error: 'The list changed. Reload and try again.' }
     for (let i = 0; i < orderedIds.length; i++) {
-      await tx.update(block).set({ displayOrder: i + 1 }).where(eq(block.id, orderedIds[i]))
+      await tx.update(block).set({ displayOrder: i + 1 }).where(and(eq(block.projectSlug, project), eq(block.displayId, orderedIds[i])))
     }
     await audit({ project, actor, action: 'block.reorder', objectType: 'sequence', objectId: sequenceId, detail: { order: orderedIds } }, tx)
     return { ok: true as const }
@@ -303,7 +317,7 @@ export async function retireBlock(project: string, id: string, actor: Actor): Pr
   return getDb().transaction(async (tx) => {
     const row = await liveBlock(tx, project, id)
     if (!row) return { ok: false as const, error: 'That block does not exist.' }
-    await tx.update(block).set({ retiredAt: new Date() }).where(eq(block.id, id))
+    await tx.update(block).set({ retiredAt: new Date() }).where(eq(block.id, row.id))
     await audit({ project, actor, action: 'block.retire', objectType: 'block', objectId: id, detail: { title: row.title } }, tx)
     return { ok: true as const }
   })

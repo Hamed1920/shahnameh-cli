@@ -96,9 +96,12 @@ const ts = (name: string) => timestamp(name, { withTimezone: true });
 const createdAt = () => ts('created_at').notNull().defaultNow();
 const personFk = (name: string) => text(name).references(() => user.id);
 
-// A sequence of blocks. `id` is the display id (PD-S01); `internal_id` is the episode id in the project.
+// A sequence of blocks. `id` is an opaque key, `<project_slug>:<display id>` (lib/pd/keys.ts), so two
+// projects with the same code cannot collide; `display_id` is the id people see (PD-S01);
+// `internal_id` is the episode id in the project.
 export const sequence = pgTable('sequence', {
   id: text('id').primaryKey(),
+  displayId: text('display_id').notNull(),
   projectSlug: text('project_slug').notNull(),
   number: integer('number').notNull(),
   title: text('title').notNull(),
@@ -108,22 +111,31 @@ export const sequence = pgTable('sequence', {
   createdBy: personFk('created_by'),
   createdAt: createdAt(),
   retiredAt: ts('retired_at'),
-}, (t) => [uniqueIndex('sequence_project_number_unique').on(t.projectSlug, t.number)]);
+}, (t) => [
+  uniqueIndex('sequence_project_number_unique').on(t.projectSlug, t.number),
+  uniqueIndex('sequence_project_display_unique').on(t.projectSlug, t.displayId),
+]);
 
-// A block (one shot). `id` is the display id (PD-S01-B003); `internal_id` the scene/shot id.
+// A block (one shot). `id` is an opaque key (`<project_slug>:<display id>`); `display_id` is
+// PD-S01-B003; `internal_id` the scene/shot id, unique within its project.
 export const block = pgTable('block', {
   id: text('id').primaryKey(),
+  displayId: text('display_id').notNull(),
   projectSlug: text('project_slug').notNull(),
   sequenceId: text('sequence_id').notNull().references(() => sequence.id),
   number: integer('number').notNull(),
-  internalId: text('internal_id').unique(),
+  internalId: text('internal_id'),
   title: text('title').notNull(),
   displayOrder: integer('display_order').notNull(),
   targetDurationSeconds: integer('target_duration_seconds'),
   createdBy: personFk('created_by'),
   createdAt: createdAt(),
   retiredAt: ts('retired_at'),
-}, (t) => [uniqueIndex('block_sequence_number_unique').on(t.sequenceId, t.number)]);
+}, (t) => [
+  uniqueIndex('block_sequence_number_unique').on(t.sequenceId, t.number),
+  uniqueIndex('block_project_display_unique').on(t.projectSlug, t.displayId),
+  uniqueIndex('block_project_internal_unique').on(t.projectSlug, t.internalId),
+]);
 
 // Every saved wording of a block's prompt. The hash is of the normalized text.
 export const promptVersion = pgTable('prompt_version', {

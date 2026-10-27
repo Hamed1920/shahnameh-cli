@@ -19,6 +19,8 @@ export interface TreeGeneration {
 
 export interface TreeBlock {
   id: string
+  /** The database key, for loading the block's review. */
+  key: string
   sequenceId: string
   title: string
   number: number

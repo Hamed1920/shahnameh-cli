@@ -7,6 +7,7 @@ import type { Actor } from '@/lib/actor-core'
 import { freshCatalog } from '@/lib/catalog'
 import { buildGenerateRow, submitOneRowBatch } from '@/lib/generate-row'
 import { blockJobLabel } from '@/lib/pd-gen-map'
+import { displayOf } from '@/lib/pd/keys'
 import { requireProject, type Project } from '@/lib/projects'
 import { getCatalog, getWorkerConfig } from '@/lib/store'
 import { isBlocks } from '@/lib/structure'
@@ -105,7 +106,8 @@ export async function generateForBlock(formData: FormData): Promise<BlockResult>
   freshCatalog()
   const blockId = String(formData.get('block') ?? '')
   const { getBlock } = await import('@/lib/pd-store')
-  const b = await getBlock(pr.slug, blockId)
+  // The form carries the block's key; the lookup is by display id inside this project.
+  const b = await getBlock(pr.slug, displayOf(blockId))
   if (!b || !b.internalId) return fail('That block does not exist.')
   const prompt = String(formData.get('prompt') ?? '')
   if (!prompt.trim()) return fail('The prompt cannot be empty.')
@@ -121,21 +123,21 @@ export async function generateForBlock(formData: FormData): Promise<BlockResult>
     const versionRefs = Array.isArray(version.refs) ? (version.refs as unknown[]).map(String) : []
     const { job, defaults } = await buildGenerateRow(pr, formData, cfg, {
       target: b.internalId,
-      label: blockJobLabel(b.id, version.versionNumber),
+      label: blockJobLabel(b.displayId, version.versionNumber),
       // Verbatim: the worker keeps this as basePrompt, which is how the generation finds its version.
       prompt: version.promptText,
       refs: [...new Set([...versionRefs, ...tokens])],
     })
     const batchId = await submitOneRowBatch(pr, actor, {
-      name: `${b.id} pv${version.versionNumber}`,
+      name: `${b.displayId} pv${version.versionNumber}`,
       source: { kind: 'paste', files: [] },
       defaults,
       job,
     })
     // The Activity Log (auth is on here: guard() refuses otherwise).
     const { audit } = await import('@/lib/audit')
-    await audit({ project: pr.slug, actor, action: 'generation.request', objectType: 'block', objectId: b.id, detail: { batchId, promptVersion: version.versionNumber } })
-    refresh(pr, b.id)
+    await audit({ project: pr.slug, actor, action: 'generation.request', objectType: 'block', objectId: b.displayId, detail: { batchId, promptVersion: version.versionNumber } })
+    refresh(pr, b.displayId)
     return { ok: true, batchId, version: version.versionNumber, created: saved.created }
   } catch (e) {
     if (e instanceof Invalid) return fail(e.message)
