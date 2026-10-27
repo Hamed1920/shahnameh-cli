@@ -18,8 +18,6 @@ import { foldGallery, type GalleryEvent, type GalleryState } from './gallery'
  * why the panel may own both ends of it.
  */
 
-export const REVIEWER = process.env.SHM_REVIEWER || 'hamed'
-
 // One append at a time within this process, so two tabs cannot interleave.
 let tail: Promise<void> = Promise.resolve()
 

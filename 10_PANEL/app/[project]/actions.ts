@@ -9,6 +9,7 @@ import { requireProject } from '@/lib/projects'
 import { Invalid, parseJsonArray, readUploads, type PendingUpload } from '@/lib/uploads'
 import { getCandidates, getLearnings, resolveRefToken } from '@/lib/store'
 import { revalidateProject } from '@/lib/revalidate'
+import { gate, whoStamp } from '@/lib/actor'
 import type { Project } from '@/lib/projects'
 import { MACHINE } from '@/worker/lib/machine.mjs'
 import type { Candidate, Learning, ReviewDecision, Verdict } from '@/lib/types'
@@ -26,8 +27,6 @@ import type { Candidate, Learning, ReviewDecision, Verdict } from '@/lib/types'
  * the uploads, and performs the promotion, rejection and requeue. One writer
  * for the registries means no races against the PowerShell tools.
  */
-
-const REVIEWER = process.env.SHM_REVIEWER || 'hamed'
 
 async function appendJsonl(file: string, record: unknown): Promise<void> {
   await fs.mkdir(path.dirname(file), { recursive: true })
@@ -111,6 +110,9 @@ export async function decide(
   _prev: ActionResult | null,
   formData: FormData,
 ): Promise<ActionResult> {
+  const g = await gate(String(formData.get('project') ?? ''), 'review.decide')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(formData.get('project'))
   const candidatePath = String(formData.get('candidate') ?? '')
   const verdict = String(formData.get('verdict') ?? '') as Verdict
@@ -150,6 +152,12 @@ export async function decide(
       ? formData.get('regenStage') === 'final' ? 'final' : 'draft'
       : null
 
+  // Accepting a draft buys the final and denying with requeue buys a revision: both spend (worker.mjs runDecisions).
+  if (regenerates) {
+    const spend = await gate(pr.slug, 'review.decide.spend')
+    if (!spend.ok) return { ok: false, error: spend.error }
+  }
+
   // A discard files nothing: uploads and reference edits on the form are ignored.
   let uploads: PendingUpload[] = []
   let refs: string[] | undefined
@@ -173,7 +181,7 @@ export async function decide(
   const record: ReviewDecision = {
     id,
     ts: new Date().toISOString(),
-    reviewer: REVIEWER,
+    ...whoStamp(actor),
     // The machine that decided: only its worker applies it (worker/lib/machine.mjs).
     machine: MACHINE,
     candidate: candidatePath,
@@ -221,6 +229,9 @@ export interface LearningResult { ok: boolean; error?: string }
 
 /** Approve or reject a proposed rule. Returns why not, rather than throwing, so the page can say so. */
 export async function decideLearning(_prev: LearningResult | null, formData: FormData): Promise<LearningResult> {
+  const g = await gate(String(formData.get('project') ?? ''), 'learning.decide')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(formData.get('project'))
   const id = String(formData.get('id') ?? '')
   const status = String(formData.get('status') ?? '')
@@ -236,7 +247,7 @@ export async function decideLearning(_prev: LearningResult | null, formData: For
     ...existing,
     rule: edited || existing.rule,
     status,
-    decidedBy: REVIEWER,
+    decidedBy: actor.name,
     decidedAt: new Date().toISOString(),
   }
 

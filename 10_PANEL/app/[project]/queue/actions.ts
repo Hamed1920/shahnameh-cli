@@ -1,7 +1,8 @@
 'use server'
 
 import fsp from 'node:fs/promises'
-import { REVIEWER, appendJobRequest, newRequestId } from '@/lib/job-requests'
+import { appendJobRequest, newRequestId } from '@/lib/job-requests'
+import { gate, whoStamp } from '@/lib/actor'
 import { listProjects, requireProject } from '@/lib/projects'
 import { revalidateProject } from '@/lib/revalidate'
 import { getQueue, getWorkerState } from '@/lib/store'
@@ -17,6 +18,9 @@ export async function actOnFailedJob(
   jobId: string,
   action: 'retry' | 'dismiss',
 ): Promise<{ ok: boolean; error?: string }> {
+  const g = await gate(project, action === 'retry' ? 'job.retry' : 'job.dismiss')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(project)
   const [queue, state] = await Promise.all([getQueue(pr), getWorkerState(pr)])
   if (!queue.some((q) => q.jobId === jobId)) return { ok: false, error: 'That job is not in the queue any more.' }
@@ -26,7 +30,7 @@ export async function actOnFailedJob(
   }
   try {
     await appendJobRequest(pr, {
-      id: newRequestId(), ts: new Date().toISOString(), reviewer: REVIEWER,
+      id: newRequestId(), ts: new Date().toISOString(), ...whoStamp(actor),
       type: action === 'retry' ? 'job.retry' : 'job.dismiss', jobId,
     })
   } catch (e) {
@@ -43,6 +47,8 @@ export async function actOnFailedJob(
  * running worker finish the job in hand and exit -- never mid-generation.
  */
 export async function stopAllWorkers(project: string): Promise<{ ok: boolean; error?: string }> {
+  const g = await gate(project, 'workers.control')
+  if (!g.ok) return { ok: false, error: g.error }
   try {
     await fsp.writeFile(pauseFlagPath(), `stopped from the panel ${new Date().toISOString()}\n`, 'utf8')
     for (const pr of await listProjects()) {
@@ -57,6 +63,8 @@ export async function stopAllWorkers(project: string): Promise<{ ok: boolean; er
 
 /** Undo "Stop all workers": the supervisor starts every worker again on its next tick. */
 export async function startAllWorkers(project: string): Promise<{ ok: boolean; error?: string }> {
+  const g = await gate(project, 'workers.control')
+  if (!g.ok) return { ok: false, error: g.error }
   try {
     for (const pr of await listProjects()) {
       if (stopFlagKind(pr.P.stopFlag) === 'stop') await fsp.rm(pr.P.stopFlag, { force: true })

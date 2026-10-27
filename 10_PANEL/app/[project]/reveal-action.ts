@@ -4,6 +4,7 @@ import { spawn } from 'node:child_process'
 import fs from 'node:fs/promises'
 import { safeResolve } from '@/lib/paths'
 import { requireProject } from '@/lib/projects'
+import { gate } from '@/lib/actor'
 
 /**
  * Open File Explorer with one project file selected. Reads nothing and writes
@@ -14,6 +15,8 @@ import { requireProject } from '@/lib/projects'
  * window opens on their desktop. Any path is confined to the project root.
  */
 export async function revealInFolder(project: string, relative: string): Promise<{ ok: boolean; error?: string }> {
+  const g = await gate(project, 'reveal.local')
+  if (!g.ok) return { ok: false, error: g.error }
   if (process.platform !== 'win32') return { ok: false, error: 'Show in folder only works on Windows.' }
 
   const pr = await requireProject(project)

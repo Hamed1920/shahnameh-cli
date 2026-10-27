@@ -4,7 +4,8 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { freshCatalog } from '@/lib/catalog'
 import { checkRefCount, readGenerationForm } from '@/lib/generation-form'
-import { REVIEWER, appendJobRequest, newRequestId } from '@/lib/job-requests'
+import { appendJobRequest, newRequestId } from '@/lib/job-requests'
+import { gate, whoStamp } from '@/lib/actor'
 import { requireProject } from '@/lib/projects'
 import { revalidateProject } from '@/lib/revalidate'
 import { getDecisions, getWorkerConfig, getWorkerState, referenceResolver } from '@/lib/store'
@@ -22,6 +23,9 @@ import type { JobRequest } from '@/lib/types'
  * the worker checks the references again before it queues anything.
  */
 export async function requestRegenerate(formData: FormData): Promise<{ ok: boolean; error?: string }> {
+  const g = await gate(String(formData.get('project') ?? ''), 'regen.spend')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(formData.get('project'))
   freshCatalog()
   const jobId = String(formData.get('jobId') ?? '').trim()
@@ -42,7 +46,7 @@ export async function requestRegenerate(formData: FormData): Promise<{ ok: boole
   }
 
   const req: Extract<JobRequest, { type: 'regenerate' }> = {
-    id: newRequestId(), ts: new Date().toISOString(), reviewer: REVIEWER, type: 'regenerate', jobId, decisionId,
+    id: newRequestId(), ts: new Date().toISOString(), ...whoStamp(actor), type: 'regenerate', jobId, decisionId,
   }
   let uploads: PendingUpload[] = []
   try {

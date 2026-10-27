@@ -1,4 +1,5 @@
 import { getProject } from '@/lib/projects'
+import { gateRoute } from '@/lib/actor'
 import { getStudioSession, getWorkerStatus } from '@/lib/store'
 
 export const dynamic = 'force-dynamic'
@@ -9,7 +10,10 @@ export const dynamic = 'force-dynamic'
  * that prices and generates a try, so the dialog can say why nothing is happening.
  */
 export async function GET(request: Request, ctx: RouteContext<'/[project]/api/studio'>) {
-  const pr = await getProject((await ctx.params).project)
+  const slug = (await ctx.params).project
+  const gr = await gateRoute(slug, 'view.prompts')
+  if (!gr.ok) return gr.response
+  const pr = await getProject(slug)
   if (!pr) return new Response('no such project', { status: 404 })
   const id = new URL(request.url).searchParams.get('session') ?? ''
   if (!/^ss_[a-z0-9]{4,40}$/.test(id)) return new Response('bad session', { status: 400 })

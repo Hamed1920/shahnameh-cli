@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { idRx } from '../../../worker/lib/ids.mjs'
 import { EPISODE_RX, episodeTitleSlug, shortEpisode } from '@/lib/episodes'
 import { requireProject } from '@/lib/projects'
+import { gate, whoStamp } from '@/lib/actor'
 import { getEpisodes } from '@/lib/store'
 import { getAcceptedTakes } from '@/lib/episode-board'
 import { Invalid, readFootage } from '@/lib/uploads'
@@ -21,7 +22,6 @@ import { MACHINE } from '@/worker/lib/machine.mjs'
  * is the one that allocates any number.
  */
 
-const REVIEWER = process.env.SHM_REVIEWER || 'hamed'
 /** Long enough for a name, short enough to stay one. */
 const MAX_TITLE = 60
 
@@ -58,6 +58,9 @@ async function append(pr: Project, record: Record<string, unknown>): Promise<Epi
  * one (docs/INDEXING.md section 9).
  */
 export async function startEpisode(project: string, episode: string, title = ''): Promise<EpisodeResult> {
+  const g = await gate(project, 'episode.write')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(project)
   const ep = String(episode ?? '').trim().toUpperCase()
   if (!EPISODE_RX.test(ep)) return { ok: false, error: `'${episode}' is not an episode. It looks like EP002.` }
@@ -70,7 +73,7 @@ export async function startEpisode(project: string, episode: string, title = '')
   return append(pr, {
     id: newOpId(),
     ts: new Date().toISOString(),
-    reviewer: REVIEWER,
+    ...whoStamp(actor),
     type: 'new-episode',
     episode: ep,
     title: String(title ?? '').trim().slice(0, MAX_TITLE),
@@ -79,6 +82,9 @@ export async function startEpisode(project: string, episode: string, title = '')
 
 /** Rename an episode. Its wording changes; its number never does. */
 export async function renameEpisode(project: string, episode: string, title: string): Promise<EpisodeResult> {
+  const g = await gate(project, 'episode.destructive')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(project)
   const ep = String(episode ?? '').trim().toUpperCase()
   if (!EPISODE_RX.test(ep)) return { ok: false, error: `'${episode}' is not an episode.` }
@@ -95,7 +101,7 @@ export async function renameEpisode(project: string, episode: string, title: str
   return append(pr, {
     id: newOpId(),
     ts: new Date().toISOString(),
-    reviewer: REVIEWER,
+    ...whoStamp(actor),
     type: 'rename-episode',
     episode: ep,
     title: name,
@@ -111,6 +117,9 @@ export async function renameEpisode(project: string, episode: string, title: str
  * gap where a shot used to be is the correct record of one having been there.
  */
 export async function archiveShots(project: string, shots: string[]): Promise<EpisodeResult> {
+  const g = await gate(project, 'episode.destructive')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(project)
   const rx = idRx(pr.code)
   const wanted = [...new Set((shots ?? []).map((s) => String(s ?? '').trim().toUpperCase()).filter(Boolean))]
@@ -122,7 +131,7 @@ export async function archiveShots(project: string, shots: string[]): Promise<Ep
   return append(pr, {
     id: newOpId(),
     ts: new Date().toISOString(),
-    reviewer: REVIEWER,
+    ...whoStamp(actor),
     type: 'archive-shot',
     episode: wanted[0].match(rx.shotParts)?.[1] ?? '',
     shots: wanted,
@@ -131,13 +140,16 @@ export async function archiveShots(project: string, shots: string[]): Promise<Ep
 
 /** Put archived shots back in the episodes they came from. */
 export async function restoreShots(project: string, archiveIds: string[]): Promise<EpisodeResult> {
+  const g = await gate(project, 'episode.write')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(project)
   const ids = [...new Set((archiveIds ?? []).map(String).filter(Boolean))]
   if (ids.length === 0) return { ok: false, error: 'Choose something to put back.' }
   return append(pr, {
     id: newOpId(),
     ts: new Date().toISOString(),
-    reviewer: REVIEWER,
+    ...whoStamp(actor),
     type: 'restore-shot',
     episode: '',
     archiveIds: ids,
@@ -151,6 +163,9 @@ export async function restoreShots(project: string, archiveIds: string[]): Promi
  * number here, so starting an episode with it again is refused.
  */
 export async function removeEpisode(project: string, episode: string): Promise<EpisodeResult> {
+  const g = await gate(project, 'episode.destructive')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(project)
   const ep = String(episode ?? '').trim().toUpperCase()
   if (!EPISODE_RX.test(ep)) return { ok: false, error: `'${episode}' is not an episode.` }
@@ -162,7 +177,7 @@ export async function removeEpisode(project: string, episode: string): Promise<E
   return append(pr, {
     id: newOpId(),
     ts: new Date().toISOString(),
-    reviewer: REVIEWER,
+    ...whoStamp(actor),
     type: 'remove-episode',
     episode: ep,
   })
@@ -178,6 +193,9 @@ export async function removeEpisode(project: string, episode: string): Promise<E
  * page resolves, and the episode gets footage it did not have.
  */
 export async function fileTakes(project: string, episode: string, shots: string[]): Promise<EpisodeResult> {
+  const g = await gate(project, 'episode.write')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(project)
   const ep = String(episode ?? '').trim().toUpperCase()
   if (!EPISODE_RX.test(ep)) return { ok: false, error: `'${episode}' is not an episode.` }
@@ -203,7 +221,7 @@ export async function fileTakes(project: string, episode: string, shots: string[
   return append(pr, {
     id: newOpId(),
     ts: new Date().toISOString(),
-    reviewer: REVIEWER,
+    ...whoStamp(actor),
     type: 'add-shot',
     episode: ep,
     episodeTitle: found.title,
@@ -220,6 +238,9 @@ export async function fileTakes(project: string, episode: string, shots: string[
  * episode already has -- it allocates the number, not this.
  */
 export async function addFootage(formData: FormData): Promise<EpisodeResult> {
+  const g = await gate(String(formData.get('project') ?? ''), 'episode.write')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(formData.get('project'))
   const ep = String(formData.get('episode') ?? '').trim().toUpperCase()
   if (!EPISODE_RX.test(ep)) return { ok: false, error: `'${ep}' is not an episode.` }
@@ -253,7 +274,7 @@ export async function addFootage(formData: FormData): Promise<EpisodeResult> {
   const r = await append(pr, {
     id,
     ts: new Date().toISOString(),
-    reviewer: REVIEWER,
+    ...whoStamp(actor),
     type: 'add-shot',
     episode: ep,
     episodeTitle: found.title,

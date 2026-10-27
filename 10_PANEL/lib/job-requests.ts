@@ -11,8 +11,6 @@ import type { JobRequest } from './types'
  * the only thing that acts on a line written here.
  */
 
-export const REVIEWER = process.env.SHM_REVIEWER || 'hamed'
-
 export function newRequestId(): string {
   return `jr_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`
 }

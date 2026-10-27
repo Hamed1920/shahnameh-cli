@@ -4,7 +4,8 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { checkRefCount, readGenerationForm } from '@/lib/generation-form'
 import { KINDS, MAX_UPLOAD_BYTES, UPLOAD_ROLES, entitySlug, isAscii } from '@/lib/indexing'
-import { REVIEWER, appendJobRequest, newRequestId } from '@/lib/job-requests'
+import { appendJobRequest, newRequestId } from '@/lib/job-requests'
+import { gate, whoStamp } from '@/lib/actor'
 import { freshCatalog } from '@/lib/catalog'
 import { modelKindOf } from '@/lib/models'
 import { requireProject } from '@/lib/projects'
@@ -40,6 +41,9 @@ async function run(fn: () => Promise<void>): Promise<Result> {
 
 /** What a try would cost. The worker answers with `generate cost`; nothing is queued. */
 export async function studioPrice(formData: FormData): Promise<Result> {
+  const g = await gate(String(formData.get('project') ?? ''), 'studio.price')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(formData.get('project'))
   freshCatalog()
   return run(async () => {
@@ -63,7 +67,7 @@ export async function studioPrice(formData: FormData): Promise<Result> {
     }
 
     const req: Extract<JobRequest, { type: 'studio.price' }> = {
-      id: newRequestId(), ts: new Date().toISOString(), reviewer: REVIEWER, type: 'studio.price',
+      id: newRequestId(), ts: new Date().toISOString(), ...whoStamp(actor), type: 'studio.price',
       sessionId, genId, model: form.model, prompt, refs, params: form.params, count,
     }
     const entity = String(formData.get('entity') ?? '').trim()
@@ -88,15 +92,21 @@ export async function studioPrice(formData: FormData): Promise<Result> {
 
 /** The priced Generate button, clicked: this is the approval. The worker refuses if the price moved. */
 export async function studioApprove(project: string, sessionId: string, genId: string, expectedTotal: number | null): Promise<Result> {
+  const g = await gate(project, 'studio.spend')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(project)
   if (!SESSION_RX.test(sessionId) || !GEN_RX.test(genId)) return { ok: false, error: 'Bad try.' }
-  await appendJobRequest(pr, { id: newRequestId(), ts: new Date().toISOString(), reviewer: REVIEWER, type: 'studio.approve', sessionId, genId, expectedTotal })
+  await appendJobRequest(pr, { id: newRequestId(), ts: new Date().toISOString(), ...whoStamp(actor), type: 'studio.approve', sessionId, genId, expectedTotal })
   revalidateProject(pr.slug)
   return { ok: true }
 }
 
 /** File one result: a new look of the entity, or the new entity it was made for. */
 export async function studioPick(formData: FormData): Promise<Result> {
+  const g = await gate(String(formData.get('project') ?? ''), 'studio.spend')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(formData.get('project'))
   return run(async () => {
     const sessionId = sessionOf(formData)
@@ -124,7 +134,7 @@ export async function studioPick(formData: FormData): Promise<Result> {
       fileAs = { mode: 'new', kind, name, ...(description && { description }) }
     }
     await appendJobRequest(pr, {
-      id: newRequestId(), ts: new Date().toISOString(), reviewer: REVIEWER, type: 'studio.pick',
+      id: newRequestId(), ts: new Date().toISOString(), ...whoStamp(actor), type: 'studio.pick',
       sessionId, hfJobId, take, fileAs, role, descriptor,
     })
     revalidateProject(pr.slug)
@@ -133,9 +143,12 @@ export async function studioPick(formData: FormData): Promise<Result> {
 
 /** Put the unpicked results away (to _rejected) and end the session. */
 export async function studioClose(project: string, sessionId: string): Promise<Result> {
+  const g = await gate(project, 'studio.close')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(project)
   if (!SESSION_RX.test(sessionId)) return { ok: false, error: 'Bad session.' }
-  await appendJobRequest(pr, { id: newRequestId(), ts: new Date().toISOString(), reviewer: REVIEWER, type: 'studio.close', sessionId })
+  await appendJobRequest(pr, { id: newRequestId(), ts: new Date().toISOString(), ...whoStamp(actor), type: 'studio.close', sessionId })
   revalidateProject(pr.slug)
   return { ok: true }
 }
@@ -146,6 +159,9 @@ export async function studioClose(project: string, sessionId: string): Promise<R
  * stay inputs: when the session closes they go to _rejected beside the unpicked results.
  */
 export async function studioUpload(formData: FormData): Promise<{ ok: boolean; tokens?: string[]; error?: string }> {
+  const g = await gate(String(formData.get('project') ?? ''), 'studio.close')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(formData.get('project'))
   let sessionId: string
   try { sessionId = sessionOf(formData) } catch (e) { return { ok: false, error: (e as Error).message } }

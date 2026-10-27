@@ -287,6 +287,7 @@ export function PromptIntake({ catalog, cfg, knownShots, recentRefs, episodes }:
     setBusy('extract')
     const fd = new FormData()
     for (const f of toServer) fd.append('files', f, f.name)
+    fd.append('project', project.slug)
     const r = await extractDocuments(fd).catch((e: Error) => ({ ok: false, error: e.message, files: undefined }))
     setBusy(null)
     if (!r.ok || !r.files) { setError(r.error ?? 'Could not read those files.'); return }

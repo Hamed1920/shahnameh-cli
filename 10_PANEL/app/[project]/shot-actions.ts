@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { idRx } from '../../worker/lib/ids.mjs'
 import { EPISODE_RX, episodeTitleSlug, shortEpisode } from '@/lib/episodes'
 import { requireProject } from '@/lib/projects'
+import { gate, whoStamp } from '@/lib/actor'
 import { getShotMoveRequests } from '@/lib/store'
 import { MACHINE } from '@/worker/lib/machine.mjs'
 
@@ -26,7 +27,6 @@ import { MACHINE } from '@/worker/lib/machine.mjs'
  *     twice and have the second one fail once the first has landed.
  */
 
-const REVIEWER = process.env.SHM_REVIEWER || 'hamed'
 const MAX_AT_ONCE = 200
 /** Long enough for a folder name, short enough to stay a name. */
 const MAX_TITLE = 60
@@ -49,6 +49,9 @@ export async function assignToEpisode(
   /** Names the episode's folder, and only when it does not have one yet. */
   title = '',
 ): Promise<AssignResult> {
+  const g = await gate(project, 'episode.destructive')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(project)
   const ep = String(episode ?? '').trim().toUpperCase()
   if (!EPISODE_RX.test(ep)) return { ok: false, error: `'${episode}' is not an episode. It looks like EP002.` }
@@ -95,7 +98,7 @@ export async function assignToEpisode(
   const record = {
     id,
     ts: new Date().toISOString(),
-    reviewer: REVIEWER,
+    ...whoStamp(actor),
     type: 'move-shot',
     episode: ep,
     shots: move,

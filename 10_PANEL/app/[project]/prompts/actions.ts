@@ -5,7 +5,8 @@ import { checkRefCount, readGenerationForm } from '@/lib/generation-form'
 import { freshCatalog } from '@/lib/catalog'
 import { stageResolutionFor } from '@/lib/models'
 import { DOCUMENT_EXT, MAX_DOCUMENTS, MAX_DOCUMENT_BYTES, documentToText } from '@/lib/documents'
-import { REVIEWER, appendJobRequest, newBatchId, newRequestId } from '@/lib/job-requests'
+import { appendJobRequest, newBatchId, newRequestId } from '@/lib/job-requests'
+import { gate, whoStamp } from '@/lib/actor'
 import { requireProject } from '@/lib/projects'
 import { revalidateProject } from '@/lib/revalidate'
 import { getBatches, getCatalog, getQueue, getShotMoves, getWorkerConfig, readJsonl, resolveRefToken } from '@/lib/store'
@@ -26,6 +27,8 @@ import type { BatchDefaults, BatchJobInput, JobRequestEvent, QueueItem } from '@
 export interface ExtractedDoc { name: string; text: string }
 
 export async function extractDocuments(formData: FormData): Promise<{ ok: boolean; files?: ExtractedDoc[]; error?: string }> {
+  const g = await gate(String(formData.get('project') ?? ''), 'batch.submit')
+  if (!g.ok) return { ok: false, error: g.error }
   const files = formData.getAll('files').filter((f): f is File => f instanceof File)
   if (files.length === 0) return { ok: false, error: 'No files arrived.' }
   if (files.length > MAX_DOCUMENTS) return { ok: false, error: `At most ${MAX_DOCUMENTS} files at once.` }
@@ -45,9 +48,12 @@ export async function extractDocuments(formData: FormData): Promise<{ ok: boolea
 
 /** Ask the worker to fetch the Higgsfield model list again. Free: it only reads `model list` / `model get`. */
 export async function refreshModels(project: string): Promise<{ ok: boolean; reqId?: string; error?: string }> {
+  const g = await gate(project, 'batch.submit')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(project)
   const reqId = newRequestId()
-  await appendJobRequest(pr, { id: reqId, ts: new Date().toISOString(), reviewer: REVIEWER, type: 'models.refresh' })
+  await appendJobRequest(pr, { id: reqId, ts: new Date().toISOString(), ...whoStamp(actor), type: 'models.refresh' })
   revalidateProject(pr.slug)
   return { ok: true, reqId }
 }
@@ -60,6 +66,8 @@ export async function refreshModels(project: string): Promise<{ ok: boolean; req
 export async function modelRefreshResult(project: string, reqId: string): Promise<
   { state: 'done'; count: number; usable: number } | { state: 'failed' | 'retrying'; reason: string } | { state: 'waiting' }
 > {
+  const g = await gate(project, 'batch.submit')
+  if (!g.ok) return { state: 'failed', reason: g.error }
   const pr = await requireProject(project)
   const events = (await readJsonl<JobRequestEvent>(pr.P.jobRequestResults)).filter((e) => e.reqId === reqId)
   const done = events.find((e) => e.event === 'models')
@@ -84,6 +92,9 @@ interface SubmitPayload {
 }
 
 export async function submitBatch(formData: FormData): Promise<{ ok: boolean; batchId?: string; error?: string; rowErrors?: Record<string, string[]> }> {
+  const g = await gate(String(formData.get('project') ?? ''), 'batch.submit')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(formData.get('project'))
   freshCatalog()
   let payload: SubmitPayload
@@ -140,7 +151,7 @@ export async function submitBatch(formData: FormData): Promise<{ ok: boolean; ba
       id: requestId,
       ...(uploads.length && { uploads: uploads.map((u) => u.meta) }),
       ts: new Date().toISOString(),
-      reviewer: REVIEWER,
+      ...whoStamp(actor),
       type: 'batch.submit',
       batchId,
       name: String(payload.name ?? '').trim().slice(0, 80) || batchId,
@@ -163,6 +174,9 @@ export async function submitBatch(formData: FormData): Promise<{ ok: boolean; ba
  * and waits for approval before it spends.
  */
 export async function generateFromPrompt(formData: FormData): Promise<{ ok: boolean; batchId?: string; error?: string }> {
+  const g = await gate(String(formData.get('project') ?? ''), 'batch.submit')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(formData.get('project'))
   freshCatalog()
   const jobId = String(formData.get('jobId') ?? '').trim()
@@ -230,7 +244,7 @@ export async function generateFromPrompt(formData: FormData): Promise<{ ok: bool
   await appendJobRequest(pr, {
     id: newRequestId(),
     ts: new Date().toISOString(),
-    reviewer: REVIEWER,
+    ...whoStamp(actor),
     type: 'batch.submit',
     batchId,
     name: `${src.label || src.target} · from scratch`.slice(0, 80),
@@ -243,6 +257,9 @@ export async function generateFromPrompt(formData: FormData): Promise<{ ok: bool
 }
 
 export async function approveBatch(project: string, batchId: string, expectedTotal: number | null): Promise<{ ok: boolean; error?: string }> {
+  const g = await gate(project, 'batch.approve')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(project)
   const batch = (await getBatches(pr)).find((b) => b.batchId === batchId)
   if (!batch) return { ok: false, error: 'Unknown batch.' }
@@ -250,7 +267,7 @@ export async function approveBatch(project: string, batchId: string, expectedTot
   // Nothing spends without a price (the worker refuses it as well).
   if (batch.unpriced > 0) return { ok: false, error: `${batch.unpriced} row(s) could not be priced. Discard the batch, fix them and submit again.` }
   await appendJobRequest(pr, {
-    id: newRequestId(), ts: new Date().toISOString(), reviewer: REVIEWER, type: 'batch.approve', batchId,
+    id: newRequestId(), ts: new Date().toISOString(), ...whoStamp(actor), type: 'batch.approve', batchId,
     expectedTotal: expectedTotal == null ? null : Number(expectedTotal),
   })
   revalidateProject(pr.slug)
@@ -258,11 +275,14 @@ export async function approveBatch(project: string, batchId: string, expectedTot
 }
 
 export async function discardBatch(project: string, batchId: string): Promise<{ ok: boolean; error?: string }> {
+  const g = await gate(project, 'batch.discard')
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
   const pr = await requireProject(project)
   const batch = (await getBatches(pr)).find((b) => b.batchId === batchId)
   if (!batch) return { ok: false, error: 'Unknown batch.' }
   if (batch.status === 'queued' || batch.status === 'discarded') return { ok: false, error: `This batch is already ${batch.status}.` }
-  await appendJobRequest(pr, { id: newRequestId(), ts: new Date().toISOString(), reviewer: REVIEWER, type: 'batch.discard', batchId })
+  await appendJobRequest(pr, { id: newRequestId(), ts: new Date().toISOString(), ...whoStamp(actor), type: 'batch.discard', batchId })
   revalidateProject(pr.slug)
   return { ok: true }
 }

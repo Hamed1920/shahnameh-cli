@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { ProjectInvalid, createProject } from '@/lib/scaffold'
+import { gate } from '@/lib/actor'
 
 /**
  * Start a new film. The only write the panel makes outside a project: it
@@ -10,6 +11,8 @@ import { ProjectInvalid, createProject } from '@/lib/scaffold'
  * on the worker owns them like any other project's.
  */
 export async function newProject(formData: FormData): Promise<{ ok: false; error: string } | void> {
+  const g = await gate(null, 'project.create')
+  if (!g.ok) return { ok: false, error: g.error }
   let slug: string
   try {
     const made = await createProject({

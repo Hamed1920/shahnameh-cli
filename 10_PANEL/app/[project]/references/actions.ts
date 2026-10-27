@@ -5,6 +5,8 @@ import path from 'node:path'
 import { revalidatePath } from 'next/cache'
 import { MAX_ADD_TOTAL_BYTES, MAX_ADD_UPLOADS, entitySlug, isAscii } from '@/lib/indexing'
 import { requireProject } from '@/lib/projects'
+import { gate, whoStamp } from '@/lib/actor'
+import { indexOpCapability } from '@/lib/access/capabilities'
 import { getAssets, getEntities } from '@/lib/store'
 import { Invalid, readUploads } from '@/lib/uploads'
 import type { Entity, IndexOpType } from '@/lib/types'
@@ -17,7 +19,6 @@ import { MACHINE } from '@/worker/lib/machine.mjs'
  * checks everything again when it applies them.
  */
 
-const REVIEWER = process.env.SHM_REVIEWER || 'hamed'
 const ROLES = ['HERO', 'TURNAROUND', 'PLATE', 'DETAIL', 'BOARD', 'RENDER']
 const STATUSES = ['CONCEPT', 'APPROVED', 'LOCKED']
 const TYPES: IndexOpType[] = ['add', 'retire', 'restore', 'status', 'canonical', 'role', 'rename', 'archive', 'unarchive', 'move']
@@ -40,6 +41,9 @@ export async function requestIndexOp(formData: FormData): Promise<OpRequestResul
   }
   const type = op.type as IndexOpType
   if (!TYPES.includes(type)) return { ok: false, error: `Unknown action '${String(op.type)}'.` }
+  const g = await gate(String(formData.get('project') ?? ''), indexOpCapability(type))
+  if (!g.ok) return { ok: false, error: g.error }
+  const { actor } = g
 
   const id = `op_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`
   const [entities, assets] = await Promise.all([getEntities(pr), getAssets(pr)])
@@ -64,7 +68,7 @@ export async function requestIndexOp(formData: FormData): Promise<OpRequestResul
       return { entity: e.id, variant }
     })
 
-  const record: Record<string, unknown> = { id, ts: new Date().toISOString(), reviewer: REVIEWER, type }
+  const record: Record<string, unknown> = { id, ts: new Date().toISOString(), ...whoStamp(actor), type }
   let files: { rel: string; bytes: Buffer }[] = []
 
   try {

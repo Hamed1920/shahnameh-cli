@@ -1,4 +1,5 @@
 import { decide } from '../../actions'
+import { gateRoute } from '@/lib/actor'
 
 /**
  * A Review decision sent with navigator.sendBeacon as the page closes or reloads
@@ -10,6 +11,9 @@ import { decide } from '../../actions'
  */
 export async function POST(request: Request) {
   const form = await request.formData()
+  // A proper 401 / 403 for a beacon; decide() checks again, including whether this decision spends.
+  const gr = await gateRoute(String(form.get('project') ?? ''), 'review.decide')
+  if (!gr.ok) return gr.response
   const r = await decide(null, form)
   return Response.json(r, { status: r.ok ? 200 : 400 })
 }

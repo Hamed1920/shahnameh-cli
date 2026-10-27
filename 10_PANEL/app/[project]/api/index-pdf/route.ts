@@ -1,5 +1,6 @@
 import { buildIndexPack, type PackPart } from '@/lib/index-pack'
 import { getProject } from '@/lib/projects'
+import { gateRoute } from '@/lib/actor'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,7 +17,10 @@ export async function GET(request: Request, ctx: RouteContext<'/[project]/api/in
   const params = new URL(request.url).searchParams
   const part: PackPart = params.get('part') === 'index' ? 'index' : 'full'
   const disposition = params.get('inline') === '1' ? 'inline' : 'attachment'
-  const pr = await getProject((await ctx.params).project)
+  const slug = (await ctx.params).project
+  const gr = await gateRoute(slug, 'view.prompts')
+  if (!gr.ok) return gr.response
+  const pr = await getProject(slug)
   if (!pr) return new Response('no such project', { status: 404 })
   try {
     const bytes = await buildIndexPack(pr, part)
