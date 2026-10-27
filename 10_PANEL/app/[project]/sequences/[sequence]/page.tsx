@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { Breadcrumb } from '@/components/breadcrumb'
 import { EmptyState } from '@/components/ui/card'
 import { Table, Td, Th, Thead, Tr } from '@/components/ui/table'
+import { noteBadge } from '@/lib/pd/review-rules'
 import { Badge, PageHeader, SectionHeading } from '@/components/ui/text'
 import { BlockTools, DurationEdit, NewBlock } from '../controls'
 import { sequencePage } from '../guard'
@@ -57,7 +58,9 @@ export default async function SequencePage({ params }: PageProps<'/[project]/seq
                   <Td>
                     <span className="flex flex-wrap gap-1.5">
                       {b.open > 0 && <Badge tone="muted">{b.open} open</Badge>}
-                      {b.unread > 0 && <Badge tone="accent">{b.unread} unread</Badge>}
+                      {noteBadge({ unreadDirector: b.unreadDirector, unreadContinuity: b.unreadContinuity, revision: b.status === 'revision_required' }).map((t) => (
+                        <Badge key={t} tone="accent">{t}</Badge>
+                      ))}
                       {b.open === 0 && b.unread === 0 && <span className="text-faint">—</span>}
                     </span>
                   </Td>

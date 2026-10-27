@@ -5,10 +5,13 @@ import { TakeMedia } from '@/components/take-media'
 import { buttonClasses } from '@/components/ui/button-styles'
 import { Card, EmptyState } from '@/components/ui/card'
 import { Badge, PageHeader, SectionHeading } from '@/components/ui/text'
+import { NoteItem } from '@/components/review-notes'
 import { gLabel } from '@/lib/pd/numbering'
+import { continuityWarning } from '@/lib/pd/submission'
 import { getBatches, getCatalog, getWorkerConfig } from '@/lib/store'
 import { sequencePage } from '../../guard'
 import { StatusLabel } from '../../status'
+import { GenerationReviewControls, MarkRead, ResolutionSelect } from './review-controls'
 import { AssetLinks, GeneratePanel, PromptEditor, type LinkLine, type VersionLine } from './workspace'
 
 export const dynamic = 'force-dynamic'
@@ -48,6 +51,9 @@ export default async function BlockPage({ params }: PageProps<'/[project]/sequen
     getWorkerConfig(),
   ])
   const states = await gens.resolveGenerationFiles(pr, rows)
+  const rev = await (await import('@/lib/pd-review')).productionReview(block.id, actor.id)
+  const activeSub = rev.submissions.find((s) => s.id === rev.activeId) ?? null
+  const allNotes = rev.submissions.flatMap((s) => s.notes).sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt))
   const versionNo = new Map(versions.map((v) => [v.id, v.versionNumber]))
 
   const versionLines: VersionLine[] = versions.map((v) => ({ versionNumber: v.versionNumber, text: v.promptText, by: v.createdBy ?? 'local', at: when(v.createdAt) }))
@@ -134,6 +140,19 @@ export default async function BlockPage({ params }: PageProps<'/[project]/sequen
                     <dt className="text-faint">When</dt><dd className="text-muted">{when(g.createdAt)}</dd>
                     <dt className="text-faint">Cost</dt><dd className="text-muted tabular-nums">{g.costCredits != null ? `${Number(g.costCredits)} credits` : '—'}</dd>
                   </dl>
+                  <GenerationReviewControls
+                    project={pr.slug} blockId={block.id}
+                    g={{
+                      generationId: g.id, gLabel: gLabel(g.gNumber),
+                      rounds: rev.submissions.filter((s) => s.generationId === g.id).map((s) => s.round).reverse(),
+                      active: activeSub?.generationId === g.id,
+                      nextRound: Math.max(0, ...rev.submissions.map((s) => s.round)) + 1,
+                      approved: rev.submissions.some((s) => s.generationId === g.id && s.status === 'approved'),
+                      isFinal: rev.final?.generationId === g.id,
+                      hasFile: !!st?.file && st.decision !== 'denied' && st.decision !== 'discarded',
+                      replacesRound: activeSub && activeSub.generationId !== g.id ? activeSub.round : null,
+                    }}
+                  />
                   {(st?.decision ?? 'pending') === 'pending' && st?.file && (
                     <Link href={`/${pr.slug}/review`} className={buttonClasses({ tone: 'outline', size: 'sm' })}>Review it</Link>
                   )}
@@ -144,8 +163,74 @@ export default async function BlockPage({ params }: PageProps<'/[project]/sequen
         )}
       </section>
 
-      {/* Phase 5 adds here: Send to Director Review, the director's and supervisor's notes, and the Final pick. */}
-      <section id="review" />
+      <section id="review">
+        <SectionHeading count={rev.submissions.length}>Director review</SectionHeading>
+        <MarkRead project={pr.slug} ids={rev.unreadIds} />
+        <div className="space-y-6">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px]" data-active-round={activeSub?.round ?? ''}>
+            {activeSub ? (
+              <>
+                <span className="font-mono text-[14px] text-fg">Current: Round {activeSub.round} · {activeSub.gLabel}</span>
+                {line && <StatusLabel status={line.status} />}
+                <span className="text-muted">Sent by {activeSub.submittedByName}, {when(activeSub.submittedAt)}</span>
+                {activeSub.decidedByName && activeSub.decidedAt && (
+                  <span className="text-muted">Decided by {activeSub.decidedByName}, {when(activeSub.decidedAt)}</span>
+                )}
+              </>
+            ) : (
+              <span className="text-muted">Nothing is with the director. Use Send to Director Review on a generation above.</span>
+            )}
+          </div>
+
+          <div data-final={rev.final?.gLabel ?? ''}>
+            <h3 className="eyebrow text-fg/85">Final</h3>
+            {rev.final ? (
+              <p className="mt-2 text-[13.5px] text-fg">
+                {rev.final.gLabel}{rev.final.round !== null && <> · approved as Round {rev.final.round}</>}
+                <span className="ml-3 text-[12.5px] text-muted">set by {rev.final.byName}, {when(rev.final.at)}</span>
+              </p>
+            ) : (
+              <p className="mt-2 text-[13px] text-faint">No Final yet. A generation the director approved can be marked as Final above.</p>
+            )}
+            {continuityWarning(rev.openContinuity) && (
+              <p role="status" className="mt-2 text-[12.5px] text-muted">Warning: {continuityWarning(rev.openContinuity)} Check them before you rely on the Final.</p>
+            )}
+          </div>
+
+          <div>
+            <h3 className="eyebrow text-fg/85">Rounds <span className="ml-1 font-mono text-faint">{rev.submissions.length}</span></h3>
+            {rev.submissions.length === 0 ? (
+              <p className="mt-2 text-[13px] text-faint">No generation has been sent to the director yet.</p>
+            ) : (
+              <ol className="mt-3 divide-y divide-edge rounded-lg border border-edge text-[13px]">
+                {rev.submissions.map((s) => (
+                  <li key={s.id} className="flex flex-wrap items-center gap-x-4 gap-y-1 px-3.5 py-2" data-round={s.round}>
+                    <span className="font-mono text-fg">Round {s.round} · {s.gLabel}</span>
+                    <span className="text-muted">{s.status === 'pending' ? 'Waiting for review' : s.status === 'approved' ? 'Approved' : 'Revision requested'}</span>
+                    {s.isActive && <span className="text-fg">Current</span>}
+                    <span className="text-faint">sent by {s.submittedByName}, {when(s.submittedAt)}</span>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </div>
+
+          <div>
+            <h3 className="eyebrow text-fg/85">Notes <span className="ml-1 font-mono text-faint">{allNotes.length}</span></h3>
+            {allNotes.length === 0 ? (
+              <p className="mt-2 text-[13px] text-faint">No notes from the director or the script supervisor yet.</p>
+            ) : (
+              <ul className="mt-3 space-y-2.5">
+                {allNotes.map((n) => (
+                  <NoteItem key={n.id} note={n} showResolution={false}>
+                    <ResolutionSelect project={pr.slug} feedbackId={n.id} value={n.resolutionStatus} />
+                  </NoteItem>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

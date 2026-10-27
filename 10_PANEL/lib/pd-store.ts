@@ -57,6 +57,9 @@ export interface BlockLine {
   open: number
   /** Notes this person has not read (their own are never unread). */
   unread: number
+  /** Unread notes by category, for the badge label (Director revision / Continuity note). */
+  unreadDirector: number
+  unreadContinuity: number
 }
 
 // ---- status inputs -------------------------------------------------------------------------
@@ -191,7 +194,7 @@ export async function listBlocks(sequenceId: string, viewer: Actor | null): Prom
   // Notes live on submissions; a block's notes are those of every round it has had.
   const notes = ids.length
     ? await db
-        .select({ id: feedback.id, blockId: reviewSubmission.blockId, status: feedback.resolutionStatus, author: feedback.authorId })
+        .select({ id: feedback.id, blockId: reviewSubmission.blockId, status: feedback.resolutionStatus, author: feedback.authorId, category: feedback.category })
         .from(feedback)
         .innerJoin(reviewSubmission, eq(reviewSubmission.id, feedback.submissionId))
         .where(inArray(reviewSubmission.blockId, ids))
@@ -205,12 +208,15 @@ export async function listBlocks(sequenceId: string, viewer: Actor | null): Prom
 
   return rows.map((b) => {
     const f = facts.get(b.id)!
-    const mine = notes.filter((n) => n.blockId === b.id).map((n) => ({ id: n.id, resolutionStatus: n.status as NoteStatus }))
+    const ofBlock = notes.filter((n) => n.blockId === b.id)
+    const mine = ofBlock.map((n) => ({ id: n.id, resolutionStatus: n.status as NoteStatus }))
     const c = feedbackCounts(mine, read)
+    const unreadBy = (cat: string) => (viewer ? ofBlock.filter((n) => n.category === cat && !read.has(n.id)).length : 0)
     return {
       id: b.id, number: b.number, title: b.title, internalId: b.internalId, displayOrder: b.displayOrder,
       targetDurationSeconds: b.targetDurationSeconds, status: statusOf(f), generations: f.generations,
       round: f.active?.round ?? null, open: c.open, unread: viewer ? c.unread : 0,
+      unreadDirector: unreadBy('director'), unreadContinuity: unreadBy('continuity'),
     }
   })
 }
