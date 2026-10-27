@@ -66,6 +66,11 @@ Run `/project-log` at the start of a session, or read directly:
   conversation. Never refer to anything by loose description — there are three staffs.
 - **Only the ID prefix differs between projects.** Kinds, the kind → folder map, statuses, roles
   and the `EPnnn/SQnn/SCnnn/SHnnnn` shape are system-wide (`10_PANEL/worker/lib/ids.mjs`).
+  One layer sits on top: a project whose `project.json` says `"structure": "blocks"` (Persimmon
+  Dreams, code `PD`) is shown as **Sequence → Block** with no Shot level. Underneath it is still
+  episodes and scenes: Sequence `PD-S01` is episode `PD-EP001`, Block `PD-S01-B003` is
+  `PD-EP001-SC003-SH0010` (`10_PANEL/lib/structure.ts`). The worker, filing and the validator
+  see only the internal ids; people see only the display ids. See `docs/INDEXING.md` §7b.
 - **Different object → different number. Same object, different look → new `_V`. Same look,
   re-rolled → new `_T`.**
 - **Only the CLI allocates numbers.** Chat and Cowork propose `NEW/KIND/SLUG`; the CLI assigns.
@@ -76,6 +81,11 @@ Run `/project-log` at the start of a session, or read directly:
   row targeting `NEXT/EPnnn` gets the next free `SCnnn-SH0010` at approval, past every scene in
   that project's `QUEUE.jsonl` or on disk (`assignScenes` in `worker/lib/scenes.mjs`). Numbers are
   per project: `SHM-PRP-001` and another project's `XXX-PRP-001` are unrelated.
+  **The one exception is a blocks project's sequences and blocks**: their numbers come from the
+  database, allocated in one locked transaction when someone makes a sequence or block on the
+  Sequences page (`10_PANEL/lib/pd-store.ts`), never reused, retired only. Its Prompts page refuses
+  `NEXT/EPnnn`; a generation targets an existing block. Entity numbers there still come from the
+  worker as above.
 - **Numbers are never reused**, including after `RETIRED`.
 - **Never move or rename an asset** without updating that project's
   `00_PROJECT/registry/ASSET_MANIFEST.csv`.
@@ -160,6 +170,25 @@ Run `/project-log` at the start of a session, or read directly:
   the queue, review log, job requests or index ops have history — starting would replay them and
   spend again, so restore the state files from git first. It also refuses if `SHM_HIGGSFIELD_JS` names a file that
   does not exist, rather than falling back to the real CLI.
+
+## Login and roles
+
+Login is off unless `10_PANEL/.env.local` sets `SHM_AUTH=on` (with `DATABASE_URL` and
+`BETTER_AUTH_SECRET`; see `10_PANEL/README.md`, "Login and database"). Off, the panel is the single
+local owner and writes every record exactly as before. A blocks project (Persimmon Dreams) needs
+login on. The database (Postgres via Drizzle, `10_PANEL/lib/db/schema.ts`) holds only accounts,
+sequences and blocks, generation numbers, prompt versions, review rounds, notes and the activity
+log; project data stays in the files, and the worker is still the only writer of registries.
+
+- **Roles** (`10_PANEL/lib/access/capabilities.ts`, one table): **owner** (Hamed: everything,
+  accounts, activity log, learnings), **production** (all production work, including spending
+  within the ceiling), **director** (review room: sees only what was sent, notes, Approve / Request
+  Revision, asset approval) and **supervisor** (review room: continuity notes only). Every Server
+  Action and route checks its capability (`gate` / `requireCan` in `10_PANEL/lib/actor.ts`);
+  hiding a button is never the check.
+- The director and supervisor never get a file path: they see media only through
+  `api/review-media/<submission>` and `api/asset-review-media/<review>`.
+- Accounts are made on `/admin/users` (owner) or with `npm run auth:add-user`. There is no sign-up.
 
 ## Files dropped in the root
 

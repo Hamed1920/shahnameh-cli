@@ -280,6 +280,28 @@ Shot output files:
 SHM-EP001-SC014-SH0030_V01_T02.mp4
 ```
 
+### 7b. Sequence → Block projects
+
+A project whose `project.json` has `"structure": "blocks"` shows **Sequences** and **Blocks**
+instead of episodes, scenes and shots. A block is one generated video (15–30 s) and is never split
+into shots. Underneath, the story grammar above is unchanged:
+
+```
+PD-S01           Sequence 1     =  PD-EP001                 (folder 07_EPISODES/PD-EP001-<TITLE>)
+PD-S01-B003      Block 3        =  PD-EP001-SC003-SH0010    (the shot is always SH0010)
+```
+
+- People, the panel and the review room use the display ids. The worker, file names, `QUEUE.jsonl`
+  and the validator use the internal ids. `10_PANEL/lib/structure.ts` converts between them.
+- Sequence and block numbers are allocated by the database, not the worker, and never reused.
+  Titles and display order are editable; the number never changes. Moving a block to another
+  sequence is not supported.
+- Each block's generations are numbered `G01, G02, …` in the order they were made, and those numbers
+  are frozen once given. Review rounds (`Round 1, 2, …`) count only what was deliberately sent to
+  the director; they are not generation numbers.
+- States in the pre-production library are `REF` (or `FX`) entities whose slug starts with
+  `STATE-` (`PD-REF-004-STATE-WOUNDED`), not a separate kind.
+
 ---
 
 ## 8. Registries
