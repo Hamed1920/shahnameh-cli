@@ -264,7 +264,7 @@ export async function approveBatch(project: string, batchId: string, expectedTot
   if (!g.ok) return { ok: false, error: g.error }
   const payload: ApproveBatchPayload = { batchId, expectedTotal: expectedTotal == null ? null : Number(expectedTotal) }
   if (g.mode === 'propose') {
-    // An agent asks; nothing is appended and nothing can spend until Hamed approves.
+    // Someone who must ask: nothing is appended and nothing can spend until Hamed approves.
     const found = await approvableBatch(project, batchId)
     if ('error' in found) return { ok: false, error: found.error }
     const jobs = found.batch.jobs.filter((j) => j.ok).length

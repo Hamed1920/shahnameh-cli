@@ -11,6 +11,7 @@ import { getActivity, jobLabel } from '@/lib/activity'
 import { freshCatalog } from '@/lib/catalog'
 import { getProjectVersion } from '@/lib/live'
 import { getProject, publicInfo } from '@/lib/projects'
+import { isBlocks } from '@/lib/structure'
 import { getGeneratingJobIds, getLearnings, getPending, getQueue, getWaitingJobs, getWorkerState, getWorkerStatus } from '@/lib/store'
 
 export async function generateMetadata({ params }: LayoutProps<'/[project]'>): Promise<Metadata> {
@@ -29,14 +30,28 @@ export default async function ProjectLayout({ children, params }: LayoutProps<'/
   const pr = await getProject((await params).project)
   if (!pr) notFound()
 
+  // A Sequence / Block project keeps its structure in the database, so it cannot run without login.
+  if (isBlocks(pr) && !authEnabled()) {
+    return (
+      <main className="scroll-pane flex-1">
+        <div className="mx-auto max-w-xl px-6 pt-24">
+          <h1 className="font-display text-[28px] text-fg">This project needs login</h1>
+          <p className="mt-3 text-[14px] text-muted">
+            {pr.name} is organised in sequences and blocks, which live in the database. Start the panel with SHM_AUTH=on to open it.
+          </p>
+        </div>
+      </main>
+    )
+  }
+
   // Login on only: the name beside Sign out. Off: null, and the sidebar shows no sign-out.
   let signedInAs: string | null = null
   let showApprovals = false
   if (authEnabled()) {
     const actor = await (await import('@/lib/auth/session')).sessionActor()
     signedInAs = actor?.name ?? null
-    // A client has one place: the portal. Staff pages are not theirs.
-    if (actor?.role === 'client') redirect(`/client/${pr.slug}`)
+    // The director and the script supervisor have one place: the review area. Staff pages are not theirs.
+    if (actor?.role === 'director' || actor?.role === 'supervisor') redirect(`/review-room/${pr.slug}`)
     // The approvals inbox is the owner's.
     showApprovals = actor?.role === 'owner'
   }

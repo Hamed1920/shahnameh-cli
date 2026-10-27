@@ -23,9 +23,9 @@ const { values } = parseArgs({
 })
 
 const email = values.email?.trim().toLowerCase()
-const role = values.role ?? 'client'
-if (!email || !values.name) throw new Error('Usage: --email <email> --name <name> [--role owner|agent|client] [--project <slug> ...] [--password <pw>]')
-if (!['owner', 'agent', 'client'].includes(role)) throw new Error(`Unknown role "${role}": use owner, agent or client.`)
+const role = values.role ?? 'supervisor'
+if (!email || !values.name) throw new Error('Usage: --email <email> --name <name> [--role owner|production|director|supervisor] [--project <slug> ...] [--password <pw>]')
+if (!['owner', 'production', 'director', 'supervisor'].includes(role)) throw new Error(`Unknown role "${role}": use owner, production, director or supervisor.`)
 if (values.password !== undefined && values.password.length < 8) throw new Error('--password must be at least 8 characters.')
 
 const db = getDb()

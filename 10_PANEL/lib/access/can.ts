@@ -2,7 +2,7 @@ import { CAPABILITIES } from './capabilities.ts'
 import type { Mode, Role } from './capabilities.ts'
 
 export function isRole(x: unknown): x is Role {
-  return x === 'owner' || x === 'agent' || x === 'client'
+  return x === 'owner' || x === 'production' || x === 'director' || x === 'supervisor'
 }
 
 /** What this role may do with this capability. An unknown role or capability is 'deny'. */

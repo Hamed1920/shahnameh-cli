@@ -22,7 +22,7 @@ export async function getActor(): Promise<Actor> {
 /**
  * The actor, once they may do `cap` here. `project` is the slug, or null for something
  * that belongs to no project (starting a new one). Throws Forbidden when denied or not a
- * member; `mode` is 'propose' when an agent must ask Hamed instead of doing it.
+ * member; `mode` is 'propose' when the actor must ask Hamed instead of doing it.
  */
 export async function requireCan(
   project: string | null,
@@ -43,7 +43,7 @@ export function whoStamp(actor: Actor) {
   return stamp(actor, authEnabled())
 }
 
-/** What an agent is told when a capability needs Hamed. Phase 6 routes the four spending ones to an inbox. */
+/** What someone is told when a capability needs Hamed. Phase 6 routes the four spending ones to an inbox. */
 export function proposalRefused(_cap: Capability): string {
   return "This needs Hamed's approval. The approvals inbox is not built yet."
 }

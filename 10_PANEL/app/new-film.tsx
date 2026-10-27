@@ -44,6 +44,7 @@ export function NewFilm({ taken, alone }: { taken: { slugs: string[]; codes: str
   const [derived, setDerived] = useState({ slug: '', code: '', mark: '' })
   // Once a part is typed by hand the name stops overwriting it.
   const [held, setHeld] = useState<Record<Part, boolean>>({ slug: false, code: false, mark: false })
+  const [structure, setStructure] = useState<'episodes' | 'blocks'>('episodes')
   const [editing, setEditing] = useState<Part | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [pending, start] = useTransition()
@@ -88,6 +89,7 @@ export function NewFilm({ taken, alone }: { taken: { slugs: string[]; codes: str
         <input type="hidden" name="slug" value={derived.slug} />
         <input type="hidden" name="code" value={derived.code} />
         <input type="hidden" name="mark" value={derived.mark} />
+        <input type="hidden" name="structure" value={structure} />
 
         <div className="min-w-0">
           <p className="eyebrow text-faint">{alone ? 'Your first film' : 'New film'}</p>
@@ -157,6 +159,29 @@ export function NewFilm({ taken, alone }: { taken: { slugs: string[]; codes: str
             <span className="text-faint/60">— click to change</span>
           </div>
 
+          {/* Quiet: the usual layout is chosen already. */}
+          <div
+            role="radiogroup"
+            aria-label="How the film is organised"
+            className={cn('mt-5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px]', 'transition-opacity duration-200', ready ? 'opacity-100' : 'pointer-events-none opacity-0')}
+          >
+            {STRUCTURES.map((s) => (
+              <button
+                key={s.value}
+                type="button"
+                role="radio"
+                aria-checked={structure === s.value}
+                onClick={() => setStructure(s.value)}
+                className={cn(
+                  'focus-ring rounded-sm px-1.5 py-0.5 transition-colors duration-150',
+                  structure === s.value ? 'text-fg' : 'text-faint hover:text-fg',
+                )}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+
           <div className="mt-7 flex min-h-10 items-center gap-4">
             <div className={cn('transition-opacity duration-200', ready ? 'opacity-100' : 'pointer-events-none opacity-0')}>
               <Button type="submit" tone="accent" pending={pending} pendingLabel="Creating">
@@ -174,6 +199,11 @@ export function NewFilm({ taken, alone }: { taken: { slugs: string[]; codes: str
     </section>
   )
 }
+
+const STRUCTURES: { value: 'episodes' | 'blocks'; label: string }[] = [
+  { value: 'episodes', label: 'Episodes → Scenes' },
+  { value: 'blocks', label: 'Sequences → Blocks' },
+]
 
 const LABEL: Record<Part, string> = {
   slug: 'The folder on disk, and the web address',

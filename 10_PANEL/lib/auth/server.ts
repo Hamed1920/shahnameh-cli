@@ -15,7 +15,7 @@ function makeAuth() {
     emailAndPassword: { enabled: true, disableSignUp: true },
     user: {
       additionalFields: {
-        role: { type: 'string', required: false, defaultValue: 'client', input: false },
+        role: { type: 'string', required: false, defaultValue: 'supervisor', input: false },
       },
     },
     trustedOrigins: origins,

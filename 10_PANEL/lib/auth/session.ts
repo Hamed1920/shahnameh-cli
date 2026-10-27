@@ -14,7 +14,7 @@ export const sessionActor = cache(async (): Promise<Actor | null> => {
   if (!s) return null
   const role = (s.user as { role?: unknown }).role
   // An unknown role falls to the least privilege.
-  return { id: s.user.id, name: s.user.name, role: isRole(role) ? role : 'client' }
+  return { id: s.user.id, name: s.user.name, role: isRole(role) ? role : 'supervisor' }
 })
 
 /** The project slugs this user is a member of. */

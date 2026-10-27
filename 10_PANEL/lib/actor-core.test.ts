@@ -14,10 +14,10 @@ test('the local actor is the owner and honours SHM_REVIEWER', () => {
 })
 
 test('stamp adds the actor fields only when login is on', () => {
-  const a = { id: 'u1', name: 'Sara', role: 'agent' as const }
+  const a = { id: 'u1', name: 'Sara', role: 'production' as const }
   assert.deepEqual(Object.keys(stamp(a, false)), ['reviewer'])
   assert.deepEqual(stamp(a, false), { reviewer: 'Sara' })
-  assert.deepEqual(stamp(a, true), { reviewer: 'Sara', actorId: 'u1', actorRole: 'agent' })
+  assert.deepEqual(stamp(a, true), { reviewer: 'Sara', actorId: 'u1', actorRole: 'production' })
 })
 
 test('Forbidden carries the capability', () => {

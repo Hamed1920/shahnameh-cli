@@ -97,3 +97,16 @@ test('a new project opts itself into git, so it is not silently untracked', asyn
 })
 
 test.after(() => fs.rm(dir, { recursive: true, force: true }))
+
+test('structure is written to project.json only for blocks', async () => {
+  const plain = JSON.parse(await read('silk-road', 'project.json'))
+  assert.equal('structure' in plain, false)
+  assert.equal(made.structure, 'episodes')
+  const pd = await createProject({ name: 'Persimmon Dreams', slug: 'persimmon', code: 'PD', structure: 'blocks' })
+  assert.equal(JSON.parse(await read('persimmon', 'project.json')).structure, 'blocks')
+  assert.equal(pd.structure, 'blocks')
+  // Anything else is the default.
+  const odd = await createProject({ name: 'Odd One', slug: 'odd-one', code: 'ODD', structure: 'nonsense' as never })
+  assert.equal('structure' in JSON.parse(await read('odd-one', 'project.json')), false)
+  assert.equal(odd.structure, 'episodes')
+})

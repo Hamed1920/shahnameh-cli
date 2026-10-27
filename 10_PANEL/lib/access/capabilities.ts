@@ -1,71 +1,79 @@
 /**
- * Who may do what. One table, three roles, three answers.
+ * Who may do what. One table, four roles, three answers.
  *
  *   allow    do it now
  *   propose  ask Hamed: the request waits in his approvals inbox and nothing is
  *            spent or changed until he says yes
  *   deny     not for this role
  *
+ * The roles: the owner (Hamed, the project manager), production (the team that
+ * makes the film), the director and the script supervisor (who only review what
+ * was sent to them). No role proposes today; the approvals inbox stays for when
+ * one does.
+ *
  * Pure data: no imports, so tests and server code can both read it. The panel
- * checks it through can() in ./can.ts. Learnings stay Hamed's call: an agent can
- * only propose one.
+ * checks it through can() in ./can.ts. Learnings stay Hamed's call.
  */
 
-export type Role = 'owner' | 'agent' | 'client'
+export type Role = 'owner' | 'production' | 'director' | 'supervisor'
 export type Mode = 'allow' | 'propose' | 'deny'
 
-type Row = { owner: Mode; agent: Mode; client: Mode }
+type Row = { owner: Mode; production: Mode; director: Mode; supervisor: Mode }
 
-const row = (owner: Mode, agent: Mode, client: Mode): Row => ({ owner, agent, client })
+const row = (owner: Mode, production: Mode, director: Mode, supervisor: Mode): Row => ({ owner, production, director, supervisor })
 
-// A staff capability: the owner can, an agent can or must ask, a client never.
-const staff = (agent: Mode): Row => row('allow', agent, 'deny')
+// An operational capability: the owner can, production as given, the reviewers never.
+const staff = (production: Mode): Row => row('allow', production, 'deny', 'deny')
+
+// The owner alone.
+const ownerOnly = (): Row => row('allow', 'deny', 'deny', 'deny')
+
+// The review area: the owner can; the director and the supervisor as given; production no.
+const review = (director: Mode, supervisor: Mode): Row => row('allow', 'deny', director, supervisor)
 
 export const CAPABILITIES = {
   /** Review decisions that cost nothing (notes, discard, like). */
   'review.decide': staff('allow'),
   /** Accept a draft to final, or deny and requeue: both spend credits. */
-  'review.decide.spend': staff('propose'),
+  'review.decide.spend': staff('allow'),
   /** Submit a Prompts-page batch for pricing, generate from a prompt, read documents, refresh models. */
   'batch.submit': staff('allow'),
   /** Approve a priced batch: this is what queues the jobs. */
-  'batch.approve': staff('propose'),
+  'batch.approve': staff('allow'),
   /** Throw away a batch that was priced but not approved. */
   'batch.discard': staff('allow'),
   /** Price a reference-studio try. */
   'studio.price': staff('allow'),
   /** Generate in the studio, or pick a result to file. */
-  'studio.spend': staff('propose'),
+  'studio.spend': staff('allow'),
   /** Close a studio session. */
   'studio.close': staff('allow'),
   /** Ask for a regeneration of a take. */
-  'regen.spend': staff('propose'),
+  'regen.spend': staff('allow'),
   /** Retry a failed job. */
-  'job.retry': staff('propose'),
+  'job.retry': staff('allow'),
   /** Dismiss a failed job from the Queue page. */
   'job.dismiss': staff('allow'),
-  /** Approve or reject a learning (a rule that reaches prompts). */
-  'learning.decide': staff('propose'),
+  /** Approve or reject a learning (a rule that reaches prompts). Only Hamed decides. */
+  'learning.decide': ownerOnly(),
   /** Gallery likes, tags and order. */
   'gallery.curate': staff('allow'),
   /** References page: add, restore, change status, canonical look, role, unarchive. */
   'index.write': staff('allow'),
   /** References page: retire, archive, rename, move. */
-  'index.destructive': staff('propose'),
+  'index.destructive': staff('allow'),
   /** Episodes: start, file, add footage, assign shots. */
   'episode.write': staff('allow'),
   /** Episodes: rename, archive, restore, remove. */
-  'episode.destructive': staff('propose'),
+  'episode.destructive': staff('allow'),
   /** Start a new project. */
-  'project.create': staff('propose'),
+  'project.create': ownerOnly(),
   /** Stop or start the workers. */
-  'workers.control': staff('deny'),
+  'workers.control': ownerOnly(),
   /** "Show in folder": opens the machine's file explorer. */
-  'reveal.local': staff('deny'),
-  /** Approve or reject what an agent proposed (the inbox). */
-  'approval.decide': staff('deny'),
-  /** Release a take, shot or episode to clients, or take it back. */
-  'release.manage': staff('allow'),
+  'reveal.local': ownerOnly(),
+  /** Approve or reject what was proposed (the inbox). */
+  'approval.decide': ownerOnly(),
   /** Prompts pages and the prompts inside records. */
   'view.prompts': staff('allow'),
   /** Credits, prices and the spend ledger. */
@@ -74,15 +82,33 @@ export const CAPABILITIES = {
   'view.drafts': staff('allow'),
   /** Rejected takes. */
   'view.rejects': staff('allow'),
-  /** Items released to clients, and progress counts. */
-  'view.released': row('allow', 'allow', 'allow'),
-  /** Comment and approve or reject on a released item. Clients only. */
-  'comment.client': row('deny', 'deny', 'allow'),
+  /** Blocks projects: create, rename, reorder and retire sequences and blocks, edit prompts. */
+  'block.write': staff('allow'),
+  /** Blocks projects: send a generation to the director's review. */
+  'submission.create': staff('allow'),
+  /** Blocks projects: pick the final generation of a block. */
+  'final.set': staff('allow'),
+  /** Library: present an asset version to the director. */
+  'asset.present': staff('allow'),
+  /** The review area: what was sent to this person. */
+  'review.view': review('allow', 'allow'),
+  /** Write a director's note. */
+  'feedback.director': review('allow', 'deny'),
+  /** Write a continuity note. */
+  'feedback.continuity': review('deny', 'allow'),
+  /** Approve a submission or request a revision. Director only (the owner can too). */
+  'review.decide.director': review('allow', 'deny'),
+  /** Select, approve or comment on a library asset. */
+  'asset.review': review('allow', 'deny'),
+  /** Accounts: create a user, set a role, deactivate. */
+  'users.manage': ownerOnly(),
+  /** The activity log. */
+  'audit.view': ownerOnly(),
 } as const satisfies Record<string, Row>
 
 export type Capability = keyof typeof CAPABILITIES
 
-/** Everything that spends credits. An agent is never 'allow' on any of these. */
+/** Everything that spends credits. Production may spend; the spend ceiling still applies. The reviewers never. */
 export const SPENDING: ReadonlySet<Capability> = new Set<Capability>([
   'review.decide.spend',
   'batch.approve',

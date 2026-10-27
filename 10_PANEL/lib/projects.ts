@@ -3,6 +3,7 @@ import fsp from 'node:fs/promises'
 import path from 'node:path'
 import { codeProblem, slugProblem } from '../worker/lib/ids.mjs'
 import { projectPaths, type ProjectPaths } from './paths.ts'
+import { structureOf, type Structure } from './structure.ts'
 
 /**
  * The projects this panel can open: every folder under projects/ that holds a
@@ -23,6 +24,8 @@ export interface ProjectInfo {
   /** One or two characters for the sidebar badge. */
   mark: string
   created: string
+  /** How the film is laid out for people: Episode / Scene, or Sequence / Block. Default 'episodes'. */
+  structure?: Structure
 }
 
 export interface Project extends ProjectInfo {
@@ -43,7 +46,7 @@ export function projectsDir(): string {
 
 /** What a browser may see about a project: no disk paths. */
 export function publicInfo(p: Project): ProjectInfo {
-  return { slug: p.slug, name: p.name, code: p.code, description: p.description, mark: p.mark, created: p.created }
+  return { slug: p.slug, name: p.name, code: p.code, description: p.description, mark: p.mark, created: p.created, structure: p.structure }
 }
 
 /** First letter of the name, for a project without its own mark. */
@@ -75,6 +78,7 @@ function load(slug: string): Project | null {
     description: String(json.description ?? ''),
     mark: String(json.mark ?? '').trim() || defaultMark(name),
     created: String(json.created ?? ''),
+    structure: structureOf(json),
     root,
     P: projectPaths(root),
   }

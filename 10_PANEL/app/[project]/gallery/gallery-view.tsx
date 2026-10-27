@@ -9,7 +9,6 @@ import { EpisodePicker } from '@/components/episode-picker'
 import { MoveErrors } from '@/components/move-errors'
 import { ContextMenu, type MenuEntry } from '@/components/ui/context-menu'
 import { RegenerateButton, type RegenerateConfig } from '@/components/regenerate-button'
-import { ReleaseToggle } from '@/components/release-toggle'
 import { ShowInFolder } from '@/components/show-in-folder'
 import { Card, EmptyState } from '@/components/ui/card'
 import { Input, Select } from '@/components/ui/field'
@@ -47,8 +46,6 @@ export interface GalleryTake {
   credits: number | null
   source: RegenerateSource | null
   regenerations: RegenerationView[]
-  /** Login on and allowed to release: the take's reference and its live release id, if any. Absent otherwise. */
-  release?: { ref: string; id: string | null }
 }
 
 type Sort = 'order' | 'newest' | 'scene' | 'liked'
@@ -832,7 +829,6 @@ function TakeCard({
 
       <div className="mt-auto space-y-2.5">
         {take.file && <ShowInFolder path={take.file} />}
-        {take.release && <ReleaseToggle kind="take" reference={take.release.ref} label={take.title} releaseId={take.release.id} />}
         {take.canRegenerate && (
           <RegenerateButton
             jobId={take.jobId}

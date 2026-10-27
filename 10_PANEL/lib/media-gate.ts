@@ -1,24 +1,18 @@
 import { authEnabled } from './actor-core'
 import { gateRoute } from './actor'
-import { assetToRef } from './asset-ref'
 
 /**
- * The gate for api/asset and api/thumb. Staff (and login off) need 'view.drafts', as before.
- * A client may fetch only what an active release covers: view.released, the path mapped to a
- * ref (any working-space path or `..` maps to none), and a live release over that ref.
+ * The gate for api/asset and api/thumb. Login off, and everyone on staff, need 'view.drafts', as
+ * before. The director and the script supervisor never get a file path from these two routes:
+ * what was sent to them is streamed by the review-media route, which resolves the file itself.
  */
 export async function gateMedia(slug: string, rel: string) {
+  void rel
   if (!authEnabled()) return gateRoute(slug, 'view.drafts')
   const { sessionActor } = await import('./auth/session')
   const actor = await sessionActor()
-  if (actor?.role !== 'client') return gateRoute(slug, 'view.drafts')
-
-  const g = await gateRoute(slug, 'view.released')
-  if (!g.ok) return g
-  const no = { ok: false as const, response: new Response('forbidden', { status: 403 }) }
-  const ref = assetToRef(rel)
-  if (!ref) return no
-  const { releaseCovers } = await import('./releases')
-  if (!(await releaseCovers(slug, ref))) return no
-  return g
+  if (actor?.role === 'director' || actor?.role === 'supervisor') {
+    return { ok: false as const, response: new Response('forbidden', { status: 403 }) }
+  }
+  return gateRoute(slug, 'view.drafts')
 }

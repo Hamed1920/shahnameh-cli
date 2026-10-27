@@ -2,6 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { codeProblem, slugProblem, suggestCode, suggestSlug } from '../worker/lib/ids.mjs'
 import { listProjects, projectsDir, type Project } from './projects.ts'
+import { structureOf, type Structure } from './structure.ts'
 
 /**
  * Starting a new film from the panel: copy templates/project, fill in the name
@@ -23,6 +24,8 @@ export interface NewProject {
   description: string
   /** One or two characters for the badge. Empty means "derive it from the name". */
   mark: string
+  /** 'episodes' (the default) or 'blocks'. Written to project.json only when 'blocks'. */
+  structure?: Structure
 }
 
 /** A problem the person can fix, shown on the form. */
@@ -86,7 +89,7 @@ export async function checkNew(input: Partial<NewProject>): Promise<NewProject> 
   // Two graphemes, not two code units: a Persian letter must survive intact.
   const mark = Array.from(String(input.mark ?? '').trim()).slice(0, 2).join('')
 
-  return { name, slug, code, description: String(input.description ?? '').trim().slice(0, 500), mark }
+  return { name, slug, code, description: String(input.description ?? '').trim().slice(0, 500), mark, structure: structureOf(input) }
 }
 
 /**
@@ -105,7 +108,9 @@ export async function createProject(input: Partial<NewProject>): Promise<Project
     // mark is left out unless it was chosen: projects.ts derives it from the name otherwise.
     const project = {
       schema: 1, name: v.name, slug: v.slug, code: v.code, description: v.description,
-      ...(v.mark ? { mark: v.mark } : {}), created,
+      ...(v.mark ? { mark: v.mark } : {}),
+      // Left out for the default, so an episodes project's project.json is what it always was.
+      ...(v.structure === 'blocks' ? { structure: 'blocks' } : {}), created,
     }
     await fs.writeFile(path.join(staging, 'project.json'), JSON.stringify(project, null, 2) + '\n', 'utf8')
     await rename(staging, path.join(dir, v.slug))

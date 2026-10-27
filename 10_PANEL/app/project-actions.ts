@@ -21,6 +21,7 @@ export async function newProject(formData: FormData): Promise<{ ok: false; error
       code: String(formData.get('code') ?? ''),
       description: String(formData.get('description') ?? ''),
       mark: String(formData.get('mark') ?? ''),
+      structure: formData.get('structure') === 'blocks' ? 'blocks' : 'episodes',
     })
     slug = made.slug
   } catch (e) {
