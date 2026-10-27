@@ -2,23 +2,24 @@
 // generate migrations: `npm run db:generate`, then `npm run db:migrate`.
 import { sql } from 'drizzle-orm';
 import {
-  boolean, check, index, jsonb, pgTable, primaryKey, text, timestamp, uniqueIndex, uuid,
+  boolean, check, index, integer, jsonb, numeric, pgTable, primaryKey, text, timestamp, uniqueIndex, uuid,
 } from 'drizzle-orm/pg-core';
 
 // ---- BetterAuth core tables (field names are what BetterAuth expects) ----
 
-// A person who can sign in. `role` is owner | agent | client.
+// A person who can sign in. `role` is owner | production | director | supervisor.
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   email: text('email').notNull().unique(),
   emailVerified: boolean('email_verified').notNull().default(false),
   image: text('image'),
-  role: text('role').notNull().default('client'),
+  role: text('role').notNull().default('supervisor'),
+  disabled: boolean('disabled').notNull().default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 }, (t) => [
-  check('user_role_check', sql`${t.role} in ('owner', 'agent', 'client')`),
+  check('user_role_check', sql`${t.role} in ('owner', 'production', 'director', 'supervisor')`),
 ]);
 
 // One row per signed-in browser.
@@ -69,36 +70,6 @@ export const projectMember = pgTable('project_member', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 }, (t) => [primaryKey({ columns: [t.projectSlug, t.userId] })]);
 
-// Something the owner has released to clients: a take, a shot or an episode.
-// `ref` is the id (or asset reference) as the project knows it. Revoking sets revoked_at;
-// rows are never deleted. Only one live release per (project, kind, ref).
-export const release = pgTable('release', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  projectSlug: text('project_slug').notNull(),
-  kind: text('kind').notNull(),
-  ref: text('ref').notNull(),
-  label: text('label'),
-  releasedBy: text('released_by').notNull().references(() => user.id),
-  releasedAt: timestamp('released_at', { withTimezone: true }).notNull().defaultNow(),
-  revokedAt: timestamp('revoked_at', { withTimezone: true }),
-}, (t) => [
-  check('release_kind_check', sql`${t.kind} in ('take', 'shot', 'episode')`),
-  uniqueIndex('release_live_unique').on(t.projectSlug, t.kind, t.ref).where(sql`${t.revokedAt} is null`),
-]);
-
-// A client's note on a released item, optionally with a verdict.
-export const clientComment = pgTable('client_comment', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  releaseId: uuid('release_id').notNull().references(() => release.id, { onDelete: 'cascade' }),
-  userId: text('user_id').notNull().references(() => user.id),
-  body: text('body').notNull(),
-  verdict: text('verdict'),
-  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-}, (t) => [
-  check('client_comment_verdict_check', sql`${t.verdict} is null or ${t.verdict} in ('approve', 'reject')`),
-  index('client_comment_release_idx').on(t.releaseId),
-]);
-
 // An action someone asked for that the owner must approve before it runs.
 // `capability` names the action, `payload` carries its inputs, `result` / `error` its outcome.
 export const approvalRequest = pgTable('approval_request', {
@@ -118,3 +89,177 @@ export const approvalRequest = pgTable('approval_request', {
   check('approval_request_status_check', sql`${t.status} in ('pending', 'approved', 'rejected', 'executed', 'failed')`),
   index('approval_request_status_created_idx').on(t.status, t.createdAt),
 ]);
+
+// ---- Production panel (Persimmon Dreams): sequences, blocks, generations, review ----
+
+const ts = (name: string) => timestamp(name, { withTimezone: true });
+const createdAt = () => ts('created_at').notNull().defaultNow();
+const personFk = (name: string) => text(name).references(() => user.id);
+
+// A sequence of blocks. `id` is the display id (PD-S01); `internal_id` is the episode id in the project.
+export const sequence = pgTable('sequence', {
+  id: text('id').primaryKey(),
+  projectSlug: text('project_slug').notNull(),
+  number: integer('number').notNull(),
+  title: text('title').notNull(),
+  description: text('description'),
+  displayOrder: integer('display_order').notNull(),
+  internalId: text('internal_id'),
+  createdBy: personFk('created_by'),
+  createdAt: createdAt(),
+  retiredAt: ts('retired_at'),
+}, (t) => [uniqueIndex('sequence_project_number_unique').on(t.projectSlug, t.number)]);
+
+// A block (one shot). `id` is the display id (PD-S01-B003); `internal_id` the scene/shot id.
+export const block = pgTable('block', {
+  id: text('id').primaryKey(),
+  projectSlug: text('project_slug').notNull(),
+  sequenceId: text('sequence_id').notNull().references(() => sequence.id),
+  number: integer('number').notNull(),
+  internalId: text('internal_id').unique(),
+  title: text('title').notNull(),
+  displayOrder: integer('display_order').notNull(),
+  targetDurationSeconds: integer('target_duration_seconds'),
+  createdBy: personFk('created_by'),
+  createdAt: createdAt(),
+  retiredAt: ts('retired_at'),
+}, (t) => [uniqueIndex('block_sequence_number_unique').on(t.sequenceId, t.number)]);
+
+// Every saved wording of a block's prompt. The hash is of the normalized text.
+export const promptVersion = pgTable('prompt_version', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  blockId: text('block_id').notNull().references(() => block.id),
+  versionNumber: integer('version_number').notNull(),
+  promptText: text('prompt_text').notNull(),
+  promptHash: text('prompt_hash').notNull(),
+  refs: jsonb('refs').notNull().default(sql`'[]'::jsonb`),
+  createdBy: personFk('created_by'),
+  createdAt: createdAt(),
+}, (t) => [
+  uniqueIndex('prompt_version_block_number_unique').on(t.blockId, t.versionNumber),
+  index('prompt_version_block_hash_idx').on(t.blockId, t.promptHash),
+]);
+
+// An asset (and optionally one look of it) used by a block.
+export const blockAssetLink = pgTable('block_asset_link', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  blockId: text('block_id').notNull().references(() => block.id),
+  entityId: text('entity_id').notNull(),
+  variant: text('variant'),
+  role: text('role'),
+  createdBy: personFk('created_by'),
+  createdAt: createdAt(),
+}, (t) => [
+  uniqueIndex('block_asset_link_unique').on(t.blockId, t.entityId, sql`coalesce(${t.variant}, '')`),
+]);
+
+// One take of a block, synced from the worker's records. `g_number` is frozen once given.
+export const generation = pgTable('generation', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  projectSlug: text('project_slug').notNull(),
+  blockId: text('block_id').notNull().references(() => block.id),
+  gNumber: integer('g_number').notNull(),
+  hfJobId: text('hf_job_id'),
+  jobId: text('job_id'),
+  candidate: text('candidate'),
+  parentJobId: text('parent_job_id'),
+  stage: text('stage'),
+  model: text('model'),
+  resolution: text('resolution'),
+  durationSeconds: numeric('duration_seconds'),
+  costCredits: numeric('cost_credits'),
+  operationType: text('operation_type').notNull(),
+  promptVersionId: uuid('prompt_version_id').references(() => promptVersion.id),
+  createdBy: text('created_by'),
+  createdAt: ts('created_at').notNull(),
+  syncedAt: ts('synced_at').notNull().defaultNow(),
+}, (t) => [
+  check('generation_operation_type_check', sql`${t.operationType} in ('generate', 'edit', 'revision', 'final_of_draft')`),
+  uniqueIndex('generation_block_g_unique').on(t.blockId, t.gNumber),
+  uniqueIndex('generation_block_job_candidate_unique').on(t.blockId, t.hfJobId, t.candidate),
+]);
+
+// A generation put forward for the director. At most one active submission per block.
+export const reviewSubmission = pgTable('review_submission', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  blockId: text('block_id').notNull().references(() => block.id),
+  generationId: uuid('generation_id').notNull().references(() => generation.id),
+  roundNumber: integer('round_number').notNull(),
+  submittedBy: text('submitted_by').notNull().references(() => user.id),
+  submittedAt: ts('submitted_at').notNull().defaultNow(),
+  status: text('status').notNull().default('pending'),
+  isActive: boolean('is_active').notNull().default(true),
+  decidedBy: personFk('decided_by'),
+  decidedAt: ts('decided_at'),
+  fileSha256: text('file_sha256'),
+}, (t) => [
+  check('review_submission_status_check', sql`${t.status} in ('pending', 'approved', 'revision_requested')`),
+  uniqueIndex('review_submission_block_round_unique').on(t.blockId, t.roundNumber),
+  uniqueIndex('review_submission_active_unique').on(t.blockId).where(sql`${t.isActive}`),
+]);
+
+// A note on a submission, from the director or on continuity.
+export const feedback = pgTable('feedback', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  submissionId: uuid('submission_id').notNull().references(() => reviewSubmission.id),
+  authorId: text('author_id').notNull().references(() => user.id),
+  authorRole: text('author_role').notNull(),
+  category: text('category').notNull(),
+  body: text('body').notNull(),
+  timecodeSeconds: numeric('timecode_seconds'),
+  resolutionStatus: text('resolution_status').notNull().default('open'),
+  resolvedBy: personFk('resolved_by'),
+  resolvedAt: ts('resolved_at'),
+  createdAt: createdAt(),
+}, (t) => [
+  check('feedback_category_check', sql`${t.category} in ('director', 'continuity')`),
+  check('feedback_resolution_check', sql`${t.resolutionStatus} in ('open', 'in_progress', 'resolved')`),
+  index('feedback_submission_idx').on(t.submissionId),
+]);
+
+// Who has read which feedback.
+export const feedbackRead = pgTable('feedback_read', {
+  feedbackId: uuid('feedback_id').notNull().references(() => feedback.id),
+  userId: text('user_id').notNull().references(() => user.id),
+  readAt: ts('read_at').notNull().defaultNow(),
+}, (t) => [primaryKey({ columns: [t.feedbackId, t.userId] })]);
+
+// An asset look shown to the director. Approval appends an INDEX_OPS request (`index_op_id`).
+export const assetReview = pgTable('asset_review', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  projectSlug: text('project_slug').notNull(),
+  entityId: text('entity_id').notNull(),
+  variant: text('variant'),
+  presentedBy: text('presented_by').notNull().references(() => user.id),
+  presentedAt: ts('presented_at').notNull().defaultNow(),
+  status: text('status').notNull().default('presented'),
+  directorNotes: text('director_notes'),
+  decidedBy: personFk('decided_by'),
+  decidedAt: ts('decided_at'),
+  indexOpId: text('index_op_id'),
+}, (t) => [
+  check('asset_review_status_check', sql`${t.status} in ('presented', 'selected', 'revision_requested', 'approved')`),
+  index('asset_review_entity_idx').on(t.projectSlug, t.entityId),
+]);
+
+// The one current Final of a block. Earlier Finals live on in audit_log.
+export const blockFinal = pgTable('block_final', {
+  blockId: text('block_id').primaryKey().references(() => block.id),
+  generationId: uuid('generation_id').notNull().references(() => generation.id),
+  submissionId: uuid('submission_id').notNull().references(() => reviewSubmission.id),
+  finalizedBy: text('finalized_by').notNull().references(() => user.id),
+  finalizedAt: ts('finalized_at').notNull().defaultNow(),
+});
+
+// Append-only record of who did what.
+export const auditLog = pgTable('audit_log', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  projectSlug: text('project_slug'),
+  actorId: text('actor_id'),
+  actorName: text('actor_name').notNull(),
+  action: text('action').notNull(),
+  objectType: text('object_type').notNull(),
+  objectId: text('object_id').notNull(),
+  detail: jsonb('detail'),
+  createdAt: createdAt(),
+}, (t) => [index('audit_log_project_created_idx').on(t.projectSlug, t.createdAt)]);

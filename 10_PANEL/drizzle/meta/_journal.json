@@ -8,6 +8,20 @@
       "when": 1793100497205,
       "tag": "0000_windy_havok",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793114499538,
+      "tag": "0001_drop_release_roles",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793114503204,
+      "tag": "0002_production_panel",
+      "breakpoints": true
     }
   ]
 }
