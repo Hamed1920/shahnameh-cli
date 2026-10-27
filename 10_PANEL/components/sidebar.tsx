@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
 import { ArrowLeftRight, Bell, ClipboardCheck, Coins, LogOut } from 'lucide-react'
 import { ActivitySheet, useActivity } from '@/components/activity'
-import { NAV, SIDEBAR_COOKIE, SIDEBAR_RAIL, SIDEBAR_WIDTH, navHref } from '@/components/nav-items'
+import { SIDEBAR_COOKIE, SIDEBAR_RAIL, SIDEBAR_WIDTH, navFor, navHref } from '@/components/nav-items'
 import { useProject } from '@/components/project-context'
 import { EASE, SPRING } from '@/components/ui/motion-tokens'
 import type { Account } from '@/lib/account'
@@ -189,7 +189,7 @@ export function Sidebar({
 
       <nav aria-label="Sections" className="pt-2">
         <ul className="space-y-px">
-          {NAV.map(({ path, label, icon: Icon }) => {
+          {navFor(project.structure).map(({ path, label, icon: Icon }) => {
             const href = navHref(project.slug, path)
             const active = path === '' ? pathname === home : pathname.startsWith(href)
             const count = counts[path] ?? 0

@@ -1,4 +1,5 @@
 import { idRx } from '../worker/lib/ids.mjs'
+import { blockTargetToInternal, PICK_A_BLOCK, workerTarget } from './block-target'
 import { KINDS, entitySlug, isAscii } from './indexing'
 import { checkModelFit, hasDraft, hasSound, isVideoModel, modelInfo, modelProblemOf } from './models'
 import { targetCandidates } from './ref-suggest'
@@ -103,6 +104,8 @@ export interface RowConfig {
   code: string
   /** Shown first in model pickers (worker/config.json pinnedModels). Any usable catalogue model is allowed. */
   pinned: string[]
+  /** A Sequence / Block project: a new scene (NEXT/EPnnn) is refused, the target must be a block. */
+  blocks?: boolean
 }
 
 export type RowTarget = Pick<DraftRow, 'targetMode' | 'target' | 'sceneAuto' | 'episode' | 'newKind' | 'newName'>
@@ -115,7 +118,7 @@ export function targetModeOf(target: string | null, catalog: CatalogEntity[], co
   if (m) return { ...base, targetMode: 'new', newKind: m[1].toUpperCase(), newName: m[2].replace(/-/g, ' ') }
   const next = t.toUpperCase().match(NEXT_SCENE_RX)
   if (next) return { ...base, targetMode: 'shot', sceneAuto: true, episode: next[1] }
-  if (shotRx(code).test(t)) return { ...base, targetMode: 'shot', target: t }
+  if (shotRx(code).test(t) || blockTargetToInternal(code, t)) return { ...base, targetMode: 'shot', target: t }
   const ent = catalog.find((e) => e.id === t || e.shortId === t || e.id === t.replace(/^@/, '') || e.shortId === t.replace(/^@/, ''))
   return { ...base, targetMode: 'entity', target: ent?.id ?? t }
 }
@@ -147,10 +150,11 @@ export function initialTarget(
 }
 
 /** The target string the worker receives. */
-export function rowTarget(row: DraftRow): string {
+export function rowTarget(row: DraftRow, code?: string): string {
   if (row.targetMode === 'new') return `NEW/${row.newKind}/${entitySlug(row.newName)}`
   if (row.targetMode === 'shot' && row.sceneAuto) return nextSceneTarget(row.episode.trim().toUpperCase())
-  return row.target.trim()
+  // A block's display id (PD-S01-B003) becomes its internal shot id here, never in the worker.
+  return code ? workerTarget(code, row.target) : row.target.trim()
 }
 
 export function rowModel(row: DraftRow, defaults: BatchDefaults): string {
@@ -169,12 +173,16 @@ export function checkRow(row: DraftRow, catalog: CatalogEntity[], batch: DraftRo
     const t = row.target.trim()
     if (!t) problems.push('Choose what this prompt is for.')
     else if (!catalog.some((e) => e.id === t || e.shortId === t)) problems.push(`${t} is not in the index. Pick it from the list, or make it a new entity.`)
+  } else if (row.targetMode === 'shot' && row.sceneAuto && cfg.blocks) {
+    problems.push(PICK_A_BLOCK)
   } else if (row.targetMode === 'shot' && row.sceneAuto) {
     if (!EPISODE_RX.test(row.episode.trim().toUpperCase())) problems.push('An episode looks like EP001.')
   } else if (row.targetMode === 'shot') {
     const t = row.target.trim()
     if (!t) problems.push('Type the shot id.')
-    else if (!shotRx(cfg.code).test(t)) problems.push(`A shot id looks like ${cfg.code}-EP001-SC004-SH0010.`)
+    else if (!shotRx(cfg.code).test(t) && !blockTargetToInternal(cfg.code, t)) {
+      problems.push(cfg.blocks ? PICK_A_BLOCK : `A shot id looks like ${cfg.code}-EP001-SC004-SH0010.`)
+    }
   } else {
     if (!(KINDS as readonly string[]).includes(row.newKind)) problems.push('Choose a kind for the new entity.')
     const slug = entitySlug(row.newName)
@@ -231,7 +239,7 @@ export function checkRow(row: DraftRow, catalog: CatalogEntity[], batch: DraftRo
 }
 
 /** What the worker receives for one row: the defaults folded into params, nothing reworded. */
-export function toJobInput(row: DraftRow, defaults: BatchDefaults): BatchJobInput {
+export function toJobInput(row: DraftRow, defaults: BatchDefaults, code?: string): BatchJobInput {
   const model = rowModel(row, defaults)
   const video = isVideoModel(model)
   const info = modelInfo(model)
@@ -258,7 +266,7 @@ export function toJobInput(row: DraftRow, defaults: BatchDefaults): BatchJobInpu
   return {
     key: row.key,
     label: row.label.trim() || null,
-    target: rowTarget(row),
+    target: rowTarget(row, code),
     ...(row.targetMode === 'new' && {
       newEntity: { kind: row.newKind, slug: entitySlug(row.newName), name: row.newName.trim(), description: row.newDescription.trim() },
     }),

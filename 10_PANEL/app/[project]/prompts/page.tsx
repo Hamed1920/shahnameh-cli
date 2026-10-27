@@ -6,6 +6,7 @@ import {
 } from '@/lib/store'
 import { clampDuration } from '@/lib/models'
 import { requireProject } from '@/lib/projects'
+import { isBlocks } from '@/lib/structure'
 import type { BatchDefaults } from '@/lib/types'
 import { Batches } from './batches'
 import { ModelListStatus } from './model-list-status'
@@ -39,6 +40,7 @@ export default async function PromptsPage({ params }: PageProps<'/[project]/prom
   }
   const intakeCfg: IntakeConfig = {
     code: pr.code,
+    blocks: isBlocks(pr),
     pinned,
     defaultImageModel: String(cfg.defaultImageModel ?? 'nano_banana_pro'),
     aspectRatios: (cfg.aspectRatios as string[]) ?? ['16:9', '9:16', '1:1'],

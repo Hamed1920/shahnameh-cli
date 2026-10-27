@@ -11,6 +11,7 @@ import { batchSummary } from '@/lib/approval-summary'
 import { approvableBatch, doApproveBatch, type ApproveBatchPayload } from '@/lib/exec/batch'
 import { proposeApproval } from '@/lib/propose'
 import { requireProject } from '@/lib/projects'
+import { isBlocks } from '@/lib/structure'
 import { revalidateProject } from '@/lib/revalidate'
 import { getBatches, getCatalog, getQueue, getShotMoves, getWorkerConfig, readJsonl, resolveRefToken } from '@/lib/store'
 import fs from 'node:fs/promises'
@@ -111,7 +112,7 @@ export async function submitBatch(formData: FormData): Promise<{ ok: boolean; ba
   if (payload.rows.length > 200) return { ok: false, error: 'At most 200 prompts in one batch.' }
 
   const [catalog, cfg] = await Promise.all([getCatalog(pr), getWorkerConfig()])
-  const rowCfg: RowConfig = { code: pr.code, pinned: (cfg.pinnedModels as string[] | undefined) ?? [] }
+  const rowCfg: RowConfig = { code: pr.code, pinned: (cfg.pinnedModels as string[] | undefined) ?? [], blocks: isBlocks(pr) }
   const rowErrors: Record<string, string[]> = {}
   for (const row of payload.rows) {
     const problems = checkRow(row, catalog, payload.rows, payload.defaults, rowCfg)
@@ -121,7 +122,7 @@ export async function submitBatch(formData: FormData): Promise<{ ok: boolean; ba
 
   const shared = String(payload.prefix ?? '').trim()
   const jobs: BatchJobInput[] = payload.rows.map((row) => {
-    const job = toJobInput(row, payload.defaults)
+    const job = toJobInput(row, payload.defaults, pr.code)
     const prefix = payload.prefixes ? String(payload.prefixes[row.key] ?? '').trim() : shared
     return prefix ? { ...job, prompt: `${prefix}\n\n${job.prompt}` } : job
   })
