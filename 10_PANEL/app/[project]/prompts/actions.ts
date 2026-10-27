@@ -6,6 +6,7 @@ import { freshCatalog } from '@/lib/catalog'
 import { DOCUMENT_EXT, MAX_DOCUMENTS, MAX_DOCUMENT_BYTES, documentToText } from '@/lib/documents'
 import { appendJobRequest, newBatchId, newRequestId } from '@/lib/job-requests'
 import { gate, gateMode, whoStamp } from '@/lib/actor'
+import { authEnabled } from '@/lib/actor-core'
 import { batchSummary } from '@/lib/approval-summary'
 import { approvableBatch, doApproveBatch, type ApproveBatchPayload } from '@/lib/exec/batch'
 import { proposeApproval } from '@/lib/propose'
@@ -229,7 +230,13 @@ export async function approveBatch(project: string, batchId: string, expectedTot
     const summary = batchSummary({ batchId, name: found.batch.name, jobs, total: found.batch.total })
     return proposeApproval(project, 'batch.approve', summary, payload, g.actor)
   }
-  return doApproveBatch(project, payload, g.actor)
+  const result = await doApproveBatch(project, payload, g.actor)
+  // The Activity Log: only a blocks project with login on (it needs the database). The JSONL record is untouched.
+  if (result.ok && authEnabled() && isBlocks(await requireProject(project))) {
+    const { audit } = await import('@/lib/audit')
+    await audit({ project, actor: g.actor, action: 'batch.approve', objectType: 'batch', objectId: batchId, detail: { expectedTotal: payload.expectedTotal } })
+  }
+  return result
 }
 
 export async function discardBatch(project: string, batchId: string): Promise<{ ok: boolean; error?: string }> {

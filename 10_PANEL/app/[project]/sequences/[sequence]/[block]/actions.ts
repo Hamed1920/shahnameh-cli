@@ -132,6 +132,9 @@ export async function generateForBlock(formData: FormData): Promise<BlockResult>
       defaults,
       job,
     })
+    // The Activity Log (auth is on here: guard() refuses otherwise).
+    const { audit } = await import('@/lib/audit')
+    await audit({ project: pr.slug, actor, action: 'generation.request', objectType: 'block', objectId: b.id, detail: { batchId, promptVersion: version.versionNumber } })
     refresh(pr, b.id)
     return { ok: true, batchId, version: version.versionNumber, created: saved.created }
   } catch (e) {

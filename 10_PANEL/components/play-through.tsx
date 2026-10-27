@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import Link from 'next/link'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import {
@@ -12,7 +13,7 @@ import { EASE } from '@/components/ui/motion-tokens'
 import { Modal } from '@/components/ui/modal'
 import { isVideo } from '@/lib/asset'
 import { cn } from '@/lib/cn'
-import { bestOption, chosenOption, moveInOrder, orderStops, type PlayStop } from '@/lib/play-through'
+import { bestOption, chosenOption, moveInOrder, orderStops, type PlayOption, type PlayStop } from '@/lib/play-through'
 
 /** The volume the viewer last chose, kept for the next run. Storage can be blocked; the run works without it. */
 const VOLUME_KEY = 'play-through-volume'
@@ -31,6 +32,11 @@ const clock = (t: number) => {
 
 /** How long a still stays up before the run moves on. */
 const STILL_MS = 4000
+/** How long a gap card ("not sent yet") stays up before the run moves on. */
+const GAP_MS = 3000
+
+/** Where a take plays from: its own address (a review-media URL) or the asset route. */
+const isMoving = (o: PlayOption) => (o.kind ? o.kind === 'video' : isVideo(o.file))
 
 /**
  * "Play through": every shot of the page, one after another.
@@ -45,7 +51,7 @@ const STILL_MS = 4000
  * fresh element per shot would have to be let in again every time.
  */
 export function PlayThroughButton({
-  stops, scope, label = 'Play through', size = 'sm', className,
+  stops, scope, label = 'Play through', size = 'sm', className, reorder = true,
 }: {
   /** In their natural order: the order the author numbered them in. */
   stops: PlayStop[]
@@ -54,11 +60,13 @@ export function PlayThroughButton({
   label?: string
   size?: 'sm' | 'md'
   className?: string
+  /** A playlist that is already in film order (a sequence) turns the arranging off. */
+  reorder?: boolean
 }) {
   const [open, setOpen] = useState(false)
   const [arranging, setArranging] = useState(false)
   const [order, setOrder] = usePlayOrder(scope)
-  const ordered = useMemo(() => orderStops(stops, order), [stops, order])
+  const ordered = useMemo(() => (reorder ? orderStops(stops, order) : stops), [stops, order, reorder])
   return (
     <>
       <Button
@@ -66,13 +74,13 @@ export function PlayThroughButton({
         size={size}
         tone="outline"
         className={className}
-        disabled={ordered.length === 0}
-        title={ordered.length === 0 ? 'Nothing here has footage to play yet.' : `Play ${ordered.length} shot${ordered.length === 1 ? '' : 's'} one after another`}
+        disabled={!ordered.some((s) => !s.gap)}
+        title={!ordered.some((s) => !s.gap) ? 'Nothing here has footage to play yet.' : `Play ${ordered.length} shot${ordered.length === 1 ? '' : 's'} one after another`}
         onClick={() => setOpen(true)}
       >
         <Play aria-hidden className="size-3.5" /> {label}
       </Button>
-      <Button
+      {reorder && <Button
         type="button"
         size={size}
         tone="ghost"
@@ -83,9 +91,9 @@ export function PlayThroughButton({
       >
         <ArrowDownUp aria-hidden className="size-3.5" /> Reorder
         {order.length > 0 && <span className="size-1.5 rounded-full bg-accent" role="img" aria-label="custom order" />}
-      </Button>
+      </Button>}
       <Player stops={ordered} open={open} onClose={() => setOpen(false)} />
-      <ReorderDialog open={arranging} stops={ordered} custom={order.length > 0} onOrder={setOrder} onClose={() => setArranging(false)} />
+      {reorder && <ReorderDialog open={arranging} stops={ordered} custom={order.length > 0} onOrder={setOrder} onClose={() => setArranging(false)} />}
     </>
   )
 }
@@ -278,7 +286,8 @@ function Player({ stops, open, onClose }: { stops: PlayStop[]; open: boolean; on
   const best = stop ? bestOption(stop.options) : null
   const next = stops[at + 1]
   const nextTake = next ? chosenOption(next, picks) : null
-  const playing = take && isVideo(take.file)
+  const gap = !!stop?.gap
+  const playing = !!take && isMoving(take)
 
   // Unmuting from a volume of zero would stay silent, so it comes up to half instead.
   const toggleMute = useCallback(() => {
@@ -306,7 +315,7 @@ function Player({ stops, open, onClose }: { stops: PlayStop[]; open: boolean; on
 
   // Start the take the moment it is chosen. A browser that refuses sound is
   // asked again muted, so the run still moves instead of sitting on a frame.
-  const src = take ? assetUrl(take.file) : null
+  const src = take ? (take.url ?? assetUrl(take.file)) : null
   useEffect(() => {
     const el = video.current
     if (!open || !el || !playing || finished) return
@@ -333,9 +342,16 @@ function Player({ stops, open, onClose }: { stops: PlayStop[]; open: boolean; on
     else if (open && playing && !finished && el.paused) el.play().catch(() => {})
   }, [paused, open, playing, finished])
 
+  // A gap card moves on by itself, after a few seconds: nothing is skipped without being seen.
+  useEffect(() => {
+    if (!open || !gap || paused || finished) return
+    const t = setTimeout(advance, GAP_MS)
+    return () => clearTimeout(t)
+  }, [open, gap, at, paused, finished, advance])
+
   // A still has no end of its own.
   useEffect(() => {
-    if (!open || !take || playing || paused || finished) return
+    if (!open || !take || gap || playing || paused || finished) return
     const t = setTimeout(advance, STILL_MS)
     return () => clearTimeout(t)
   }, [open, take, playing, paused, finished, advance])
@@ -392,7 +408,7 @@ function Player({ stops, open, onClose }: { stops: PlayStop[]; open: boolean; on
 
   return createPortal(
     <AnimatePresence>
-      {open && stop && take && (
+      {open && stop && (take || gap) && (
         <motion.div
           key="play-through"
           ref={shell}
@@ -421,9 +437,18 @@ function Player({ stops, open, onClose }: { stops: PlayStop[]; open: boolean; on
               preload="auto"
               className={cn('size-full cursor-pointer object-contain', !playing && 'hidden')}
             />
-            {!playing && (
+            {gap && (
+              <div className="absolute inset-0 grid place-items-center">
+                <div className="grid max-w-md justify-items-center gap-3 rounded-xl border border-dashed border-edge-strong px-8 py-10 text-center">
+                  <p className="font-mono text-sm text-fg">{stop.title}</p>
+                  <p className="text-[13px] text-muted">{stop.subtitle ?? 'Nothing to play for this block yet.'}</p>
+                  <Button type="button" tone="outline" size="sm" onClick={advance}>Skip</Button>
+                </div>
+              </div>
+            )}
+            {!playing && take && !gap && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={assetUrl(take.file)} alt={stop.title} className="size-full object-contain" />
+              <img src={take.url ?? assetUrl(take.file)} alt={stop.title} className="size-full object-contain" />
             )}
             {finished && (
               <div className="absolute inset-0 grid place-items-center bg-black/70">
@@ -443,7 +468,10 @@ function Player({ stops, open, onClose }: { stops: PlayStop[]; open: boolean; on
           <div className={cn('absolute inset-x-0 top-0 flex items-center gap-4 bg-gradient-to-b from-black/80 to-transparent px-5 pt-4 pb-10 transition-opacity duration-300', chromeOff && 'pointer-events-none opacity-0')}>
             <div className="min-w-0 flex-1">
               <p className="truncate font-mono text-sm font-medium text-fg">{stop.title}</p>
-              {stop.subtitle && <p className="truncate text-[12.5px] text-muted">{stop.subtitle}</p>}
+              {stop.subtitle && !gap && <p className="truncate text-[12.5px] text-muted">{stop.subtitle}</p>}
+              {stop.href && (
+                <Link href={stop.href} className="focus-ring text-[12px] text-accent underline-offset-2 hover:underline">Open this block</Link>
+              )}
             </div>
             <span className="font-mono text-xs text-muted tabular-nums">
               <span className="text-fg">{String(at + 1).padStart(2, '0')}</span> / {String(stops.length).padStart(2, '0')}
@@ -457,8 +485,8 @@ function Player({ stops, open, onClose }: { stops: PlayStop[]; open: boolean; on
           <div className={cn('absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent pt-12 transition-opacity duration-300', chromeOff && 'pointer-events-none opacity-0')}>
           {/* The ticks: which take of this shot the run plays. */}
           <div className="flex flex-wrap items-center gap-2 px-5">
-            <span className="mr-1 text-[11.5px] text-faint">{stop.options.length > 1 ? 'Play' : 'Only take'}</span>
-            {stop.options.map((o) => {
+            {!gap && <span className="mr-1 text-[11.5px] text-faint">{stop.options.length > 1 ? 'Play' : 'Only take'}</span>}
+            {!gap && take && stop.options.map((o) => {
               const on = o.id === take.id
               return (
                 <button
@@ -555,8 +583,8 @@ function Player({ stops, open, onClose }: { stops: PlayStop[]; open: boolean; on
           </div>
 
           {/* Warm the next shot's take so the cut is not a stall. */}
-          {nextTake && isVideo(nextTake.file) && (
-            <video key={nextTake.file} src={assetUrl(nextTake.file)} preload="auto" muted className="hidden" aria-hidden />
+          {nextTake && isMoving(nextTake) && (
+            <video key={nextTake.file} src={nextTake.url ?? assetUrl(nextTake.file)} preload="auto" muted className="hidden" aria-hidden />
           )}
         </motion.div>
       )}

@@ -21,6 +21,10 @@ export interface PlayOption {
   ts: string
   /** This is the footage the episode holds now. */
   filed?: boolean
+  /** Play this address as it is, instead of serving `file` through the asset route (a review-media URL). */
+  url?: string
+  /** Set when the address does not end in a file extension. */
+  kind?: 'video' | 'image'
 }
 
 /** One shot in the run, with every take that could stand for it. */
@@ -29,6 +33,10 @@ export interface PlayStop {
   title: string
   subtitle?: string
   options: PlayOption[]
+  /** A placeholder for a block with nothing to play: shown for a few seconds, never skipped without a sign. */
+  gap?: boolean
+  /** Where the viewer can go to read about this stop (the block's review page). */
+  href?: string
 }
 
 const STAGE_RANK = { final: 2, null: 1, draft: 0 } as const

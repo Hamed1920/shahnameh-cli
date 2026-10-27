@@ -308,3 +308,19 @@ export async function retireBlock(project: string, id: string, actor: Actor): Pr
     return { ok: true as const }
   })
 }
+
+/** Notes this person has not read, across every live block of the project (the sidebar badge). */
+export async function unreadTotal(project: string, userId: string): Promise<number> {
+  const db = getDb()
+  const rows = await db
+    .select({ id: feedback.id, author: feedback.authorId })
+    .from(feedback)
+    .innerJoin(reviewSubmission, eq(reviewSubmission.id, feedback.submissionId))
+    .innerJoin(block, eq(block.id, reviewSubmission.blockId))
+    .where(and(eq(block.projectSlug, project), isNull(block.retiredAt)))
+  const theirs = rows.filter((r) => r.author !== userId)
+  if (theirs.length === 0) return 0
+  const read = await db.select({ id: feedbackRead.feedbackId }).from(feedbackRead).where(and(eq(feedbackRead.userId, userId), inArray(feedbackRead.feedbackId, theirs.map((r) => r.id))))
+  const seen = new Set(read.map((r) => r.id))
+  return theirs.filter((r) => !seen.has(r.id)).length
+}

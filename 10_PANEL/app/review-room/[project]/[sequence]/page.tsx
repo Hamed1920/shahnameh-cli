@@ -5,6 +5,10 @@ import { Badge } from '@/components/ui/text'
 import { StatusLabel } from '@/app/[project]/sequences/status'
 import { reviewPage } from '../guard'
 import { ReviewHeader } from '../header'
+import { SequencePlayback } from '@/components/sequence-playback'
+import { ProjectProvider } from '@/components/project-context'
+import { publicInfo } from '@/lib/projects'
+import { buildPlaylist } from '@/lib/sequence-playlist'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,11 +20,21 @@ export default async function ReviewSequencePage({ params }: PageProps<'/review-
   const seq = await getSequence(pr.slug, String(p.sequence ?? '').toUpperCase())
   if (!seq) notFound()
   const blocks = await listBlocks(seq.id, actor)
+  const { playlistBlocks } = await import('@/lib/pd-playlist')
+  const stops = buildPlaylist(pr.slug, await playlistBlocks(pr, seq.id, false), 'submitted', (id) => `/review-room/${pr.slug}/${seq.id}/${id}`)
 
   return (
     <main className="scroll-pane flex-1">
       <div className="mx-auto max-w-4xl px-6 py-10">
         <ReviewHeader project={pr.slug} eyebrow={`${pr.name} · ${seq.id}`} title={seq.title} back={{ href: `/review-room/${pr.slug}`, label: 'Review room' }} name={actor.name} />
+
+        {blocks.length > 0 && (
+          <div className="mt-10">
+            <ProjectProvider project={publicInfo(pr)}>
+              <SequencePlayback scope={`review:${seq.id}`} sources={[{ id: 'submitted', label: 'Submitted', hint: 'What was sent to the director', stops }]} />
+            </ProjectProvider>
+          </div>
+        )}
 
         {blocks.length === 0 ? (
           <p className="mt-12 rounded-xl border border-dashed border-edge-strong/70 px-8 py-14 text-center text-sm text-muted">This sequence has no blocks yet.</p>

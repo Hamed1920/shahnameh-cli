@@ -8,6 +8,8 @@ import { Badge, PageHeader, SectionHeading } from '@/components/ui/text'
 import { BlockTools, DurationEdit, NewBlock } from '../controls'
 import { sequencePage } from '../guard'
 import { StatusLabel } from '../status'
+import { SequencePlayback } from '@/components/sequence-playback'
+import { buildPlaylist } from '@/lib/sequence-playlist'
 
 export const dynamic = 'force-dynamic'
 
@@ -24,6 +26,9 @@ export default async function SequencePage({ params }: PageProps<'/[project]/seq
   await (await import('@/lib/pd-generations')).syncGenerations(pr)
   const blocks = await listBlocks(seq.id, actor)
   const ids = blocks.map((b) => b.id)
+  const { playlistBlocks } = await import('@/lib/pd-playlist')
+  const pl = await playlistBlocks(pr, seq.id, true)
+  const hrefFor = (id: string) => `/${pr.slug}/sequences/${seq.id}/${id}`
 
   return (
     <div className="space-y-12">
@@ -33,6 +38,19 @@ export default async function SequencePage({ params }: PageProps<'/[project]/seq
           {seq.description || 'The blocks of this sequence, in the order they play.'}
         </PageHeader>
       </div>
+
+      {blocks.length > 0 && (
+        <section>
+          <SectionHeading count={blocks.length}>Playback</SectionHeading>
+          <SequencePlayback
+            scope={`production:${seq.id}`}
+            sources={[
+              { id: 'submitted', label: 'Submitted', hint: 'Active submissions, as the director sees them', stops: buildPlaylist(pr.slug, pl, 'submitted', hrefFor) },
+              { id: 'best', label: 'Best available', hint: 'Final if set, else the active submission, else the latest accepted generation', stops: buildPlaylist(pr.slug, pl, 'best', hrefFor) },
+            ]}
+          />
+        </section>
+      )}
 
       <section>
         <SectionHeading count={blocks.length}>Blocks</SectionHeading>

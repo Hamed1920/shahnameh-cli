@@ -47,6 +47,7 @@ export default async function ProjectLayout({ children, params }: LayoutProps<'/
   // Login on only: the name beside Sign out. Off: null, and the sidebar shows no sign-out.
   let signedInAs: string | null = null
   let showApprovals = false
+  let unreadNotes = 0
   if (authEnabled()) {
     const actor = await (await import('@/lib/auth/session')).sessionActor()
     signedInAs = actor?.name ?? null
@@ -54,6 +55,10 @@ export default async function ProjectLayout({ children, params }: LayoutProps<'/
     if (actor?.role === 'director' || actor?.role === 'supervisor') redirect(`/review-room/${pr.slug}`)
     // The approvals inbox is the owner's.
     showApprovals = actor?.role === 'owner'
+    // A blocks project: the director's and supervisor's notes waiting for production (and the owner).
+    if (isBlocks(pr) && actor && (actor.role === 'owner' || actor.role === 'production')) {
+      unreadNotes = await (await import('@/lib/pd-store')).unreadTotal(pr.slug, actor.id)
+    }
   }
   const collapsed = (await cookies()).get(SIDEBAR_COOKIE)?.value === '1'
   // Taken with the render, so a change between render and mount is not missed.
@@ -81,6 +86,7 @@ export default async function ProjectLayout({ children, params }: LayoutProps<'/
               '/review': pending.length,
               '/queue': waiting.length,
               '/learnings': learnings.filter((l) => l.status === 'proposed').length,
+              ...(unreadNotes > 0 && { '/sequences': unreadNotes }),
             }}
             activity={activity}
             worker={worker}

@@ -11,6 +11,10 @@ import { TakeMedia } from '@/components/take-media'
 import { assetUrl, isFiledShot } from '@/lib/asset'
 import { getDecidedEntries, type DecidedEntry, type FollowUp } from '@/lib/decided'
 import { requireProject } from '@/lib/projects'
+import { authEnabled } from '@/lib/actor-core'
+import { isBlocks } from '@/lib/structure'
+import { BlocksDecided } from './blocks-decided'
+import { sequencePage } from '../sequences/guard'
 import { cn } from '@/lib/cn'
 import { episodeLabel, episodesIn, shortEpisode, NO_EPISODE_LABEL, type EpisodeOption } from '@/lib/episodes'
 import { getCatalog, getEpisodes, getPriceTable, getShotMoveRequests, getWorkerConfig } from '@/lib/store'
@@ -188,7 +192,13 @@ function Location({ entry }: { entry: DecidedEntry }) {
 }
 
 export default async function DecidedPage({ params, searchParams }: PageProps<'/[project]/decided'>) {
-  const pr = await requireProject((await params).project)
+  const slug = (await params).project
+  const pr = await requireProject(slug)
+  // A Sequence / Block project has its own tree view (PRD 11); everything below is the episodes page, untouched.
+  if (isBlocks(pr) && authEnabled()) {
+    const g = await sequencePage(slug)
+    return <BlocksDecided pr={g.pr} actor={g.actor} searchParams={await searchParams} />
+  }
   const [all, catalog, cfg, priceTable, episodeList, moves] = await Promise.all([
     getDecidedEntries(pr), getCatalog(pr), getWorkerConfig(), getPriceTable(), getEpisodes(pr), getShotMoveRequests(pr),
   ])
