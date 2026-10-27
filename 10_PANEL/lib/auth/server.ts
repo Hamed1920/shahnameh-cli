@@ -1,6 +1,8 @@
 // BetterAuth, built on first use. Importing this file touches nothing: no database, no env.
 // Only loaded when SHM_AUTH=on (lib/actor.ts, the auth route, the login page).
 import { betterAuth } from 'better-auth'
+import { APIError } from 'better-auth/api'
+import { eq } from 'drizzle-orm'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { nextCookies } from 'better-auth/next-js'
 import { getDb } from '../db/client.ts'
@@ -16,6 +18,17 @@ function makeAuth() {
     user: {
       additionalFields: {
         role: { type: 'string', required: false, defaultValue: 'supervisor', input: false },
+      },
+    },
+    databaseHooks: {
+      session: {
+        create: {
+          // No session is made for a disabled account, so sign-in is refused.
+          before: async (s) => {
+            const [u] = await getDb().select({ disabled: schema.user.disabled }).from(schema.user).where(eq(schema.user.id, s.userId))
+            if (u?.disabled) throw new APIError('FORBIDDEN', { message: 'This account is disabled.' })
+          },
+        },
       },
     },
     trustedOrigins: origins,

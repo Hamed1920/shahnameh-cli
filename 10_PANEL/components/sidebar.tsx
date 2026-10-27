@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion } from 'motion/react'
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
-import { ArrowLeftRight, Bell, ClipboardCheck, Coins, LogOut } from 'lucide-react'
+import { ArrowLeftRight, Bell, ClipboardCheck, Coins, History, LogOut, Users } from 'lucide-react'
 import { ActivitySheet, useActivity } from '@/components/activity'
 import { SIDEBAR_COOKIE, SIDEBAR_RAIL, SIDEBAR_WIDTH, navFor, navHref } from '@/components/nav-items'
 import { useProject } from '@/components/project-context'
@@ -443,6 +443,48 @@ export function Sidebar({
               {!collapsed && (
                 <motion.span {...fade} className="text-[13px] whitespace-nowrap">
                   Approvals
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </Link>
+        )}
+        {/* Login on, owner only. */}
+        {showApprovals && (
+          <Link
+            href={navHref(project.slug, '/activity')}
+            aria-current={pathname.startsWith(navHref(project.slug, '/activity')) ? 'page' : undefined}
+            title="Activity log"
+            className={cn(
+              'focus-ring relative flex h-9 items-center gap-3 overflow-hidden rounded-md px-3',
+              'text-faint transition-colors duration-150 hover:bg-white/[0.03] hover:text-fg',
+            )}
+          >
+            <History aria-hidden strokeWidth={1.75} className="size-5 shrink-0" />
+            <AnimatePresence initial={false}>
+              {!collapsed && (
+                <motion.span {...fade} className="text-[13px] whitespace-nowrap">
+                  Activity log
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </Link>
+        )}
+        {/* Login on, owner only. */}
+        {showApprovals && (
+          <Link
+            href={'/admin/users'}
+            aria-current={pathname.startsWith('/admin/users') ? 'page' : undefined}
+            title="Accounts"
+            className={cn(
+              'focus-ring relative flex h-9 items-center gap-3 overflow-hidden rounded-md px-3',
+              'text-faint transition-colors duration-150 hover:bg-white/[0.03] hover:text-fg',
+            )}
+          >
+            <Users aria-hidden strokeWidth={1.75} className="size-5 shrink-0" />
+            <AnimatePresence initial={false}>
+              {!collapsed && (
+                <motion.span {...fade} className="text-[13px] whitespace-nowrap">
+                  Accounts
                 </motion.span>
               )}
             </AnimatePresence>

@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Logo } from '@/components/logo'
 import { Reveal } from '@/components/ui/reveal'
 import { cn } from '@/lib/cn'
+import { authEnabled } from '@/lib/actor-core'
 import { getPickerData, type AccountSpend, type FilmRow, type Frame } from '@/lib/picker'
 import { FilmStrip } from './film-strip'
 import { NewFilm } from './new-film'
@@ -23,11 +24,13 @@ const n = (x: number) => Math.round(x).toLocaleString('en-US')
 
 export default async function ProjectsPage() {
   const { films, spend, taken } = await getPickerData()
+  // Login on, owner looking: a way to the accounts page.
+  const owner = authEnabled() && (await (await import('@/lib/auth/session')).sessionActor())?.role === 'owner'
 
   return (
     <main className="scroll-pane flex-1">
       <div className="mx-auto max-w-[1740px] px-6 pb-24 lg:px-14">
-        <Masthead spend={spend} count={films.length} />
+        <Masthead spend={spend} count={films.length} accounts={owner} />
 
         {films.map((film, i) => (
           <Reveal key={film.slug} index={i}>
@@ -47,7 +50,7 @@ export default async function ProjectsPage() {
  * account -- so it belongs here once, not on each band where it would read as
  * belonging to that film.
  */
-function Masthead({ spend, count }: { spend: AccountSpend; count: number }) {
+function Masthead({ spend, count, accounts }: { spend: AccountSpend; count: number; accounts: boolean }) {
   const pct = spend.ceiling > 0 ? Math.min(spend.spent / spend.ceiling, 1) : 0
 
   return (
@@ -61,6 +64,12 @@ function Masthead({ spend, count }: { spend: AccountSpend; count: number }) {
           </p>
         </div>
       </div>
+
+      {accounts && (
+        <Link href="/admin/users" className="focus-ring text-[13px] text-faint transition-colors hover:text-fg">
+          Accounts
+        </Link>
+      )}
 
       {spend.ceiling > 0 && (
         <div className="w-full max-w-[280px]">
