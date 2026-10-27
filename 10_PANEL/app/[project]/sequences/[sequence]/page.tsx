@@ -20,6 +20,7 @@ export default async function SequencePage({ params }: PageProps<'/[project]/seq
   const { getSequence, listBlocks } = await import('@/lib/pd-store')
   const seq = await getSequence(pr.slug, String(p.sequence ?? '').toUpperCase())
   if (!seq) notFound()
+  await (await import('@/lib/pd-generations')).syncGenerations(pr)
   const blocks = await listBlocks(seq.id, actor)
   const ids = blocks.map((b) => b.id)
 

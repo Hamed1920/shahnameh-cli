@@ -23,6 +23,9 @@ export default async function SequencesPage({ params, searchParams }: PageProps<
   const { pr, actor } = await sequencePage((await params).project)
   const q = String(((await searchParams).q as string | undefined) ?? '').trim().toLowerCase()
   const { listBlocks, listSequences } = await import('@/lib/pd-store')
+  const gens = await import('@/lib/pd-generations')
+  await gens.syncGenerations(pr)
+  const unassigned = (await gens.unassignedOutputs(pr)).length
   const sequences = await listSequences(pr.slug)
   const ids = sequences.map((s) => s.id)
 
@@ -53,6 +56,13 @@ export default async function SequencesPage({ params, searchParams }: PageProps<
         <button type="submit" className={buttonClasses({ tone: 'outline', size: 'sm' })}>Search</button>
         {q && <Link href={`/${pr.slug}/sequences`} className={buttonClasses({ tone: 'ghost', size: 'sm' })}>Clear</Link>}
       </form>
+
+      {unassigned > 0 && (
+        <p className="text-sm text-muted">
+          <Link href={`/${pr.slug}/sequences/unassigned`} className="focus-ring rounded text-fg underline">{unassigned} generated output{unassigned === 1 ? '' : 's'} belong to no block</Link>
+          {' '}and need mapping.
+        </p>
+      )}
 
       {q && (
         <section>

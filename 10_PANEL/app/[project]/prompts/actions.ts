@@ -1,9 +1,8 @@
 'use server'
 
 import { checkRow, shotRx, toJobInput, type DraftRow, type RowConfig } from '@/lib/batch-rules'
-import { checkRefCount, readGenerationForm } from '@/lib/generation-form'
+import { buildGenerateRow, submitOneRowBatch } from '@/lib/generate-row'
 import { freshCatalog } from '@/lib/catalog'
-import { stageResolutionFor } from '@/lib/models'
 import { DOCUMENT_EXT, MAX_DOCUMENTS, MAX_DOCUMENT_BYTES, documentToText } from '@/lib/documents'
 import { appendJobRequest, newBatchId, newRequestId } from '@/lib/job-requests'
 import { gate, gateMode, whoStamp } from '@/lib/actor'
@@ -17,7 +16,7 @@ import { getBatches, getCatalog, getQueue, getShotMoves, getWorkerConfig, readJs
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { MAX_ADD_TOTAL_BYTES, MAX_ADD_UPLOADS } from '@/lib/indexing'
-import { Invalid, parseJsonArray, readUploads, type PendingUpload } from '@/lib/uploads'
+import { Invalid, readUploads, type PendingUpload } from '@/lib/uploads'
 import type { BatchDefaults, BatchJobInput, JobRequestEvent, QueueItem } from '@/lib/types'
 
 /**
@@ -200,61 +199,19 @@ export async function generateFromPrompt(formData: FormData): Promise<{ ok: bool
     const prompt = String(formData.get('prompt') ?? '').trim()
     if (!prompt) throw new Invalid('The prompt cannot be empty.')
 
-    const form = readGenerationForm(formData, cfg)
-    const model = form.model
-
-    const variant = String(formData.get('variant') ?? '').trim().toUpperCase()
-    if (variant && !/^V\d{2}$/.test(variant)) throw new Invalid('A look is V01, V02, ...')
-
-    const refs = (parseJsonArray(formData, 'refs') ?? []).map((r) => String(r ?? '').trim()).filter(Boolean)
-    checkRefCount(model, new Set(refs).size)
-    for (const token of refs) {
-      if (!token.startsWith('@') || !(await resolveRefToken(pr, token))) throw new Invalid(`Reference ${token} does not resolve to a file in the index.`)
-    }
-
-    const video = form.video
-    const aspect = String(form.params.aspect_ratio ?? '16:9')
-    const stage = form.stage ?? 'draft'
-    const duration = Number(form.params.duration ?? '') || Number(cfg.videoDuration ?? 15)
-    const sound = form.sound ?? false
-    const params: BatchJobInput['params'] = { ...form.params, aspect_ratio: aspect }
-    if (video) {
-      if (form.sound !== null) params.generate_audio = sound
-      // Stated outright: a final queued as a batch row would otherwise get the model's own default.
-      const resolution = form.stage ? stageResolutionFor(model, stage, {
-        videoDraftResolution: String(cfg.videoDraftResolution), videoFinalResolution: String(cfg.videoFinalResolution),
-      }) : null
-      if (resolution) params.resolution = resolution
-    }
-
-    job = {
-      key: 'r1',
-      label: src.label ?? null,
-      target,
-      variant: variant || null,
-      model,
-      stage: form.stage,
-      refs: [...new Set(refs)],
-      params,
-      prompt,
-    }
-    defaults = { model, aspect_ratio: aspect, duration, stage, generate_audio: sound }
+    const built = await buildGenerateRow(pr, formData, cfg, { target, label: src.label ?? null, prompt })
+    job = built.job
+    defaults = built.defaults
   } catch (e) {
     if (e instanceof Invalid) return { ok: false, error: e.message }
     throw e
   }
 
-  const batchId = newBatchId()
-  await appendJobRequest(pr, {
-    id: newRequestId(),
-    ts: new Date().toISOString(),
-    ...whoStamp(actor),
-    type: 'batch.submit',
-    batchId,
-    name: `${src.label || src.target} · from scratch`.slice(0, 80),
+  const batchId = await submitOneRowBatch(pr, actor, {
+    name: `${src.label || src.target} · from scratch`,
     source: { kind: 'library', files: [src.jobId] },
     defaults,
-    jobs: [job],
+    job,
   })
   revalidateProject(pr.slug)
   return { ok: true, batchId }
