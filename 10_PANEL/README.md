@@ -319,5 +319,12 @@ needed and the panel never connects to a database.
 2. Start a database: `docker compose -f docker-compose.db.yml up -d` (Postgres on port 5433, matches
    the example `DATABASE_URL`), or put a Supabase direct / session-pooler URL in `DATABASE_URL`.
 3. Create the tables: `npm run db:migrate`.
+4. Create the first account (sign-up is closed; only this script makes accounts):
+   `npm run auth:add-user -- --email you@example.com --name "Hamed" --role owner --project shahnameh-cli`.
+   With no `--password` it makes a random one and prints it once. Run it again for the same email to
+   change the name or role or add `--project` memberships; the password changes only with `--password`.
+   Roles: `owner` (all projects), `agent`, `client`.
+5. Set `SHM_AUTH=on` and start the panel. With `DATABASE_URL` or `BETTER_AUTH_SECRET` missing it
+   refuses to start. Sign in at `/login`; Sign out is in the sidebar.
 
 After changing `lib/db/schema.ts`, run `npm run db:generate` and commit the new file in `drizzle/`.

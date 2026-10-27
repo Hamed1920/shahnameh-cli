@@ -6,6 +6,7 @@ import { LiveRefresh } from '@/components/live-refresh'
 import { SIDEBAR_COOKIE } from '@/components/nav-items'
 import { ProjectProvider } from '@/components/project-context'
 import { Sidebar } from '@/components/sidebar'
+import { authEnabled } from '@/lib/actor-core'
 import { getActivity, jobLabel } from '@/lib/activity'
 import { freshCatalog } from '@/lib/catalog'
 import { getProjectVersion } from '@/lib/live'
@@ -28,6 +29,8 @@ export default async function ProjectLayout({ children, params }: LayoutProps<'/
   const pr = await getProject((await params).project)
   if (!pr) notFound()
 
+  // Login on only: the name beside Sign out. Off: null, and the sidebar shows no sign-out.
+  const signedInAs = authEnabled() ? ((await (await import('@/lib/auth/session')).sessionActor())?.name ?? null) : null
   const collapsed = (await cookies()).get(SIDEBAR_COOKIE)?.value === '1'
   // Taken with the render, so a change between render and mount is not missed.
   // queue.jsonl, state.json, the review log, the worker lock and every staging job.json are
@@ -58,6 +61,7 @@ export default async function ProjectLayout({ children, params }: LayoutProps<'/
             activity={activity}
             worker={worker}
             generating={generating}
+            signedInAs={signedInAs}
             held={waiting.filter((q) => heldIds.has(q.jobId)).length}
           />
           {/* A size container, so a page's sticky bar can bleed to its full width (StickyHeader). */}

@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion } from 'motion/react'
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
-import { ArrowLeftRight, Bell, Coins } from 'lucide-react'
+import { ArrowLeftRight, Bell, Coins, LogOut } from 'lucide-react'
 import { ActivitySheet, useActivity } from '@/components/activity'
 import { NAV, SIDEBAR_COOKIE, SIDEBAR_RAIL, SIDEBAR_WIDTH, navHref } from '@/components/nav-items'
 import { useProject } from '@/components/project-context'
@@ -75,6 +75,7 @@ export function Sidebar({
   worker: status,
   generating = null,
   held = 0,
+  signedInAs = null,
 }: {
   defaultCollapsed: boolean
   /** Badge per nav path, e.g. jobs waiting on the Queue. Zero shows nothing. */
@@ -87,6 +88,8 @@ export function Sidebar({
   generating?: string | null
   /** Queued jobs the worker is holding back (over the credit limit, not signed in). */
   held?: number
+  /** The signed-in person's name when login is on; null when it is off (no sign-out is shown). */
+  signedInAs?: string | null
 }) {
   // A worker still "starting" a minute after this page first saw it is not starting.
   const settling = !status.running && !status.autostartOff && !status.paused && !status.stopRequested
@@ -421,6 +424,31 @@ export function Sidebar({
             )}
           </AnimatePresence>
         </Link>
+        {/* Login on only: who is signed in, and the way out. */}
+        {signedInAs !== null && (
+          <button
+            type="button"
+            title={`Signed in as ${signedInAs}`}
+            onClick={async () => {
+              const { authClient } = await import('@/lib/auth/client')
+              await authClient.signOut()
+              window.location.href = '/login'
+            }}
+            className={cn(
+              'focus-ring flex h-9 w-full cursor-pointer items-center gap-3 overflow-hidden rounded-md px-3',
+              'text-faint transition-colors duration-150 hover:bg-white/[0.03] hover:text-fg',
+            )}
+          >
+            <LogOut aria-hidden strokeWidth={1.75} className="size-5 shrink-0" />
+            <AnimatePresence initial={false}>
+              {!collapsed && (
+                <motion.span {...fade} className="min-w-0 truncate text-[13px] whitespace-nowrap">
+                  Sign out <span className="text-muted">· {signedInAs}</span>
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </button>
+        )}
         <button
           type="button"
           onClick={toggle}

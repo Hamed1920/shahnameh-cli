@@ -16,7 +16,8 @@
     "test": "node --experimental-strip-types --test lib/*.test.ts worker/*.test.mjs",
     "up": "node scripts/up.mjs",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "auth:add-user": "node --experimental-strip-types scripts/add-user.ts"
   },
   "dependencies": {
     "better-auth": "^1.7.14",
