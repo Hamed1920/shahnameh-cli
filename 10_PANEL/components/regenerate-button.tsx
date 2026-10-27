@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Coins, RotateCcw } from 'lucide-react'
 import { requestRegenerate } from '@/app/[project]/decided/actions'
 import { useProject } from '@/components/project-context'
+import { useToast } from '@/components/toast'
 import { GenerationSettings, setExtra, settingsFrom, type GenerationConfig, type GenerationSettingsValue } from '@/components/generation-settings'
 import { MentionTextarea } from '@/components/mention-textarea'
 import { ReferenceEditor, useMentionOptions, sameRefFor, useReferenceEdits } from '@/components/reference-editor'
@@ -53,6 +54,7 @@ export function RegenerateButton({
   prices?: Record<string, number>
 }) {
   const project = useProject()
+  const toaster = useToast()
   const [innerOpen, setInnerOpen] = useState(false)
   const open = openProp ?? innerOpen
   const setOpen = (v: boolean) => { setInnerOpen(v); onOpenChange?.(v) }
@@ -112,6 +114,7 @@ export function RegenerateButton({
     const r = await requestRegenerate(fd).catch((e: Error) => ({ ok: false, error: e.message }))
     setBusy(false)
     if (!r.ok) { setError(r.error ?? 'Could not send that.'); return }
+    if ('pending' in r && r.pending) toaster.show({ tone: 'good', title: 'Sent to Hamed for approval' })
     setOpen(false)
     reset()
   }

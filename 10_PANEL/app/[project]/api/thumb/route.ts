@@ -1,6 +1,6 @@
 import { fileEtag, notModified } from '@/lib/http-cache'
 import { getProject } from '@/lib/projects'
-import { gateRoute } from '@/lib/actor'
+import { gateMedia } from '@/lib/media-gate'
 import { thumbnail, thumbnailSource } from '@/lib/thumbs'
 
 export const dynamic = 'force-dynamic'
@@ -18,7 +18,7 @@ export async function GET(request: Request, ctx: RouteContext<'/[project]/api/th
   const w = Number(url.searchParams.get('w') ?? 96)
   if (!rel) return new Response('missing path', { status: 400 })
   const slug = (await ctx.params).project
-  const gr = await gateRoute(slug, 'view.drafts')
+  const gr = await gateMedia(slug, rel)
   if (!gr.ok) return gr.response
   const pr = await getProject(slug)
   if (!pr) return new Response('no such project', { status: 404 })

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { CatalogSync } from '@/components/catalog-sync'
 import { LiveRefresh } from '@/components/live-refresh'
@@ -30,7 +30,16 @@ export default async function ProjectLayout({ children, params }: LayoutProps<'/
   if (!pr) notFound()
 
   // Login on only: the name beside Sign out. Off: null, and the sidebar shows no sign-out.
-  const signedInAs = authEnabled() ? ((await (await import('@/lib/auth/session')).sessionActor())?.name ?? null) : null
+  let signedInAs: string | null = null
+  let showApprovals = false
+  if (authEnabled()) {
+    const actor = await (await import('@/lib/auth/session')).sessionActor()
+    signedInAs = actor?.name ?? null
+    // A client has one place: the portal. Staff pages are not theirs.
+    if (actor?.role === 'client') redirect(`/client/${pr.slug}`)
+    // The approvals inbox is the owner's.
+    showApprovals = actor?.role === 'owner'
+  }
   const collapsed = (await cookies()).get(SIDEBAR_COOKIE)?.value === '1'
   // Taken with the render, so a change between render and mount is not missed.
   // queue.jsonl, state.json, the review log, the worker lock and every staging job.json are
@@ -62,6 +71,7 @@ export default async function ProjectLayout({ children, params }: LayoutProps<'/
             worker={worker}
             generating={generating}
             signedInAs={signedInAs}
+            showApprovals={showApprovals}
             held={waiting.filter((q) => heldIds.has(q.jobId)).length}
           />
           {/* A size container, so a page's sticky bar can bleed to its full width (StickyHeader). */}

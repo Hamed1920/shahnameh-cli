@@ -65,6 +65,22 @@ export async function gate(project: string | null, cap: Capability): Promise<Gat
   }
 }
 
+export type ModeGate = { ok: true; actor: Actor; mode: 'allow' | 'propose' } | { ok: false; error: string }
+
+/**
+ * gate() for the actions that can wait in the approvals inbox: a proposal is not refused here,
+ * the caller sees `mode` and either does the work ('allow') or files a request ('propose').
+ */
+export async function gateMode(project: string | null, cap: Capability): Promise<ModeGate> {
+  try {
+    const { actor, mode } = await requireCan(project, cap)
+    return { ok: true, actor, mode }
+  } catch (e) {
+    if (e instanceof Forbidden) return { ok: false, error: e.message }
+    throw e
+  }
+}
+
 /** A Response for a Forbidden: 401 when nobody is signed in, 403 otherwise. Null for any other error. */
 export function forbiddenResponse(e: unknown): Response | null {
   if (!(e instanceof Forbidden)) return null

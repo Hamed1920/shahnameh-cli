@@ -9,6 +9,7 @@ import { ModelParamFields, extraFor } from '@/components/generation-settings'
 import { IndexPicker } from '@/components/index-picker'
 import { ModelPicker } from '@/components/model-picker'
 import { useAssetUrls, useProject } from '@/components/project-context'
+import { useToast } from '@/components/toast'
 import { RoleHelp } from '@/components/role-help'
 import { Button } from '@/components/ui/button'
 import { Field, Input, Select, Textarea } from '@/components/ui/field'
@@ -63,6 +64,7 @@ export function ReferenceStudio({
   onPicked?: (token: string) => void
 }) {
   const project = useProject()
+  const toaster = useToast()
   const router = useRouter()
   const { thumbUrl } = useAssetUrls()
   const [sessionId, setSessionId] = useState<string>(() => resumeId || newSessionId())
@@ -182,6 +184,7 @@ export function ReferenceStudio({
     const r = await studioApprove(project.slug, sessionId, current.genId, current.total).catch((e: Error) => ({ ok: false, error: e.message }))
     setBusy(null)
     if (!r.ok) { setError(r.error ?? 'Could not start it.'); return }
+    if ('pending' in r && r.pending) toaster.show({ tone: 'good', title: 'Sent to Hamed for approval' })
     // The same form can run again: price it afresh as a new try.
     setNonce((n) => n + 1)
   }
@@ -494,6 +497,7 @@ function PickForm({
   onError: (e: string | null) => void
 }) {
   const project = useProject()
+  const toaster = useToast()
   const [role, setRole] = useState(entity && entity.variants.length ? 'PLATE' : 'HERO')
   const [descriptor, setDescriptor] = useState(() =>
     prompt.replace(/[^A-Za-z0-9 ]+/g, ' ').trim().split(/\s+/).slice(0, 5).join(' ').toLowerCase() || 'reference')
@@ -518,7 +522,8 @@ function PickForm({
     setBusy(false)
     if (!r.ok) { setErr(r.error ?? 'Could not file it.'); return }
     onError(null)
-    onSent()
+    if ('pending' in r && r.pending) toaster.show({ tone: 'good', title: 'Sent to Hamed for approval' })
+    else onSent()
     onClose()
   }
 

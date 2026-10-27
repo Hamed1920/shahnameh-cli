@@ -53,11 +53,11 @@ export function Batches({ batches, worker }: { batches: BatchView[]; worker: Wor
     : waited > 30000 ? 'Taking longer than usual. The message on the batch, if any, says why; otherwise the worker’s log on the Queue page may.'
     : null
 
-  async function act(b: BatchView, fn: () => Promise<{ ok: boolean; error?: string }>) {
+  async function act(b: BatchView, fn: () => Promise<{ ok: boolean; error?: string; pending?: boolean }>) {
     setBusy(b.batchId)
     const r = await fn().catch((e: Error) => ({ ok: false, error: e.message }))
     setBusy(null)
-    setNote((n) => ({ ...n, [b.batchId]: r.ok ? 'Sent to the worker…' : r.error ?? 'Could not send that.' }))
+    setNote((n) => ({ ...n, [b.batchId]: r.ok ? ('pending' in r && r.pending ? 'Sent to Hamed for approval' : 'Sent to the worker…') : r.error ?? 'Could not send that.' }))
   }
 
   return (

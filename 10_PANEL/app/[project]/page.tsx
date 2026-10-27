@@ -1,4 +1,6 @@
 import { getDecidedEntries } from '@/lib/decided'
+import { assetToRef } from '@/lib/asset-ref'
+import { releaseControls } from '@/lib/release-view'
 import { requireProject } from '@/lib/projects'
 import { allTags } from '@/lib/gallery'
 import { getGalleryState } from '@/lib/gallery-log'
@@ -38,6 +40,8 @@ export default async function GalleryPage({ params }: PageProps<'/[project]'>) {
     videoFinalResolution: String(cfg.videoFinalResolution ?? '1080p'),
   }
 
+  // Login on and allowed to release: the Release toggle's data. Null otherwise, and no toggle shows.
+  const released = await releaseControls(pr.slug)
   const takes: GalleryTake[] = entries
     .filter((e) => e.decision.verdict === 'accepted')
     .map((e) => ({
@@ -59,6 +63,11 @@ export default async function GalleryPage({ params }: PageProps<'/[project]'>) {
       credits: e.regenerateCredits,
       source: e.source,
       regenerations: e.regenerations,
+      // The take is the filed file's name without its extension: exactly what api/asset checks for a client.
+      release: (() => {
+        const take = released && e.file ? assetToRef(e.file)?.take : undefined
+        return take ? { ref: take, id: released![`take:${take}`] ?? null } : undefined
+      })(),
     }))
 
   return (

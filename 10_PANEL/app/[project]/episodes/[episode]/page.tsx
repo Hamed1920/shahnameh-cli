@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
+import { ReleaseToggle } from '@/components/release-toggle'
 import { ShowInFolder } from '@/components/show-in-folder'
 import { EmptyState, StatTile } from '@/components/ui/card'
 import { Reveal } from '@/components/ui/reveal'
@@ -9,6 +10,7 @@ import { EPISODE_RX, episodeLabel, shortEpisode, type EpisodeOption } from '@/li
 import { getAcceptedTakes, getEpisodeBoard } from '@/lib/episode-board'
 import { inPromptOrder, shotStops } from '@/lib/play-through'
 import { requireProject } from '@/lib/projects'
+import { releaseControls } from '@/lib/release-view'
 import { getEpisodes, getPendingIndexOps } from '@/lib/store'
 import { EpisodePanel } from '../episode-panel'
 import { Progress, summarise } from '../progress'
@@ -37,6 +39,8 @@ export default async function EpisodePage({ params }: PageProps<'/[project]/epis
   ])
   const ep = board.find((e) => e.id === id)
   if (!ep) notFound()
+  // Login on and allowed to release: the toggle's data. Null otherwise.
+  const released = await releaseControls(pr.slug)
 
   const episodes: EpisodeOption[] = episodeList.slice(0, -1).map((e) => ({ id: e.id, title: e.title, shots: e.shots }))
   const next = episodeList[episodeList.length - 1].id
@@ -91,6 +95,10 @@ export default async function EpisodePage({ params }: PageProps<'/[project]/epis
           )}
         </PageHeader>
       </div>
+
+      {released && (
+        <ReleaseToggle kind="episode" reference={ep.id} label={episodeLabel(ep.id, { [ep.id]: ep.title })} releaseId={released[`episode:${ep.id}`] ?? null} />
+      )}
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {stats.map((s, i) => (

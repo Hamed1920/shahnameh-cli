@@ -6,7 +6,10 @@ import { freshCatalog } from '@/lib/catalog'
 import { stageResolutionFor } from '@/lib/models'
 import { DOCUMENT_EXT, MAX_DOCUMENTS, MAX_DOCUMENT_BYTES, documentToText } from '@/lib/documents'
 import { appendJobRequest, newBatchId, newRequestId } from '@/lib/job-requests'
-import { gate, whoStamp } from '@/lib/actor'
+import { gate, gateMode, whoStamp } from '@/lib/actor'
+import { batchSummary } from '@/lib/approval-summary'
+import { approvableBatch, doApproveBatch, type ApproveBatchPayload } from '@/lib/exec/batch'
+import { proposeApproval } from '@/lib/propose'
 import { requireProject } from '@/lib/projects'
 import { revalidateProject } from '@/lib/revalidate'
 import { getBatches, getCatalog, getQueue, getShotMoves, getWorkerConfig, readJsonl, resolveRefToken } from '@/lib/store'
@@ -256,22 +259,19 @@ export async function generateFromPrompt(formData: FormData): Promise<{ ok: bool
   return { ok: true, batchId }
 }
 
-export async function approveBatch(project: string, batchId: string, expectedTotal: number | null): Promise<{ ok: boolean; error?: string }> {
-  const g = await gate(project, 'batch.approve')
+export async function approveBatch(project: string, batchId: string, expectedTotal: number | null): Promise<{ ok: boolean; error?: string; pending?: boolean; message?: string }> {
+  const g = await gateMode(project, 'batch.approve')
   if (!g.ok) return { ok: false, error: g.error }
-  const { actor } = g
-  const pr = await requireProject(project)
-  const batch = (await getBatches(pr)).find((b) => b.batchId === batchId)
-  if (!batch) return { ok: false, error: 'Unknown batch.' }
-  if (batch.status !== 'priced') return { ok: false, error: `This batch is ${batch.status}, so it cannot be approved now.` }
-  // Nothing spends without a price (the worker refuses it as well).
-  if (batch.unpriced > 0) return { ok: false, error: `${batch.unpriced} row(s) could not be priced. Discard the batch, fix them and submit again.` }
-  await appendJobRequest(pr, {
-    id: newRequestId(), ts: new Date().toISOString(), ...whoStamp(actor), type: 'batch.approve', batchId,
-    expectedTotal: expectedTotal == null ? null : Number(expectedTotal),
-  })
-  revalidateProject(pr.slug)
-  return { ok: true }
+  const payload: ApproveBatchPayload = { batchId, expectedTotal: expectedTotal == null ? null : Number(expectedTotal) }
+  if (g.mode === 'propose') {
+    // An agent asks; nothing is appended and nothing can spend until Hamed approves.
+    const found = await approvableBatch(project, batchId)
+    if ('error' in found) return { ok: false, error: found.error }
+    const jobs = found.batch.jobs.filter((j) => j.ok).length
+    const summary = batchSummary({ batchId, name: found.batch.name, jobs, total: found.batch.total })
+    return proposeApproval(project, 'batch.approve', summary, payload, g.actor)
+  }
+  return doApproveBatch(project, payload, g.actor)
 }
 
 export async function discardBatch(project: string, batchId: string): Promise<{ ok: boolean; error?: string }> {

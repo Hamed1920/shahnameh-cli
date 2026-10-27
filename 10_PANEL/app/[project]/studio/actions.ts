@@ -3,9 +3,13 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { checkRefCount, readGenerationForm } from '@/lib/generation-form'
-import { KINDS, MAX_UPLOAD_BYTES, UPLOAD_ROLES, entitySlug, isAscii } from '@/lib/indexing'
+import { KINDS, MAX_UPLOAD_BYTES, entitySlug, isAscii } from '@/lib/indexing'
 import { appendJobRequest, newRequestId } from '@/lib/job-requests'
-import { gate, whoStamp } from '@/lib/actor'
+import { gate, gateMode, whoStamp } from '@/lib/actor'
+import { studioApproveSummary, studioPickSummary } from '@/lib/approval-summary'
+import { GEN_RX, SESSION_RX, doStudioApprove, doStudioPick, run, sessionOf, type Result, type StudioApprovePayload } from '@/lib/exec/studio'
+import { formToFields } from '@/lib/form-payload'
+import { proposeApproval } from '@/lib/propose'
 import { freshCatalog } from '@/lib/catalog'
 import { modelKindOf } from '@/lib/models'
 import { requireProject } from '@/lib/projects'
@@ -21,23 +25,6 @@ import type { JobRequest } from '@/lib/types'
  * 09_OUTPUT/_uploads/<session>/, the working space the panel may write, and is
  * only ever an input to a try. It is never filed into the index from here.
  */
-
-const SESSION_RX = /^ss_[a-z0-9]{4,40}$/
-const GEN_RX = /^g[a-z0-9]{3,24}$/
-type Result = { ok: boolean; error?: string }
-
-function sessionOf(formData: FormData): string {
-  const id = String(formData.get('sessionId') ?? '')
-  if (!SESSION_RX.test(id)) throw new Invalid('Bad studio session.')
-  return id
-}
-
-async function run(fn: () => Promise<void>): Promise<Result> {
-  try { await fn(); return { ok: true } } catch (e) {
-    if (e instanceof Invalid) return { ok: false, error: e.message }
-    throw e
-  }
-}
 
 /** What a try would cost. The worker answers with `generate cost`; nothing is queued. */
 export async function studioPrice(formData: FormData): Promise<Result> {
@@ -92,53 +79,31 @@ export async function studioPrice(formData: FormData): Promise<Result> {
 
 /** The priced Generate button, clicked: this is the approval. The worker refuses if the price moved. */
 export async function studioApprove(project: string, sessionId: string, genId: string, expectedTotal: number | null): Promise<Result> {
-  const g = await gate(project, 'studio.spend')
+  const g = await gateMode(project, 'studio.spend')
   if (!g.ok) return { ok: false, error: g.error }
-  const { actor } = g
-  const pr = await requireProject(project)
-  if (!SESSION_RX.test(sessionId) || !GEN_RX.test(genId)) return { ok: false, error: 'Bad try.' }
-  await appendJobRequest(pr, { id: newRequestId(), ts: new Date().toISOString(), ...whoStamp(actor), type: 'studio.approve', sessionId, genId, expectedTotal })
-  revalidateProject(pr.slug)
-  return { ok: true }
+  const payload: StudioApprovePayload = { sessionId, genId, expectedTotal }
+  if (g.mode === 'propose') {
+    if (!SESSION_RX.test(sessionId) || !GEN_RX.test(genId)) return { ok: false, error: 'Bad try.' }
+    return proposeApproval(project, 'studio.spend', studioApproveSummary(payload), { op: 'approve', ...payload }, g.actor)
+  }
+  return doStudioApprove(project, payload, g.actor)
 }
 
 /** File one result: a new look of the entity, or the new entity it was made for. */
 export async function studioPick(formData: FormData): Promise<Result> {
-  const g = await gate(String(formData.get('project') ?? ''), 'studio.spend')
+  const project = String(formData.get('project') ?? '')
+  const g = await gateMode(project, 'studio.spend')
   if (!g.ok) return { ok: false, error: g.error }
-  const { actor } = g
-  const pr = await requireProject(formData.get('project'))
-  return run(async () => {
-    const sessionId = sessionOf(formData)
-    const hfJobId = String(formData.get('hfJobId') ?? '')
-    const take = String(formData.get('take') ?? '')
-    if (!/^[A-Za-z0-9_-]{4,80}$/.test(hfJobId) || !/^T\d{2}$/.test(take)) throw new Invalid('Bad result.')
-    const role = String(formData.get('role') ?? 'HERO')
-    if (!(UPLOAD_ROLES as readonly string[]).includes(role)) throw new Invalid('Choose a role.')
-    const descriptor = String(formData.get('descriptor') ?? '').trim()
-    if (!descriptor || !isAscii(descriptor)) throw new Invalid('Add a short English description; it becomes the filename.')
-
-    let fileAs: Extract<JobRequest, { type: 'studio.pick' }>['fileAs']
-    const entity = String(formData.get('entity') ?? '').trim()
-    if (entity) {
-      const catalog = await getCatalog(pr)
-      const e = catalog.find((x) => x.id === entity || x.shortId === entity)
-      if (!e) throw new Invalid(`${entity} is not in the index.`)
-      fileAs = { mode: 'variant', entity: e.id }
-    } else {
-      const kind = String(formData.get('kind') ?? '')
-      const name = String(formData.get('name') ?? '').trim()
-      const description = String(formData.get('description') ?? '').trim()
-      if (!(KINDS as readonly string[]).includes(kind) || !name) throw new Invalid('Say what the new thing is: a kind and a name.')
-      if (!isAscii(name) || !isAscii(description)) throw new Invalid('The name and description go into the registry, so they must be English.')
-      fileAs = { mode: 'new', kind, name, ...(description && { description }) }
-    }
-    await appendJobRequest(pr, {
-      id: newRequestId(), ts: new Date().toISOString(), ...whoStamp(actor), type: 'studio.pick',
-      sessionId, hfJobId, take, fileAs, role, descriptor,
+  if (g.mode === 'propose') {
+    const fields = formToFields(formData)
+    if (!fields) return { ok: false, error: 'This cannot be sent for approval.' }
+    const summary = studioPickSummary({
+      hfJobId: String(formData.get('hfJobId') ?? ''), take: String(formData.get('take') ?? ''),
+      entity: String(formData.get('entity') ?? '') || undefined, name: String(formData.get('name') ?? '') || undefined,
     })
-    revalidateProject(pr.slug)
-  })
+    return proposeApproval(project, 'studio.spend', summary, { op: 'pick', fields }, g.actor)
+  }
+  return doStudioPick(project, formData, g.actor)
 }
 
 /** Put the unpicked results away (to _rejected) and end the session. */

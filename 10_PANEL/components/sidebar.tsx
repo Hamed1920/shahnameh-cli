@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion } from 'motion/react'
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
-import { ArrowLeftRight, Bell, Coins, LogOut } from 'lucide-react'
+import { ArrowLeftRight, Bell, ClipboardCheck, Coins, LogOut } from 'lucide-react'
 import { ActivitySheet, useActivity } from '@/components/activity'
 import { NAV, SIDEBAR_COOKIE, SIDEBAR_RAIL, SIDEBAR_WIDTH, navHref } from '@/components/nav-items'
 import { useProject } from '@/components/project-context'
@@ -76,6 +76,7 @@ export function Sidebar({
   generating = null,
   held = 0,
   signedInAs = null,
+  showApprovals = false,
 }: {
   defaultCollapsed: boolean
   /** Badge per nav path, e.g. jobs waiting on the Queue. Zero shows nothing. */
@@ -90,6 +91,8 @@ export function Sidebar({
   held?: number
   /** The signed-in person's name when login is on; null when it is off (no sign-out is shown). */
   signedInAs?: string | null
+  /** Login on and the owner is looking: a link to the approvals inbox. */
+  showApprovals?: boolean
 }) {
   // A worker still "starting" a minute after this page first saw it is not starting.
   const settling = !status.running && !status.autostartOff && !status.paused && !status.stopRequested
@@ -424,6 +427,27 @@ export function Sidebar({
             )}
           </AnimatePresence>
         </Link>
+        {/* Login on, owner only: what the agents asked for. */}
+        {showApprovals && (
+          <Link
+            href={navHref(project.slug, '/approvals')}
+            aria-current={pathname.startsWith(navHref(project.slug, '/approvals')) ? 'page' : undefined}
+            title="Approvals"
+            className={cn(
+              'focus-ring relative flex h-9 items-center gap-3 overflow-hidden rounded-md px-3',
+              'text-faint transition-colors duration-150 hover:bg-white/[0.03] hover:text-fg',
+            )}
+          >
+            <ClipboardCheck aria-hidden strokeWidth={1.75} className="size-5 shrink-0" />
+            <AnimatePresence initial={false}>
+              {!collapsed && (
+                <motion.span {...fade} className="text-[13px] whitespace-nowrap">
+                  Approvals
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </Link>
+        )}
         {/* Login on only: who is signed in, and the way out. */}
         {signedInAs !== null && (
           <button
