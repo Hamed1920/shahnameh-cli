@@ -1,0 +1,17 @@
+# Local Postgres for login. docker compose -f docker-compose.db.yml up -d
+services:
+  db:
+    image: postgres:17
+    container_name: fmfd-db
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: fmfd
+      POSTGRES_PASSWORD: fmfd
+      POSTGRES_DB: fmfd
+    volumes:
+      - fmfd-db-data:/var/lib/postgresql/data
+
+volumes:
+  fmfd-db-data:

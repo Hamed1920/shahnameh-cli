@@ -307,3 +307,17 @@ panel appends and asserts what the worker does (numbers reserved only at approva
 on the CLI argv, stale totals refused, graceful stop). The panel itself cannot run a second dev
 server from the same folder, and Turbopack refuses a junctioned `node_modules`, so page rendering
 is checked against the running panel with plain GETs.
+
+## Login and database (off by default)
+
+The panel runs without a login unless `SHM_AUTH=on` is set in `.env.local`. With it on, people
+sign in (BetterAuth) and what they can see depends on their role; accounts, project membership,
+releases, client comments and approval requests live in Postgres. With it off nothing here is
+needed and the panel never connects to a database.
+
+1. Copy `.env.example` to `.env.local` and fill it in.
+2. Start a database: `docker compose -f docker-compose.db.yml up -d` (Postgres on port 5433, matches
+   the example `DATABASE_URL`), or put a Supabase direct / session-pooler URL in `DATABASE_URL`.
+3. Create the tables: `npm run db:migrate`.
+
+After changing `lib/db/schema.ts`, run `npm run db:generate` and commit the new file in `drizzle/`.

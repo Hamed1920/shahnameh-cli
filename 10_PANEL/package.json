@@ -14,16 +14,21 @@
     "worker:dry": "node worker/worker.mjs --once --dry-run",
     "enqueue": "node worker/enqueue.mjs",
     "test": "node --experimental-strip-types --test lib/*.test.ts worker/*.test.mjs",
-    "up": "node scripts/up.mjs"
+    "up": "node scripts/up.mjs",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
+    "better-auth": "^1.7.14",
     "clsx": "^2.1.1",
+    "drizzle-orm": "^0.45.4",
     "fflate": "^0.8.3",
     "lucide-react": "^1.40.0",
     "motion": "^13.2.0",
     "next": "16.3.4",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^6.3.289",
+    "pg": "^8.23.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "sharp": "^0.35.4",
@@ -32,8 +37,10 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "drizzle-kit": "^0.31.11",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
