@@ -469,3 +469,5 @@ the root and each film in its own folder beside it, so:
 
 Nothing about a name, a number, a variant or a take changed. A project written under the old
 layout is already correct under this one.
+
+Indexing questions: see docs/SYNC_PROTOCOL.md for how prompts reach the CLI.
