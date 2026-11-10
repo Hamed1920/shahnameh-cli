@@ -1,0 +1,130 @@
+{
+  "jobId": "J-20261030-IQQ",
+  "parentJobId": "J-20261030-JIE",
+  "hfJobId": "4b9b6343-4cfa-475e-a618-c907bbf35e1e",
+  "attempt": 2,
+  "stage": "draft",
+  "label": "PLAN 01",
+  "target": "SHM-EP015-SC021-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "BEGIN PROMPT\r\n\r\nPLAN 01 | THE WORLD FINDS A WORKER\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_JAMSHID_WORKER}} @Jamshid (look 5)   {{CHAR_DOCK_WORKERS}} @Chinese People (look 1) @Chinese People (look 2) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_PORT_PANORAMA}}  {{LOC_WORKING_QUAY}}\r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_MOORING_ROPE}}  {{PROP_NET}}  {{PROP_CARGO_HOIST}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nLOCATION AND LIGHT\r\n\r\nCold neutral overcast daylight. Damp quay surfaces reflect the sky; restrained water bounce reaches the workers. Muted weathered materials, integrated port equipment and rounded masonry openings. The port is a living trading city within the referenced world, not a historical tourism illustration.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nThe harbor is active. Jamshid is one worker among others on the working quay. A cargo crate hangs low in a sling beside a quay hoist. The water is beyond the quay edge; a clear loading zone separates workers from the suspended load.\r\n\r\n\r\nPLAN 01 | SHOTS\r\n\r\nSHOT 01-01 | 0s–3s | 3 SECONDS\r\n\r\n18mm extreme long shot from offshore southeast, elevated above the water. The entire island city, coastline and harbor fit within the horizontal frame. A slow lateral drift reveals separate layers of sea, buildings and inland rise. No featured character.\r\n\r\nSHOT 01-02 | 3s–7s | 4 SECONDS\r\n\r\nHard cut to 28mm from a low covered street on the WEST side inside the city, looking diagonally east toward the working quay. Workers pass close to lens, cargo and ordinary boats beyond. Slight handheld advance through the opening. This is a new ground-level direction, not a closer crop of the offshore view.\r\n\r\nSHOT 01-03 | 7s–10s | 3 SECONDS\r\n\r\n65mm tight detail from beside a bollard at hand height. Jamshid pulls wet rope through a controlled wrap; work-worn hands and sleeves establish skill. The camera follows the pull a few centimeters.\r\n\r\nSHOT 01-04 | 10s–15s | 5 SECONDS\r\n\r\n35mm medium three-quarter from Jamshid's left landward side, well away from the hand-detail station. His masked face, stooped shoulders and net work enter view. He remains on the left third, checks a fastening, then looks toward the hoist, away from camera. Other workers cross in a different depth layer.\r\n\r\nEND STATE AND EDIT\r\n\r\nJamshid stands beside the hoist loading zone, aware of the working line. End on his glance toward the cargo mechanism, ready for its failure.\r\n\r\nSOUND\r\n\r\nWater against timber, wet rope friction, tools, foot traffic and distant nonverbal market bustle.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Jamshid (CHR-002 V05); match it wherever Jamshid appears.\n<<<image_2>>> is Chinese People (GRP-011 V01); match it wherever Chinese People appears.\n<<<image_3>>> is Chinese People (GRP-011 V02); match it wherever Chinese People appears.\n<<<image_4>>> is China Port Panorama (LOC-036 V02); match it wherever China Port Panorama appears.\n<<<image_5>>> is Port Shipyard Hall (LOC-035 V01); match it wherever Port Shipyard Hall appears.\n<<<image_6>>> is China Port Panorama (LOC-036 V01); match it wherever China Port Panorama appears.",
+  "basePrompt": "BEGIN PROMPT\r\n\r\nPLAN 01 | THE WORLD FINDS A WORKER\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_JAMSHID_WORKER}} @Jamshid (look 5)   {{CHAR_DOCK_WORKERS}} @Chinese People (look 1) @Chinese People (look 2) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_PORT_PANORAMA}}  {{LOC_WORKING_QUAY}}\r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_MOORING_ROPE}}  {{PROP_NET}}  {{PROP_CARGO_HOIST}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nLOCATION AND LIGHT\r\n\r\nCold neutral overcast daylight. Damp quay surfaces reflect the sky; restrained water bounce reaches the workers. Muted weathered materials, integrated port equipment and rounded masonry openings. The port is a living trading city within the referenced world, not a historical tourism illustration.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nThe harbor is active. Jamshid is one worker among others on the working quay. A cargo crate hangs low in a sling beside a quay hoist. The water is beyond the quay edge; a clear loading zone separates workers from the suspended load.\r\n\r\n\r\nPLAN 01 | SHOTS\r\n\r\nSHOT 01-01 | 0s–3s | 3 SECONDS\r\n\r\n18mm extreme long shot from offshore southeast, elevated above the water. The entire island city, coastline and harbor fit within the horizontal frame. A slow lateral drift reveals separate layers of sea, buildings and inland rise. No featured character.\r\n\r\nSHOT 01-02 | 3s–7s | 4 SECONDS\r\n\r\nHard cut to 28mm from a low covered street on the WEST side inside the city, looking diagonally east toward the working quay. Workers pass close to lens, cargo and ordinary boats beyond. Slight handheld advance through the opening. This is a new ground-level direction, not a closer crop of the offshore view.\r\n\r\nSHOT 01-03 | 7s–10s | 3 SECONDS\r\n\r\n65mm tight detail from beside a bollard at hand height. Jamshid pulls wet rope through a controlled wrap; work-worn hands and sleeves establish skill. The camera follows the pull a few centimeters.\r\n\r\nSHOT 01-04 | 10s–15s | 5 SECONDS\r\n\r\n35mm medium three-quarter from Jamshid's left landward side, well away from the hand-detail station. His masked face, stooped shoulders and net work enter view. He remains on the left third, checks a fastening, then looks toward the hoist, away from camera. Other workers cross in a different depth layer.\r\n\r\nEND STATE AND EDIT\r\n\r\nJamshid stands beside the hoist loading zone, aware of the working line. End on his glance toward the cargo mechanism, ready for its failure.\r\n\r\nSOUND\r\n\r\nWater against timber, wet rope friction, tools, foot traffic and distant nonverbal market bustle.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-002/V05",
+    "@GRP-011/V01",
+    "@GRP-011/V02",
+    "@LOC-036/V02",
+    "@LOC-035/V01",
+    "@LOC-036/V01"
+  ],
+  "sentRefs": [
+    "@CHR-002/V05",
+    "@GRP-011/V01",
+    "@GRP-011/V02",
+    "@LOC-036/V02",
+    "@LOC-035/V01",
+    "@LOC-036/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-10-30T19:06:22.277Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_190137_4b9b6343-4cfa-475e-a618-c907bbf35e1e.mp4"
+    }
+  ],
+  "rawResponse": {
+    "created_at": "2026-10-30T19:01:37.981874Z",
+    "display_name": "Seedance 2.5",
+    "id": "4b9b6343-4cfa-475e-a618-c907bbf35e1e",
+    "job_type": "seedance_2_5",
+    "min_result_url": null,
+    "params": {
+      "aspect_ratio": "16:9",
+      "bitrate_mode": "standard",
+      "draft": true,
+      "draft_job_id": null,
+      "duration": 15,
+      "extension_mode": null,
+      "generate_audio": true,
+      "genre": "auto",
+      "height": 480,
+      "medias": [
+        {
+          "data": {
+            "id": "b2548257-956d-47b9-a8c1-ccab5b6599a9",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/b2548257-956d-47b9-a8c1-ccab5b6599a9.jpg"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "5e53cb53-a7d1-47fd-9533-593775b80317",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/5e53cb53-a7d1-47fd-9533-593775b80317.png"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "c14b93c9-d711-41ca-b1ab-5ba16b226533",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/c14b93c9-d711-41ca-b1ab-5ba16b226533.png"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "a7704de9-7c4e-41cb-ae05-8fdaed7fa621",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/a7704de9-7c4e-41cb-ae05-8fdaed7fa621.png"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "030e5b39-f918-497f-aa18-1cc718af0e2f",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/030e5b39-f918-497f-aa18-1cc718af0e2f.png"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "55e57b8d-a4ec-4c03-b399-caaf9f066f3d",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/55e57b8d-a4ec-4c03-b399-caaf9f066f3d.png"
+          },
+          "role": "image"
+        }
+      ],
+      "model": "default",
+      "multi_prompt": [],
+      "multi_shot_mode": "custom",
+      "multi_shots": false,
+      "prompt": "BEGIN PROMPT\r\n\r\nPLAN 01 | THE WORLD FINDS A WORKER\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_JAMSHID_WORKER}} @Jamshid (look 5)   {{CHAR_DOCK_WORKERS}} @Chinese People (look 1) @Chinese People (look 2) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_PORT_PANORAMA}}  {{LOC_WORKING_QUAY}}\r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_MOORING_ROPE}}  {{PROP_NET}}  {{PROP_CARGO_HOIST}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nLOCATION AND LIGHT\r\n\r\nCold neutral overcast daylight. Damp quay surfaces reflect the sky; restrained water bounce reaches the workers. Muted weathered materials, integrated port equipment and rounded masonry openings. The port is a living trading city within the referenced world, not a historical tourism illustration.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nThe harbor is active. Jamshid is one worker among others on the working quay. A cargo crate hangs low in a sling beside a quay hoist. The water is beyond the quay edge; a clear loading zone separates workers from the suspended load.\r\n\r\n\r\nPLAN 01 | SHOTS\r\n\r\nSHOT 01-01 | 0s–3s | 3 SECONDS\r\n\r\n18mm extreme long shot from offshore southeast, elevated above the water. The entire island city, coastline and harbor fit within the horizontal frame. A slow lateral drift reveals separate layers of sea, buildings and inland rise. No featured character.\r\n\r\nSHOT 01-02 | 3s–7s | 4 SECONDS\r\n\r\nHard cut to 28mm from a low covered street on the WEST side inside the city, looking diagonally east toward the working quay. Workers pass close to lens, cargo and ordinary boats beyond. Slight handheld advance through the opening. This is a new ground-level direction, not a closer crop of the offshore view.\r\n\r\nSHOT 01-03 | 7s–10s | 3 SECONDS\r\n\r\n65mm tight detail from beside a bollard at hand height. Jamshid pulls wet rope through a controlled wrap; work-worn hands and sleeves establish skill. The camera follows the pull a few centimeters.\r\n\r\nSHOT 01-04 | 10s–15s | 5 SECONDS\r\n\r\n35mm medium three-quarter from Jamshid's left landward side, well away from the hand-detail station. His masked face, stooped shoulders and net work enter view. He remains on the left third, checks a fastening, then looks toward the hoist, away from camera. Other workers cross in a different depth layer.\r\n\r\nEND STATE AND EDIT\r\n\r\nJamshid stands beside the hoist loading zone, aware of the working line. End on his glance toward the cargo mechanism, ready for its failure.\r\n\r\nSOUND\r\n\r\nWater against timber, wet rope friction, tools, foot traffic and distant nonverbal market bustle.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Jamshid (CHR-002 V05); match it wherever Jamshid appears.\n<<<image_2>>> is Chinese People (GRP-011 V01); match it wherever Chinese People appears.\n<<<image_3>>> is Chinese People (GRP-011 V02); match it wherever Chinese People appears.\n<<<image_4>>> is China Port Panorama (LOC-036 V02); match it wherever China Port Panorama appears.\n<<<image_5>>> is Port Shipyard Hall (LOC-035 V01); match it wherever Port Shipyard Hall appears.\n<<<image_6>>> is China Port Panorama (LOC-036 V01); match it wherever China Port Panorama appears.",
+      "prompt_language": "en",
+      "reference_elements": [],
+      "resolution": "480p",
+      "seed": 945403351,
+      "speedramp": "auto",
+      "width": 854
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_190137_4b9b6343-4cfa-475e-a618-c907bbf35e1e.mp4",
+    "status": "completed",
+    "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_190137_4b9b6343-4cfa-475e-a618-c907bbf35e1e_thumbnail.webp"
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "jobId": "J-20261030-HAI",
+  "parentJobId": "J-20261030-NQ6",
+  "hfJobId": "46130b45-54ce-4bdf-8417-9b57c0ca5762",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 06",
+  "target": "SHM-EP015-SC026-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 06 | THE HUNT ENTERS ORDINARY LIFE\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_GUARDS}}  {{CHAR_MARKET_PEOPLE}}\nLOCATION REFERENCES\n{{LOC_NIGHT_MARKET}}  {{LOC_HIDEOUT_APPROACH}}\nPROP REFERENCES\n{{PROP_MARKET_STALLS}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nLOCATION AND LIGHT\nNight market with warm localized stall practicals against deep cool shadow. Integrated lamps hang beneath awnings. The route narrows into a dim masonry passage ending at Jamshid's plain workshop door. Light becomes scarcer along the route.\nSTART STATE AND BLOCKING\nFour guards travel from the quay toward the market interior. Lead Guard A and Guard B are in front, Guards C and D follow. The hideout lies beyond the market passage. Maintain forward travel through successive spaces.\n\nPLAN 06 | SHOTS\nSHOT 06-01 | 0s–4s | 4 SECONDS\n35mm close handheld retreating ahead of the two leading guards. They advance toward camera through a narrow aisle. A vendor pulls a basket inward; a porter turns sideways. The operator retreats with short purposeful steps, keeping their cold forward attention readable.\nSHOT 06-02 | 4s–8s | 4 SECONDS\n50mm lateral view from between stalls. Guards cross left to right behind a foreground hanging textile. A masked vendor yields, then returns immediately to arranging goods after they pass. Camera shifts to recover the guards beyond the obstruction.\nSHOT 06-03 | 8s–12s | 4 SECONDS\n28mm rear handheld in the narrowing passage. The four guards move away from camera toward the door. Follow their backs as warm market spill diminishes. The lead pair slow at the threshold; the others retain their positions behind.\nSHOT 06-04 | 12s–15s | 3 SECONDS\n40mm tight oblique from beside the door. Guard A presses the latch and pushes the door inward. Guard B follows closely. Camera catches only a sliver of the cramped dark interior. Cut on the opening, before the room is fully revealed.\nEND STATE AND EDIT\nThe hideout door has opened inward. Guards A and B begin entering; C and D remain in the approach. Continue the same intrusion inside the room.\nSOUND\nMarket movement, baskets, steps and fabric; the bustle recedes into the passage. End on latch, hinge and the first step across the threshold.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_2>>> is Chinese Workers (GRP-012 V01); match it wherever Chinese Workers appears.\n<<<image_3>>> is Chinese Workers (GRP-012 V02); match it wherever Chinese Workers appears.\n<<<image_4>>> is China Bazaar (LOC-037 V01); match it wherever China Bazaar appears.\n<<<image_5>>> is China Bazaar (LOC-037 V02); match it wherever China Bazaar appears.\n<<<image_6>>> is Chinese People (GRP-011 V01); match it wherever Chinese People appears.",
+  "basePrompt": "PLAN 06 | THE HUNT ENTERS ORDINARY LIFE\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_GUARDS}}  {{CHAR_MARKET_PEOPLE}}\nLOCATION REFERENCES\n{{LOC_NIGHT_MARKET}}  {{LOC_HIDEOUT_APPROACH}}\nPROP REFERENCES\n{{PROP_MARKET_STALLS}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nLOCATION AND LIGHT\nNight market with warm localized stall practicals against deep cool shadow. Integrated lamps hang beneath awnings. The route narrows into a dim masonry passage ending at Jamshid's plain workshop door. Light becomes scarcer along the route.\nSTART STATE AND BLOCKING\nFour guards travel from the quay toward the market interior. Lead Guard A and Guard B are in front, Guards C and D follow. The hideout lies beyond the market passage. Maintain forward travel through successive spaces.\n\nPLAN 06 | SHOTS\nSHOT 06-01 | 0s–4s | 4 SECONDS\n35mm close handheld retreating ahead of the two leading guards. They advance toward camera through a narrow aisle. A vendor pulls a basket inward; a porter turns sideways. The operator retreats with short purposeful steps, keeping their cold forward attention readable.\nSHOT 06-02 | 4s–8s | 4 SECONDS\n50mm lateral view from between stalls. Guards cross left to right behind a foreground hanging textile. A masked vendor yields, then returns immediately to arranging goods after they pass. Camera shifts to recover the guards beyond the obstruction.\nSHOT 06-03 | 8s–12s | 4 SECONDS\n28mm rear handheld in the narrowing passage. The four guards move away from camera toward the door. Follow their backs as warm market spill diminishes. The lead pair slow at the threshold; the others retain their positions behind.\nSHOT 06-04 | 12s–15s | 3 SECONDS\n40mm tight oblique from beside the door. Guard A presses the latch and pushes the door inward. Guard B follows closely. Camera catches only a sliver of the cramped dark interior. Cut on the opening, before the room is fully revealed.\nEND STATE AND EDIT\nThe hideout door has opened inward. Guards A and B begin entering; C and D remain in the approach. Continue the same intrusion inside the room.\nSOUND\nMarket movement, baskets, steps and fabric; the bustle recedes into the passage. End on latch, hinge and the first step across the threshold.\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@GRP-005/V01",
+    "@GRP-012/V01",
+    "@GRP-012/V02",
+    "@LOC-037/V01",
+    "@LOC-037/V02",
+    "@GRP-011/V01"
+  ],
+  "sentRefs": [
+    "@GRP-005/V01",
+    "@GRP-012/V01",
+    "@GRP-012/V02",
+    "@LOC-037/V01",
+    "@LOC-037/V02",
+    "@GRP-011/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-10-30T16:41:11.347Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_163820_46130b45-54ce-4bdf-8417-9b57c0ca5762.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-30T16:38:20.539845Z",
+      "display_name": "Seedance 2.5",
+      "id": "46130b45-54ce-4bdf-8417-9b57c0ca5762",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "cf42dd59-d709-4388-a6b4-d9331720d089",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/cf42dd59-d709-4388-a6b4-d9331720d089.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "fc6f15ff-2584-4d99-9009-f19f52d62ca1",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/fc6f15ff-2584-4d99-9009-f19f52d62ca1.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a233584d-310b-49e4-b66a-3b0602fb3fa0",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/a233584d-310b-49e4-b66a-3b0602fb3fa0.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "6bc992ba-7544-4e79-bee0-2bdca33d852a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/6bc992ba-7544-4e79-bee0-2bdca33d852a.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "09b3911e-991e-4e2b-af0c-caf3c814ab30",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/09b3911e-991e-4e2b-af0c-caf3c814ab30.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "1e536237-8b1e-4712-bfee-059cc7867504",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/1e536237-8b1e-4712-bfee-059cc7867504.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 06 | THE HUNT ENTERS ORDINARY LIFE\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_GUARDS}}  {{CHAR_MARKET_PEOPLE}}\nLOCATION REFERENCES\n{{LOC_NIGHT_MARKET}}  {{LOC_HIDEOUT_APPROACH}}\nPROP REFERENCES\n{{PROP_MARKET_STALLS}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nLOCATION AND LIGHT\nNight market with warm localized stall practicals against deep cool shadow. Integrated lamps hang beneath awnings. The route narrows into a dim masonry passage ending at Jamshid's plain workshop door. Light becomes scarcer along the route.\nSTART STATE AND BLOCKING\nFour guards travel from the quay toward the market interior. Lead Guard A and Guard B are in front, Guards C and D follow. The hideout lies beyond the market passage. Maintain forward travel through successive spaces.\n\nPLAN 06 | SHOTS\nSHOT 06-01 | 0s–4s | 4 SECONDS\n35mm close handheld retreating ahead of the two leading guards. They advance toward camera through a narrow aisle. A vendor pulls a basket inward; a porter turns sideways. The operator retreats with short purposeful steps, keeping their cold forward attention readable.\nSHOT 06-02 | 4s–8s | 4 SECONDS\n50mm lateral view from between stalls. Guards cross left to right behind a foreground hanging textile. A masked vendor yields, then returns immediately to arranging goods after they pass. Camera shifts to recover the guards beyond the obstruction.\nSHOT 06-03 | 8s–12s | 4 SECONDS\n28mm rear handheld in the narrowing passage. The four guards move away from camera toward the door. Follow their backs as warm market spill diminishes. The lead pair slow at the threshold; the others retain their positions behind.\nSHOT 06-04 | 12s–15s | 3 SECONDS\n40mm tight oblique from beside the door. Guard A presses the latch and pushes the door inward. Guard B follows closely. Camera catches only a sliver of the cramped dark interior. Cut on the opening, before the room is fully revealed.\nEND STATE AND EDIT\nThe hideout door has opened inward. Guards A and B begin entering; C and D remain in the approach. Continue the same intrusion inside the room.\nSOUND\nMarket movement, baskets, steps and fabric; the bustle recedes into the passage. End on latch, hinge and the first step across the threshold.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_2>>> is Chinese Workers (GRP-012 V01); match it wherever Chinese Workers appears.\n<<<image_3>>> is Chinese Workers (GRP-012 V02); match it wherever Chinese Workers appears.\n<<<image_4>>> is China Bazaar (LOC-037 V01); match it wherever China Bazaar appears.\n<<<image_5>>> is China Bazaar (LOC-037 V02); match it wherever China Bazaar appears.\n<<<image_6>>> is Chinese People (GRP-011 V01); match it wherever Chinese People appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 1133989506,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_163820_46130b45-54ce-4bdf-8417-9b57c0ca5762.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_163820_46130b45-54ce-4bdf-8417-9b57c0ca5762_thumbnail.webp"
+    }
+  ]
+}

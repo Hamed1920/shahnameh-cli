@@ -1,0 +1,132 @@
+{
+  "jobId": "J-20261030-WR2",
+  "parentJobId": "J-20261030-NQC",
+  "hfJobId": "832e0da2-5866-4178-9a56-c3f2664d230c",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 01",
+  "target": "SHM-EP015-SC021-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 01 | THE WORLD FINDS A WORKER\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_JAMSHID_WORKER}}  {{CHAR_DOCK_WORKERS}}\nLOCATION REFERENCES\n{{LOC_PORT_PANORAMA}}  {{LOC_WORKING_QUAY}}\nPROP REFERENCES\n{{PROP_MOORING_ROPE}}  {{PROP_NET}}  {{PROP_CARGO_HOIST}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nLOCATION AND LIGHT\nCold neutral overcast daylight. Damp quay surfaces reflect the sky; restrained water bounce reaches the workers. Muted weathered materials, integrated port equipment and rounded masonry openings. The port is a living trading city within the referenced world, not a historical tourism illustration.\nSTART STATE AND BLOCKING\nThe harbor is active. Jamshid is one worker among others on the working quay. A cargo crate hangs low in a sling beside a quay hoist. The water is beyond the quay edge; a clear loading zone separates workers from the suspended load.\n\nPLAN 01 | SHOTS\nSHOT 01-01 | 0s–5s | 5 SECONDS\n12mm extreme wide from an elevated shore-side gallery. Hold a nearly fixed frame: ordinary merchant boats, cargo paths, working figures and water occupy separate depth layers. Discover activity without centering any person.\nSHOT 01-02 | 5s–9s | 4 SECONDS\n65mm close detail from waist height beside a worker: worn hands draw wet rope through a secure wrap around a fixed bollard. The rope slides under controlled tension. Frame hands and rough sleeve before revealing identity; this is Jamshid.\nSHOT 01-03 | 9s–15s | 6 SECONDS\n35mm medium from the landward side, rising only from hand height to chest height as Jamshid checks a net attachment. Reveal his referenced aged mask and stooped shoulders. He tests the fastening precisely, then follows the hoist rope with an alert glance. Another worker crosses the foreground; Jamshid stays off-center.\nEND STATE AND EDIT\nJamshid stands beside the hoist loading zone, aware of the working line. End on his glance toward the cargo mechanism, ready for its failure.\nSOUND\nWater against timber, wet rope friction, tools, foot traffic and distant nonverbal market bustle.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Jamshid (CHR-002 V05); match it wherever Jamshid appears.\n<<<image_2>>> is Chinese People (GRP-011 V01); match it wherever Chinese People appears.\n<<<image_3>>> is Chinese People (GRP-011 V02); match it wherever Chinese People appears.\n<<<image_4>>> is China Port Panorama (LOC-036 V02); match it wherever China Port Panorama appears.\n<<<image_5>>> is Port Shipyard Hall (LOC-035 V01); match it wherever Port Shipyard Hall appears.\n<<<image_6>>> is China Port Panorama (LOC-036 V01); match it wherever China Port Panorama appears.",
+  "basePrompt": "PLAN 01 | THE WORLD FINDS A WORKER\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_JAMSHID_WORKER}}  {{CHAR_DOCK_WORKERS}}\nLOCATION REFERENCES\n{{LOC_PORT_PANORAMA}}  {{LOC_WORKING_QUAY}}\nPROP REFERENCES\n{{PROP_MOORING_ROPE}}  {{PROP_NET}}  {{PROP_CARGO_HOIST}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nLOCATION AND LIGHT\nCold neutral overcast daylight. Damp quay surfaces reflect the sky; restrained water bounce reaches the workers. Muted weathered materials, integrated port equipment and rounded masonry openings. The port is a living trading city within the referenced world, not a historical tourism illustration.\nSTART STATE AND BLOCKING\nThe harbor is active. Jamshid is one worker among others on the working quay. A cargo crate hangs low in a sling beside a quay hoist. The water is beyond the quay edge; a clear loading zone separates workers from the suspended load.\n\nPLAN 01 | SHOTS\nSHOT 01-01 | 0s–5s | 5 SECONDS\n12mm extreme wide from an elevated shore-side gallery. Hold a nearly fixed frame: ordinary merchant boats, cargo paths, working figures and water occupy separate depth layers. Discover activity without centering any person.\nSHOT 01-02 | 5s–9s | 4 SECONDS\n65mm close detail from waist height beside a worker: worn hands draw wet rope through a secure wrap around a fixed bollard. The rope slides under controlled tension. Frame hands and rough sleeve before revealing identity; this is Jamshid.\nSHOT 01-03 | 9s–15s | 6 SECONDS\n35mm medium from the landward side, rising only from hand height to chest height as Jamshid checks a net attachment. Reveal his referenced aged mask and stooped shoulders. He tests the fastening precisely, then follows the hoist rope with an alert glance. Another worker crosses the foreground; Jamshid stays off-center.\nEND STATE AND EDIT\nJamshid stands beside the hoist loading zone, aware of the working line. End on his glance toward the cargo mechanism, ready for its failure.\nSOUND\nWater against timber, wet rope friction, tools, foot traffic and distant nonverbal market bustle.\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-002/V05",
+    "@GRP-011/V01",
+    "@GRP-011/V02",
+    "@LOC-036/V02",
+    "@LOC-035/V01",
+    "@LOC-036/V01"
+  ],
+  "sentRefs": [
+    "@CHR-002/V05",
+    "@GRP-011/V01",
+    "@GRP-011/V02",
+    "@LOC-036/V02",
+    "@LOC-035/V01",
+    "@LOC-036/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-10-30T16:43:44.358Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_164118_832e0da2-5866-4178-9a56-c3f2664d230c.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-30T16:41:18.022948Z",
+      "display_name": "Seedance 2.5",
+      "id": "832e0da2-5866-4178-9a56-c3f2664d230c",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "4bb00222-b328-4649-9969-d5181f6bf3ae",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/4bb00222-b328-4649-9969-d5181f6bf3ae.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "e7b8c337-44cb-4acd-9465-528cb5200dd1",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/e7b8c337-44cb-4acd-9465-528cb5200dd1.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "b84f556e-f16d-40a5-aa04-a4da0e22771b",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/b84f556e-f16d-40a5-aa04-a4da0e22771b.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "404ae936-72dc-44a2-b3e2-a34c9a030660",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/404ae936-72dc-44a2-b3e2-a34c9a030660.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "c3856e64-56c4-4446-93b9-b27c6d25f73a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/c3856e64-56c4-4446-93b9-b27c6d25f73a.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "527f9dcd-a53f-48d9-8cac-a5d61f5eccb1",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/527f9dcd-a53f-48d9-8cac-a5d61f5eccb1.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 01 | THE WORLD FINDS A WORKER\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_JAMSHID_WORKER}}  {{CHAR_DOCK_WORKERS}}\nLOCATION REFERENCES\n{{LOC_PORT_PANORAMA}}  {{LOC_WORKING_QUAY}}\nPROP REFERENCES\n{{PROP_MOORING_ROPE}}  {{PROP_NET}}  {{PROP_CARGO_HOIST}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nLOCATION AND LIGHT\nCold neutral overcast daylight. Damp quay surfaces reflect the sky; restrained water bounce reaches the workers. Muted weathered materials, integrated port equipment and rounded masonry openings. The port is a living trading city within the referenced world, not a historical tourism illustration.\nSTART STATE AND BLOCKING\nThe harbor is active. Jamshid is one worker among others on the working quay. A cargo crate hangs low in a sling beside a quay hoist. The water is beyond the quay edge; a clear loading zone separates workers from the suspended load.\n\nPLAN 01 | SHOTS\nSHOT 01-01 | 0s–5s | 5 SECONDS\n12mm extreme wide from an elevated shore-side gallery. Hold a nearly fixed frame: ordinary merchant boats, cargo paths, working figures and water occupy separate depth layers. Discover activity without centering any person.\nSHOT 01-02 | 5s–9s | 4 SECONDS\n65mm close detail from waist height beside a worker: worn hands draw wet rope through a secure wrap around a fixed bollard. The rope slides under controlled tension. Frame hands and rough sleeve before revealing identity; this is Jamshid.\nSHOT 01-03 | 9s–15s | 6 SECONDS\n35mm medium from the landward side, rising only from hand height to chest height as Jamshid checks a net attachment. Reveal his referenced aged mask and stooped shoulders. He tests the fastening precisely, then follows the hoist rope with an alert glance. Another worker crosses the foreground; Jamshid stays off-center.\nEND STATE AND EDIT\nJamshid stands beside the hoist loading zone, aware of the working line. End on his glance toward the cargo mechanism, ready for its failure.\nSOUND\nWater against timber, wet rope friction, tools, foot traffic and distant nonverbal market bustle.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Jamshid (CHR-002 V05); match it wherever Jamshid appears.\n<<<image_2>>> is Chinese People (GRP-011 V01); match it wherever Chinese People appears.\n<<<image_3>>> is Chinese People (GRP-011 V02); match it wherever Chinese People appears.\n<<<image_4>>> is China Port Panorama (LOC-036 V02); match it wherever China Port Panorama appears.\n<<<image_5>>> is Port Shipyard Hall (LOC-035 V01); match it wherever Port Shipyard Hall appears.\n<<<image_6>>> is China Port Panorama (LOC-036 V01); match it wherever China Port Panorama appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 1148802292,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_164118_832e0da2-5866-4178-9a56-c3f2664d230c.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_164118_832e0da2-5866-4178-9a56-c3f2664d230c_thumbnail.webp"
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "jobId": "J-20261031-UE3",
+  "parentJobId": "J-20261030-XND",
+  "hfJobId": "a56785a0-aac3-47da-b914-a808d5676efc",
+  "attempt": 2,
+  "stage": "final",
+  "label": "PLAN 05",
+  "target": "SHM-EP015-SC025-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "BEGIN PROMPT\r\n\r\nPLAN 05 | ONE SMALL ORDER\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_ZAHHAK}}  {{CHAR_GUARDS}}  {{CHAR_SHIP_CREW}}\r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_SHIP_COMMAND_LANDING}}  {{LOC_DOCK_RAMP}}\r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_ZAHHAK_SHIP}}  {{PROP_ZAHHAK_STAFF}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nZahhak remains unhurried and indifferent. Whenever he walks, show the staff planting first, weight transferring onto it, then the weaker leg following in an uneven step. Preserve the reference's weak-leg side. His two single-headed shoulder snakes remain alive, making small independent movements; preserve their attachment and proportions.\r\n\r\nLOCATION AND LIGHT\r\n\r\nFull night, cold recessed deck lights and faint shore spill. An overhead deck practical reveals Zahhak's mask edge and staff while leaving deep shadow behind him. The elevated landing overlooks a broad downward ramp toward the quay.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nThe ship is moored and its ramp is securely deployed. Zahhak starts one pace behind the upper rail. Four guards wait near the upper ramp entrance. Ship crew remain at mooring stations. Zahhak stays on the upper level throughout.\r\n\r\n\r\nPLAN 05 | SHOTS\r\n\r\nSHOT 05-01 | 0s–6s | 6 SECONDS\r\n\r\n28mm low-angle full figure from below the landing. Zahhak takes two slow uneven steps toward the rail: staff plants first, body weight settles onto it, the weaker leg follows. Preserve the weak-leg side shown by the character reference. His living shoulder snakes make small independent neck and scale movements. The camera moves only a few centimeters closer.\r\n\r\nSHOT 05-02 | 6s–9s | 3 SECONDS\r\n\r\n50mm low oblique medium from the ramp side. Keeping his weight supported on the planted staff, Zahhak makes one small free-hand gesture toward the city. His head barely turns. The nearest guard immediately pivots toward the ramp.\r\n\r\nSHOT 05-03 | 9s–15s | 6 SECONDS\r\n\r\n24mm from the quay at the foot of the ramp, angled upward. Four guards descend rapidly from the upper landing toward camera, then pass toward the market entrance. Zahhak remains high in the background, still and supported by his staff. Camera steps aside with the passing guards, retaining the height difference.\r\n\r\nEND STATE AND EDIT\r\n\r\nFour guards have reached the quay and move toward the night market. Zahhak remains aboard at the elevated landing. A later off-screen transfer takes him to the coastal residence.\r\n\r\nSOUND\r\n\r\nStaff taps, uneven measured steps, then faster coordinated guard boots on metal, with water and ship mechanisms underneath.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_3>>> is China Port Night Dock (LOC-038 V01); match it wherever China Port Night Dock appears.\n<<<image_4>>> is China Port Panorama (LOC-036 V02); match it wherever China Port Panorama appears.\n<<<image_5>>> is Zahhak Ship (PRP-024 V02); match it wherever Zahhak Ship appears.\n<<<image_6>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+  "basePrompt": "BEGIN PROMPT\r\n\r\nPLAN 05 | ONE SMALL ORDER\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_ZAHHAK}}  {{CHAR_GUARDS}}  {{CHAR_SHIP_CREW}}\r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_SHIP_COMMAND_LANDING}}  {{LOC_DOCK_RAMP}}\r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_ZAHHAK_SHIP}}  {{PROP_ZAHHAK_STAFF}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nZahhak remains unhurried and indifferent. Whenever he walks, show the staff planting first, weight transferring onto it, then the weaker leg following in an uneven step. Preserve the reference's weak-leg side. His two single-headed shoulder snakes remain alive, making small independent movements; preserve their attachment and proportions.\r\n\r\nLOCATION AND LIGHT\r\n\r\nFull night, cold recessed deck lights and faint shore spill. An overhead deck practical reveals Zahhak's mask edge and staff while leaving deep shadow behind him. The elevated landing overlooks a broad downward ramp toward the quay.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nThe ship is moored and its ramp is securely deployed. Zahhak starts one pace behind the upper rail. Four guards wait near the upper ramp entrance. Ship crew remain at mooring stations. Zahhak stays on the upper level throughout.\r\n\r\n\r\nPLAN 05 | SHOTS\r\n\r\nSHOT 05-01 | 0s–6s | 6 SECONDS\r\n\r\n28mm low-angle full figure from below the landing. Zahhak takes two slow uneven steps toward the rail: staff plants first, body weight settles onto it, the weaker leg follows. Preserve the weak-leg side shown by the character reference. His living shoulder snakes make small independent neck and scale movements. The camera moves only a few centimeters closer.\r\n\r\nSHOT 05-02 | 6s–9s | 3 SECONDS\r\n\r\n50mm low oblique medium from the ramp side. Keeping his weight supported on the planted staff, Zahhak makes one small free-hand gesture toward the city. His head barely turns. The nearest guard immediately pivots toward the ramp.\r\n\r\nSHOT 05-03 | 9s–15s | 6 SECONDS\r\n\r\n24mm from the quay at the foot of the ramp, angled upward. Four guards descend rapidly from the upper landing toward camera, then pass toward the market entrance. Zahhak remains high in the background, still and supported by his staff. Camera steps aside with the passing guards, retaining the height difference.\r\n\r\nEND STATE AND EDIT\r\n\r\nFour guards have reached the quay and move toward the night market. Zahhak remains aboard at the elevated landing. A later off-screen transfer takes him to the coastal residence.\r\n\r\nSOUND\r\n\r\nStaff taps, uneven measured steps, then faster coordinated guard boots on metal, with water and ship mechanisms underneath.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@CHR-001/V08",
+    "@GRP-005/V01",
+    "@LOC-038/V01",
+    "@LOC-036/V02",
+    "@PRP-024/V02",
+    "@PRP-001/V01"
+  ],
+  "sentRefs": [
+    "@CHR-001/V08",
+    "@GRP-005/V01",
+    "@LOC-038/V01",
+    "@LOC-036/V02",
+    "@PRP-024/V02",
+    "@PRP-001/V01"
+  ],
+  "convertedFrom": "6b78449b-5be6-4cbe-955f-e479fd10924e",
+  "createdAt": "2026-10-31T08:13:23.573Z",
+  "costCredits": 240,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261031_081052_a56785a0-aac3-47da-b914-a808d5676efc.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-31T08:10:52.781482Z",
+      "display_name": "Seedance 2.5",
+      "id": "a56785a0-aac3-47da-b914-a808d5676efc",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": "6b78449b-5be6-4cbe-955f-e479fd10924e",
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "492416dc-76d7-4e60-8580-7295273d31f2",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/492416dc-76d7-4e60-8580-7295273d31f2.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "8c6a711f-c135-43a7-a4fa-9f10734768be",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/8c6a711f-c135-43a7-a4fa-9f10734768be.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "d161bd09-0569-4b00-a0c5-594d300d2158",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/d161bd09-0569-4b00-a0c5-594d300d2158.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "064511a3-e330-4444-9446-22725f2b9a3d",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/064511a3-e330-4444-9446-22725f2b9a3d.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "fdaa16ab-9bce-4b40-91dc-b3a613ae5d09",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/fdaa16ab-9bce-4b40-91dc-b3a613ae5d09.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "10a38df4-56c5-46a3-831b-072aa2e5cda8",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/10a38df4-56c5-46a3-831b-072aa2e5cda8.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "BEGIN PROMPT\r\n\r\nPLAN 05 | ONE SMALL ORDER\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_ZAHHAK}}  {{CHAR_GUARDS}}  {{CHAR_SHIP_CREW}}\r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_SHIP_COMMAND_LANDING}}  {{LOC_DOCK_RAMP}}\r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_ZAHHAK_SHIP}}  {{PROP_ZAHHAK_STAFF}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nZahhak remains unhurried and indifferent. Whenever he walks, show the staff planting first, weight transferring onto it, then the weaker leg following in an uneven step. Preserve the reference's weak-leg side. His two single-headed shoulder snakes remain alive, making small independent movements; preserve their attachment and proportions.\r\n\r\nLOCATION AND LIGHT\r\n\r\nFull night, cold recessed deck lights and faint shore spill. An overhead deck practical reveals Zahhak's mask edge and staff while leaving deep shadow behind him. The elevated landing overlooks a broad downward ramp toward the quay.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nThe ship is moored and its ramp is securely deployed. Zahhak starts one pace behind the upper rail. Four guards wait near the upper ramp entrance. Ship crew remain at mooring stations. Zahhak stays on the upper level throughout.\r\n\r\n\r\nPLAN 05 | SHOTS\r\n\r\nSHOT 05-01 | 0s–6s | 6 SECONDS\r\n\r\n28mm low-angle full figure from below the landing. Zahhak takes two slow uneven steps toward the rail: staff plants first, body weight settles onto it, the weaker leg follows. Preserve the weak-leg side shown by the character reference. His living shoulder snakes make small independent neck and scale movements. The camera moves only a few centimeters closer.\r\n\r\nSHOT 05-02 | 6s–9s | 3 SECONDS\r\n\r\n50mm low oblique medium from the ramp side. Keeping his weight supported on the planted staff, Zahhak makes one small free-hand gesture toward the city. His head barely turns. The nearest guard immediately pivots toward the ramp.\r\n\r\nSHOT 05-03 | 9s–15s | 6 SECONDS\r\n\r\n24mm from the quay at the foot of the ramp, angled upward. Four guards descend rapidly from the upper landing toward camera, then pass toward the market entrance. Zahhak remains high in the background, still and supported by his staff. Camera steps aside with the passing guards, retaining the height difference.\r\n\r\nEND STATE AND EDIT\r\n\r\nFour guards have reached the quay and move toward the night market. Zahhak remains aboard at the elevated landing. A later off-screen transfer takes him to the coastal residence.\r\n\r\nSOUND\r\n\r\nStaff taps, uneven measured steps, then faster coordinated guard boots on metal, with water and ship mechanisms underneath.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_3>>> is China Port Night Dock (LOC-038 V01); match it wherever China Port Night Dock appears.\n<<<image_4>>> is China Port Panorama (LOC-036 V02); match it wherever China Port Panorama appears.\n<<<image_5>>> is Zahhak Ship (PRP-024 V02); match it wherever Zahhak Ship appears.\n<<<image_6>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "seed": 1661694965,
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261031_081052_a56785a0-aac3-47da-b914-a808d5676efc.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261031_081052_a56785a0-aac3-47da-b914-a808d5676efc_thumbnail.webp"
+    }
+  ]
+}

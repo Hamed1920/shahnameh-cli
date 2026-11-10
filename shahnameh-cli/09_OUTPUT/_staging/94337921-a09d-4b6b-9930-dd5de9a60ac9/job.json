@@ -1,0 +1,132 @@
+{
+  "jobId": "J-20261030-XN4",
+  "parentJobId": "J-20261030-4JW",
+  "hfJobId": "94337921-a09d-4b6b-9930-dd5de9a60ac9",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 09",
+  "target": "SHM-EP015-SC029-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 09 | HE DOES NOT SEE A RIVAL\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_JAMSHID_WORKER}}  {{CHAR_ZAHHAK}}  {{CHAR_GUARDS}}\nLOCATION REFERENCES\n{{LOC_COASTAL_RESIDENCE}}\nPROP REFERENCES\n{{PROP_ZAHHAK_STAFF}}  {{PROP_INDUSTRIAL_SAW}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nZahhak remains unhurried and indifferent. Whenever he walks, show the staff planting first, weight transferring onto it, then the weaker leg following in an uneven step. Preserve the reference's weak-leg side. His two single-headed shoulder snakes remain alive, making small independent movements; preserve their attachment and proportions.\nLOCATION AND LIGHT\nNight in the same defined geometry: SOUTH entrance, NORTH balcony, EAST industrial saw bay, WEST circulation aisle. Cold integrated hall lights remain steady. A harsher functional lamp marks the idle saw bay. Sea and port lights remain visible beyond the north opening.\nSTART STATE AND BLOCKING\nJamshid stands center hall facing north, A and B at his sides. C and D remain near the south door. Zahhak stands near the north threshold, back toward Jamshid, staff planted. The east saw bay contains an idle industrial timber saw and a level feed carriage.\n\nPLAN 09 | SHOTS\nSHOT 09-01 | 0s–6s | 6 SECONDS\n35mm calm front three-quarter medium-wide from northwest of Zahhak, looking southeast. Zahhak occupies the right foreground, torso facing north away from Jamshid; Jamshid stands distant left-center facing him, with his mask front visible. Zahhak turns his head only enough for a brief glance at Jamshid, then directs his eyes toward the east saw bay. Jamshid holds his upright expectation. Camera drifts forward slowly.\nSHOT 09-02 | 6s–9s | 3 SECONDS\n50mm from west, a tighter lateral composition retaining both Zahhak's hand and the distant saw bay. Zahhak supports himself on his staff and gives one small free-hand indication toward the saw. Guard A immediately begins turning Jamshid east. Zahhak's gaze has already left him.\nSHOT 09-03 | 9s–12s | 3 SECONDS\n35mm close handheld from west of the escort. A and B move Jamshid toward the east service bay. His torso tries to remain oriented north toward Zahhak while his feet are redirected east. Camera reacts to that bodily conflict.\nSHOT 09-04 | 12s–15s | 3 SECONDS\n28mm calm full figure from the west aisle. Zahhak turns north toward the balcony and takes one slow uneven step: plant staff, transfer weight, draw weaker leg forward. His shoulder snakes continue subtle living movement. The camera remains composed.\nEND STATE AND EDIT\nTwo paths have begun: Jamshid moves east with A and B; Zahhak moves north toward the balcony. C and D remain at the entrance. Preserve these directions through the following parallel cuts.\nSOUND\nQuiet staff contact contrasts with the escort's faster shoes, sleeve friction and Jamshid's breathing. Harbor activity continues underneath.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Jamshid (CHR-002 V04); match it wherever Jamshid appears.\n<<<image_3>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Zahhak Hall China (LOC-042 V01); match it wherever Zahhak Hall China appears.\n<<<image_5>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.\n<<<image_6>>> is Sawmill Machine (PRP-025 V01); match it wherever Sawmill Machine appears.",
+  "basePrompt": "PLAN 09 | HE DOES NOT SEE A RIVAL\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_JAMSHID_WORKER}}  {{CHAR_ZAHHAK}}  {{CHAR_GUARDS}}\nLOCATION REFERENCES\n{{LOC_COASTAL_RESIDENCE}}\nPROP REFERENCES\n{{PROP_ZAHHAK_STAFF}}  {{PROP_INDUSTRIAL_SAW}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nZahhak remains unhurried and indifferent. Whenever he walks, show the staff planting first, weight transferring onto it, then the weaker leg following in an uneven step. Preserve the reference's weak-leg side. His two single-headed shoulder snakes remain alive, making small independent movements; preserve their attachment and proportions.\nLOCATION AND LIGHT\nNight in the same defined geometry: SOUTH entrance, NORTH balcony, EAST industrial saw bay, WEST circulation aisle. Cold integrated hall lights remain steady. A harsher functional lamp marks the idle saw bay. Sea and port lights remain visible beyond the north opening.\nSTART STATE AND BLOCKING\nJamshid stands center hall facing north, A and B at his sides. C and D remain near the south door. Zahhak stands near the north threshold, back toward Jamshid, staff planted. The east saw bay contains an idle industrial timber saw and a level feed carriage.\n\nPLAN 09 | SHOTS\nSHOT 09-01 | 0s–6s | 6 SECONDS\n35mm calm front three-quarter medium-wide from northwest of Zahhak, looking southeast. Zahhak occupies the right foreground, torso facing north away from Jamshid; Jamshid stands distant left-center facing him, with his mask front visible. Zahhak turns his head only enough for a brief glance at Jamshid, then directs his eyes toward the east saw bay. Jamshid holds his upright expectation. Camera drifts forward slowly.\nSHOT 09-02 | 6s–9s | 3 SECONDS\n50mm from west, a tighter lateral composition retaining both Zahhak's hand and the distant saw bay. Zahhak supports himself on his staff and gives one small free-hand indication toward the saw. Guard A immediately begins turning Jamshid east. Zahhak's gaze has already left him.\nSHOT 09-03 | 9s–12s | 3 SECONDS\n35mm close handheld from west of the escort. A and B move Jamshid toward the east service bay. His torso tries to remain oriented north toward Zahhak while his feet are redirected east. Camera reacts to that bodily conflict.\nSHOT 09-04 | 12s–15s | 3 SECONDS\n28mm calm full figure from the west aisle. Zahhak turns north toward the balcony and takes one slow uneven step: plant staff, transfer weight, draw weaker leg forward. His shoulder snakes continue subtle living movement. The camera remains composed.\nEND STATE AND EDIT\nTwo paths have begun: Jamshid moves east with A and B; Zahhak moves north toward the balcony. C and D remain at the entrance. Preserve these directions through the following parallel cuts.\nSOUND\nQuiet staff contact contrasts with the escort's faster shoes, sleeve friction and Jamshid's breathing. Harbor activity continues underneath.\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V08",
+    "@CHR-002/V04",
+    "@GRP-005/V01",
+    "@LOC-042/V01",
+    "@PRP-001/V01",
+    "@PRP-025/V01"
+  ],
+  "sentRefs": [
+    "@CHR-001/V08",
+    "@CHR-002/V04",
+    "@GRP-005/V01",
+    "@LOC-042/V01",
+    "@PRP-001/V01",
+    "@PRP-025/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-10-30T16:39:34.011Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_163712_94337921-a09d-4b6b-9930-dd5de9a60ac9.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-30T16:37:12.989258Z",
+      "display_name": "Seedance 2.5",
+      "id": "94337921-a09d-4b6b-9930-dd5de9a60ac9",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "1dff4f2f-4353-4648-8970-f0b42a8b18f7",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/1dff4f2f-4353-4648-8970-f0b42a8b18f7.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "b000e280-4c9d-4b7a-9483-6f0238e143ae",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/b000e280-4c9d-4b7a-9483-6f0238e143ae.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "dfa22781-3db8-4032-827f-f80fc54f883c",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/dfa22781-3db8-4032-827f-f80fc54f883c.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a61137a3-d119-4851-9892-e450c6522251",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/a61137a3-d119-4851-9892-e450c6522251.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "b598e3b7-56c0-4d7f-91b0-3fe68c51aa49",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/b598e3b7-56c0-4d7f-91b0-3fe68c51aa49.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "6e182696-d937-470d-94db-3a394d4e5aca",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/6e182696-d937-470d-94db-3a394d4e5aca.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 09 | HE DOES NOT SEE A RIVAL\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_JAMSHID_WORKER}}  {{CHAR_ZAHHAK}}  {{CHAR_GUARDS}}\nLOCATION REFERENCES\n{{LOC_COASTAL_RESIDENCE}}\nPROP REFERENCES\n{{PROP_ZAHHAK_STAFF}}  {{PROP_INDUSTRIAL_SAW}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nZahhak remains unhurried and indifferent. Whenever he walks, show the staff planting first, weight transferring onto it, then the weaker leg following in an uneven step. Preserve the reference's weak-leg side. His two single-headed shoulder snakes remain alive, making small independent movements; preserve their attachment and proportions.\nLOCATION AND LIGHT\nNight in the same defined geometry: SOUTH entrance, NORTH balcony, EAST industrial saw bay, WEST circulation aisle. Cold integrated hall lights remain steady. A harsher functional lamp marks the idle saw bay. Sea and port lights remain visible beyond the north opening.\nSTART STATE AND BLOCKING\nJamshid stands center hall facing north, A and B at his sides. C and D remain near the south door. Zahhak stands near the north threshold, back toward Jamshid, staff planted. The east saw bay contains an idle industrial timber saw and a level feed carriage.\n\nPLAN 09 | SHOTS\nSHOT 09-01 | 0s–6s | 6 SECONDS\n35mm calm front three-quarter medium-wide from northwest of Zahhak, looking southeast. Zahhak occupies the right foreground, torso facing north away from Jamshid; Jamshid stands distant left-center facing him, with his mask front visible. Zahhak turns his head only enough for a brief glance at Jamshid, then directs his eyes toward the east saw bay. Jamshid holds his upright expectation. Camera drifts forward slowly.\nSHOT 09-02 | 6s–9s | 3 SECONDS\n50mm from west, a tighter lateral composition retaining both Zahhak's hand and the distant saw bay. Zahhak supports himself on his staff and gives one small free-hand indication toward the saw. Guard A immediately begins turning Jamshid east. Zahhak's gaze has already left him.\nSHOT 09-03 | 9s–12s | 3 SECONDS\n35mm close handheld from west of the escort. A and B move Jamshid toward the east service bay. His torso tries to remain oriented north toward Zahhak while his feet are redirected east. Camera reacts to that bodily conflict.\nSHOT 09-04 | 12s–15s | 3 SECONDS\n28mm calm full figure from the west aisle. Zahhak turns north toward the balcony and takes one slow uneven step: plant staff, transfer weight, draw weaker leg forward. His shoulder snakes continue subtle living movement. The camera remains composed.\nEND STATE AND EDIT\nTwo paths have begun: Jamshid moves east with A and B; Zahhak moves north toward the balcony. C and D remain at the entrance. Preserve these directions through the following parallel cuts.\nSOUND\nQuiet staff contact contrasts with the escort's faster shoes, sleeve friction and Jamshid's breathing. Harbor activity continues underneath.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Jamshid (CHR-002 V04); match it wherever Jamshid appears.\n<<<image_3>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Zahhak Hall China (LOC-042 V01); match it wherever Zahhak Hall China appears.\n<<<image_5>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.\n<<<image_6>>> is Sawmill Machine (PRP-025 V01); match it wherever Sawmill Machine appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 1892349739,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_163712_94337921-a09d-4b6b-9930-dd5de9a60ac9.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_163712_94337921-a09d-4b6b-9930-dd5de9a60ac9_thumbnail.webp"
+    }
+  ]
+}

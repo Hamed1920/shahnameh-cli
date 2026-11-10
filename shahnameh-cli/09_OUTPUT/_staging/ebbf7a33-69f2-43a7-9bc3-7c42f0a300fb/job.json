@@ -1,0 +1,122 @@
+{
+  "jobId": "J-20261030-6DF",
+  "parentJobId": "J-20261030-3AJ",
+  "hfJobId": "ebbf7a33-69f2-43a7-9bc3-7c42f0a300fb",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 03",
+  "target": "SHM-EP015-SC023-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 03 | AUTHORITY ENDS AT THE SHIFT\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_JAMSHID_WORKER}}  {{CHAR_DOCK_WORKERS}}  {{CHAR_DOCK_FOREMAN}}\nLOCATION REFERENCES\n{{LOC_WORKING_QUAY}}  {{LOC_PORT_PANORAMA}}\nPROP REFERENCES\n{{PROP_NET}}  {{PROP_MOORING_ROPE}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nLOCATION AND LIGHT\nFirst two shots: cold overcast daylight. Last three shots: the exact same harbor camera station at late day, blue dusk and full night. Integrated lamps become visible across the cuts; illumination changes only with the explicit time ellipses.\nSTART STATE AND BLOCKING\nThe cargo crisis has ended. Jamshid stands upright beside the grounded cargo. The foreman approaches from his left with a damaged section of net. The quay remains busy.\n\nPLAN 03 | SHOTS\nSHOT 03-01 | 0s–5s | 5 SECONDS\n40mm medium from landward. The foreman places the damaged net in Jamshid's hands and indicates the repair station with an ordinary practical gesture. Jamshid holds his posture for a beat, swallows his anger through a tightened jaw beneath the mask and accepts the task.\nSHOT 03-02 | 5s–8s | 3 SECONDS\n28mm from two meters farther back and slightly left. Workers pass between lens and Jamshid, reclaiming the center. He turns toward the repair station with the net. The camera lets him recede into working traffic.\nSHOT 03-03 | 8s–10s | 2 SECONDS\n18mm fixed harbor wide from an elevated gallery. Late day: merchant boats and workers continue moving. Keep the quay bend and one lamp mast as geographic anchors.\nSHOT 03-04 | 10s–12s | 2 SECONDS\nHard cut to the identical 18mm composition at blue dusk. A different shift crosses the same quay. Practical lamps are now lit.\nSHOT 03-05 | 12s–15s | 3 SECONDS\nHard cut to the identical composition at full night. Water is dark and the working quay remains illuminated in small pools. Hold the open harbor entrance in the far background.\nEND STATE AND EDIT\nFull night is established. Jamshid has left the visual center. The open harbor entrance prepares the arrival of a larger vessel.\nSOUND\nNet fibers, work steps and dock tools; sound perspective widens across the time ellipses to night water, sparse loading activity and distant machinery.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Jamshid (CHR-002 V05); match it wherever Jamshid appears.\n<<<image_2>>> is Chinese Foreman (CHR-012 V01); match it wherever Chinese Foreman appears.\n<<<image_3>>> is Chinese People (GRP-011 V01); match it wherever Chinese People appears.\n<<<image_4>>> is Chinese People (GRP-011 V02); match it wherever Chinese People appears.\n<<<image_5>>> is Port Shipyard Hall (LOC-035 V01); match it wherever Port Shipyard Hall appears.",
+  "basePrompt": "PLAN 03 | AUTHORITY ENDS AT THE SHIFT\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_JAMSHID_WORKER}}  {{CHAR_DOCK_WORKERS}}  {{CHAR_DOCK_FOREMAN}}\nLOCATION REFERENCES\n{{LOC_WORKING_QUAY}}  {{LOC_PORT_PANORAMA}}\nPROP REFERENCES\n{{PROP_NET}}  {{PROP_MOORING_ROPE}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nLOCATION AND LIGHT\nFirst two shots: cold overcast daylight. Last three shots: the exact same harbor camera station at late day, blue dusk and full night. Integrated lamps become visible across the cuts; illumination changes only with the explicit time ellipses.\nSTART STATE AND BLOCKING\nThe cargo crisis has ended. Jamshid stands upright beside the grounded cargo. The foreman approaches from his left with a damaged section of net. The quay remains busy.\n\nPLAN 03 | SHOTS\nSHOT 03-01 | 0s–5s | 5 SECONDS\n40mm medium from landward. The foreman places the damaged net in Jamshid's hands and indicates the repair station with an ordinary practical gesture. Jamshid holds his posture for a beat, swallows his anger through a tightened jaw beneath the mask and accepts the task.\nSHOT 03-02 | 5s–8s | 3 SECONDS\n28mm from two meters farther back and slightly left. Workers pass between lens and Jamshid, reclaiming the center. He turns toward the repair station with the net. The camera lets him recede into working traffic.\nSHOT 03-03 | 8s–10s | 2 SECONDS\n18mm fixed harbor wide from an elevated gallery. Late day: merchant boats and workers continue moving. Keep the quay bend and one lamp mast as geographic anchors.\nSHOT 03-04 | 10s–12s | 2 SECONDS\nHard cut to the identical 18mm composition at blue dusk. A different shift crosses the same quay. Practical lamps are now lit.\nSHOT 03-05 | 12s–15s | 3 SECONDS\nHard cut to the identical composition at full night. Water is dark and the working quay remains illuminated in small pools. Hold the open harbor entrance in the far background.\nEND STATE AND EDIT\nFull night is established. Jamshid has left the visual center. The open harbor entrance prepares the arrival of a larger vessel.\nSOUND\nNet fibers, work steps and dock tools; sound perspective widens across the time ellipses to night water, sparse loading activity and distant machinery.\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-002/V05",
+    "@CHR-012/V01",
+    "@GRP-011/V01",
+    "@GRP-011/V02",
+    "@LOC-035/V01"
+  ],
+  "sentRefs": [
+    "@CHR-002/V05",
+    "@CHR-012/V01",
+    "@GRP-011/V01",
+    "@GRP-011/V02",
+    "@LOC-035/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-10-30T16:42:33.527Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_163957_ebbf7a33-69f2-43a7-9bc3-7c42f0a300fb.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-30T16:39:57.227249Z",
+      "display_name": "Seedance 2.5",
+      "id": "ebbf7a33-69f2-43a7-9bc3-7c42f0a300fb",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "10111316-c07c-45a1-ad00-7cdf62d47bfe",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/10111316-c07c-45a1-ad00-7cdf62d47bfe.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "9aeef0e4-a0a8-4adb-8582-046d441e1aea",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/9aeef0e4-a0a8-4adb-8582-046d441e1aea.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "71e8eea1-06b0-4c46-9fd1-0410fffe1b49",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/71e8eea1-06b0-4c46-9fd1-0410fffe1b49.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a17ed18b-9d90-4c77-bfc0-e50836f98c5f",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/a17ed18b-9d90-4c77-bfc0-e50836f98c5f.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "bbea02fa-eed4-4c24-a811-7f2d845f360a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/bbea02fa-eed4-4c24-a811-7f2d845f360a.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 03 | AUTHORITY ENDS AT THE SHIFT\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_JAMSHID_WORKER}}  {{CHAR_DOCK_WORKERS}}  {{CHAR_DOCK_FOREMAN}}\nLOCATION REFERENCES\n{{LOC_WORKING_QUAY}}  {{LOC_PORT_PANORAMA}}\nPROP REFERENCES\n{{PROP_NET}}  {{PROP_MOORING_ROPE}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nLOCATION AND LIGHT\nFirst two shots: cold overcast daylight. Last three shots: the exact same harbor camera station at late day, blue dusk and full night. Integrated lamps become visible across the cuts; illumination changes only with the explicit time ellipses.\nSTART STATE AND BLOCKING\nThe cargo crisis has ended. Jamshid stands upright beside the grounded cargo. The foreman approaches from his left with a damaged section of net. The quay remains busy.\n\nPLAN 03 | SHOTS\nSHOT 03-01 | 0s–5s | 5 SECONDS\n40mm medium from landward. The foreman places the damaged net in Jamshid's hands and indicates the repair station with an ordinary practical gesture. Jamshid holds his posture for a beat, swallows his anger through a tightened jaw beneath the mask and accepts the task.\nSHOT 03-02 | 5s–8s | 3 SECONDS\n28mm from two meters farther back and slightly left. Workers pass between lens and Jamshid, reclaiming the center. He turns toward the repair station with the net. The camera lets him recede into working traffic.\nSHOT 03-03 | 8s–10s | 2 SECONDS\n18mm fixed harbor wide from an elevated gallery. Late day: merchant boats and workers continue moving. Keep the quay bend and one lamp mast as geographic anchors.\nSHOT 03-04 | 10s–12s | 2 SECONDS\nHard cut to the identical 18mm composition at blue dusk. A different shift crosses the same quay. Practical lamps are now lit.\nSHOT 03-05 | 12s–15s | 3 SECONDS\nHard cut to the identical composition at full night. Water is dark and the working quay remains illuminated in small pools. Hold the open harbor entrance in the far background.\nEND STATE AND EDIT\nFull night is established. Jamshid has left the visual center. The open harbor entrance prepares the arrival of a larger vessel.\nSOUND\nNet fibers, work steps and dock tools; sound perspective widens across the time ellipses to night water, sparse loading activity and distant machinery.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Jamshid (CHR-002 V05); match it wherever Jamshid appears.\n<<<image_2>>> is Chinese Foreman (CHR-012 V01); match it wherever Chinese Foreman appears.\n<<<image_3>>> is Chinese People (GRP-011 V01); match it wherever Chinese People appears.\n<<<image_4>>> is Chinese People (GRP-011 V02); match it wherever Chinese People appears.\n<<<image_5>>> is Port Shipyard Hall (LOC-035 V01); match it wherever Port Shipyard Hall appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 1638791214,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_163957_ebbf7a33-69f2-43a7-9bc3-7c42f0a300fb.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_163957_ebbf7a33-69f2-43a7-9bc3-7c42f0a300fb_thumbnail.webp"
+    }
+  ]
+}

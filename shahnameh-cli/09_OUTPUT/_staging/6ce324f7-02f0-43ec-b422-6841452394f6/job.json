@@ -1,0 +1,112 @@
+{
+  "jobId": "J-20261030-I1V",
+  "parentJobId": "J-20261030-Q0H",
+  "hfJobId": "6ce324f7-02f0-43ec-b422-6841452394f6",
+  "attempt": 2,
+  "stage": "draft",
+  "label": "PLAN 02",
+  "target": "SHM-EP015-SC022-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "BEGIN PROMPT\r\n\r\nPLAN 02 | THE FIRST COMMAND WORKS\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_JAMSHID_WORKER}} @Jamshid (look 5)   {{CHAR_DOCK_WORKERS}} @Chinese People (look 1) @Chinese People (look 2) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_WORKING_QUAY}} @Port Shipyard Hall (look 1) \r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_CARGO_HOIST}}  {{PROP_MOORING_ROPE}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nLOCATION AND LIGHT\r\n\r\nCold neutral overcast daylight with water bounce. Preserve the referenced hoist, crate, bollards and level loading area. Light stays constant during the command; authority comes from posture and camera organization.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nGeography: NORTH is the water and suspended cargo loading zone; SOUTH is the dry quay. Jamshid starts SOUTH of the workers facing NORTH toward the load. Worker A operates the brake at west; B handles a hauling line east; C controls the guide rope south of the load. Nobody stands beneath the crate. Workers pull out of sequence, causing a low sideways swing. Jamshid must watch this in front of him, never behind him.\r\n\r\n\r\nPLAN 02 | SHOTS\r\n\r\nSHOT 02-01 | 0s–3s | 3 SECONDS\r\n\r\n28mm handheld from SOUTH behind Jamshid, his back foreground left. Workers and suspended crate fill the middle distance ahead of him. A struggles with the brake as B pulls too early and C loses guide-rope tension. Camera reacts to their opposing movement; the crate swings a short distance over the clear loading zone.\r\n\r\nSHOT 02-02 | 3s–5s | 2 SECONDS\r\n\r\n50mm lateral close from WEST beside the brake. A's grip slips, the line jerks and C strains in the background. Camera flinches with the line but recovers focus immediately. Their inability to coordinate is readable.\r\n\r\nSHOT 02-03 | 5s–8s | 3 SECONDS\r\n\r\n35mm from the SOUTHWEST, moving with Jamshid as he steps into the workers' safe operating aisle. His back and left profile face camera; he looks north at the workers. He raises his RIGHT palm to shoulder height, elbow bent, fingers together, ordering them to stop, then reaches toward A's brake hand to steady it.\r\n\r\nSHOT 02-04 | 8s–11s | 3 SECONDS\r\n\r\n40mm front three-quarter from NORTHWEST of Jamshid, looking SOUTH across dry quay only. The suspended cargo is NORTH of Jamshid, behind the camera and entirely OUT OF FRAME. He looks toward B just beside lens, points sharply to the hauling line and signals a controlled pull; then turns his eyes west to A and presses his palm downward to hold the brake. No speech.\r\n\r\nSHOT 02-05 | 11s–15s | 4 SECONDS\r\n\r\n28mm side-wide from WEST showing all three stations and Jamshid between them, outside the load path. He redirects C's guide rope, watches B pull, then cues A to release slowly. Their successive responses steady the crate and begin its final controlled descent. Camera shifts physically toward the coordinated group, no zoom.\r\n\r\nEND STATE AND EDIT\r\n\r\nThe crate has stopped swinging and is descending through its last few centimeters. Jamshid remains engaged with the workers, right hand controlling the final lowering. The next block completes the landing.\r\n\r\nSOUND\r\n\r\nConflicting rope strains, pulley chatter, effortful breaths, hurried feet, then a steadier brake and rope rhythm. No intelligible shouted orders.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Jamshid (CHR-002 V05); match it wherever Jamshid appears.\n<<<image_2>>> is Chinese People (GRP-011 V01); match it wherever Chinese People appears.\n<<<image_3>>> is Chinese People (GRP-011 V02); match it wherever Chinese People appears.\n<<<image_4>>> is Port Shipyard Hall (LOC-035 V01); match it wherever Port Shipyard Hall appears.",
+  "basePrompt": "BEGIN PROMPT\r\n\r\nPLAN 02 | THE FIRST COMMAND WORKS\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_JAMSHID_WORKER}} @Jamshid (look 5)   {{CHAR_DOCK_WORKERS}} @Chinese People (look 1) @Chinese People (look 2) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_WORKING_QUAY}} @Port Shipyard Hall (look 1) \r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_CARGO_HOIST}}  {{PROP_MOORING_ROPE}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nLOCATION AND LIGHT\r\n\r\nCold neutral overcast daylight with water bounce. Preserve the referenced hoist, crate, bollards and level loading area. Light stays constant during the command; authority comes from posture and camera organization.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nGeography: NORTH is the water and suspended cargo loading zone; SOUTH is the dry quay. Jamshid starts SOUTH of the workers facing NORTH toward the load. Worker A operates the brake at west; B handles a hauling line east; C controls the guide rope south of the load. Nobody stands beneath the crate. Workers pull out of sequence, causing a low sideways swing. Jamshid must watch this in front of him, never behind him.\r\n\r\n\r\nPLAN 02 | SHOTS\r\n\r\nSHOT 02-01 | 0s–3s | 3 SECONDS\r\n\r\n28mm handheld from SOUTH behind Jamshid, his back foreground left. Workers and suspended crate fill the middle distance ahead of him. A struggles with the brake as B pulls too early and C loses guide-rope tension. Camera reacts to their opposing movement; the crate swings a short distance over the clear loading zone.\r\n\r\nSHOT 02-02 | 3s–5s | 2 SECONDS\r\n\r\n50mm lateral close from WEST beside the brake. A's grip slips, the line jerks and C strains in the background. Camera flinches with the line but recovers focus immediately. Their inability to coordinate is readable.\r\n\r\nSHOT 02-03 | 5s–8s | 3 SECONDS\r\n\r\n35mm from the SOUTHWEST, moving with Jamshid as he steps into the workers' safe operating aisle. His back and left profile face camera; he looks north at the workers. He raises his RIGHT palm to shoulder height, elbow bent, fingers together, ordering them to stop, then reaches toward A's brake hand to steady it.\r\n\r\nSHOT 02-04 | 8s–11s | 3 SECONDS\r\n\r\n40mm front three-quarter from NORTHWEST of Jamshid, looking SOUTH across dry quay only. The suspended cargo is NORTH of Jamshid, behind the camera and entirely OUT OF FRAME. He looks toward B just beside lens, points sharply to the hauling line and signals a controlled pull; then turns his eyes west to A and presses his palm downward to hold the brake. No speech.\r\n\r\nSHOT 02-05 | 11s–15s | 4 SECONDS\r\n\r\n28mm side-wide from WEST showing all three stations and Jamshid between them, outside the load path. He redirects C's guide rope, watches B pull, then cues A to release slowly. Their successive responses steady the crate and begin its final controlled descent. Camera shifts physically toward the coordinated group, no zoom.\r\n\r\nEND STATE AND EDIT\r\n\r\nThe crate has stopped swinging and is descending through its last few centimeters. Jamshid remains engaged with the workers, right hand controlling the final lowering. The next block completes the landing.\r\n\r\nSOUND\r\n\r\nConflicting rope strains, pulley chatter, effortful breaths, hurried feet, then a steadier brake and rope rhythm. No intelligible shouted orders.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-002/V05",
+    "@GRP-011/V01",
+    "@GRP-011/V02",
+    "@LOC-035/V01"
+  ],
+  "sentRefs": [
+    "@CHR-002/V05",
+    "@GRP-011/V01",
+    "@GRP-011/V02",
+    "@LOC-035/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-10-30T19:07:01.131Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_190420_6ce324f7-02f0-43ec-b422-6841452394f6.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-30T19:04:20.454155Z",
+      "display_name": "Seedance 2.5",
+      "id": "6ce324f7-02f0-43ec-b422-6841452394f6",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "9c98194d-4448-471b-b667-a1bf136f07a0",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/9c98194d-4448-471b-b667-a1bf136f07a0.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "88a32655-f802-45b0-a250-9261014f2730",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/88a32655-f802-45b0-a250-9261014f2730.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "1d4eb0a9-3140-4a3a-b983-8259069fc74c",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/1d4eb0a9-3140-4a3a-b983-8259069fc74c.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "e39d4e85-28bb-4c62-a654-2370dbb642c4",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/e39d4e85-28bb-4c62-a654-2370dbb642c4.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "BEGIN PROMPT\r\n\r\nPLAN 02 | THE FIRST COMMAND WORKS\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_JAMSHID_WORKER}} @Jamshid (look 5)   {{CHAR_DOCK_WORKERS}} @Chinese People (look 1) @Chinese People (look 2) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_WORKING_QUAY}} @Port Shipyard Hall (look 1) \r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_CARGO_HOIST}}  {{PROP_MOORING_ROPE}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nLOCATION AND LIGHT\r\n\r\nCold neutral overcast daylight with water bounce. Preserve the referenced hoist, crate, bollards and level loading area. Light stays constant during the command; authority comes from posture and camera organization.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nGeography: NORTH is the water and suspended cargo loading zone; SOUTH is the dry quay. Jamshid starts SOUTH of the workers facing NORTH toward the load. Worker A operates the brake at west; B handles a hauling line east; C controls the guide rope south of the load. Nobody stands beneath the crate. Workers pull out of sequence, causing a low sideways swing. Jamshid must watch this in front of him, never behind him.\r\n\r\n\r\nPLAN 02 | SHOTS\r\n\r\nSHOT 02-01 | 0s–3s | 3 SECONDS\r\n\r\n28mm handheld from SOUTH behind Jamshid, his back foreground left. Workers and suspended crate fill the middle distance ahead of him. A struggles with the brake as B pulls too early and C loses guide-rope tension. Camera reacts to their opposing movement; the crate swings a short distance over the clear loading zone.\r\n\r\nSHOT 02-02 | 3s–5s | 2 SECONDS\r\n\r\n50mm lateral close from WEST beside the brake. A's grip slips, the line jerks and C strains in the background. Camera flinches with the line but recovers focus immediately. Their inability to coordinate is readable.\r\n\r\nSHOT 02-03 | 5s–8s | 3 SECONDS\r\n\r\n35mm from the SOUTHWEST, moving with Jamshid as he steps into the workers' safe operating aisle. His back and left profile face camera; he looks north at the workers. He raises his RIGHT palm to shoulder height, elbow bent, fingers together, ordering them to stop, then reaches toward A's brake hand to steady it.\r\n\r\nSHOT 02-04 | 8s–11s | 3 SECONDS\r\n\r\n40mm front three-quarter from NORTHWEST of Jamshid, looking SOUTH across dry quay only. The suspended cargo is NORTH of Jamshid, behind the camera and entirely OUT OF FRAME. He looks toward B just beside lens, points sharply to the hauling line and signals a controlled pull; then turns his eyes west to A and presses his palm downward to hold the brake. No speech.\r\n\r\nSHOT 02-05 | 11s–15s | 4 SECONDS\r\n\r\n28mm side-wide from WEST showing all three stations and Jamshid between them, outside the load path. He redirects C's guide rope, watches B pull, then cues A to release slowly. Their successive responses steady the crate and begin its final controlled descent. Camera shifts physically toward the coordinated group, no zoom.\r\n\r\nEND STATE AND EDIT\r\n\r\nThe crate has stopped swinging and is descending through its last few centimeters. Jamshid remains engaged with the workers, right hand controlling the final lowering. The next block completes the landing.\r\n\r\nSOUND\r\n\r\nConflicting rope strains, pulley chatter, effortful breaths, hurried feet, then a steadier brake and rope rhythm. No intelligible shouted orders.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Jamshid (CHR-002 V05); match it wherever Jamshid appears.\n<<<image_2>>> is Chinese People (GRP-011 V01); match it wherever Chinese People appears.\n<<<image_3>>> is Chinese People (GRP-011 V02); match it wherever Chinese People appears.\n<<<image_4>>> is Port Shipyard Hall (LOC-035 V01); match it wherever Port Shipyard Hall appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 838444495,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_190420_6ce324f7-02f0-43ec-b422-6841452394f6.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_190420_6ce324f7-02f0-43ec-b422-6841452394f6_thumbnail.webp"
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "jobId": "J-20261030-F63",
+  "parentJobId": "J-20261030-59T",
+  "hfJobId": "9ebd8527-9ede-4440-87b1-96ca5d2cacc3",
+  "attempt": 2,
+  "stage": "draft",
+  "label": "PLAN 07",
+  "target": "SHM-EP015-SC027-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "BEGIN PROMPT\r\n\r\nPLAN 07 | THE SECOND COMMAND IS STRUCK DOWN\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_JAMSHID_WORKER}} @Jamshid (look 4)   {{CHAR_GUARDS}} @Palace Guards (look 1) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_JAMSHID_HIDEOUT}} @Jamshid Cell (look 1) \r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_NET}}  {{PROP_WORKBENCH}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nLOCATION AND LIGHT\r\n\r\nNight in a cramped workshop dwelling: SOUTH broken entrance, WEST workbench and shaded neutral lamp, EAST narrow high window, NORTH short blind service passage ending at a solid wall. Weak warmer spill enters from the south door. The passage has one dim recessed utility lamp. Light remains fixed; action crosses pools and shadow.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nJamshid sits at the WEST workbench with a net. The SOUTH door has just been kicked open; A and B are entering, C and D remain outside. A clear route runs from the bench toward the NORTH short passage, which has no exit. Begin before Jamshid stands; do not start with guards surrounding a standing captive.\r\n\r\n\r\nPLAN 07 | SHOTS\r\n\r\nSHOT 07-01 | 0s–2s | 2 SECONDS\r\n\r\n28mm handheld from southwest just inside the room. The already-broken door swings away as B and A rush through. Jamshid, beside the west bench, jerks toward them and springs up, dropping the net onto the bench.\r\n\r\nSHOT 07-02 | 2s–4s | 2 SECONDS\r\n\r\n40mm close from the bench's north side. Jamshid backs away, checks the south entrance, sees it blocked and turns north. Camera stumbles back with his urgent turn.\r\n\r\nSHOT 07-03 | 4s–6s | 2 SECONDS\r\n\r\n24mm close behind Jamshid's right shoulder as he lunges into the north passage. A follows; B enters behind A. The camera runs with him, briefly losing the edge of his mask before recovering.\r\n\r\nSHOT 07-04 | 6s–7s | 1 SECONDS\r\n\r\n35mm from a shallow recess ahead, lateral to the passage. Jamshid reaches the solid end wall and braces one hand against it. The framing makes the dead end unambiguous.\r\n\r\nSHOT 07-05 | 7s–9s | 2 SECONDS\r\n\r\n50mm close from his left at the dead end. He turns back south toward the pursuing guard, eyes wide behind fixed mask openings, breathing interrupted. Camera catches the turn late.\r\n\r\nSHOT 07-06 | 9s–11s | 2 SECONDS\r\n\r\n35mm from just behind A looking north. Jamshid faces camera and A, raises his RIGHT palm sharply to shoulder height, elbow bent, fingers together: an urgent stop command with his whole body braced behind it. He wants the guard to halt; no spoken word.\r\n\r\nSHOT 07-07 | 11s–13s | 2 SECONDS\r\n\r\n50mm side profile from the west passage recess. Jamshid holds his palm between himself and A. A keeps advancing, brushes past the hand, bringing his free striking arm back. Jamshid has nowhere to retreat.\r\n\r\nSHOT 07-08 | 13s–15s | 2 SECONDS\r\n\r\n35mm close oblique beside Jamshid, facing the approaching guard. A strikes the rigid mask once with an open hand; the head and mask recoil together without deformation. Camera flinches violently off the face at contact. Hard cut to black for the final quarter-second. No blood or slow motion.\r\n\r\nEND STATE AND EDIT\r\n\r\nBlack briefly ends the strike. A and B take control of Jamshid during the omitted interval. The subsequent transfer begins after a short ellipse, with his mask and costume intact.\r\n\r\nSOUND\r\n\r\nDoor movement, rushing boots, net dropping, short gasps, hand on wall, a single dull mask impact, immediate brief silence at black.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Jamshid (CHR-002 V04); match it wherever Jamshid appears.\n<<<image_2>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_3>>> is China Bazaar (LOC-037 V02); match it wherever China Bazaar appears.\n<<<image_4>>> is Jamshid Cell (LOC-040 V01); match it wherever Jamshid Cell appears.",
+  "basePrompt": "BEGIN PROMPT\r\n\r\nPLAN 07 | THE SECOND COMMAND IS STRUCK DOWN\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_JAMSHID_WORKER}} @Jamshid (look 4)   {{CHAR_GUARDS}} @Palace Guards (look 1) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_JAMSHID_HIDEOUT}} @Jamshid Cell (look 1) \r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_NET}}  {{PROP_WORKBENCH}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nLOCATION AND LIGHT\r\n\r\nNight in a cramped workshop dwelling: SOUTH broken entrance, WEST workbench and shaded neutral lamp, EAST narrow high window, NORTH short blind service passage ending at a solid wall. Weak warmer spill enters from the south door. The passage has one dim recessed utility lamp. Light remains fixed; action crosses pools and shadow.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nJamshid sits at the WEST workbench with a net. The SOUTH door has just been kicked open; A and B are entering, C and D remain outside. A clear route runs from the bench toward the NORTH short passage, which has no exit. Begin before Jamshid stands; do not start with guards surrounding a standing captive.\r\n\r\n\r\nPLAN 07 | SHOTS\r\n\r\nSHOT 07-01 | 0s–2s | 2 SECONDS\r\n\r\n28mm handheld from southwest just inside the room. The already-broken door swings away as B and A rush through. Jamshid, beside the west bench, jerks toward them and springs up, dropping the net onto the bench.\r\n\r\nSHOT 07-02 | 2s–4s | 2 SECONDS\r\n\r\n40mm close from the bench's north side. Jamshid backs away, checks the south entrance, sees it blocked and turns north. Camera stumbles back with his urgent turn.\r\n\r\nSHOT 07-03 | 4s–6s | 2 SECONDS\r\n\r\n24mm close behind Jamshid's right shoulder as he lunges into the north passage. A follows; B enters behind A. The camera runs with him, briefly losing the edge of his mask before recovering.\r\n\r\nSHOT 07-04 | 6s–7s | 1 SECONDS\r\n\r\n35mm from a shallow recess ahead, lateral to the passage. Jamshid reaches the solid end wall and braces one hand against it. The framing makes the dead end unambiguous.\r\n\r\nSHOT 07-05 | 7s–9s | 2 SECONDS\r\n\r\n50mm close from his left at the dead end. He turns back south toward the pursuing guard, eyes wide behind fixed mask openings, breathing interrupted. Camera catches the turn late.\r\n\r\nSHOT 07-06 | 9s–11s | 2 SECONDS\r\n\r\n35mm from just behind A looking north. Jamshid faces camera and A, raises his RIGHT palm sharply to shoulder height, elbow bent, fingers together: an urgent stop command with his whole body braced behind it. He wants the guard to halt; no spoken word.\r\n\r\nSHOT 07-07 | 11s–13s | 2 SECONDS\r\n\r\n50mm side profile from the west passage recess. Jamshid holds his palm between himself and A. A keeps advancing, brushes past the hand, bringing his free striking arm back. Jamshid has nowhere to retreat.\r\n\r\nSHOT 07-08 | 13s–15s | 2 SECONDS\r\n\r\n35mm close oblique beside Jamshid, facing the approaching guard. A strikes the rigid mask once with an open hand; the head and mask recoil together without deformation. Camera flinches violently off the face at contact. Hard cut to black for the final quarter-second. No blood or slow motion.\r\n\r\nEND STATE AND EDIT\r\n\r\nBlack briefly ends the strike. A and B take control of Jamshid during the omitted interval. The subsequent transfer begins after a short ellipse, with his mask and costume intact.\r\n\r\nSOUND\r\n\r\nDoor movement, rushing boots, net dropping, short gasps, hand on wall, a single dull mask impact, immediate brief silence at black.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-002/V04",
+    "@GRP-005/V01",
+    "@LOC-037/V02",
+    "@LOC-040/V01"
+  ],
+  "sentRefs": [
+    "@CHR-002/V04",
+    "@GRP-005/V01",
+    "@LOC-037/V02",
+    "@LOC-040/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-10-30T19:11:59.187Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_190928_9ebd8527-9ede-4440-87b1-96ca5d2cacc3.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-30T19:09:28.343097Z",
+      "display_name": "Seedance 2.5",
+      "id": "9ebd8527-9ede-4440-87b1-96ca5d2cacc3",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "647a9d61-782b-4b7d-be2c-6814206217f1",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/647a9d61-782b-4b7d-be2c-6814206217f1.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "333eba1e-9a56-405d-ad40-d8efa00feb4d",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/333eba1e-9a56-405d-ad40-d8efa00feb4d.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "75d2f6d9-9132-467d-864c-842a31e45218",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/75d2f6d9-9132-467d-864c-842a31e45218.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a8d0f2dd-27f9-40d6-bd4a-fec49a6689c4",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/a8d0f2dd-27f9-40d6-bd4a-fec49a6689c4.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "BEGIN PROMPT\r\n\r\nPLAN 07 | THE SECOND COMMAND IS STRUCK DOWN\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_JAMSHID_WORKER}} @Jamshid (look 4)   {{CHAR_GUARDS}} @Palace Guards (look 1) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_JAMSHID_HIDEOUT}} @Jamshid Cell (look 1) \r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_NET}}  {{PROP_WORKBENCH}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nLOCATION AND LIGHT\r\n\r\nNight in a cramped workshop dwelling: SOUTH broken entrance, WEST workbench and shaded neutral lamp, EAST narrow high window, NORTH short blind service passage ending at a solid wall. Weak warmer spill enters from the south door. The passage has one dim recessed utility lamp. Light remains fixed; action crosses pools and shadow.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nJamshid sits at the WEST workbench with a net. The SOUTH door has just been kicked open; A and B are entering, C and D remain outside. A clear route runs from the bench toward the NORTH short passage, which has no exit. Begin before Jamshid stands; do not start with guards surrounding a standing captive.\r\n\r\n\r\nPLAN 07 | SHOTS\r\n\r\nSHOT 07-01 | 0s–2s | 2 SECONDS\r\n\r\n28mm handheld from southwest just inside the room. The already-broken door swings away as B and A rush through. Jamshid, beside the west bench, jerks toward them and springs up, dropping the net onto the bench.\r\n\r\nSHOT 07-02 | 2s–4s | 2 SECONDS\r\n\r\n40mm close from the bench's north side. Jamshid backs away, checks the south entrance, sees it blocked and turns north. Camera stumbles back with his urgent turn.\r\n\r\nSHOT 07-03 | 4s–6s | 2 SECONDS\r\n\r\n24mm close behind Jamshid's right shoulder as he lunges into the north passage. A follows; B enters behind A. The camera runs with him, briefly losing the edge of his mask before recovering.\r\n\r\nSHOT 07-04 | 6s–7s | 1 SECONDS\r\n\r\n35mm from a shallow recess ahead, lateral to the passage. Jamshid reaches the solid end wall and braces one hand against it. The framing makes the dead end unambiguous.\r\n\r\nSHOT 07-05 | 7s–9s | 2 SECONDS\r\n\r\n50mm close from his left at the dead end. He turns back south toward the pursuing guard, eyes wide behind fixed mask openings, breathing interrupted. Camera catches the turn late.\r\n\r\nSHOT 07-06 | 9s–11s | 2 SECONDS\r\n\r\n35mm from just behind A looking north. Jamshid faces camera and A, raises his RIGHT palm sharply to shoulder height, elbow bent, fingers together: an urgent stop command with his whole body braced behind it. He wants the guard to halt; no spoken word.\r\n\r\nSHOT 07-07 | 11s–13s | 2 SECONDS\r\n\r\n50mm side profile from the west passage recess. Jamshid holds his palm between himself and A. A keeps advancing, brushes past the hand, bringing his free striking arm back. Jamshid has nowhere to retreat.\r\n\r\nSHOT 07-08 | 13s–15s | 2 SECONDS\r\n\r\n35mm close oblique beside Jamshid, facing the approaching guard. A strikes the rigid mask once with an open hand; the head and mask recoil together without deformation. Camera flinches violently off the face at contact. Hard cut to black for the final quarter-second. No blood or slow motion.\r\n\r\nEND STATE AND EDIT\r\n\r\nBlack briefly ends the strike. A and B take control of Jamshid during the omitted interval. The subsequent transfer begins after a short ellipse, with his mask and costume intact.\r\n\r\nSOUND\r\n\r\nDoor movement, rushing boots, net dropping, short gasps, hand on wall, a single dull mask impact, immediate brief silence at black.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Jamshid (CHR-002 V04); match it wherever Jamshid appears.\n<<<image_2>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_3>>> is China Bazaar (LOC-037 V02); match it wherever China Bazaar appears.\n<<<image_4>>> is Jamshid Cell (LOC-040 V01); match it wherever Jamshid Cell appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 1127046234,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_190928_9ebd8527-9ede-4440-87b1-96ca5d2cacc3.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_190928_9ebd8527-9ede-4440-87b1-96ca5d2cacc3_thumbnail.webp"
+    }
+  ]
+}

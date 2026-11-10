@@ -1,0 +1,124 @@
+{
+  "jobId": "J-20261031-P41",
+  "parentJobId": "J-20261031-3VP",
+  "hfJobId": "ae600efa-33e9-40f6-8aa0-1390eee0e2e4",
+  "attempt": 3,
+  "stage": "draft",
+  "label": "PLAN 03",
+  "target": "SHM-EP015-SC023-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "BEGIN PROMPT\r\n\r\nPLAN 03 | A KING SENT BACK TO WORK\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_JAMSHID_WORKER}} @Jamshid (look 5)   {{CHAR_DOCK_WORKERS}} @Chinese People (look 1) @Chinese People (look 2)   {{CHAR_DOCK_FOREMAN}} @Chinese Foreman (look 1) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_WORKING_QUAY}} @Port Shipyard Hall (look 1)   {{LOC_PORT_PANORAMA}}\r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_NET}}  {{PROP_CARGO_HOIST}}  {{PROP_MOORING_ROPE}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nLOCATION AND LIGHT\r\n\r\nCold neutral overcast daylight throughout all four shots. Damp quay bounce, tactile net fibers and work-worn garments. No sunset, no lighting transition and no time-lapse.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nOn the quay, the stabilized crate is completing its descent in the NORTH loading zone. Jamshid stands SOUTH of it beside the rope stations. The foreman approaches from WEST carrying the damaged fishing net. A net-repair position lies farther SOUTH.\r\n\r\n\r\nPLAN 03 | SHOTS\r\n\r\nSHOT 03-01 | 0s–3s | 3 SECONDS\r\n\r\n35mm low lateral from WEST of the loading zone. The crate settles onto its support. Jamshid completes a small downward hand cue, then lets his hand fall. Workers release tension in order. No one crosses beneath the load.\r\n\r\nSHOT 03-02 | 3s–6s | 3 SECONDS\r\n\r\n50mm slightly low three-quarter from SOUTHEAST, facing Jamshid's left-front profile. Place him on the left third, dock structure rising behind. His spine straightens, chin lifts a little and his shoulders broaden with remembered authority. A restrained physical push recognizes his pride without centering him.\r\n\r\nSHOT 03-03 | 6s–11s | 5 SECONDS\r\n\r\n35mm waist-height from SOUTHWEST. Foreman enters from frame left, pushes the bundled net into Jamshid's chest and waiting hands, then delivers one brusque open-handed knock to his upper shoulder, directing him toward the repair station. Jamshid catches the net, stumbles one step and is sent out frame right. Camera is displaced slightly by their bodies.\r\n\r\nSHOT 03-04 | 11s–15s | 4 SECONDS\r\n\r\n65mm close oblique from beside the repair position, net strands soft in the foreground. Jamshid separates a tangled section and pulls a loop into order. His shoulders are folded again, hands still exact. Hold his suppressed response through a short stopped breath; he continues working.\r\n\r\nEND STATE AND EDIT\r\n\r\nEnd in daylight on Jamshid working the net. A direct editorial time ellipsis leads to the night ship arrival; do not generate any day-to-night transition shots.\r\n\r\nSOUND\r\n\r\nCargo landing, rope slack, net hitting clothing, one dull shoulder contact, continued work traffic and net fiber friction.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT\n\nRevision — the previous attempt was rejected for these reasons. Fix them:\n- \"In the first shot, Jamshid has his back to the camera, facing the cargo suspended from above.\"\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Jamshid (CHR-002 V05); match it wherever Jamshid appears.\n<<<image_2>>> is Chinese Foreman (CHR-012 V01); match it wherever Chinese Foreman appears.\n<<<image_3>>> is Chinese People (GRP-011 V01); match it wherever Chinese People appears.\n<<<image_4>>> is Chinese People (GRP-011 V02); match it wherever Chinese People appears.\n<<<image_5>>> is Port Shipyard Hall (LOC-035 V01); match it wherever Port Shipyard Hall appears.",
+  "basePrompt": "BEGIN PROMPT\r\n\r\nPLAN 03 | A KING SENT BACK TO WORK\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_JAMSHID_WORKER}} @Jamshid (look 5)   {{CHAR_DOCK_WORKERS}} @Chinese People (look 1) @Chinese People (look 2)   {{CHAR_DOCK_FOREMAN}} @Chinese Foreman (look 1) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_WORKING_QUAY}} @Port Shipyard Hall (look 1)   {{LOC_PORT_PANORAMA}}\r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_NET}}  {{PROP_CARGO_HOIST}}  {{PROP_MOORING_ROPE}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nLOCATION AND LIGHT\r\n\r\nCold neutral overcast daylight throughout all four shots. Damp quay bounce, tactile net fibers and work-worn garments. No sunset, no lighting transition and no time-lapse.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nOn the quay, the stabilized crate is completing its descent in the NORTH loading zone. Jamshid stands SOUTH of it beside the rope stations. The foreman approaches from WEST carrying the damaged fishing net. A net-repair position lies farther SOUTH.\r\n\r\n\r\nPLAN 03 | SHOTS\r\n\r\nSHOT 03-01 | 0s–3s | 3 SECONDS\r\n\r\n35mm low lateral from WEST of the loading zone. The crate settles onto its support. Jamshid completes a small downward hand cue, then lets his hand fall. Workers release tension in order. No one crosses beneath the load.\r\n\r\nSHOT 03-02 | 3s–6s | 3 SECONDS\r\n\r\n50mm slightly low three-quarter from SOUTHEAST, facing Jamshid's left-front profile. Place him on the left third, dock structure rising behind. His spine straightens, chin lifts a little and his shoulders broaden with remembered authority. A restrained physical push recognizes his pride without centering him.\r\n\r\nSHOT 03-03 | 6s–11s | 5 SECONDS\r\n\r\n35mm waist-height from SOUTHWEST. Foreman enters from frame left, pushes the bundled net into Jamshid's chest and waiting hands, then delivers one brusque open-handed knock to his upper shoulder, directing him toward the repair station. Jamshid catches the net, stumbles one step and is sent out frame right. Camera is displaced slightly by their bodies.\r\n\r\nSHOT 03-04 | 11s–15s | 4 SECONDS\r\n\r\n65mm close oblique from beside the repair position, net strands soft in the foreground. Jamshid separates a tangled section and pulls a loop into order. His shoulders are folded again, hands still exact. Hold his suppressed response through a short stopped breath; he continues working.\r\n\r\nEND STATE AND EDIT\r\n\r\nEnd in daylight on Jamshid working the net. A direct editorial time ellipsis leads to the night ship arrival; do not generate any day-to-night transition shots.\r\n\r\nSOUND\r\n\r\nCargo landing, rope slack, net hitting clothing, one dull shoulder contact, continued work traffic and net fiber friction.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT",
+  "revisionNotes": [
+    "\"In the first shot, Jamshid has his back to the camera, facing the cargo suspended from above.\""
+  ],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-002/V05",
+    "@CHR-012/V01",
+    "@GRP-011/V01",
+    "@GRP-011/V02",
+    "@LOC-035/V01"
+  ],
+  "sentRefs": [
+    "@CHR-002/V05",
+    "@CHR-012/V01",
+    "@GRP-011/V01",
+    "@GRP-011/V02",
+    "@LOC-035/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-10-31T08:21:23.472Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261031_081927_ae600efa-33e9-40f6-8aa0-1390eee0e2e4.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-31T08:19:27.492438Z",
+      "display_name": "Seedance 2.5",
+      "id": "ae600efa-33e9-40f6-8aa0-1390eee0e2e4",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "b12e7cd8-fa17-43fa-8a3c-fccc8e16193e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/b12e7cd8-fa17-43fa-8a3c-fccc8e16193e.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "990e6774-e0ad-4687-9b32-abcf327b845d",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/990e6774-e0ad-4687-9b32-abcf327b845d.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "fdd9baac-330d-4c23-8235-e5eb3f11f6d9",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/fdd9baac-330d-4c23-8235-e5eb3f11f6d9.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "725f78d4-2eb0-4c81-9499-7330680f3813",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/725f78d4-2eb0-4c81-9499-7330680f3813.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "42e27363-0272-4a28-9304-1ffe6e13d150",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/42e27363-0272-4a28-9304-1ffe6e13d150.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "BEGIN PROMPT\r\n\r\nPLAN 03 | A KING SENT BACK TO WORK\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_JAMSHID_WORKER}} @Jamshid (look 5)   {{CHAR_DOCK_WORKERS}} @Chinese People (look 1) @Chinese People (look 2)   {{CHAR_DOCK_FOREMAN}} @Chinese Foreman (look 1) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_WORKING_QUAY}} @Port Shipyard Hall (look 1)   {{LOC_PORT_PANORAMA}}\r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_NET}}  {{PROP_CARGO_HOIST}}  {{PROP_MOORING_ROPE}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nLOCATION AND LIGHT\r\n\r\nCold neutral overcast daylight throughout all four shots. Damp quay bounce, tactile net fibers and work-worn garments. No sunset, no lighting transition and no time-lapse.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nOn the quay, the stabilized crate is completing its descent in the NORTH loading zone. Jamshid stands SOUTH of it beside the rope stations. The foreman approaches from WEST carrying the damaged fishing net. A net-repair position lies farther SOUTH.\r\n\r\n\r\nPLAN 03 | SHOTS\r\n\r\nSHOT 03-01 | 0s–3s | 3 SECONDS\r\n\r\n35mm low lateral from WEST of the loading zone. The crate settles onto its support. Jamshid completes a small downward hand cue, then lets his hand fall. Workers release tension in order. No one crosses beneath the load.\r\n\r\nSHOT 03-02 | 3s–6s | 3 SECONDS\r\n\r\n50mm slightly low three-quarter from SOUTHEAST, facing Jamshid's left-front profile. Place him on the left third, dock structure rising behind. His spine straightens, chin lifts a little and his shoulders broaden with remembered authority. A restrained physical push recognizes his pride without centering him.\r\n\r\nSHOT 03-03 | 6s–11s | 5 SECONDS\r\n\r\n35mm waist-height from SOUTHWEST. Foreman enters from frame left, pushes the bundled net into Jamshid's chest and waiting hands, then delivers one brusque open-handed knock to his upper shoulder, directing him toward the repair station. Jamshid catches the net, stumbles one step and is sent out frame right. Camera is displaced slightly by their bodies.\r\n\r\nSHOT 03-04 | 11s–15s | 4 SECONDS\r\n\r\n65mm close oblique from beside the repair position, net strands soft in the foreground. Jamshid separates a tangled section and pulls a loop into order. His shoulders are folded again, hands still exact. Hold his suppressed response through a short stopped breath; he continues working.\r\n\r\nEND STATE AND EDIT\r\n\r\nEnd in daylight on Jamshid working the net. A direct editorial time ellipsis leads to the night ship arrival; do not generate any day-to-night transition shots.\r\n\r\nSOUND\r\n\r\nCargo landing, rope slack, net hitting clothing, one dull shoulder contact, continued work traffic and net fiber friction.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT\n\nRevision — the previous attempt was rejected for these reasons. Fix them:\n- \"In the first shot, Jamshid has his back to the camera, facing the cargo suspended from above.\"\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Jamshid (CHR-002 V05); match it wherever Jamshid appears.\n<<<image_2>>> is Chinese Foreman (CHR-012 V01); match it wherever Chinese Foreman appears.\n<<<image_3>>> is Chinese People (GRP-011 V01); match it wherever Chinese People appears.\n<<<image_4>>> is Chinese People (GRP-011 V02); match it wherever Chinese People appears.\n<<<image_5>>> is Port Shipyard Hall (LOC-035 V01); match it wherever Port Shipyard Hall appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 955152966,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261031_081927_ae600efa-33e9-40f6-8aa0-1390eee0e2e4.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261031_081927_ae600efa-33e9-40f6-8aa0-1390eee0e2e4_thumbnail.webp"
+    }
+  ]
+}

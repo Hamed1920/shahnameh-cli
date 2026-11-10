@@ -1,0 +1,142 @@
+{
+  "jobId": "J-20261030-P8B",
+  "parentJobId": null,
+  "hfJobId": "5de892dd-17fa-4268-a8ac-6bb7cf01e87a",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 12",
+  "target": "SHM-EP015-SC032-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 12 | THE WORLD CONTINUES\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_ZAHHAK}}  {{CHAR_DOCK_WORKERS}}\nLOCATION REFERENCES\n{{LOC_BALCONY}}  {{LOC_WORKING_QUAY}}\nPROP REFERENCES\n{{PROP_ZAHHAK_STAFF}}  {{PROP_MOORING_ROPE}}  {{PROP_MERCHANT_BOATS}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nZahhak remains unhurried and indifferent. Whenever he walks, show the staff planting first, weight transferring onto it, then the weaker leg following in an uneven step. Preserve the reference's weak-leg side. His two single-headed shoulder snakes remain alive, making small independent movements; preserve their attachment and proportions.\nLOCATION AND LIGHT\nCold full night. Balcony rail lights barely define Zahhak's silhouette. The working harbor below is somewhat brighter, with practical loading lamps reflected in water. In quay details, a neutral work lamp reveals wet rope and a fixed bollard. The world remains visually functional.\nSTART STATE AND BLOCKING\nZahhak stands at the north balcony rail facing the harbor, staff planted and weight settled. The industrial saw is behind him inside the residence, entirely outside the frame. A small ordinary merchant vessel is being secured at the quay below.\n\nPLAN 12 | SHOTS\nSHOT 12-01 | 0s–7s | 7 SECONDS\n18mm wide from behind Zahhak, slightly west of the balcony doorway. He occupies the right third, facing the harbor. Hold nearly still. At roughly two seconds into the shot, the industrial machine starts somewhere behind camera. Zahhak keeps watching the harbor without turning or changing posture. His snakes make small living adjustments. Workers below continue hauling a mooring line.\nSHOT 12-02 | 7s–11s | 4 SECONDS\n35mm quay-level lateral medium-wide. Two masked dock workers secure an ordinary merchant boat. One feeds the mooring line while the other draws it around a fixed bollard. Water and timber shift under normal docking forces. Their attention stays entirely on work. The off-screen machine sound continues as an editorial sound bridge, quieter beneath quay sounds.\nSHOT 12-03 | 11s–15s | 4 SECONDS\n65mm close detail beside the bollard. A worker's hands complete the mooring hitch, pulling its final turn snug. Hold the rope visibly taking tension. Immediately after the knot settles, the distant machine sound stops. Allow a brief beat of ordinary water and rope sound, then CUT TO BLACK at the end of the block.\nEND STATE AND EDIT\nThe mooring knot holds. The machine has stopped. End immediately after the brief continuation of ordinary harbor sound. Jamshid's death remains entirely off-screen; the final image belongs to work.\nSOUND\nOrdinary industrial motor and cutting mechanism outside frame, without bodily impact or anatomical sound effects; harbor water, timber movement and rope friction. At the final knot, machine stops, ordinary water persists briefly, then black and silence.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Jamshid (CHR-002 V04); match it wherever Jamshid appears.\n<<<image_3>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Zahhak Hall China (LOC-042 V01); match it wherever Zahhak Hall China appears.\n<<<image_5>>> is Zahhak Balcony (LOC-041 V01); match it wherever Zahhak Balcony appears.\n<<<image_6>>> is Sawmill Machine (PRP-025 V01); match it wherever Sawmill Machine appears.\n<<<image_7>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+  "basePrompt": "PLAN 12 | THE WORLD CONTINUES\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_ZAHHAK}}  {{CHAR_DOCK_WORKERS}}\nLOCATION REFERENCES\n{{LOC_BALCONY}}  {{LOC_WORKING_QUAY}}\nPROP REFERENCES\n{{PROP_ZAHHAK_STAFF}}  {{PROP_MOORING_ROPE}}  {{PROP_MERCHANT_BOATS}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nZahhak remains unhurried and indifferent. Whenever he walks, show the staff planting first, weight transferring onto it, then the weaker leg following in an uneven step. Preserve the reference's weak-leg side. His two single-headed shoulder snakes remain alive, making small independent movements; preserve their attachment and proportions.\nLOCATION AND LIGHT\nCold full night. Balcony rail lights barely define Zahhak's silhouette. The working harbor below is somewhat brighter, with practical loading lamps reflected in water. In quay details, a neutral work lamp reveals wet rope and a fixed bollard. The world remains visually functional.\nSTART STATE AND BLOCKING\nZahhak stands at the north balcony rail facing the harbor, staff planted and weight settled. The industrial saw is behind him inside the residence, entirely outside the frame. A small ordinary merchant vessel is being secured at the quay below.\n\nPLAN 12 | SHOTS\nSHOT 12-01 | 0s–7s | 7 SECONDS\n18mm wide from behind Zahhak, slightly west of the balcony doorway. He occupies the right third, facing the harbor. Hold nearly still. At roughly two seconds into the shot, the industrial machine starts somewhere behind camera. Zahhak keeps watching the harbor without turning or changing posture. His snakes make small living adjustments. Workers below continue hauling a mooring line.\nSHOT 12-02 | 7s–11s | 4 SECONDS\n35mm quay-level lateral medium-wide. Two masked dock workers secure an ordinary merchant boat. One feeds the mooring line while the other draws it around a fixed bollard. Water and timber shift under normal docking forces. Their attention stays entirely on work. The off-screen machine sound continues as an editorial sound bridge, quieter beneath quay sounds.\nSHOT 12-03 | 11s–15s | 4 SECONDS\n65mm close detail beside the bollard. A worker's hands complete the mooring hitch, pulling its final turn snug. Hold the rope visibly taking tension. Immediately after the knot settles, the distant machine sound stops. Allow a brief beat of ordinary water and rope sound, then CUT TO BLACK at the end of the block.\nEND STATE AND EDIT\nThe mooring knot holds. The machine has stopped. End immediately after the brief continuation of ordinary harbor sound. Jamshid's death remains entirely off-screen; the final image belongs to work.\nSOUND\nOrdinary industrial motor and cutting mechanism outside frame, without bodily impact or anatomical sound effects; harbor water, timber movement and rope friction. At the final knot, machine stops, ordinary water persists briefly, then black and silence.\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V08",
+    "@CHR-002/V04",
+    "@GRP-005/V01",
+    "@LOC-042/V01",
+    "@LOC-041/V01",
+    "@PRP-025/V01",
+    "@PRP-001/V01"
+  ],
+  "sentRefs": [
+    "@CHR-001/V08",
+    "@CHR-002/V04",
+    "@GRP-005/V01",
+    "@LOC-042/V01",
+    "@LOC-041/V01",
+    "@PRP-025/V01",
+    "@PRP-001/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-10-30T16:37:31.786Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_163510_5de892dd-17fa-4268-a8ac-6bb7cf01e87a.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-30T16:35:10.299633Z",
+      "display_name": "Seedance 2.5",
+      "id": "5de892dd-17fa-4268-a8ac-6bb7cf01e87a",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "7a85894c-1178-4a9c-9eda-53480ea725af",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/7a85894c-1178-4a9c-9eda-53480ea725af.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "6135dec9-0073-44f2-91ce-2451b6858ec0",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/6135dec9-0073-44f2-91ce-2451b6858ec0.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a30ad976-3359-4669-94cc-5a53b4924ead",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/a30ad976-3359-4669-94cc-5a53b4924ead.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "e275cdcd-80bd-4d23-9f6a-04949e54a12e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/e275cdcd-80bd-4d23-9f6a-04949e54a12e.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "9bfd78ad-56c3-4896-9f68-8b55e48de628",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/9bfd78ad-56c3-4896-9f68-8b55e48de628.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "7eaad76a-0ff5-4983-ade0-c0996e9add45",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/7eaad76a-0ff5-4983-ade0-c0996e9add45.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "f2d1061f-0151-4f04-bdea-73b644a099d4",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/f2d1061f-0151-4f04-bdea-73b644a099d4.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 12 | THE WORLD CONTINUES\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_ZAHHAK}}  {{CHAR_DOCK_WORKERS}}\nLOCATION REFERENCES\n{{LOC_BALCONY}}  {{LOC_WORKING_QUAY}}\nPROP REFERENCES\n{{PROP_ZAHHAK_STAFF}}  {{PROP_MOORING_ROPE}}  {{PROP_MERCHANT_BOATS}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nZahhak remains unhurried and indifferent. Whenever he walks, show the staff planting first, weight transferring onto it, then the weaker leg following in an uneven step. Preserve the reference's weak-leg side. His two single-headed shoulder snakes remain alive, making small independent movements; preserve their attachment and proportions.\nLOCATION AND LIGHT\nCold full night. Balcony rail lights barely define Zahhak's silhouette. The working harbor below is somewhat brighter, with practical loading lamps reflected in water. In quay details, a neutral work lamp reveals wet rope and a fixed bollard. The world remains visually functional.\nSTART STATE AND BLOCKING\nZahhak stands at the north balcony rail facing the harbor, staff planted and weight settled. The industrial saw is behind him inside the residence, entirely outside the frame. A small ordinary merchant vessel is being secured at the quay below.\n\nPLAN 12 | SHOTS\nSHOT 12-01 | 0s–7s | 7 SECONDS\n18mm wide from behind Zahhak, slightly west of the balcony doorway. He occupies the right third, facing the harbor. Hold nearly still. At roughly two seconds into the shot, the industrial machine starts somewhere behind camera. Zahhak keeps watching the harbor without turning or changing posture. His snakes make small living adjustments. Workers below continue hauling a mooring line.\nSHOT 12-02 | 7s–11s | 4 SECONDS\n35mm quay-level lateral medium-wide. Two masked dock workers secure an ordinary merchant boat. One feeds the mooring line while the other draws it around a fixed bollard. Water and timber shift under normal docking forces. Their attention stays entirely on work. The off-screen machine sound continues as an editorial sound bridge, quieter beneath quay sounds.\nSHOT 12-03 | 11s–15s | 4 SECONDS\n65mm close detail beside the bollard. A worker's hands complete the mooring hitch, pulling its final turn snug. Hold the rope visibly taking tension. Immediately after the knot settles, the distant machine sound stops. Allow a brief beat of ordinary water and rope sound, then CUT TO BLACK at the end of the block.\nEND STATE AND EDIT\nThe mooring knot holds. The machine has stopped. End immediately after the brief continuation of ordinary harbor sound. Jamshid's death remains entirely off-screen; the final image belongs to work.\nSOUND\nOrdinary industrial motor and cutting mechanism outside frame, without bodily impact or anatomical sound effects; harbor water, timber movement and rope friction. At the final knot, machine stops, ordinary water persists briefly, then black and silence.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Jamshid (CHR-002 V04); match it wherever Jamshid appears.\n<<<image_3>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Zahhak Hall China (LOC-042 V01); match it wherever Zahhak Hall China appears.\n<<<image_5>>> is Zahhak Balcony (LOC-041 V01); match it wherever Zahhak Balcony appears.\n<<<image_6>>> is Sawmill Machine (PRP-025 V01); match it wherever Sawmill Machine appears.\n<<<image_7>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 2010478335,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_163510_5de892dd-17fa-4268-a8ac-6bb7cf01e87a.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_163510_5de892dd-17fa-4268-a8ac-6bb7cf01e87a_thumbnail.webp"
+    }
+  ]
+}

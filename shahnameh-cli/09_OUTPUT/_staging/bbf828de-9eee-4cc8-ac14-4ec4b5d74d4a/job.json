@@ -1,0 +1,122 @@
+{
+  "jobId": "J-20261031-1V3",
+  "parentJobId": "J-20261031-LUH",
+  "hfJobId": "bbf828de-9eee-4cc8-ac14-4ec4b5d74d4a",
+  "attempt": 3,
+  "stage": "final",
+  "label": "PLAN 04",
+  "target": "SHM-EP015-SC024-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "BEGIN PROMPT\r\n\r\nPLAN 04 | A BLACK MASS ENTERS THE HARBOR\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_SHIP_CREW}}\r\n\r\nLOCATION REFERENCES\r\n{{LOC_HARBOR_APPROACH}}\r\n{{LOC_WORKING_QUAY}}\r\n\r\nPROP REFERENCES\r\n{{PROP_ZAHHAK_SHIP}}\r\n{{PROP_MERCHANT_BOATS}}\r\n\r\nDIRECTION AND CONTINUITY\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence.\r\n\r\nPreserve the referenced ship’s exact silhouette, immense scale, advanced engineered construction, black materials and snake-headed structural details. These are serpent heads, not dragon heads.\r\n\r\nPreserve each referenced character’s costume, proportions and rigid handmade mask. All visible humans wear their referenced masks.\r\n\r\nEach listed hard cut changes the physical camera position and viewpoint.\r\n\r\nReferences anchor design; the written lighting controls illumination.\r\n\r\nNO MUSIC.\r\nNO DIALOGUE.\r\n\r\nLOCATION AND LIGHT\r\nFull night at the harbor.\r\n\r\nSparse cold practical lights from the port skim the immense black hull. Small recessed ship lights reveal functional edges, railings and structural serpent motifs.\r\n\r\nIn Shot 1, a dense bank of natural sea fog occupies the harbor entrance behind and around the approaching bow. The foreground water and the nearest quay remain clearer.\r\n\r\nFragments of the island city, quay walls and scattered harbor lamps remain visible at the extreme left and right edges of the frame. Keep the central approach dominated by fog and the emerging ship.\r\n\r\nThe fog is uneven and physically drifting. It does not glow or open symmetrically.\r\n\r\nAs the ship reaches the clearer water beside the quay in Shots 2 and 3, the dense fog remains farther behind it at the harbor entrance. Preserve the same night exposure and lighting direction.\r\n\r\nSTART STATE AND BLOCKING\r\nZahhak’s dedicated ship approaches bow-first from the fog-covered harbor entrance toward the camera and the quay at slow docking speed.\r\n\r\nIts forward movement is already underway when the sequence begins.\r\n\r\nAt the opening frame, the snake-headed bow ornament is just beginning to become visible through the fog. Most of the hull remains concealed behind it.\r\n\r\nOrdinary merchant vessels remain much smaller beside the quay.\r\n\r\nSHOT 04-01 | 0s–3s | 3 SECONDS\r\n12mm extreme wide from the shore, close to water height, looking toward the harbor entrance.\r\n\r\nKeep the camera nearly fixed.\r\n\r\nThe snake-headed structure at the tip of the bow emerges first from the dense sea fog near the center of the frame.\r\n\r\nImmediately behind it, the immense black bow becomes progressively visible as the ship advances toward the camera at slow docking speed.\r\n\r\nReveal the front of the hull through its actual forward movement: first the serpent head, then the bow’s sharp silhouette, then the broad dark surfaces rising behind it.\r\n\r\nThe ship is already close to the front edge of the fog bank; this is a short continuous emergence, not a distant ship suddenly racing across the harbor.\r\n\r\nTrailing fog remains around the upper structure and behind the hull. Do not clear the entire ship within this shot.\r\n\r\nThe approaching bow grows slightly larger and pushes a heavy displacement wave across the foreground water.\r\n\r\nFragments of quay walls, small merchant craft and harbor lamps remain visible along the far left and right edges. These fixed elements establish the ship’s overwhelming scale.\r\n\r\nNo zoom.\r\nNo speed ramp.\r\nNo magical fog reveal.\r\n\r\nHard cut while the black mass is still advancing out of the fog.\r\n\r\nSHOT 04-02 | 3s–11s | 8 SECONDS\r\n18mm very low angle from the quay beside the approaching hull.\r\n\r\nThe bow and flank extend beyond the top and side of the frame.\r\n\r\nTrack slowly along the quay for one meter as recessed lights and snake-shaped structural details pass overhead.\r\n\r\nSmall masked crew members work at the upper rail.\r\n\r\nKeep the immense flank moving across the frame.\r\n\r\nSHOT 04-03 | 11s–15s | 4 SECONDS\r\n24mm from a new quay station directly below the upper command landing, sharply looking upward.\r\n\r\nRecessed deck lights reveal small masked crew against the immense black engineered structure.\r\n\r\nTilt slowly up from a snake-headed structural brace to the landing.\r\n\r\nNo dragon heads.\r\n\r\nPrepare the elevated authority without bringing Zahhak down to the quay.\r\n\r\nEND STATE AND EDIT\r\nThe ship has reached docking position.\r\n\r\nA deliberate short ellipse may complete mooring before the next block.\r\n\r\nKeep ship design, night exposure and elevated landing consistent.\r\n\r\nSOUND\r\nHeavy low machinery, displaced water, hull creaks and metal tension.\r\n\r\nKeep the machinery physically localized to the ship, not a musical drone.\r\n\r\nNo dramatic impact accompanies the emergence from the fog.\r\n\r\nNO MUSIC.\r\nNO DIALOGUE.\r\n\r\nEND PROMPT\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_3>>> is China Port Panorama (LOC-036 V02); match it wherever China Port Panorama appears.\n<<<image_4>>> is China Port Night Dock (LOC-038 V01); match it wherever China Port Night Dock appears.\n<<<image_5>>> is Zahhak Ship (PRP-024 V02); match it wherever Zahhak Ship appears.",
+  "basePrompt": "BEGIN PROMPT\r\n\r\nPLAN 04 | A BLACK MASS ENTERS THE HARBOR\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_SHIP_CREW}}\r\n\r\nLOCATION REFERENCES\r\n{{LOC_HARBOR_APPROACH}}\r\n{{LOC_WORKING_QUAY}}\r\n\r\nPROP REFERENCES\r\n{{PROP_ZAHHAK_SHIP}}\r\n{{PROP_MERCHANT_BOATS}}\r\n\r\nDIRECTION AND CONTINUITY\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence.\r\n\r\nPreserve the referenced ship’s exact silhouette, immense scale, advanced engineered construction, black materials and snake-headed structural details. These are serpent heads, not dragon heads.\r\n\r\nPreserve each referenced character’s costume, proportions and rigid handmade mask. All visible humans wear their referenced masks.\r\n\r\nEach listed hard cut changes the physical camera position and viewpoint.\r\n\r\nReferences anchor design; the written lighting controls illumination.\r\n\r\nNO MUSIC.\r\nNO DIALOGUE.\r\n\r\nLOCATION AND LIGHT\r\nFull night at the harbor.\r\n\r\nSparse cold practical lights from the port skim the immense black hull. Small recessed ship lights reveal functional edges, railings and structural serpent motifs.\r\n\r\nIn Shot 1, a dense bank of natural sea fog occupies the harbor entrance behind and around the approaching bow. The foreground water and the nearest quay remain clearer.\r\n\r\nFragments of the island city, quay walls and scattered harbor lamps remain visible at the extreme left and right edges of the frame. Keep the central approach dominated by fog and the emerging ship.\r\n\r\nThe fog is uneven and physically drifting. It does not glow or open symmetrically.\r\n\r\nAs the ship reaches the clearer water beside the quay in Shots 2 and 3, the dense fog remains farther behind it at the harbor entrance. Preserve the same night exposure and lighting direction.\r\n\r\nSTART STATE AND BLOCKING\r\nZahhak’s dedicated ship approaches bow-first from the fog-covered harbor entrance toward the camera and the quay at slow docking speed.\r\n\r\nIts forward movement is already underway when the sequence begins.\r\n\r\nAt the opening frame, the snake-headed bow ornament is just beginning to become visible through the fog. Most of the hull remains concealed behind it.\r\n\r\nOrdinary merchant vessels remain much smaller beside the quay.\r\n\r\nSHOT 04-01 | 0s–3s | 3 SECONDS\r\n12mm extreme wide from the shore, close to water height, looking toward the harbor entrance.\r\n\r\nKeep the camera nearly fixed.\r\n\r\nThe snake-headed structure at the tip of the bow emerges first from the dense sea fog near the center of the frame.\r\n\r\nImmediately behind it, the immense black bow becomes progressively visible as the ship advances toward the camera at slow docking speed.\r\n\r\nReveal the front of the hull through its actual forward movement: first the serpent head, then the bow’s sharp silhouette, then the broad dark surfaces rising behind it.\r\n\r\nThe ship is already close to the front edge of the fog bank; this is a short continuous emergence, not a distant ship suddenly racing across the harbor.\r\n\r\nTrailing fog remains around the upper structure and behind the hull. Do not clear the entire ship within this shot.\r\n\r\nThe approaching bow grows slightly larger and pushes a heavy displacement wave across the foreground water.\r\n\r\nFragments of quay walls, small merchant craft and harbor lamps remain visible along the far left and right edges. These fixed elements establish the ship’s overwhelming scale.\r\n\r\nNo zoom.\r\nNo speed ramp.\r\nNo magical fog reveal.\r\n\r\nHard cut while the black mass is still advancing out of the fog.\r\n\r\nSHOT 04-02 | 3s–11s | 8 SECONDS\r\n18mm very low angle from the quay beside the approaching hull.\r\n\r\nThe bow and flank extend beyond the top and side of the frame.\r\n\r\nTrack slowly along the quay for one meter as recessed lights and snake-shaped structural details pass overhead.\r\n\r\nSmall masked crew members work at the upper rail.\r\n\r\nKeep the immense flank moving across the frame.\r\n\r\nSHOT 04-03 | 11s–15s | 4 SECONDS\r\n24mm from a new quay station directly below the upper command landing, sharply looking upward.\r\n\r\nRecessed deck lights reveal small masked crew against the immense black engineered structure.\r\n\r\nTilt slowly up from a snake-headed structural brace to the landing.\r\n\r\nNo dragon heads.\r\n\r\nPrepare the elevated authority without bringing Zahhak down to the quay.\r\n\r\nEND STATE AND EDIT\r\nThe ship has reached docking position.\r\n\r\nA deliberate short ellipse may complete mooring before the next block.\r\n\r\nKeep ship design, night exposure and elevated landing consistent.\r\n\r\nSOUND\r\nHeavy low machinery, displaced water, hull creaks and metal tension.\r\n\r\nKeep the machinery physically localized to the ship, not a musical drone.\r\n\r\nNo dramatic impact accompanies the emergence from the fog.\r\n\r\nNO MUSIC.\r\nNO DIALOGUE.\r\n\r\nEND PROMPT",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "1080p"
+  },
+  "refs": [
+    "@CHR-001/V08",
+    "@GRP-005/V01",
+    "@LOC-036/V02",
+    "@LOC-038/V01",
+    "@PRP-024/V02"
+  ],
+  "sentRefs": [
+    "@CHR-001/V08",
+    "@GRP-005/V01",
+    "@LOC-036/V02",
+    "@LOC-038/V01",
+    "@PRP-024/V02"
+  ],
+  "convertedFrom": "1b18a033-18f4-4853-97dd-c8c86772ab49",
+  "createdAt": "2026-10-31T08:33:36.936Z",
+  "costCredits": 240,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261031_083226_bbf828de-9eee-4cc8-ac14-4ec4b5d74d4a.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-31T08:32:26.233173Z",
+      "display_name": "Seedance 2.5",
+      "id": "bbf828de-9eee-4cc8-ac14-4ec4b5d74d4a",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": false,
+        "draft_job_id": "1b18a033-18f4-4853-97dd-c8c86772ab49",
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 1080,
+        "medias": [
+          {
+            "data": {
+              "id": "ea6f16bc-e197-4c98-9575-1f9a88179498",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/ea6f16bc-e197-4c98-9575-1f9a88179498.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "4d8b3ec8-0163-4736-b4e9-c8f41f1f2cc8",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/4d8b3ec8-0163-4736-b4e9-c8f41f1f2cc8.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "dfb1612e-7f52-43ca-9486-7d4f1cd128a2",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/dfb1612e-7f52-43ca-9486-7d4f1cd128a2.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "71a4e1cd-f8b1-4fa1-9288-9df4e3eb2fe8",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/71a4e1cd-f8b1-4fa1-9288-9df4e3eb2fe8.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "3619fd32-785f-4cab-b335-afc8000b434f",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/3619fd32-785f-4cab-b335-afc8000b434f.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "BEGIN PROMPT\r\n\r\nPLAN 04 | A BLACK MASS ENTERS THE HARBOR\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n{{CHAR_SHIP_CREW}}\r\n\r\nLOCATION REFERENCES\r\n{{LOC_HARBOR_APPROACH}}\r\n{{LOC_WORKING_QUAY}}\r\n\r\nPROP REFERENCES\r\n{{PROP_ZAHHAK_SHIP}}\r\n{{PROP_MERCHANT_BOATS}}\r\n\r\nDIRECTION AND CONTINUITY\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence.\r\n\r\nPreserve the referenced ship’s exact silhouette, immense scale, advanced engineered construction, black materials and snake-headed structural details. These are serpent heads, not dragon heads.\r\n\r\nPreserve each referenced character’s costume, proportions and rigid handmade mask. All visible humans wear their referenced masks.\r\n\r\nEach listed hard cut changes the physical camera position and viewpoint.\r\n\r\nReferences anchor design; the written lighting controls illumination.\r\n\r\nNO MUSIC.\r\nNO DIALOGUE.\r\n\r\nLOCATION AND LIGHT\r\nFull night at the harbor.\r\n\r\nSparse cold practical lights from the port skim the immense black hull. Small recessed ship lights reveal functional edges, railings and structural serpent motifs.\r\n\r\nIn Shot 1, a dense bank of natural sea fog occupies the harbor entrance behind and around the approaching bow. The foreground water and the nearest quay remain clearer.\r\n\r\nFragments of the island city, quay walls and scattered harbor lamps remain visible at the extreme left and right edges of the frame. Keep the central approach dominated by fog and the emerging ship.\r\n\r\nThe fog is uneven and physically drifting. It does not glow or open symmetrically.\r\n\r\nAs the ship reaches the clearer water beside the quay in Shots 2 and 3, the dense fog remains farther behind it at the harbor entrance. Preserve the same night exposure and lighting direction.\r\n\r\nSTART STATE AND BLOCKING\r\nZahhak’s dedicated ship approaches bow-first from the fog-covered harbor entrance toward the camera and the quay at slow docking speed.\r\n\r\nIts forward movement is already underway when the sequence begins.\r\n\r\nAt the opening frame, the snake-headed bow ornament is just beginning to become visible through the fog. Most of the hull remains concealed behind it.\r\n\r\nOrdinary merchant vessels remain much smaller beside the quay.\r\n\r\nSHOT 04-01 | 0s–3s | 3 SECONDS\r\n12mm extreme wide from the shore, close to water height, looking toward the harbor entrance.\r\n\r\nKeep the camera nearly fixed.\r\n\r\nThe snake-headed structure at the tip of the bow emerges first from the dense sea fog near the center of the frame.\r\n\r\nImmediately behind it, the immense black bow becomes progressively visible as the ship advances toward the camera at slow docking speed.\r\n\r\nReveal the front of the hull through its actual forward movement: first the serpent head, then the bow’s sharp silhouette, then the broad dark surfaces rising behind it.\r\n\r\nThe ship is already close to the front edge of the fog bank; this is a short continuous emergence, not a distant ship suddenly racing across the harbor.\r\n\r\nTrailing fog remains around the upper structure and behind the hull. Do not clear the entire ship within this shot.\r\n\r\nThe approaching bow grows slightly larger and pushes a heavy displacement wave across the foreground water.\r\n\r\nFragments of quay walls, small merchant craft and harbor lamps remain visible along the far left and right edges. These fixed elements establish the ship’s overwhelming scale.\r\n\r\nNo zoom.\r\nNo speed ramp.\r\nNo magical fog reveal.\r\n\r\nHard cut while the black mass is still advancing out of the fog.\r\n\r\nSHOT 04-02 | 3s–11s | 8 SECONDS\r\n18mm very low angle from the quay beside the approaching hull.\r\n\r\nThe bow and flank extend beyond the top and side of the frame.\r\n\r\nTrack slowly along the quay for one meter as recessed lights and snake-shaped structural details pass overhead.\r\n\r\nSmall masked crew members work at the upper rail.\r\n\r\nKeep the immense flank moving across the frame.\r\n\r\nSHOT 04-03 | 11s–15s | 4 SECONDS\r\n24mm from a new quay station directly below the upper command landing, sharply looking upward.\r\n\r\nRecessed deck lights reveal small masked crew against the immense black engineered structure.\r\n\r\nTilt slowly up from a snake-headed structural brace to the landing.\r\n\r\nNo dragon heads.\r\n\r\nPrepare the elevated authority without bringing Zahhak down to the quay.\r\n\r\nEND STATE AND EDIT\r\nThe ship has reached docking position.\r\n\r\nA deliberate short ellipse may complete mooring before the next block.\r\n\r\nKeep ship design, night exposure and elevated landing consistent.\r\n\r\nSOUND\r\nHeavy low machinery, displaced water, hull creaks and metal tension.\r\n\r\nKeep the machinery physically localized to the ship, not a musical drone.\r\n\r\nNo dramatic impact accompanies the emergence from the fog.\r\n\r\nNO MUSIC.\r\nNO DIALOGUE.\r\n\r\nEND PROMPT\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_3>>> is China Port Panorama (LOC-036 V02); match it wherever China Port Panorama appears.\n<<<image_4>>> is China Port Night Dock (LOC-038 V01); match it wherever China Port Night Dock appears.\n<<<image_5>>> is Zahhak Ship (PRP-024 V02); match it wherever Zahhak Ship appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "1080p",
+        "seed": 476112468,
+        "speedramp": "auto",
+        "width": 1920
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261031_083226_bbf828de-9eee-4cc8-ac14-4ec4b5d74d4a.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261031_083226_bbf828de-9eee-4cc8-ac14-4ec4b5d74d4a_thumbnail.webp"
+    }
+  ]
+}

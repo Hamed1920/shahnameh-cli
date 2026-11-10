@@ -1,0 +1,132 @@
+{
+  "jobId": "J-20261030-LG5",
+  "parentJobId": "J-20261030-HAI",
+  "hfJobId": "05ae4efe-adfe-483b-b989-f4fecf961981",
+  "attempt": 2,
+  "stage": "draft",
+  "label": "PLAN 06",
+  "target": "SHM-EP015-SC026-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "BEGIN PROMPT\r\n\r\nPLAN 06 | THE SEARCH BREAKS THROUGH\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_GUARDS}} @Palace Guards (look 1)  {{CHAR_MARKET_PEOPLE}} @Chinese Workers (look 1) @Chinese Workers (look 2) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_NIGHT_MARKET}} @China Bazaar (look 1)  {{LOC_HIDEOUT_APPROACH}} @China Bazaar (look 2) \r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_MARKET_STALLS}} \r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nLOCATION AND LIGHT\r\n\r\nNight market with warm localized stall practicals against deep cool shadow. Integrated lamps hang beneath awnings. The route narrows into a dim masonry passage ending at Jamshid's plain workshop door. Light becomes scarcer along the route.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nFour guards travel from the quay toward the market interior. Lead Guard A and Guard B are in front, Guards C and D follow. The hideout lies beyond the market passage. Maintain forward travel through successive spaces.\r\n\r\n\r\nPLAN 06 | SHOTS\r\n\r\nSHOT 06-01 | 0s–2s | 2 SECONDS\r\n\r\n24mm close handheld retreating ahead of Guards A and B through the night market. Their shoulders nearly fill the frame; they force a path rather than stroll. C and D follow.\r\n\r\nSHOT 06-02 | 2s–4s | 2 SECONDS\r\n\r\n35mm lateral beside a stall. A pushes a porter firmly sideways out of the route; the porter catches a stall edge. Camera jolts sideways with that displacement, then finds the guards.\r\n\r\nSHOT 06-03 | 4s–6s | 2 SECONDS\r\n\r\n50mm close from behind a vendor's shoulder. B thrusts an arm toward the narrow passage, silently demanding direction. The vendor recoils and points. Cut on the decisive turn.\r\n\r\nSHOT 06-04 | 6s–8s | 2 SECONDS\r\n\r\n28mm at knee-to-waist height behind the group. Boots rush into the passage, fabric and elbows intermittently block lens. Camera runs a short physically possible distance with them.\r\n\r\nSHOT 06-05 | 8s–10s | 2 SECONDS\r\n\r\n35mm from an alcove ahead. A and B round the corner toward the hideout door; C and D occupy the passage behind. Camera pivots late to keep up.\r\n\r\nSHOT 06-06 | 10s–12s | 2 SECONDS\r\n\r\n50mm tight side view beside the jamb. A plants his supporting foot and draws the other knee up. The closed door remains immediately in front of him. Nobody touches a key or lock.\r\n\r\nSHOT 06-07 | 12s–15s | 3 SECONDS\r\n\r\n24mm low oblique from the passage side of the threshold. A kicks the door once; the latch tears free and the door swings inward. B follows the opening and A drives through after him. Camera recoils then surges to the threshold. End with the doorway open and guards entering; do not reset or repeat the kick.\r\n\r\nEND STATE AND EDIT\r\n\r\nThe door is broken open. A and B cross into the room; C and D hold the outer passage. Jamshid is still inside, not already captured.\r\n\r\nSOUND\r\n\r\nFast boots, shoved fabric, baskets scraping, startled nonverbal breaths, one door kick and splintering latch, heavy hinges. No spoken orders.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_2>>> is Chinese Workers (GRP-012 V01); match it wherever Chinese Workers appears.\n<<<image_3>>> is Chinese Workers (GRP-012 V02); match it wherever Chinese Workers appears.\n<<<image_4>>> is China Bazaar (LOC-037 V01); match it wherever China Bazaar appears.\n<<<image_5>>> is China Bazaar (LOC-037 V02); match it wherever China Bazaar appears.\n<<<image_6>>> is Chinese People (GRP-011 V01); match it wherever Chinese People appears.",
+  "basePrompt": "BEGIN PROMPT\r\n\r\nPLAN 06 | THE SEARCH BREAKS THROUGH\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_GUARDS}} @Palace Guards (look 1)  {{CHAR_MARKET_PEOPLE}} @Chinese Workers (look 1) @Chinese Workers (look 2) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_NIGHT_MARKET}} @China Bazaar (look 1)  {{LOC_HIDEOUT_APPROACH}} @China Bazaar (look 2) \r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_MARKET_STALLS}} \r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nLOCATION AND LIGHT\r\n\r\nNight market with warm localized stall practicals against deep cool shadow. Integrated lamps hang beneath awnings. The route narrows into a dim masonry passage ending at Jamshid's plain workshop door. Light becomes scarcer along the route.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nFour guards travel from the quay toward the market interior. Lead Guard A and Guard B are in front, Guards C and D follow. The hideout lies beyond the market passage. Maintain forward travel through successive spaces.\r\n\r\n\r\nPLAN 06 | SHOTS\r\n\r\nSHOT 06-01 | 0s–2s | 2 SECONDS\r\n\r\n24mm close handheld retreating ahead of Guards A and B through the night market. Their shoulders nearly fill the frame; they force a path rather than stroll. C and D follow.\r\n\r\nSHOT 06-02 | 2s–4s | 2 SECONDS\r\n\r\n35mm lateral beside a stall. A pushes a porter firmly sideways out of the route; the porter catches a stall edge. Camera jolts sideways with that displacement, then finds the guards.\r\n\r\nSHOT 06-03 | 4s–6s | 2 SECONDS\r\n\r\n50mm close from behind a vendor's shoulder. B thrusts an arm toward the narrow passage, silently demanding direction. The vendor recoils and points. Cut on the decisive turn.\r\n\r\nSHOT 06-04 | 6s–8s | 2 SECONDS\r\n\r\n28mm at knee-to-waist height behind the group. Boots rush into the passage, fabric and elbows intermittently block lens. Camera runs a short physically possible distance with them.\r\n\r\nSHOT 06-05 | 8s–10s | 2 SECONDS\r\n\r\n35mm from an alcove ahead. A and B round the corner toward the hideout door; C and D occupy the passage behind. Camera pivots late to keep up.\r\n\r\nSHOT 06-06 | 10s–12s | 2 SECONDS\r\n\r\n50mm tight side view beside the jamb. A plants his supporting foot and draws the other knee up. The closed door remains immediately in front of him. Nobody touches a key or lock.\r\n\r\nSHOT 06-07 | 12s–15s | 3 SECONDS\r\n\r\n24mm low oblique from the passage side of the threshold. A kicks the door once; the latch tears free and the door swings inward. B follows the opening and A drives through after him. Camera recoils then surges to the threshold. End with the doorway open and guards entering; do not reset or repeat the kick.\r\n\r\nEND STATE AND EDIT\r\n\r\nThe door is broken open. A and B cross into the room; C and D hold the outer passage. Jamshid is still inside, not already captured.\r\n\r\nSOUND\r\n\r\nFast boots, shoved fabric, baskets scraping, startled nonverbal breaths, one door kick and splintering latch, heavy hinges. No spoken orders.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@GRP-005/V01",
+    "@GRP-012/V01",
+    "@GRP-012/V02",
+    "@LOC-037/V01",
+    "@LOC-037/V02",
+    "@GRP-011/V01"
+  ],
+  "sentRefs": [
+    "@GRP-005/V01",
+    "@GRP-012/V01",
+    "@GRP-012/V02",
+    "@LOC-037/V01",
+    "@LOC-037/V02",
+    "@GRP-011/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-10-30T19:10:52.727Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_190846_05ae4efe-adfe-483b-b989-f4fecf961981.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-30T19:08:46.7277Z",
+      "display_name": "Seedance 2.5",
+      "id": "05ae4efe-adfe-483b-b989-f4fecf961981",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "4e85835e-49a5-4135-9195-fec91043b162",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/4e85835e-49a5-4135-9195-fec91043b162.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "e7566470-a901-43f2-9f7a-e63a2d67f3a6",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/e7566470-a901-43f2-9f7a-e63a2d67f3a6.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "462a0b9e-9669-4537-8267-0dc351d3fdb3",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/462a0b9e-9669-4537-8267-0dc351d3fdb3.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "556c628e-1ba2-4956-933c-217f4654cfbc",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/556c628e-1ba2-4956-933c-217f4654cfbc.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "0dd8372b-51f6-4b3e-b5d2-abb54885fca4",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/0dd8372b-51f6-4b3e-b5d2-abb54885fca4.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "6be99828-59c9-477a-b835-8ee48fe78755",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/6be99828-59c9-477a-b835-8ee48fe78755.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "BEGIN PROMPT\r\n\r\nPLAN 06 | THE SEARCH BREAKS THROUGH\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_GUARDS}} @Palace Guards (look 1)  {{CHAR_MARKET_PEOPLE}} @Chinese Workers (look 1) @Chinese Workers (look 2) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_NIGHT_MARKET}} @China Bazaar (look 1)  {{LOC_HIDEOUT_APPROACH}} @China Bazaar (look 2) \r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_MARKET_STALLS}} \r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nLOCATION AND LIGHT\r\n\r\nNight market with warm localized stall practicals against deep cool shadow. Integrated lamps hang beneath awnings. The route narrows into a dim masonry passage ending at Jamshid's plain workshop door. Light becomes scarcer along the route.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nFour guards travel from the quay toward the market interior. Lead Guard A and Guard B are in front, Guards C and D follow. The hideout lies beyond the market passage. Maintain forward travel through successive spaces.\r\n\r\n\r\nPLAN 06 | SHOTS\r\n\r\nSHOT 06-01 | 0s–2s | 2 SECONDS\r\n\r\n24mm close handheld retreating ahead of Guards A and B through the night market. Their shoulders nearly fill the frame; they force a path rather than stroll. C and D follow.\r\n\r\nSHOT 06-02 | 2s–4s | 2 SECONDS\r\n\r\n35mm lateral beside a stall. A pushes a porter firmly sideways out of the route; the porter catches a stall edge. Camera jolts sideways with that displacement, then finds the guards.\r\n\r\nSHOT 06-03 | 4s–6s | 2 SECONDS\r\n\r\n50mm close from behind a vendor's shoulder. B thrusts an arm toward the narrow passage, silently demanding direction. The vendor recoils and points. Cut on the decisive turn.\r\n\r\nSHOT 06-04 | 6s–8s | 2 SECONDS\r\n\r\n28mm at knee-to-waist height behind the group. Boots rush into the passage, fabric and elbows intermittently block lens. Camera runs a short physically possible distance with them.\r\n\r\nSHOT 06-05 | 8s–10s | 2 SECONDS\r\n\r\n35mm from an alcove ahead. A and B round the corner toward the hideout door; C and D occupy the passage behind. Camera pivots late to keep up.\r\n\r\nSHOT 06-06 | 10s–12s | 2 SECONDS\r\n\r\n50mm tight side view beside the jamb. A plants his supporting foot and draws the other knee up. The closed door remains immediately in front of him. Nobody touches a key or lock.\r\n\r\nSHOT 06-07 | 12s–15s | 3 SECONDS\r\n\r\n24mm low oblique from the passage side of the threshold. A kicks the door once; the latch tears free and the door swings inward. B follows the opening and A drives through after him. Camera recoils then surges to the threshold. End with the doorway open and guards entering; do not reset or repeat the kick.\r\n\r\nEND STATE AND EDIT\r\n\r\nThe door is broken open. A and B cross into the room; C and D hold the outer passage. Jamshid is still inside, not already captured.\r\n\r\nSOUND\r\n\r\nFast boots, shoved fabric, baskets scraping, startled nonverbal breaths, one door kick and splintering latch, heavy hinges. No spoken orders.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_2>>> is Chinese Workers (GRP-012 V01); match it wherever Chinese Workers appears.\n<<<image_3>>> is Chinese Workers (GRP-012 V02); match it wherever Chinese Workers appears.\n<<<image_4>>> is China Bazaar (LOC-037 V01); match it wherever China Bazaar appears.\n<<<image_5>>> is China Bazaar (LOC-037 V02); match it wherever China Bazaar appears.\n<<<image_6>>> is Chinese People (GRP-011 V01); match it wherever Chinese People appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 1011111493,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_190846_05ae4efe-adfe-483b-b989-f4fecf961981.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_190846_05ae4efe-adfe-483b-b989-f4fecf961981_thumbnail.webp"
+    }
+  ]
+}

@@ -139,7 +139,74 @@
     "J-20261019-03S",
     "J-20261019-PDJ",
     "J-20261019-ELX",
-    "J-20261019-I6L"
+    "J-20261019-I6L",
+    "J-20261030-NQC",
+    "J-20261030-XV2",
+    "J-20261030-3AJ",
+    "J-20261030-LHP",
+    "J-20261030-9SO",
+    "J-20261030-NQ6",
+    "J-20261030-95F",
+    "J-20261030-CGA",
+    "J-20261030-4JW",
+    "J-20261030-UT2",
+    "J-20261030-U9D",
+    "J-20261030-P8B",
+    "J-20261030-XN4",
+    "J-20261030-RKW",
+    "J-20261030-UW0",
+    "J-20261030-VUI",
+    "J-20261030-TEF",
+    "J-20261030-59T",
+    "J-20261030-HAI",
+    "J-20261030-BTC",
+    "J-20261030-6DF",
+    "J-20261030-Q0H",
+    "J-20261030-WR2",
+    "J-20261030-YH5",
+    "J-20261030-JIE",
+    "J-20261030-IQQ",
+    "J-20261030-NXL",
+    "J-20261030-I1V",
+    "J-20261030-LG5",
+    "J-20261030-F63",
+    "J-20261030-6MA",
+    "J-20261030-KT0",
+    "J-20261030-GJZ",
+    "J-20261030-0OR",
+    "J-20261030-O0V",
+    "J-20261030-22M",
+    "J-20261030-ZRJ",
+    "J-20261030-XND",
+    "J-20261030-VLE",
+    "J-20261031-X18",
+    "J-20261031-IWK",
+    "J-20261031-V19",
+    "J-20261031-EEJ",
+    "J-20261031-HJY",
+    "J-20261031-UE3",
+    "J-20261031-T4X",
+    "J-20261031-4EV",
+    "J-20261031-3VP",
+    "J-20261031-P41",
+    "J-20261031-N6H",
+    "J-20261031-2AV",
+    "J-20261031-LUH",
+    "J-20261031-ZW8",
+    "J-20261031-1V3",
+    "J-20261031-OZ7",
+    "J-20261031-94V",
+    "J-20261031-4D4",
+    "J-20261031-ZMJ",
+    "J-20261031-EHY",
+    "J-20261031-SUF",
+    "J-20261031-QQ8",
+    "J-20261031-BXO",
+    "J-20261031-LNN",
+    "J-20261031-1ZB",
+    "J-20261031-D2N",
+    "J-20261031-X88",
+    "J-20261101-GXH"
   ],
   "processedDecisions": [
     "rev_mtljtubxafk9",
@@ -271,10 +338,60 @@
     "rev_mvfna2wfmy48",
     "rev_mvfoz8w7utan",
     "rev_mvfpe0lltvgx",
-    "rev_mvfpnj77ho5r"
+    "rev_mvfpnj77ho5r",
+    "rev_mvvc8huwfidl",
+    "rev_mvvcaseejt49",
+    "rev_mvvccufe4pyr",
+    "rev_mvvchpg7motm",
+    "rev_mvvciucpstyv",
+    "rev_mvvcpwz7mnyj",
+    "rev_mvvcrw1ead6s",
+    "rev_mvvd8hi5e19j",
+    "rev_mvvdadj2ey0u",
+    "rev_mvvdhxsv86fq",
+    "rev_mvvds9f8rhw7",
+    "rev_mvvdt51xnhvk",
+    "rev_mvw4792wibe1",
+    "rev_mvw47ma9kl4b",
+    "rev_mvw4fl6tvyqv",
+    "rev_mvw4fud5ncq0",
+    "rev_mvw4g1i0inb2",
+    "rev_mvw4gaanw3zq",
+    "rev_mvw4nrmbd8hm",
+    "rev_mvw4wprylq3c",
+    "rev_mvw4xirvkgru",
+    "rev_mvw51vd6lv4u",
+    "rev_mvw55ckmsiwk",
+    "rev_mvw57bug9lof",
+    "rev_mvw5c87vjsal",
+    "rev_mvw5o1tsy9iy",
+    "rev_mvw5syp3tv86",
+    "rev_mvw5uhlejqra",
+    "rev_mvw62i8wxdrx",
+    "rev_mvw64oa8g70u",
+    "rev_mvw66o0eomxz",
+    "rev_mvw6at1qrl3u",
+    "rev_mvw6c14kk4ze",
+    "rev_mvxlj88e45lz",
+    "rev_mw3rb6nwthli",
+    "rev_mw3rb9dxu02v",
+    "rev_mw3rbclg2edk",
+    "rev_mw3rbf3qknky",
+    "rev_mw3rbhle4wij",
+    "rev_mw3rbk2n2v66",
+    "rev_mw3rbmst7abs",
+    "rev_mw3rboyswdt2",
+    "rev_mw3rbydj6sft",
+    "rev_mw3rc0ybng75",
+    "rev_mw3rc4ehr0an",
+    "rev_mw3rc6q7s2b4",
+    "rev_mw3rc8ju7rqh",
+    "rev_mw3rcq6t7aij",
+    "rev_mw3rczx53jfn",
+    "rev_mw3rd402r7ed"
   ],
-  "spentCredits": 11422.5,
-  "updatedAt": "2026-10-19T20:34:54.615Z",
+  "spentCredits": 16692.5,
+  "updatedAt": "2026-11-05T16:31:05.517Z",
   "failedDecisions": {},
   "processedOps": [
     "op_mu18d6axozqm",
@@ -322,7 +439,12 @@
     "op_muprkbpw2zvx",
     "op_mvdlc0rkpb66vg",
     "op_voxcounting02",
-    "op_mvfo88j6mpfj"
+    "op_mvfo88j6mpfj",
+    "op_chinaintake01",
+    "op_zahhakhallsaw01",
+    "op_zahhakshipflag01",
+    "op_mvvdq53foc7i",
+    "op_moveep016a"
   ],
   "learnWatermark": "rev_mu19vrjsbra1",
   "processedRequests": [
@@ -383,7 +505,31 @@
     "jr_mvdlonntajzf",
     "jr_mvfo9h6700su",
     "jr_mvfo9x6k1ejq",
-    "jr_mvfofgqjud1j"
+    "jr_mvfofgqjud1j",
+    "jr_mvv6o1w8jx37",
+    "jr_mvv6splerd0s",
+    "jr_mvv72cizwe7d",
+    "jr_mvv72e33wyzf",
+    "jr_mvv72f8jiuf4",
+    "jr_mvv72fxpjxte",
+    "jr_mvv72go3jl6h",
+    "jr_mvv72h720fbd",
+    "jr_mvv72hmr08k0",
+    "jr_mvv72ks45wb3",
+    "jr_mvv72lerh75y",
+    "jr_mvv72lyq6arb",
+    "jr_mvv72mfduzrz",
+    "jr_mvvceydjlwov",
+    "jr_mvvd5eaojua6",
+    "jr_mvvd5p3limtb",
+    "jr_mvvdukcxwxt9",
+    "jr_mvw4e0qvluv8",
+    "jr_mvw4e1n352uv",
+    "jr_mvw4qpubd88f",
+    "jr_mvw59tg7m7q5",
+    "jr_mvw654jvo6in",
+    "jr_mvws8ml7qksu",
+    "jr_mvws9sm8wg3r"
   ],
   "held": {},
   "failedJobs": {
@@ -438,6 +584,75 @@
     "J-20261019-FEQ": {
       "reason": "Error: Higgsfield API error (HTTP 520). failed to PUT media bytes to upload_url: 520",
       "at": "2026-10-19T19:54:05.189Z"
+    },
+    "J-20261030-NQC": {
+      "reason": "Error: \"Pro\" or \"Ultimate\" plan required",
+      "at": "2026-10-30T16:29:40.306Z"
+    },
+    "J-20261030-XV2": {
+      "reason": "Error: \"Pro\" or \"Ultimate\" plan required",
+      "at": "2026-10-30T16:29:42.471Z"
+    },
+    "J-20261030-3AJ": {
+      "reason": "Error: \"Pro\" or \"Ultimate\" plan required",
+      "at": "2026-10-30T16:30:01.969Z"
+    },
+    "J-20261030-LHP": {
+      "reason": "Error: \"Pro\" or \"Ultimate\" plan required",
+      "at": "2026-10-30T16:30:18.226Z"
+    },
+    "J-20261030-9SO": {
+      "reason": "Error: \"Pro\" or \"Ultimate\" plan required",
+      "at": "2026-10-30T16:30:53.358Z"
+    },
+    "J-20261030-NQ6": {
+      "reason": "Error: \"Pro\" or \"Ultimate\" plan required",
+      "at": "2026-10-30T16:31:05.967Z"
+    },
+    "J-20261030-95F": {
+      "reason": "Error: \"Pro\" or \"Ultimate\" plan required",
+      "at": "2026-10-30T16:31:20.770Z"
+    },
+    "J-20261030-CGA": {
+      "reason": "Error: \"Pro\" or \"Ultimate\" plan required",
+      "at": "2026-10-30T16:31:34.711Z"
+    },
+    "J-20261030-4JW": {
+      "reason": "Error: \"Pro\" or \"Ultimate\" plan required",
+      "at": "2026-10-30T16:31:52.822Z"
+    },
+    "J-20261030-UT2": {
+      "reason": "Error: \"Pro\" or \"Ultimate\" plan required",
+      "at": "2026-10-30T16:32:09.483Z"
+    },
+    "J-20261030-U9D": {
+      "reason": "Error: higgsfield: request failed (no response received)",
+      "at": "2026-10-30T16:32:38.364Z"
+    },
+    "J-20261030-YH5": {
+      "reason": "Error: Higgsfield API error (HTTP 503). request failed with status 503 Service Unavailable",
+      "at": "2026-10-30T19:02:28.358Z"
+    },
+    "J-20261030-JIE": {
+      "reason": "Error: Higgsfield API error (HTTP 503). request failed with status 503 Service Unavailable",
+      "at": "2026-10-30T19:03:04.383Z"
+    },
+    "J-20261030-GJZ": {
+      "reason": "Error: Higgsfield API error (HTTP 503). request failed with status 503 Service Unavailable",
+      "at": "2026-10-30T19:27:11.719Z"
+    },
+    "J-20261031-X18": {
+      "reason": "Error: Completed Seedance 2.5 draft not found",
+      "at": "2026-10-31T08:04:27.370Z"
+    },
+    "J-20261031-IWK": {
+      "reason": "Error: Completed Seedance 2.5 draft not found",
+      "at": "2026-10-31T08:04:35.014Z"
+    },
+    "J-20261031-3VP": {
+      "reason": "Error: \"Pro\" or \"Ultimate\" plan required",
+      "at": "2026-10-31T08:17:12.287Z"
     }
-  }
+  },
+  "landedChecks": {}
 }

@@ -1,0 +1,132 @@
+{
+  "jobId": "J-20261030-O0V",
+  "parentJobId": "J-20261030-RKW",
+  "hfJobId": "77d09f83-9f96-461e-9856-eabbd65b41f2",
+  "attempt": 2,
+  "stage": "draft",
+  "label": "PLAN 11",
+  "target": "SHM-EP015-SC031-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "BEGIN PROMPT\r\n\r\nPLAN 11 | THE LAST COMMAND HAS NO WITNESS\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_JAMSHID_WORKER}} @Jamshid (look 4)   {{CHAR_ZAHHAK}} @Zahhak (look 8)  {{CHAR_GUARDS}} @Palace Guards (look 1) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_COASTAL_RESIDENCE}} @Zahhak Hall China (look 2)  {{LOC_BALCONY}} @Zahhak Balcony (look 1) \r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_ZAHHAK_STAFF}}  {{PROP_INDUSTRIAL_SAW}}  {{PROP_RESTRAINTS}}  {{PROP_COLLECTION_OBJECTS}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nZahhak remains unhurried and indifferent. Whenever he walks, show the staff planting first, weight transferring onto it, then the weaker leg following in an uneven step. Preserve the reference's weak-leg side. His two single-headed shoulder snakes remain alive, making small independent movements; preserve their attachment and proportions.\r\n\r\nLOCATION AND LIGHT\r\n\r\nNight in ONE vast collection hall with a continuous flat floor. SOUTH entrance; NORTH balcony; objects arranged on low display furniture along the perimeter walls, with no readable labels. A real functional industrial timber saw stands in the CENTRAL floor area, not on a pedestal and not in a separate room. Its level feed carriage runs WEST to EAST toward the fixed blade at its EAST end; its controls are on the SOUTH side. The NORTH wall holds a display table just WEST of the balcony opening. Cold integrated ceiling light reveals the hall; small neutral display lights skim the perimeter objects; one harder neutral task lamp lights the saw. The north balcony has dim sea-sky fill and fixed rail lights. All sources stay steady. The saw is part of the working floor, not a museum exhibit.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nThe central machine is already RUNNING. Jamshid lies on the still carriage head WEST, feet EAST toward the fixed blade. Hip strap secure, RIGHT arm free. A stands by his head on the north side; B at south controls. Jamshid looks NORTH toward Zahhak's last location. Zahhak reaches the north balcony threshold, facing the harbor, never looking back.\r\n\r\n\r\nPLAN 11 | SHOTS\r\n\r\nSHOT 11-01 | 0s–1s | 1 SECONDS\r\n\r\n75mm close from EAST-SOUTHEAST beside the blade housing. The cutting edge is already at working speed. Do not show another startup. Hard cut on mechanical vibration.\r\n\r\nSHOT 11-02 | 1s–3s | 2 SECONDS\r\n\r\n28mm from SOUTHWEST of the machine at carriage height. B engages the feed; carriage starts moving EAST toward the fixed blade. Keep a clear physical gap between Jamshid and blade. A walks alongside the head end. The camera moves anxiously with the carriage.\r\n\r\nSHOT 11-03 | 3s–6s | 3 SECONDS\r\n\r\n40mm tight handheld from NORTHWEST beside Jamshid's head. His gaze remains toward the NORTH balcony. He raises his RIGHT hand to shoulder height, elbow bent, palm out, fingers together: the recognizable final command. His body cannot follow. Camera sways and briefly falls behind focus, then finds the visible eye and palm. Neither guard responds.\r\n\r\nSHOT 11-04 | 6s–8s | 2 SECONDS\r\n\r\n65mm from a new SOUTH head-side position, raised hand foreground and mask beyond. The hand remains unanswered, then fingers soften and it lowers toward his chest. Carriage keeps moving with a remaining gap to the blade. Cut away BEFORE any bodily contact; never return to Jamshid afterward.\r\n\r\nSHOT 11-05 | 8s–11s | 3 SECONDS\r\n\r\n32mm slightly low FRONT view from the balcony, retreating ahead of Zahhak as he takes his final uneven step to the rail. Staff first, weight settles, weak leg follows. He looks past camera toward the city; he never checks behind. Snakes move subtly. Frame steadies as he stops.\r\n\r\nSHOT 11-06 | 11s–15s | 4 SECONDS\r\n\r\n24mm from BEHIND Zahhak at the balcony doorway, his back centered in the lower frame. A slow crane RISE reveals the busy harbor and city below beyond his shoulders. He remains still at the rail, staff planted, head angled down toward ordinary life. Keep him a powerful central silhouette, not an overhead top shot. Machine continues out of frame.\r\n\r\nEND STATE AND EDIT\r\n\r\nZahhak stands at the NORTH balcony rail, back to the hall, looking down at city life. The camera has permanently left Jamshid before contact. Machine continues audibly off-screen; death is omitted. The next block begins with Zahhak already at the rail, no repeated arrival.\r\n\r\nSOUND\r\n\r\nContinuous running motor and feed wheels, restrained breathing and strap friction. No pause for the final command. At balcony, machine recedes behind water and port work. No screams, bodily impacts or anatomical sounds.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Jamshid (CHR-002 V04); match it wherever Jamshid appears.\n<<<image_3>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Zahhak Hall China (LOC-042 V02); match it wherever Zahhak Hall China appears.\n<<<image_5>>> is Zahhak Balcony (LOC-041 V01); match it wherever Zahhak Balcony appears.\n<<<image_6>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+  "basePrompt": "BEGIN PROMPT\r\n\r\nPLAN 11 | THE LAST COMMAND HAS NO WITNESS\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_JAMSHID_WORKER}} @Jamshid (look 4)   {{CHAR_ZAHHAK}} @Zahhak (look 8)  {{CHAR_GUARDS}} @Palace Guards (look 1) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_COASTAL_RESIDENCE}} @Zahhak Hall China (look 2)  {{LOC_BALCONY}} @Zahhak Balcony (look 1) \r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_ZAHHAK_STAFF}}  {{PROP_INDUSTRIAL_SAW}}  {{PROP_RESTRAINTS}}  {{PROP_COLLECTION_OBJECTS}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nZahhak remains unhurried and indifferent. Whenever he walks, show the staff planting first, weight transferring onto it, then the weaker leg following in an uneven step. Preserve the reference's weak-leg side. His two single-headed shoulder snakes remain alive, making small independent movements; preserve their attachment and proportions.\r\n\r\nLOCATION AND LIGHT\r\n\r\nNight in ONE vast collection hall with a continuous flat floor. SOUTH entrance; NORTH balcony; objects arranged on low display furniture along the perimeter walls, with no readable labels. A real functional industrial timber saw stands in the CENTRAL floor area, not on a pedestal and not in a separate room. Its level feed carriage runs WEST to EAST toward the fixed blade at its EAST end; its controls are on the SOUTH side. The NORTH wall holds a display table just WEST of the balcony opening. Cold integrated ceiling light reveals the hall; small neutral display lights skim the perimeter objects; one harder neutral task lamp lights the saw. The north balcony has dim sea-sky fill and fixed rail lights. All sources stay steady. The saw is part of the working floor, not a museum exhibit.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nThe central machine is already RUNNING. Jamshid lies on the still carriage head WEST, feet EAST toward the fixed blade. Hip strap secure, RIGHT arm free. A stands by his head on the north side; B at south controls. Jamshid looks NORTH toward Zahhak's last location. Zahhak reaches the north balcony threshold, facing the harbor, never looking back.\r\n\r\n\r\nPLAN 11 | SHOTS\r\n\r\nSHOT 11-01 | 0s–1s | 1 SECONDS\r\n\r\n75mm close from EAST-SOUTHEAST beside the blade housing. The cutting edge is already at working speed. Do not show another startup. Hard cut on mechanical vibration.\r\n\r\nSHOT 11-02 | 1s–3s | 2 SECONDS\r\n\r\n28mm from SOUTHWEST of the machine at carriage height. B engages the feed; carriage starts moving EAST toward the fixed blade. Keep a clear physical gap between Jamshid and blade. A walks alongside the head end. The camera moves anxiously with the carriage.\r\n\r\nSHOT 11-03 | 3s–6s | 3 SECONDS\r\n\r\n40mm tight handheld from NORTHWEST beside Jamshid's head. His gaze remains toward the NORTH balcony. He raises his RIGHT hand to shoulder height, elbow bent, palm out, fingers together: the recognizable final command. His body cannot follow. Camera sways and briefly falls behind focus, then finds the visible eye and palm. Neither guard responds.\r\n\r\nSHOT 11-04 | 6s–8s | 2 SECONDS\r\n\r\n65mm from a new SOUTH head-side position, raised hand foreground and mask beyond. The hand remains unanswered, then fingers soften and it lowers toward his chest. Carriage keeps moving with a remaining gap to the blade. Cut away BEFORE any bodily contact; never return to Jamshid afterward.\r\n\r\nSHOT 11-05 | 8s–11s | 3 SECONDS\r\n\r\n32mm slightly low FRONT view from the balcony, retreating ahead of Zahhak as he takes his final uneven step to the rail. Staff first, weight settles, weak leg follows. He looks past camera toward the city; he never checks behind. Snakes move subtly. Frame steadies as he stops.\r\n\r\nSHOT 11-06 | 11s–15s | 4 SECONDS\r\n\r\n24mm from BEHIND Zahhak at the balcony doorway, his back centered in the lower frame. A slow crane RISE reveals the busy harbor and city below beyond his shoulders. He remains still at the rail, staff planted, head angled down toward ordinary life. Keep him a powerful central silhouette, not an overhead top shot. Machine continues out of frame.\r\n\r\nEND STATE AND EDIT\r\n\r\nZahhak stands at the NORTH balcony rail, back to the hall, looking down at city life. The camera has permanently left Jamshid before contact. Machine continues audibly off-screen; death is omitted. The next block begins with Zahhak already at the rail, no repeated arrival.\r\n\r\nSOUND\r\n\r\nContinuous running motor and feed wheels, restrained breathing and strap friction. No pause for the final command. At balcony, machine recedes behind water and port work. No screams, bodily impacts or anatomical sounds.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V08",
+    "@CHR-002/V04",
+    "@GRP-005/V01",
+    "@LOC-042/V02",
+    "@LOC-041/V01",
+    "@PRP-001/V01"
+  ],
+  "sentRefs": [
+    "@CHR-001/V08",
+    "@CHR-002/V04",
+    "@GRP-005/V01",
+    "@LOC-042/V02",
+    "@LOC-041/V01",
+    "@PRP-001/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-10-30T19:33:01.006Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_193100_77d09f83-9f96-461e-9856-eabbd65b41f2.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-30T19:31:00.18246Z",
+      "display_name": "Seedance 2.5",
+      "id": "77d09f83-9f96-461e-9856-eabbd65b41f2",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "22c0750d-a023-4ead-932d-d884bb5c5911",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/22c0750d-a023-4ead-932d-d884bb5c5911.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "e005d986-7fe6-47c6-9ba4-fe937e1c132d",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/e005d986-7fe6-47c6-9ba4-fe937e1c132d.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "64f6d878-adca-43fe-bb25-2991a1ce96b0",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/64f6d878-adca-43fe-bb25-2991a1ce96b0.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "cc3a637c-7fa0-47cf-a277-56dd56d6f663",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/cc3a637c-7fa0-47cf-a277-56dd56d6f663.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "909aff51-8680-4ccc-9908-f4027ed11981",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/909aff51-8680-4ccc-9908-f4027ed11981.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "74b63030-68c1-4efc-9c5c-1ede6b67e78c",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/74b63030-68c1-4efc-9c5c-1ede6b67e78c.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "BEGIN PROMPT\r\n\r\nPLAN 11 | THE LAST COMMAND HAS NO WITNESS\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_JAMSHID_WORKER}} @Jamshid (look 4)   {{CHAR_ZAHHAK}} @Zahhak (look 8)  {{CHAR_GUARDS}} @Palace Guards (look 1) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_COASTAL_RESIDENCE}} @Zahhak Hall China (look 2)  {{LOC_BALCONY}} @Zahhak Balcony (look 1) \r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_ZAHHAK_STAFF}}  {{PROP_INDUSTRIAL_SAW}}  {{PROP_RESTRAINTS}}  {{PROP_COLLECTION_OBJECTS}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nZahhak remains unhurried and indifferent. Whenever he walks, show the staff planting first, weight transferring onto it, then the weaker leg following in an uneven step. Preserve the reference's weak-leg side. His two single-headed shoulder snakes remain alive, making small independent movements; preserve their attachment and proportions.\r\n\r\nLOCATION AND LIGHT\r\n\r\nNight in ONE vast collection hall with a continuous flat floor. SOUTH entrance; NORTH balcony; objects arranged on low display furniture along the perimeter walls, with no readable labels. A real functional industrial timber saw stands in the CENTRAL floor area, not on a pedestal and not in a separate room. Its level feed carriage runs WEST to EAST toward the fixed blade at its EAST end; its controls are on the SOUTH side. The NORTH wall holds a display table just WEST of the balcony opening. Cold integrated ceiling light reveals the hall; small neutral display lights skim the perimeter objects; one harder neutral task lamp lights the saw. The north balcony has dim sea-sky fill and fixed rail lights. All sources stay steady. The saw is part of the working floor, not a museum exhibit.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nThe central machine is already RUNNING. Jamshid lies on the still carriage head WEST, feet EAST toward the fixed blade. Hip strap secure, RIGHT arm free. A stands by his head on the north side; B at south controls. Jamshid looks NORTH toward Zahhak's last location. Zahhak reaches the north balcony threshold, facing the harbor, never looking back.\r\n\r\n\r\nPLAN 11 | SHOTS\r\n\r\nSHOT 11-01 | 0s–1s | 1 SECONDS\r\n\r\n75mm close from EAST-SOUTHEAST beside the blade housing. The cutting edge is already at working speed. Do not show another startup. Hard cut on mechanical vibration.\r\n\r\nSHOT 11-02 | 1s–3s | 2 SECONDS\r\n\r\n28mm from SOUTHWEST of the machine at carriage height. B engages the feed; carriage starts moving EAST toward the fixed blade. Keep a clear physical gap between Jamshid and blade. A walks alongside the head end. The camera moves anxiously with the carriage.\r\n\r\nSHOT 11-03 | 3s–6s | 3 SECONDS\r\n\r\n40mm tight handheld from NORTHWEST beside Jamshid's head. His gaze remains toward the NORTH balcony. He raises his RIGHT hand to shoulder height, elbow bent, palm out, fingers together: the recognizable final command. His body cannot follow. Camera sways and briefly falls behind focus, then finds the visible eye and palm. Neither guard responds.\r\n\r\nSHOT 11-04 | 6s–8s | 2 SECONDS\r\n\r\n65mm from a new SOUTH head-side position, raised hand foreground and mask beyond. The hand remains unanswered, then fingers soften and it lowers toward his chest. Carriage keeps moving with a remaining gap to the blade. Cut away BEFORE any bodily contact; never return to Jamshid afterward.\r\n\r\nSHOT 11-05 | 8s–11s | 3 SECONDS\r\n\r\n32mm slightly low FRONT view from the balcony, retreating ahead of Zahhak as he takes his final uneven step to the rail. Staff first, weight settles, weak leg follows. He looks past camera toward the city; he never checks behind. Snakes move subtly. Frame steadies as he stops.\r\n\r\nSHOT 11-06 | 11s–15s | 4 SECONDS\r\n\r\n24mm from BEHIND Zahhak at the balcony doorway, his back centered in the lower frame. A slow crane RISE reveals the busy harbor and city below beyond his shoulders. He remains still at the rail, staff planted, head angled down toward ordinary life. Keep him a powerful central silhouette, not an overhead top shot. Machine continues out of frame.\r\n\r\nEND STATE AND EDIT\r\n\r\nZahhak stands at the NORTH balcony rail, back to the hall, looking down at city life. The camera has permanently left Jamshid before contact. Machine continues audibly off-screen; death is omitted. The next block begins with Zahhak already at the rail, no repeated arrival.\r\n\r\nSOUND\r\n\r\nContinuous running motor and feed wheels, restrained breathing and strap friction. No pause for the final command. At balcony, machine recedes behind water and port work. No screams, bodily impacts or anatomical sounds.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Jamshid (CHR-002 V04); match it wherever Jamshid appears.\n<<<image_3>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Zahhak Hall China (LOC-042 V02); match it wherever Zahhak Hall China appears.\n<<<image_5>>> is Zahhak Balcony (LOC-041 V01); match it wherever Zahhak Balcony appears.\n<<<image_6>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 274258022,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_193100_77d09f83-9f96-461e-9856-eabbd65b41f2.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_193100_77d09f83-9f96-461e-9856-eabbd65b41f2_thumbnail.webp"
+    }
+  ]
+}

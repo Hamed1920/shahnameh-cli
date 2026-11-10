@@ -1,0 +1,112 @@
+{
+  "jobId": "J-20261030-59T",
+  "parentJobId": "J-20261030-95F",
+  "hfJobId": "a38f7005-30a0-48b9-a74d-a48a636847fd",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 07",
+  "target": "SHM-EP015-SC027-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 07 | THE SECOND COMMAND IS LOWERED\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_JAMSHID_WORKER}}  {{CHAR_GUARDS}}\nLOCATION REFERENCES\n{{LOC_JAMSHID_HIDEOUT}}\nPROP REFERENCES\n{{PROP_NET}}  {{PROP_WORKBENCH}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nLOCATION AND LIGHT\nA very small workshop dwelling at night. SOUTH entrance opens inward, EAST wall has a narrow high window, WEST wall has a crowded workbench. One shaded neutral task lamp at the bench and weak warm doorway spill reveal the mask and hands. The high window is too narrow for an adult passage.\nSTART STATE AND BLOCKING\nJamshid stands near the north wall, facing the south door. Guard A enters from the south and stops in front of him. Guard B occupies the east side between Jamshid and the window. Guards C and D remain at or beyond the doorway. Camera stations stay on the west side of this confrontation.\n\nPLAN 07 | SHOTS\nSHOT 07-01 | 0s–4s | 4 SECONDS\n35mm handheld from southwest inside the room. Jamshid is deeper in frame, facing the entering guards. His eyes check Guard A, Guard B and the door in quick succession. He shifts one foot toward the window, then stops when Guard B fills that route. Camera follows this small calculation through his head and shoulder movements.\nSHOT 07-02 | 4s–7s | 3 SECONDS\n50mm from west beside the workbench. Jamshid in profile faces screen right toward Guard A. He sees the high window beyond Guard B, understands the blocked space and straightens his spine. His fear stays visible in a short breath; his gaze becomes firm.\nSHOT 07-03 | 7s–12s | 5 SECONDS\n40mm medium from southwest, keeping Jamshid and Guard A in one frame. Jamshid repeats the exact gesture: RIGHT hand to shoulder height, elbow bent, palm outward, fingers together. Guard A enters his reach, takes the right forearm and lowers it in an ordinary unhurried action. Keep the entire raised-hand-to-lowered-hand action visible without a cut.\nSHOT 07-04 | 12s–15s | 3 SECONDS\n28mm close from west of the doorway. Guard A directs Jamshid toward the exit by the lowered arm; Guard B takes the other side. Jamshid moves under compulsion, neck upright, swallowing the humiliation. Camera withdraws toward the threshold as the three pass.\nEND STATE AND EDIT\nJamshid is escorted out by A and B; C and D follow. His right hand is lowered. He remains alert and dignified, with the second command visibly defeated.\nSOUND\nTask-room hum, entry steps, a short breath, sleeve tension under the guard's grip and continuing distant market sound. Sound never pauses for the gesture.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Jamshid (CHR-002 V04); match it wherever Jamshid appears.\n<<<image_2>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_3>>> is China Bazaar (LOC-037 V02); match it wherever China Bazaar appears.\n<<<image_4>>> is Jamshid Cell (LOC-040 V01); match it wherever Jamshid Cell appears.",
+  "basePrompt": "PLAN 07 | THE SECOND COMMAND IS LOWERED\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_JAMSHID_WORKER}}  {{CHAR_GUARDS}}\nLOCATION REFERENCES\n{{LOC_JAMSHID_HIDEOUT}}\nPROP REFERENCES\n{{PROP_NET}}  {{PROP_WORKBENCH}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nLOCATION AND LIGHT\nA very small workshop dwelling at night. SOUTH entrance opens inward, EAST wall has a narrow high window, WEST wall has a crowded workbench. One shaded neutral task lamp at the bench and weak warm doorway spill reveal the mask and hands. The high window is too narrow for an adult passage.\nSTART STATE AND BLOCKING\nJamshid stands near the north wall, facing the south door. Guard A enters from the south and stops in front of him. Guard B occupies the east side between Jamshid and the window. Guards C and D remain at or beyond the doorway. Camera stations stay on the west side of this confrontation.\n\nPLAN 07 | SHOTS\nSHOT 07-01 | 0s–4s | 4 SECONDS\n35mm handheld from southwest inside the room. Jamshid is deeper in frame, facing the entering guards. His eyes check Guard A, Guard B and the door in quick succession. He shifts one foot toward the window, then stops when Guard B fills that route. Camera follows this small calculation through his head and shoulder movements.\nSHOT 07-02 | 4s–7s | 3 SECONDS\n50mm from west beside the workbench. Jamshid in profile faces screen right toward Guard A. He sees the high window beyond Guard B, understands the blocked space and straightens his spine. His fear stays visible in a short breath; his gaze becomes firm.\nSHOT 07-03 | 7s–12s | 5 SECONDS\n40mm medium from southwest, keeping Jamshid and Guard A in one frame. Jamshid repeats the exact gesture: RIGHT hand to shoulder height, elbow bent, palm outward, fingers together. Guard A enters his reach, takes the right forearm and lowers it in an ordinary unhurried action. Keep the entire raised-hand-to-lowered-hand action visible without a cut.\nSHOT 07-04 | 12s–15s | 3 SECONDS\n28mm close from west of the doorway. Guard A directs Jamshid toward the exit by the lowered arm; Guard B takes the other side. Jamshid moves under compulsion, neck upright, swallowing the humiliation. Camera withdraws toward the threshold as the three pass.\nEND STATE AND EDIT\nJamshid is escorted out by A and B; C and D follow. His right hand is lowered. He remains alert and dignified, with the second command visibly defeated.\nSOUND\nTask-room hum, entry steps, a short breath, sleeve tension under the guard's grip and continuing distant market sound. Sound never pauses for the gesture.\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-002/V04",
+    "@GRP-005/V01",
+    "@LOC-037/V02",
+    "@LOC-040/V01"
+  ],
+  "sentRefs": [
+    "@CHR-002/V04",
+    "@GRP-005/V01",
+    "@LOC-037/V02",
+    "@LOC-040/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-10-30T16:41:09.479Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_163828_a38f7005-30a0-48b9-a74d-a48a636847fd.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-30T16:38:28.546615Z",
+      "display_name": "Seedance 2.5",
+      "id": "a38f7005-30a0-48b9-a74d-a48a636847fd",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "3f49029f-5e10-429d-95e5-4d24f17d66b9",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/3f49029f-5e10-429d-95e5-4d24f17d66b9.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "95824f2e-a21b-4ca3-a97f-e6c8c4ad5e6f",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/95824f2e-a21b-4ca3-a97f-e6c8c4ad5e6f.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "28318abb-0eec-45d8-8815-62cd17b922dd",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/28318abb-0eec-45d8-8815-62cd17b922dd.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "0ab76b31-f66a-4f6d-91bb-c361d7497cb7",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/0ab76b31-f66a-4f6d-91bb-c361d7497cb7.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 07 | THE SECOND COMMAND IS LOWERED\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_JAMSHID_WORKER}}  {{CHAR_GUARDS}}\nLOCATION REFERENCES\n{{LOC_JAMSHID_HIDEOUT}}\nPROP REFERENCES\n{{PROP_NET}}  {{PROP_WORKBENCH}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nLOCATION AND LIGHT\nA very small workshop dwelling at night. SOUTH entrance opens inward, EAST wall has a narrow high window, WEST wall has a crowded workbench. One shaded neutral task lamp at the bench and weak warm doorway spill reveal the mask and hands. The high window is too narrow for an adult passage.\nSTART STATE AND BLOCKING\nJamshid stands near the north wall, facing the south door. Guard A enters from the south and stops in front of him. Guard B occupies the east side between Jamshid and the window. Guards C and D remain at or beyond the doorway. Camera stations stay on the west side of this confrontation.\n\nPLAN 07 | SHOTS\nSHOT 07-01 | 0s–4s | 4 SECONDS\n35mm handheld from southwest inside the room. Jamshid is deeper in frame, facing the entering guards. His eyes check Guard A, Guard B and the door in quick succession. He shifts one foot toward the window, then stops when Guard B fills that route. Camera follows this small calculation through his head and shoulder movements.\nSHOT 07-02 | 4s–7s | 3 SECONDS\n50mm from west beside the workbench. Jamshid in profile faces screen right toward Guard A. He sees the high window beyond Guard B, understands the blocked space and straightens his spine. His fear stays visible in a short breath; his gaze becomes firm.\nSHOT 07-03 | 7s–12s | 5 SECONDS\n40mm medium from southwest, keeping Jamshid and Guard A in one frame. Jamshid repeats the exact gesture: RIGHT hand to shoulder height, elbow bent, palm outward, fingers together. Guard A enters his reach, takes the right forearm and lowers it in an ordinary unhurried action. Keep the entire raised-hand-to-lowered-hand action visible without a cut.\nSHOT 07-04 | 12s–15s | 3 SECONDS\n28mm close from west of the doorway. Guard A directs Jamshid toward the exit by the lowered arm; Guard B takes the other side. Jamshid moves under compulsion, neck upright, swallowing the humiliation. Camera withdraws toward the threshold as the three pass.\nEND STATE AND EDIT\nJamshid is escorted out by A and B; C and D follow. His right hand is lowered. He remains alert and dignified, with the second command visibly defeated.\nSOUND\nTask-room hum, entry steps, a short breath, sleeve tension under the guard's grip and continuing distant market sound. Sound never pauses for the gesture.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Jamshid (CHR-002 V04); match it wherever Jamshid appears.\n<<<image_2>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_3>>> is China Bazaar (LOC-037 V02); match it wherever China Bazaar appears.\n<<<image_4>>> is Jamshid Cell (LOC-040 V01); match it wherever Jamshid Cell appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 2111447501,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_163828_a38f7005-30a0-48b9-a74d-a48a636847fd.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_163828_a38f7005-30a0-48b9-a74d-a48a636847fd_thumbnail.webp"
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "jobId": "J-20261030-TEF",
+  "parentJobId": "J-20261030-LHP",
+  "hfJobId": "44557070-12bc-4602-a227-eb29645aba23",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 04",
+  "target": "SHM-EP015-SC024-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 04 | A BLACK MASS ENTERS THE HARBOR\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_SHIP_CREW}}\nLOCATION REFERENCES\n{{LOC_HARBOR_APPROACH}}  {{LOC_WORKING_QUAY}}\nPROP REFERENCES\n{{PROP_ZAHHAK_SHIP}}  {{PROP_MERCHANT_BOATS}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nLOCATION AND LIGHT\nFull night. Sparse cold practical lights from the port skim an immense black engineered hull. Small recessed ship lights reveal functional edges, railings and structural serpent motifs. The ship remains darker than its surroundings; its outline is readable against the faint sky.\nSTART STATE AND BLOCKING\nZahhak's dedicated ship approaches the harbor at slow docking speed. Ordinary merchant vessels remain much smaller beside the quay. Preserve the ship reference exactly, including snake-headed details and advanced structural design.\n\nPLAN 04 | SHOTS\nSHOT 04-01 | 0s–8s | 8 SECONDS\n12mm extreme wide from the shore, close to water height. The immense black ship advances slowly from the harbor entrance toward the quay. Let the bow progressively obscure distant port lamps. Small merchant craft and dock structures provide scale. Camera remains nearly fixed; hull displacement moves water in the foreground.\nSHOT 04-02 | 8s–15s | 7 SECONDS\n18mm very low angle from the quay beside the approaching hull. The bow and flank extend beyond the top and side of the frame. Track slowly along the quay for one meter as recessed lights and snake-shaped structural details pass overhead. Small masked crew members work at the upper rail. End with the elevated command landing visible above the docking area.\nEND STATE AND EDIT\nThe ship has reached docking position. A deliberate short ellipse may complete mooring before the next block. Keep ship design, night exposure and elevated landing consistent.\nSOUND\nHeavy low machinery, displaced water, hull creaks and metal tension. Keep the machinery physically localized to the ship, not a musical drone.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_3>>> is China Port Panorama (LOC-036 V02); match it wherever China Port Panorama appears.\n<<<image_4>>> is China Port Night Dock (LOC-038 V01); match it wherever China Port Night Dock appears.\n<<<image_5>>> is Zahhak Ship (PRP-024 V01); match it wherever Zahhak Ship appears.",
+  "basePrompt": "PLAN 04 | A BLACK MASS ENTERS THE HARBOR\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_SHIP_CREW}}\nLOCATION REFERENCES\n{{LOC_HARBOR_APPROACH}}  {{LOC_WORKING_QUAY}}\nPROP REFERENCES\n{{PROP_ZAHHAK_SHIP}}  {{PROP_MERCHANT_BOATS}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nLOCATION AND LIGHT\nFull night. Sparse cold practical lights from the port skim an immense black engineered hull. Small recessed ship lights reveal functional edges, railings and structural serpent motifs. The ship remains darker than its surroundings; its outline is readable against the faint sky.\nSTART STATE AND BLOCKING\nZahhak's dedicated ship approaches the harbor at slow docking speed. Ordinary merchant vessels remain much smaller beside the quay. Preserve the ship reference exactly, including snake-headed details and advanced structural design.\n\nPLAN 04 | SHOTS\nSHOT 04-01 | 0s–8s | 8 SECONDS\n12mm extreme wide from the shore, close to water height. The immense black ship advances slowly from the harbor entrance toward the quay. Let the bow progressively obscure distant port lamps. Small merchant craft and dock structures provide scale. Camera remains nearly fixed; hull displacement moves water in the foreground.\nSHOT 04-02 | 8s–15s | 7 SECONDS\n18mm very low angle from the quay beside the approaching hull. The bow and flank extend beyond the top and side of the frame. Track slowly along the quay for one meter as recessed lights and snake-shaped structural details pass overhead. Small masked crew members work at the upper rail. End with the elevated command landing visible above the docking area.\nEND STATE AND EDIT\nThe ship has reached docking position. A deliberate short ellipse may complete mooring before the next block. Keep ship design, night exposure and elevated landing consistent.\nSOUND\nHeavy low machinery, displaced water, hull creaks and metal tension. Keep the machinery physically localized to the ship, not a musical drone.\nNO MUSIC. NO DIALOGUE.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V08",
+    "@GRP-005/V01",
+    "@LOC-036/V02",
+    "@LOC-038/V01",
+    "@PRP-024/V01"
+  ],
+  "sentRefs": [
+    "@CHR-001/V08",
+    "@GRP-005/V01",
+    "@LOC-036/V02",
+    "@LOC-038/V01",
+    "@PRP-024/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-10-30T16:41:09.186Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_163843_44557070-12bc-4602-a227-eb29645aba23.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-30T16:38:43.24758Z",
+      "display_name": "Seedance 2.5",
+      "id": "44557070-12bc-4602-a227-eb29645aba23",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "b1926e8d-d7d2-45af-acf5-a8b4008c27b2",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/b1926e8d-d7d2-45af-acf5-a8b4008c27b2.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "7863a90a-3398-4ab2-be1e-978e11bede54",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/7863a90a-3398-4ab2-be1e-978e11bede54.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "1bb23795-b1f2-4eb0-912e-0bee984fecfa",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/1bb23795-b1f2-4eb0-912e-0bee984fecfa.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "78cf5aaf-65fc-4880-aca2-c92568bc61e9",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/78cf5aaf-65fc-4880-aca2-c92568bc61e9.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "80c115a8-9291-4ae4-8c1c-aa410443f0e5",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/80c115a8-9291-4ae4-8c1c-aa410443f0e5.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 04 | A BLACK MASS ENTERS THE HARBOR\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_SHIP_CREW}}\nLOCATION REFERENCES\n{{LOC_HARBOR_APPROACH}}  {{LOC_WORKING_QUAY}}\nPROP REFERENCES\n{{PROP_ZAHHAK_SHIP}}  {{PROP_MERCHANT_BOATS}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\nLOCATION AND LIGHT\nFull night. Sparse cold practical lights from the port skim an immense black engineered hull. Small recessed ship lights reveal functional edges, railings and structural serpent motifs. The ship remains darker than its surroundings; its outline is readable against the faint sky.\nSTART STATE AND BLOCKING\nZahhak's dedicated ship approaches the harbor at slow docking speed. Ordinary merchant vessels remain much smaller beside the quay. Preserve the ship reference exactly, including snake-headed details and advanced structural design.\n\nPLAN 04 | SHOTS\nSHOT 04-01 | 0s–8s | 8 SECONDS\n12mm extreme wide from the shore, close to water height. The immense black ship advances slowly from the harbor entrance toward the quay. Let the bow progressively obscure distant port lamps. Small merchant craft and dock structures provide scale. Camera remains nearly fixed; hull displacement moves water in the foreground.\nSHOT 04-02 | 8s–15s | 7 SECONDS\n18mm very low angle from the quay beside the approaching hull. The bow and flank extend beyond the top and side of the frame. Track slowly along the quay for one meter as recessed lights and snake-shaped structural details pass overhead. Small masked crew members work at the upper rail. End with the elevated command landing visible above the docking area.\nEND STATE AND EDIT\nThe ship has reached docking position. A deliberate short ellipse may complete mooring before the next block. Keep ship design, night exposure and elevated landing consistent.\nSOUND\nHeavy low machinery, displaced water, hull creaks and metal tension. Keep the machinery physically localized to the ship, not a musical drone.\nNO MUSIC. NO DIALOGUE.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_3>>> is China Port Panorama (LOC-036 V02); match it wherever China Port Panorama appears.\n<<<image_4>>> is China Port Night Dock (LOC-038 V01); match it wherever China Port Night Dock appears.\n<<<image_5>>> is Zahhak Ship (PRP-024 V01); match it wherever Zahhak Ship appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 557225708,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_163843_44557070-12bc-4602-a227-eb29645aba23.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_163843_44557070-12bc-4602-a227-eb29645aba23_thumbnail.webp"
+    }
+  ]
+}

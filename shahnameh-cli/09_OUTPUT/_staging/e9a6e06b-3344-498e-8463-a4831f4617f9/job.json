@@ -1,0 +1,172 @@
+{
+  "jobId": "J-20261030-22M",
+  "parentJobId": "J-20261030-P8B",
+  "hfJobId": "e9a6e06b-3344-498e-8463-a4831f4617f9",
+  "attempt": 2,
+  "stage": "draft",
+  "label": "PLAN 12",
+  "target": "SHM-EP015-SC032-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP015/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "BEGIN PROMPT\r\n\r\nPLAN 12 | THE WORLD CONTINUES\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_ZAHHAK}} @Zahhak (look 8)  {{CHAR_MARKET_PEOPLE}} @Chinese People (look 1) @Chinese People (look 3) @Chinese People (look 2)  {{CHAR_DOCK_WORKERS}} @Chinese People (look 3) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_BALCONY}} @Zahhak Balcony (look 1)  {{LOC_NIGHT_MARKET}} @China Port Night Dock (look 1) @China Bazaar (look 1)   {{LOC_WORKING_QUAY}} @China Port Night Dock (look 2) \r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_ZAHHAK_STAFF}}  {{PROP_MARKET_STALLS}}  {{PROP_MOORING_ROPE}}  {{PROP_MERCHANT_BOATS}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nZahhak remains unhurried and indifferent. Whenever he walks, show the staff planting first, weight transferring onto it, then the weaker leg following in an uneven step. Preserve the reference's weak-leg side. His two single-headed shoulder snakes remain alive, making small independent movements; preserve their attachment and proportions.\r\n\r\nLOCATION AND LIGHT\r\n\r\nCold full night. Balcony rail lights barely define Zahhak's silhouette. The working harbor below is somewhat brighter, with practical loading lamps reflected in water. In quay details, a neutral work lamp reveals wet rope and a fixed bollard. The world remains visually functional.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nZahhak is already stationary at the NORTH balcony rail facing the city below, staff planted, back to the hall. The machine is already running out of frame inside the residence. Night market lanes and working quay continue ordinary activity below; all visible people wear handmade masks.\r\n\r\n\r\nPLAN 12 | SHOTS\r\n\r\nSHOT 12-01 | 0s–2s | 2 SECONDS\r\n\r\n50mm calm close profile from WEST of Zahhak at rail height. He looks down toward the harbor market; a serpent makes a small living adjustment near his shoulder. No arrival, no turn back, no response to the machine.\r\n\r\nSHOT 12-02 | 2s–6s | 4 SECONDS\r\n\r\n24mm high oblique from the balcony looking down along the direction of his gaze. Market lanes, stalls, porters and waterfront activity occupy layered depth. People buy, carry and walk independently. Let the eye leave the palace and enter this ordinary world.\r\n\r\nSHOT 12-03 | 6s–9s | 3 SECONDS\r\n\r\n40mm at market stall height from beside a customer. A masked vendor passes a wrapped purchase to the customer, who receives it and moves aside for the next person. Small handheld observation follows their hands, then releases them.\r\n\r\nSHOT 12-04 | 9s–12s | 3 SECONDS\r\n\r\n28mm lateral at street level from an intersecting lane. Two masked porters carry a basket together across frame while another worker steps aside. A quiet physical drift follows their shared effort. Nobody reacts to the palace.\r\n\r\nSHOT 12-05 | 12s–15s | 3 SECONDS\r\n\r\n65mm close at the quay: a worker's hands draw the final turn of a mooring hitch tight around a bollard. The distant machine sound ceases during the last second; normal water and rope sounds continue for a brief beat. CUT TO BLACK at 15 seconds. No return to Jamshid, machine or Zahhak.\r\n\r\nEND STATE AND EDIT\r\n\r\nThe last image belongs to ordinary work and ongoing city life. Machine sound has stopped off-screen. Cut to black and silence after the brief continuation of water. Do not show the omitted death.\r\n\r\nSOUND\r\n\r\nRunning machine carried as a restrained editorial sound bridge, progressively beneath market foot traffic, packages, baskets, water and rope. No intelligible conversation. Machine stops near the final second, ordinary water remains briefly, then black and silence.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Jamshid (CHR-002 V04); match it wherever Jamshid appears.\n<<<image_3>>> is Chinese People (GRP-011 V01); match it wherever Chinese People appears.\n<<<image_4>>> is China Port Night Dock (LOC-038 V01); match it wherever China Port Night Dock appears.\n<<<image_5>>> is Zahhak Balcony (LOC-041 V01); match it wherever Zahhak Balcony appears.\n<<<image_6>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.\n<<<image_7>>> is China Port Night Dock (LOC-038 V02); match it wherever China Port Night Dock appears.\n<<<image_8>>> is Chinese People (GRP-011 V03); match it wherever Chinese People appears.\n<<<image_9>>> is Chinese People (GRP-011 V02); match it wherever Chinese People appears.\n<<<image_10>>> is China Bazaar (LOC-037 V01); match it wherever China Bazaar appears.",
+  "basePrompt": "BEGIN PROMPT\r\n\r\nPLAN 12 | THE WORLD CONTINUES\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_ZAHHAK}} @Zahhak (look 8)  {{CHAR_MARKET_PEOPLE}} @Chinese People (look 1) @Chinese People (look 3) @Chinese People (look 2)  {{CHAR_DOCK_WORKERS}} @Chinese People (look 3) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_BALCONY}} @Zahhak Balcony (look 1)  {{LOC_NIGHT_MARKET}} @China Port Night Dock (look 1) @China Bazaar (look 1)   {{LOC_WORKING_QUAY}} @China Port Night Dock (look 2) \r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_ZAHHAK_STAFF}}  {{PROP_MARKET_STALLS}}  {{PROP_MOORING_ROPE}}  {{PROP_MERCHANT_BOATS}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nZahhak remains unhurried and indifferent. Whenever he walks, show the staff planting first, weight transferring onto it, then the weaker leg following in an uneven step. Preserve the reference's weak-leg side. His two single-headed shoulder snakes remain alive, making small independent movements; preserve their attachment and proportions.\r\n\r\nLOCATION AND LIGHT\r\n\r\nCold full night. Balcony rail lights barely define Zahhak's silhouette. The working harbor below is somewhat brighter, with practical loading lamps reflected in water. In quay details, a neutral work lamp reveals wet rope and a fixed bollard. The world remains visually functional.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nZahhak is already stationary at the NORTH balcony rail facing the city below, staff planted, back to the hall. The machine is already running out of frame inside the residence. Night market lanes and working quay continue ordinary activity below; all visible people wear handmade masks.\r\n\r\n\r\nPLAN 12 | SHOTS\r\n\r\nSHOT 12-01 | 0s–2s | 2 SECONDS\r\n\r\n50mm calm close profile from WEST of Zahhak at rail height. He looks down toward the harbor market; a serpent makes a small living adjustment near his shoulder. No arrival, no turn back, no response to the machine.\r\n\r\nSHOT 12-02 | 2s–6s | 4 SECONDS\r\n\r\n24mm high oblique from the balcony looking down along the direction of his gaze. Market lanes, stalls, porters and waterfront activity occupy layered depth. People buy, carry and walk independently. Let the eye leave the palace and enter this ordinary world.\r\n\r\nSHOT 12-03 | 6s–9s | 3 SECONDS\r\n\r\n40mm at market stall height from beside a customer. A masked vendor passes a wrapped purchase to the customer, who receives it and moves aside for the next person. Small handheld observation follows their hands, then releases them.\r\n\r\nSHOT 12-04 | 9s–12s | 3 SECONDS\r\n\r\n28mm lateral at street level from an intersecting lane. Two masked porters carry a basket together across frame while another worker steps aside. A quiet physical drift follows their shared effort. Nobody reacts to the palace.\r\n\r\nSHOT 12-05 | 12s–15s | 3 SECONDS\r\n\r\n65mm close at the quay: a worker's hands draw the final turn of a mooring hitch tight around a bollard. The distant machine sound ceases during the last second; normal water and rope sounds continue for a brief beat. CUT TO BLACK at 15 seconds. No return to Jamshid, machine or Zahhak.\r\n\r\nEND STATE AND EDIT\r\n\r\nThe last image belongs to ordinary work and ongoing city life. Machine sound has stopped off-screen. Cut to black and silence after the brief continuation of water. Do not show the omitted death.\r\n\r\nSOUND\r\n\r\nRunning machine carried as a restrained editorial sound bridge, progressively beneath market foot traffic, packages, baskets, water and rope. No intelligible conversation. Machine stops near the final second, ordinary water remains briefly, then black and silence.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V08",
+    "@CHR-002/V04",
+    "@GRP-011/V01",
+    "@LOC-038/V01",
+    "@LOC-041/V01",
+    "@PRP-001/V01",
+    "@LOC-038/V02",
+    "@GRP-011/V03",
+    "@GRP-011/V02",
+    "@LOC-037/V01"
+  ],
+  "sentRefs": [
+    "@CHR-001/V08",
+    "@CHR-002/V04",
+    "@GRP-011/V01",
+    "@LOC-038/V01",
+    "@LOC-041/V01",
+    "@PRP-001/V01",
+    "@LOC-038/V02",
+    "@GRP-011/V03",
+    "@GRP-011/V02",
+    "@LOC-037/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-10-30T19:39:17.624Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_193711_e9a6e06b-3344-498e-8463-a4831f4617f9.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-10-30T19:37:11.732821Z",
+      "display_name": "Seedance 2.5",
+      "id": "e9a6e06b-3344-498e-8463-a4831f4617f9",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "0637094e-6758-4f5e-b5b0-826870b372a5",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/0637094e-6758-4f5e-b5b0-826870b372a5.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "434ca6a7-127b-45e8-8612-0b16b7aea8a1",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/434ca6a7-127b-45e8-8612-0b16b7aea8a1.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "540147c0-a617-4aa0-a0cc-94753352c60b",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/540147c0-a617-4aa0-a0cc-94753352c60b.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "36e68eba-f76a-4122-81e2-660171d251c2",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/36e68eba-f76a-4122-81e2-660171d251c2.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "cf1fef3c-cb61-4186-8dbf-c380b08b7625",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/cf1fef3c-cb61-4186-8dbf-c380b08b7625.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "633be9fd-684c-4741-909d-90cae8a1d81f",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/633be9fd-684c-4741-909d-90cae8a1d81f.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "36b541ec-e557-465b-a7eb-53f1ff8c70de",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/36b541ec-e557-465b-a7eb-53f1ff8c70de.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "32b0a714-b498-4dc1-bc4c-94fce8c9dfe9",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/32b0a714-b498-4dc1-bc4c-94fce8c9dfe9.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "a3163ac1-5f41-4eab-8b92-0bb86ca5ea41",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/a3163ac1-5f41-4eab-8b92-0bb86ca5ea41.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "042e801a-98b0-4b97-8095-75fa99d7fa92",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/042e801a-98b0-4b97-8095-75fa99d7fa92.png"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "BEGIN PROMPT\r\n\r\nPLAN 12 | THE WORLD CONTINUES\r\n\r\nDURATION 15 SECONDS | HORIZONTAL 16:9\r\n\r\nCHARACTER REFERENCES\r\n\r\n{{CHAR_ZAHHAK}} @Zahhak (look 8)  {{CHAR_MARKET_PEOPLE}} @Chinese People (look 1) @Chinese People (look 3) @Chinese People (look 2)  {{CHAR_DOCK_WORKERS}} @Chinese People (look 3) \r\n\r\nLOCATION REFERENCES\r\n\r\n{{LOC_BALCONY}} @Zahhak Balcony (look 1)  {{LOC_NIGHT_MARKET}} @China Port Night Dock (look 1) @China Bazaar (look 1)   {{LOC_WORKING_QUAY}} @China Port Night Dock (look 2) \r\n\r\nPROP REFERENCES\r\n\r\n{{PROP_ZAHHAK_STAFF}}  {{PROP_MARKET_STALLS}}  {{PROP_MOORING_ROPE}}  {{PROP_MERCHANT_BOATS}}\r\n\r\nDIRECTION AND CONTINUITY\r\n\r\nCreate a 15-second horizontal 16:9 live-action cinematic sequence. Preserve each referenced identity, costume, proportions and rigid handmade mask; mask geometry and eye openings remain fixed. All visible humans wear their referenced masks. Emotion comes from posture, hands, breath and visible eyes. Each listed hard cut changes the physical camera station, lens or viewpoint. Handheld movement follows a possible path and recovers focus on essential action. References anchor design; written lighting controls illumination. Tactile modern Iranian mythological design, analog realism and natural imperfections. NO MUSIC. NO DIALOGUE.\r\n\r\nZahhak remains unhurried and indifferent. Whenever he walks, show the staff planting first, weight transferring onto it, then the weaker leg following in an uneven step. Preserve the reference's weak-leg side. His two single-headed shoulder snakes remain alive, making small independent movements; preserve their attachment and proportions.\r\n\r\nLOCATION AND LIGHT\r\n\r\nCold full night. Balcony rail lights barely define Zahhak's silhouette. The working harbor below is somewhat brighter, with practical loading lamps reflected in water. In quay details, a neutral work lamp reveals wet rope and a fixed bollard. The world remains visually functional.\r\n\r\nSTART STATE AND BLOCKING\r\n\r\nZahhak is already stationary at the NORTH balcony rail facing the city below, staff planted, back to the hall. The machine is already running out of frame inside the residence. Night market lanes and working quay continue ordinary activity below; all visible people wear handmade masks.\r\n\r\n\r\nPLAN 12 | SHOTS\r\n\r\nSHOT 12-01 | 0s–2s | 2 SECONDS\r\n\r\n50mm calm close profile from WEST of Zahhak at rail height. He looks down toward the harbor market; a serpent makes a small living adjustment near his shoulder. No arrival, no turn back, no response to the machine.\r\n\r\nSHOT 12-02 | 2s–6s | 4 SECONDS\r\n\r\n24mm high oblique from the balcony looking down along the direction of his gaze. Market lanes, stalls, porters and waterfront activity occupy layered depth. People buy, carry and walk independently. Let the eye leave the palace and enter this ordinary world.\r\n\r\nSHOT 12-03 | 6s–9s | 3 SECONDS\r\n\r\n40mm at market stall height from beside a customer. A masked vendor passes a wrapped purchase to the customer, who receives it and moves aside for the next person. Small handheld observation follows their hands, then releases them.\r\n\r\nSHOT 12-04 | 9s–12s | 3 SECONDS\r\n\r\n28mm lateral at street level from an intersecting lane. Two masked porters carry a basket together across frame while another worker steps aside. A quiet physical drift follows their shared effort. Nobody reacts to the palace.\r\n\r\nSHOT 12-05 | 12s–15s | 3 SECONDS\r\n\r\n65mm close at the quay: a worker's hands draw the final turn of a mooring hitch tight around a bollard. The distant machine sound ceases during the last second; normal water and rope sounds continue for a brief beat. CUT TO BLACK at 15 seconds. No return to Jamshid, machine or Zahhak.\r\n\r\nEND STATE AND EDIT\r\n\r\nThe last image belongs to ordinary work and ongoing city life. Machine sound has stopped off-screen. Cut to black and silence after the brief continuation of water. Do not show the omitted death.\r\n\r\nSOUND\r\n\r\nRunning machine carried as a restrained editorial sound bridge, progressively beneath market foot traffic, packages, baskets, water and rope. No intelligible conversation. Machine stops near the final second, ordinary water remains briefly, then black and silence.\r\n\r\nNO MUSIC. NO DIALOGUE.\r\n\r\nEND PROMPT\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Jamshid (CHR-002 V04); match it wherever Jamshid appears.\n<<<image_3>>> is Chinese People (GRP-011 V01); match it wherever Chinese People appears.\n<<<image_4>>> is China Port Night Dock (LOC-038 V01); match it wherever China Port Night Dock appears.\n<<<image_5>>> is Zahhak Balcony (LOC-041 V01); match it wherever Zahhak Balcony appears.\n<<<image_6>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.\n<<<image_7>>> is China Port Night Dock (LOC-038 V02); match it wherever China Port Night Dock appears.\n<<<image_8>>> is Chinese People (GRP-011 V03); match it wherever Chinese People appears.\n<<<image_9>>> is Chinese People (GRP-011 V02); match it wherever Chinese People appears.\n<<<image_10>>> is China Bazaar (LOC-037 V01); match it wherever China Bazaar appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 387977268,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_193711_e9a6e06b-3344-498e-8463-a4831f4617f9.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3HXqzfzxStXJZuAbpwH4bp5kFc5/hf_20261030_193711_e9a6e06b-3344-498e-8463-a4831f4617f9_thumbnail.webp"
+    }
+  ]
+}
