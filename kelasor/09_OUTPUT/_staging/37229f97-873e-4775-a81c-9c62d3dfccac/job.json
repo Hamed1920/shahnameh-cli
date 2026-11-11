@@ -1,0 +1,122 @@
+{
+  "jobId": "J-20261110-EST",
+  "parentJobId": null,
+  "hfJobId": "37229f97-873e-4775-a81c-9c62d3dfccac",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PROMPT 02",
+  "target": "KEL-EP001-SC002-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/KEL-EP001/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "KELAASOR × HAMED HEYDARI | ZAHHAK AND THE SEEKER OF JUSTICE | SEEDANCE 2.5\nREFERENCE AND CONTINUITY LOCK\nCHARACTER REFERENCES\n{{CHAR_HAMED}}\n{{CHAR_ZAHHAK}}\n{{CHAR_DADKHAH}}\n{{CHAR_GUARD_01}}\n{{CHAR_GUARD_02}}\n{{CHAR_GUARD_03}}\n{{CHAR_GUARD_04}}\nLOCATION REFERENCES\n{{LOC_THRONE_STAGE}}\n{{LOC_THEATER_AUDITORIUM}}\nPROP REFERENCES\n{{PROP_ZAHHAK_CHAIR}}\n{{PROP_STEP_PLATFORM}}\n{{PROP_GUARD_SPEARS}}\n{{PROP_TOMATO}}\nIDENTITY LOCK\nHamed is the same contemporary director in every block, wearing his reference cap, round black glasses, gray beard, black hoodie and dark trousers. No extra Hamed doubles.\nZahhak keeps his exact established handmade mask, dark clothing, serpents and facial silhouette. Keep the serpent forms attached and fixed; do not add animal heads or replace his mask. His body is adult human scale except during the deliberately temporary visual size gag.\nThe seeker of justice is ONE masked adult human, continuously in the same costume, standing or kneeling with dignified resistance. Preserve the same handmade mask and silhouette.\nExactly FOUR distinct masked guards, each retaining individual costume and rigid mask. Their spears remain rigid objects; no new guards appear.\nUse one single stage space. The audience is physically seated in the dark auditorium from the start, but remains strictly outside all camera frames until the final reveal. Do not generate spectators on the stage.\nNo dialogue, narration, music, subtitles, captions or readable text. No fantasy particles, smoke bursts, magical wardrobe changes, detached shadows or impossible architecture. The size-change gag is the ONLY deliberate nonphysical change, and it must occur without redesigning Zahhak.\nPRODUCTION PROMPT\nDIRECTION AND SPATIAL RULES\nDirect continuation of BLOCK 01. The same four guards have just formed an excessively tight foreground wall in the original SOUTH-to-NORTH master angle. Keep their identities, count, weapons, physical positions and the room unchanged. The original chair remains on flat floor; there is still no platform.\nThe two comic failures must be calm and precise. Do not change Zahhak's mask design or clothing when his scale changes. Scale is deliberately an editorial visual gag; keep the camera and set physically stable and avoid transforming walls or camera perspective.\nSHOT K02-01 | 15s–19s | 4 SECONDS\n28mm locked SOUTH master, same lens height and axis as K01-04. All four guards now stand in such a dense line that their backs and vertical spears almost completely hide Zahhak AND the seeker. Hold one dry beat. Hamed steps sideways into view, attempts to find a clean sightline by leaning a few inches, fails again. He makes a minimal palm-out gesture. Guards step backward and fan apart to their initial scattered positions, fully revealing both protagonists by the end of the shot.\nSound: abrupt cessation of boots; cloth and spear-shaft taps; awkward silence.\nSHOT K02-02 | 19s–22s | 3 SECONDS\n50mm medium from the WEST edge of the stage. Hamed regards Zahhak's low ordinary chair and raises his hand slightly to test a larger physical image of Zahhak. The scene responds: Zahhak begins to increase uniformly in size while remaining seated in exactly the same chair location. Preserve his face mask, serpents, limbs and garment folds without morphing. His chair stays unchanged, emphasizing the mismatch. Zahhak remains utterly serious.\nSound: only a subtle leather strain and chair creak, no magical whoosh.\nSHOT K02-03 | 22s–25s | 3 SECONDS\nCut to the unchanged 28mm SOUTH master. Zahhak has become so enormous that his mask and head extend beyond the top edge of the stationary frame. His body fills the right half, overwhelming the seeker; no extra heads, no changing identity. Hamed, near camera-left, tilts his face upward once to inspect the absurd crop. A controlled deadpan pause.\nSound: slight chair creak, quiet floor ambience.\nSHOT K02-04 | 25s–28s | 3 SECONDS\nStill in the same locked SOUTH master composition. Hamed lowers his raised hand. Zahhak returns smoothly to precise original human size and original seated position. His mask and costume remain identical. No other element changes scale. Hamed studies the now normal-size king, then looks to the guards as if a physical solution has occurred to him.\nSound: chair settles; no fantasy effects.\nSHOT K02-05 | 28s–30s | 2 SECONDS\n65mm medium close three-quarter on Hamed. He gives a practical beckoning gesture toward two guards at the EAST side, followed by a short gesture toward the off-stage SOUTHWEST storage access. He is asking for help bringing something substantial into the stage, without speaking. The guards turn and start to leave frame.\nSound: two firm footsteps heading off-stage.\nEND STATE AND EDIT\nZahhak is NORMAL human size, seated on the original chair at NORTH center-right; all four guards retain their original costume and masks. Two guards head for the off-stage storage access while two remain with the scene. Hamed stays near the SOUTH foreground. The stage is still evenly lit; no podium exists yet. BLOCK 03 begins with a real platform arriving by labor, not appearing from nowhere.\n\n<<<image_1>>> is Hamed (CHR-001 V01); match it wherever Hamed appears.\n<<<image_2>>> is Zahhak (CHR-002 V01); match it wherever Zahhak appears.\n<<<image_3>>> is Palace Guards (GRP-001 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Zahhak Hall (LOC-001 V01); match it wherever Zahhak Hall appears.\n<<<image_5>>> is Gilded Lion Armchair (PRP-001 V01); match it wherever Gilded Lion Armchair appears.",
+  "basePrompt": "KELAASOR × HAMED HEYDARI | ZAHHAK AND THE SEEKER OF JUSTICE | SEEDANCE 2.5\nREFERENCE AND CONTINUITY LOCK\nCHARACTER REFERENCES\n{{CHAR_HAMED}}\n{{CHAR_ZAHHAK}}\n{{CHAR_DADKHAH}}\n{{CHAR_GUARD_01}}\n{{CHAR_GUARD_02}}\n{{CHAR_GUARD_03}}\n{{CHAR_GUARD_04}}\nLOCATION REFERENCES\n{{LOC_THRONE_STAGE}}\n{{LOC_THEATER_AUDITORIUM}}\nPROP REFERENCES\n{{PROP_ZAHHAK_CHAIR}}\n{{PROP_STEP_PLATFORM}}\n{{PROP_GUARD_SPEARS}}\n{{PROP_TOMATO}}\nIDENTITY LOCK\nHamed is the same contemporary director in every block, wearing his reference cap, round black glasses, gray beard, black hoodie and dark trousers. No extra Hamed doubles.\nZahhak keeps his exact established handmade mask, dark clothing, serpents and facial silhouette. Keep the serpent forms attached and fixed; do not add animal heads or replace his mask. His body is adult human scale except during the deliberately temporary visual size gag.\nThe seeker of justice is ONE masked adult human, continuously in the same costume, standing or kneeling with dignified resistance. Preserve the same handmade mask and silhouette.\nExactly FOUR distinct masked guards, each retaining individual costume and rigid mask. Their spears remain rigid objects; no new guards appear.\nUse one single stage space. The audience is physically seated in the dark auditorium from the start, but remains strictly outside all camera frames until the final reveal. Do not generate spectators on the stage.\nNo dialogue, narration, music, subtitles, captions or readable text. No fantasy particles, smoke bursts, magical wardrobe changes, detached shadows or impossible architecture. The size-change gag is the ONLY deliberate nonphysical change, and it must occur without redesigning Zahhak.\nPRODUCTION PROMPT\nDIRECTION AND SPATIAL RULES\nDirect continuation of BLOCK 01. The same four guards have just formed an excessively tight foreground wall in the original SOUTH-to-NORTH master angle. Keep their identities, count, weapons, physical positions and the room unchanged. The original chair remains on flat floor; there is still no platform.\nThe two comic failures must be calm and precise. Do not change Zahhak's mask design or clothing when his scale changes. Scale is deliberately an editorial visual gag; keep the camera and set physically stable and avoid transforming walls or camera perspective.\nSHOT K02-01 | 15s–19s | 4 SECONDS\n28mm locked SOUTH master, same lens height and axis as K01-04. All four guards now stand in such a dense line that their backs and vertical spears almost completely hide Zahhak AND the seeker. Hold one dry beat. Hamed steps sideways into view, attempts to find a clean sightline by leaning a few inches, fails again. He makes a minimal palm-out gesture. Guards step backward and fan apart to their initial scattered positions, fully revealing both protagonists by the end of the shot.\nSound: abrupt cessation of boots; cloth and spear-shaft taps; awkward silence.\nSHOT K02-02 | 19s–22s | 3 SECONDS\n50mm medium from the WEST edge of the stage. Hamed regards Zahhak's low ordinary chair and raises his hand slightly to test a larger physical image of Zahhak. The scene responds: Zahhak begins to increase uniformly in size while remaining seated in exactly the same chair location. Preserve his face mask, serpents, limbs and garment folds without morphing. His chair stays unchanged, emphasizing the mismatch. Zahhak remains utterly serious.\nSound: only a subtle leather strain and chair creak, no magical whoosh.\nSHOT K02-03 | 22s–25s | 3 SECONDS\nCut to the unchanged 28mm SOUTH master. Zahhak has become so enormous that his mask and head extend beyond the top edge of the stationary frame. His body fills the right half, overwhelming the seeker; no extra heads, no changing identity. Hamed, near camera-left, tilts his face upward once to inspect the absurd crop. A controlled deadpan pause.\nSound: slight chair creak, quiet floor ambience.\nSHOT K02-04 | 25s–28s | 3 SECONDS\nStill in the same locked SOUTH master composition. Hamed lowers his raised hand. Zahhak returns smoothly to precise original human size and original seated position. His mask and costume remain identical. No other element changes scale. Hamed studies the now normal-size king, then looks to the guards as if a physical solution has occurred to him.\nSound: chair settles; no fantasy effects.\nSHOT K02-05 | 28s–30s | 2 SECONDS\n65mm medium close three-quarter on Hamed. He gives a practical beckoning gesture toward two guards at the EAST side, followed by a short gesture toward the off-stage SOUTHWEST storage access. He is asking for help bringing something substantial into the stage, without speaking. The guards turn and start to leave frame.\nSound: two firm footsteps heading off-stage.\nEND STATE AND EDIT\nZahhak is NORMAL human size, seated on the original chair at NORTH center-right; all four guards retain their original costume and masks. Two guards head for the off-stage storage access while two remain with the scene. Hamed stays near the SOUTH foreground. The stage is still evenly lit; no podium exists yet. BLOCK 03 begins with a real platform arriving by labor, not appearing from nowhere.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V01",
+    "@CHR-002/V01",
+    "@GRP-001/V01",
+    "@LOC-001/V01",
+    "@PRP-001/V01"
+  ],
+  "sentRefs": [
+    "@CHR-001/V01",
+    "@CHR-002/V01",
+    "@GRP-001/V01",
+    "@LOC-001/V01",
+    "@PRP-001/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-11-10T17:55:49.941Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261110_175409_37229f97-873e-4775-a81c-9c62d3dfccac.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-11-10T17:54:09.342794Z",
+      "display_name": "Seedance 2.5",
+      "id": "37229f97-873e-4775-a81c-9c62d3dfccac",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "3635acb7-666d-406a-bb3e-5b4fc30d847e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/3635acb7-666d-406a-bb3e-5b4fc30d847e.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "4fb7b32f-1c4e-4dc8-9112-afc78b471aa4",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/4fb7b32f-1c4e-4dc8-9112-afc78b471aa4.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "b9e06566-7914-48c8-af8e-97003c54e28d",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/b9e06566-7914-48c8-af8e-97003c54e28d.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "c7b5ee15-a6de-4ee0-8c2a-6e8516bb7f20",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/c7b5ee15-a6de-4ee0-8c2a-6e8516bb7f20.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "0f77a30a-61a8-4aaf-8057-e08b29cda60a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/0f77a30a-61a8-4aaf-8057-e08b29cda60a.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "KELAASOR × HAMED HEYDARI | ZAHHAK AND THE SEEKER OF JUSTICE | SEEDANCE 2.5\nREFERENCE AND CONTINUITY LOCK\nCHARACTER REFERENCES\n{{CHAR_HAMED}}\n{{CHAR_ZAHHAK}}\n{{CHAR_DADKHAH}}\n{{CHAR_GUARD_01}}\n{{CHAR_GUARD_02}}\n{{CHAR_GUARD_03}}\n{{CHAR_GUARD_04}}\nLOCATION REFERENCES\n{{LOC_THRONE_STAGE}}\n{{LOC_THEATER_AUDITORIUM}}\nPROP REFERENCES\n{{PROP_ZAHHAK_CHAIR}}\n{{PROP_STEP_PLATFORM}}\n{{PROP_GUARD_SPEARS}}\n{{PROP_TOMATO}}\nIDENTITY LOCK\nHamed is the same contemporary director in every block, wearing his reference cap, round black glasses, gray beard, black hoodie and dark trousers. No extra Hamed doubles.\nZahhak keeps his exact established handmade mask, dark clothing, serpents and facial silhouette. Keep the serpent forms attached and fixed; do not add animal heads or replace his mask. His body is adult human scale except during the deliberately temporary visual size gag.\nThe seeker of justice is ONE masked adult human, continuously in the same costume, standing or kneeling with dignified resistance. Preserve the same handmade mask and silhouette.\nExactly FOUR distinct masked guards, each retaining individual costume and rigid mask. Their spears remain rigid objects; no new guards appear.\nUse one single stage space. The audience is physically seated in the dark auditorium from the start, but remains strictly outside all camera frames until the final reveal. Do not generate spectators on the stage.\nNo dialogue, narration, music, subtitles, captions or readable text. No fantasy particles, smoke bursts, magical wardrobe changes, detached shadows or impossible architecture. The size-change gag is the ONLY deliberate nonphysical change, and it must occur without redesigning Zahhak.\nPRODUCTION PROMPT\nDIRECTION AND SPATIAL RULES\nDirect continuation of BLOCK 01. The same four guards have just formed an excessively tight foreground wall in the original SOUTH-to-NORTH master angle. Keep their identities, count, weapons, physical positions and the room unchanged. The original chair remains on flat floor; there is still no platform.\nThe two comic failures must be calm and precise. Do not change Zahhak's mask design or clothing when his scale changes. Scale is deliberately an editorial visual gag; keep the camera and set physically stable and avoid transforming walls or camera perspective.\nSHOT K02-01 | 15s–19s | 4 SECONDS\n28mm locked SOUTH master, same lens height and axis as K01-04. All four guards now stand in such a dense line that their backs and vertical spears almost completely hide Zahhak AND the seeker. Hold one dry beat. Hamed steps sideways into view, attempts to find a clean sightline by leaning a few inches, fails again. He makes a minimal palm-out gesture. Guards step backward and fan apart to their initial scattered positions, fully revealing both protagonists by the end of the shot.\nSound: abrupt cessation of boots; cloth and spear-shaft taps; awkward silence.\nSHOT K02-02 | 19s–22s | 3 SECONDS\n50mm medium from the WEST edge of the stage. Hamed regards Zahhak's low ordinary chair and raises his hand slightly to test a larger physical image of Zahhak. The scene responds: Zahhak begins to increase uniformly in size while remaining seated in exactly the same chair location. Preserve his face mask, serpents, limbs and garment folds without morphing. His chair stays unchanged, emphasizing the mismatch. Zahhak remains utterly serious.\nSound: only a subtle leather strain and chair creak, no magical whoosh.\nSHOT K02-03 | 22s–25s | 3 SECONDS\nCut to the unchanged 28mm SOUTH master. Zahhak has become so enormous that his mask and head extend beyond the top edge of the stationary frame. His body fills the right half, overwhelming the seeker; no extra heads, no changing identity. Hamed, near camera-left, tilts his face upward once to inspect the absurd crop. A controlled deadpan pause.\nSound: slight chair creak, quiet floor ambience.\nSHOT K02-04 | 25s–28s | 3 SECONDS\nStill in the same locked SOUTH master composition. Hamed lowers his raised hand. Zahhak returns smoothly to precise original human size and original seated position. His mask and costume remain identical. No other element changes scale. Hamed studies the now normal-size king, then looks to the guards as if a physical solution has occurred to him.\nSound: chair settles; no fantasy effects.\nSHOT K02-05 | 28s–30s | 2 SECONDS\n65mm medium close three-quarter on Hamed. He gives a practical beckoning gesture toward two guards at the EAST side, followed by a short gesture toward the off-stage SOUTHWEST storage access. He is asking for help bringing something substantial into the stage, without speaking. The guards turn and start to leave frame.\nSound: two firm footsteps heading off-stage.\nEND STATE AND EDIT\nZahhak is NORMAL human size, seated on the original chair at NORTH center-right; all four guards retain their original costume and masks. Two guards head for the off-stage storage access while two remain with the scene. Hamed stays near the SOUTH foreground. The stage is still evenly lit; no podium exists yet. BLOCK 03 begins with a real platform arriving by labor, not appearing from nowhere.\n\n<<<image_1>>> is Hamed (CHR-001 V01); match it wherever Hamed appears.\n<<<image_2>>> is Zahhak (CHR-002 V01); match it wherever Zahhak appears.\n<<<image_3>>> is Palace Guards (GRP-001 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Zahhak Hall (LOC-001 V01); match it wherever Zahhak Hall appears.\n<<<image_5>>> is Gilded Lion Armchair (PRP-001 V01); match it wherever Gilded Lion Armchair appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 897969867,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261110_175409_37229f97-873e-4775-a81c-9c62d3dfccac.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261110_175409_37229f97-873e-4775-a81c-9c62d3dfccac_thumbnail.webp"
+    }
+  ]
+}

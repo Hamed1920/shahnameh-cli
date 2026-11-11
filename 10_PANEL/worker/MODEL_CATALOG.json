@@ -1,6 +1,6 @@
 {
  "_comment": "Written by the worker from `higgsfield model list` / `model get` (worker/lib/models.mjs). Do not edit by hand; refresh from the Prompts page or restart a worker once it is a day old.",
- "fetchedAt": "2026-11-05T16:23:48.649Z",
+ "fetchedAt": "2026-11-10T15:52:26.879Z",
  "models": {
   "3d_jutsu_angles": {
    "job_type": "3d_jutsu_angles",
@@ -1331,6 +1331,136 @@
    "refs": {
     "param": "image_references",
     "max": 8,
+    "min": 0
+   },
+   "sound": null,
+   "stages": {
+    "draft": "360p",
+    "final": "4k",
+    "options": [
+     "360p",
+     "720p",
+     "1080p",
+     "4k"
+    ]
+   }
+  },
+  "gemini_omni_flash_1_2": {
+   "job_type": "gemini_omni_flash_1_2",
+   "display_name": "Gemini Omni Flash 1.2",
+   "type": "video",
+   "usable": true,
+   "params": [
+    {
+     "name": "aspect_ratio",
+     "type": "string",
+     "default": "16:9",
+     "required": false,
+     "enum": [
+      "16:9",
+      "9:16"
+     ]
+    },
+    {
+     "name": "duration",
+     "type": "integer",
+     "default": 8,
+     "required": false,
+     "max": 10
+    },
+    {
+     "name": "end_image",
+     "type": "object|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "mode",
+     "type": "string",
+     "default": null,
+     "required": true,
+     "enum": [
+      "text-to-video",
+      "image-to-video",
+      "reference-to-video",
+      "edit",
+      "extend"
+     ]
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "resolution",
+     "type": "string",
+     "default": "720p",
+     "required": false,
+     "enum": [
+      "360p",
+      "720p",
+      "1080p",
+      "4k"
+     ]
+    },
+    {
+     "name": "start_image",
+     "type": "object|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "video_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    }
+   ],
+   "rules": [
+    "params.mode != \"text-to-video\" || (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) + size(params.image_references) + size(params.video_references) == 0",
+    "params.mode != \"image-to-video\" || (!(params.start_image == null) && size(params.image_references) == 0 && size(params.video_references) == 0)",
+    "params.mode != \"reference-to-video\" || ((params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) == 0 && size(params.image_references) + size(params.video_references) > 0)",
+    "params.mode != \"edit\" || ((params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) == 0 && size(params.video_references) == 1)",
+    "params.mode != \"extend\" || ((params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) == 0 && size(params.image_references) == 0 && size(params.video_references) == 1)",
+    "params.duration <= 10 || params.mode == \"edit\" || params.mode == \"text-to-video\" || (params.mode == \"image-to-video\" && params.end_image == null)"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "params.mode != \"text-to-video\" || (params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) + size(params.image_references) + size(params.video_references) == 0",
+     "message": "mode 'text-to-video' does not accept media"
+    },
+    {
+     "cel": "params.mode != \"image-to-video\" || (!(params.start_image == null) && size(params.image_references) == 0 && size(params.video_references) == 0)",
+     "message": "mode 'image-to-video' requires start_image and accepts only an optional end_image"
+    },
+    {
+     "cel": "params.mode != \"reference-to-video\" || ((params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) == 0 && size(params.image_references) + size(params.video_references) > 0)",
+     "message": "mode 'reference-to-video' requires references and does not accept keyframes"
+    },
+    {
+     "cel": "params.mode != \"edit\" || ((params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) == 0 && size(params.video_references) == 1)",
+     "message": "mode 'edit' requires one source video and accepts optional reference images"
+    },
+    {
+     "cel": "params.mode != \"extend\" || ((params.start_image == null ? 0 : 1) + (params.end_image == null ? 0 : 1) == 0 && size(params.image_references) == 0 && size(params.video_references) == 1)",
+     "message": "mode 'extend' requires exactly one source video and no images"
+    },
+    {
+     "cel": "params.duration <= 10 || params.mode == \"edit\" || params.mode == \"text-to-video\" || (params.mode == \"image-to-video\" && params.end_image == null)",
+     "message": "References, first/last frames and extensions support at most 10 seconds"
+    }
+   ],
+   "refs": {
+    "param": "image_references",
+    "max": 12,
     "min": 0
    },
    "sound": null,
@@ -5690,6 +5820,81 @@
      "type": "integer|null",
      "default": null,
      "required": false
+    }
+   ],
+   "rules": [
+    "size(params.image_references) <= 10"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) <= 10",
+     "message": "at most 10 image_references are allowed"
+    }
+   ],
+   "refs": {
+    "param": "image_references",
+    "max": 10,
+    "min": 0
+   },
+   "sound": null,
+   "stages": null
+  },
+  "seedream_5_5": {
+   "job_type": "seedream_5_5",
+   "display_name": "Seedream 5.5",
+   "type": "image",
+   "usable": true,
+   "params": [
+    {
+     "name": "aspect_ratio",
+     "type": "string",
+     "default": "4:3",
+     "required": false,
+     "enum": [
+      "auto",
+      "1:1",
+      "4:3",
+      "3:4",
+      "16:9",
+      "9:16",
+      "3:2",
+      "2:3",
+      "21:9"
+     ]
+    },
+    {
+     "name": "background",
+     "type": "string",
+     "default": "auto",
+     "required": false,
+     "enum": [
+      "auto",
+      "transparent",
+      "opaque"
+     ]
+    },
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "resolution",
+     "type": "string",
+     "default": "2k",
+     "required": false,
+     "enum": [
+      "1k",
+      "1.5k",
+      "2k"
+     ]
     }
    ],
    "rules": [

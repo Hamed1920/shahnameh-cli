@@ -1,0 +1,7 @@
+job_id,content_hash,author,type,target,resolved_target,variant,engine,state,ingested,source_file,parent_job_id,hf_job_id,attempt,cost,machine
+J-20261110-1H2,,panel:batch,generate.video,KEL-EP001-SC004-SH0010,KEL-EP001-SC004-SH0010,V01,higgsfield,FAILED,2026-11-10T17:54:21.041Z,queue,,,1,45,superpays-macbook-pro-local
+J-20261110-W9U,,panel:batch,generate.video,KEL-EP001-SC001-SH0010,KEL-EP001-SC001-SH0010,V01,higgsfield,GENERATED,2026-11-10T17:55:43.290Z,queue,,9e0425f8-eb6b-4b61-a35d-0d0dd18aa405,1,45,superpays-macbook-pro-local
+J-20261110-EST,,panel:batch,generate.video,KEL-EP001-SC002-SH0010,KEL-EP001-SC002-SH0010,V01,higgsfield,GENERATED,2026-11-10T17:55:49.941Z,queue,,37229f97-873e-4775-a81c-9c62d3dfccac,1,45,superpays-macbook-pro-local
+J-20261110-9U1,,panel:batch,generate.video,KEL-EP001-SC003-SH0010,KEL-EP001-SC003-SH0010,V01,higgsfield,GENERATED,2026-11-10T17:55:59.924Z,queue,,2fb4de7b-f96e-47b8-89d2-16ead2c56e68,1,45,superpays-macbook-pro-local
+J-20261110-DIM,,panel:batch,generate.video,KEL-EP001-SC005-SH0010,KEL-EP001-SC005-SH0010,V01,higgsfield,GENERATED,2026-11-10T17:56:26.389Z,queue,,9d38ba6f-64f7-478b-89d5-d2812c8805b6,1,45,superpays-macbook-pro-local
+J-20261110-8KV,,panel:retry,generate.video,KEL-EP001-SC004-SH0010,KEL-EP001-SC004-SH0010,V01,higgsfield,GENERATED,2026-11-10T17:58:34.136Z,queue,J-20261110-1H2,96a71bee-b50d-473a-9b81-b3dc2040adac,1,45,superpays-macbook-pro-local

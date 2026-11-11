@@ -1,0 +1,122 @@
+{
+  "jobId": "J-20261110-W9U",
+  "parentJobId": null,
+  "hfJobId": "9e0425f8-eb6b-4b61-a35d-0d0dd18aa405",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PROMPT 01",
+  "target": "KEL-EP001-SC001-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/KEL-EP001/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "KELAASOR × HAMED HEYDARI | ZAHHAK AND THE SEEKER OF JUSTICE | SEEDANCE 2.5\nREFERENCE AND CONTINUITY LOCK\nCHARACTER REFERENCES\n{{CHAR_HAMED}}\n{{CHAR_ZAHHAK}}\n{{CHAR_DADKHAH}}\n{{CHAR_GUARD_01}}\n{{CHAR_GUARD_02}}\n{{CHAR_GUARD_03}}\n{{CHAR_GUARD_04}}\nLOCATION REFERENCES\n{{LOC_THRONE_STAGE}}\n{{LOC_THEATER_AUDITORIUM}}\nPROP REFERENCES\n{{PROP_ZAHHAK_CHAIR}}\n{{PROP_STEP_PLATFORM}}\n{{PROP_GUARD_SPEARS}}\n{{PROP_TOMATO}}\nIDENTITY LOCK\nHamed is the same contemporary director in every block, wearing his reference cap, round black glasses, gray beard, black hoodie and dark trousers. No extra Hamed doubles.\nZahhak keeps his exact established handmade mask, dark clothing, serpents and facial silhouette. Keep the serpent forms attached and fixed; do not add animal heads or replace his mask. His body is adult human scale except during the deliberately temporary visual size gag.\nThe seeker of justice is ONE masked adult human, continuously in the same costume, standing or kneeling with dignified resistance. Preserve the same handmade mask and silhouette.\nExactly FOUR distinct masked guards, each retaining individual costume and rigid mask. Their spears remain rigid objects; no new guards appear.\nUse one single stage space. The audience is physically seated in the dark auditorium from the start, but remains strictly outside all camera frames until the final reveal. Do not generate spectators on the stage.\nNo dialogue, narration, music, subtitles, captions or readable text. No fantasy particles, smoke bursts, magical wardrobe changes, detached shadows or impossible architecture. The size-change gag is the ONLY deliberate nonphysical change, and it must occur without redesigning Zahhak.\nPRODUCTION PROMPT\nDIRECTION AND SPATIAL RULES\nCreate a 15-second horizontal 16:9 live-action film sequence. A dry, serious, physical-comedy filmmaking scene inside a large Persian-myth-inspired stage hall. Treat the mythological cast with complete dignity, not parody. The camera must make each arrangement legible. The auditorium remains outside frame.\nEstablish a fixed master camera on the SOUTH side of the stage looking NORTH. Zahhak sits on an ordinary human-scale chair at the NORTH end, center-right. The seeker stands at the SOUTH-central foreground facing him. Four guards are scattered asymmetrically in middle ground. Hamed begins just outside camera-left. The set is deliberately under-directed, not cheaply built: neutral high uniform overhead work lighting, no dramatic spotlight. No podium exists yet.\nSHOT K01-01 | 0s–5s | 5 SECONDS\n28mm locked frontal wide master, chest-height camera from SOUTH, looking NORTH. Show the entire indifferent composition: Zahhak seated at ordinary height, seeker at a distance, four guards scattered with no compositional hierarchy. A tiny, controlled objection gesture from the seeker; Zahhak barely shifts one hand. All faces remain covered by established masks. Nobody speaks. Hold long enough to register the intentionally weak theatrical arrangement.\nSound: faint shoes, restrained cloth friction, expansive but quiet hall tone.\nSHOT K01-02 | 5s–9s | 4 SECONDS\n40mm medium three-quarter from SOUTHWEST. Hamed enters from camera-left, walks across the front stage edge, and stops without touching anyone. He looks from the seeker to Zahhak, then across the scattered guards. A few seconds of purposeful observation; no exaggerated thinking pose. Short lateral camera reposition follows him and stops.\nSound: four ordinary steps, clothing movement.\nSHOT K01-03 | 9s–12s | 3 SECONDS\n55mm medium close from slightly behind Hamed's RIGHT shoulder. Hamed gives one concise hand signal, pointing the four guards toward the centerline between Zahhak and the seeker. Guards react with militarily precise body turns. Do not move Zahhak or the seeker.\nSound: one synchronized armor or fabric shift, first boot contacts.\nSHOT K01-04 | 12s–15s | 3 SECONDS\nReturn to the exact 28mm SOUTH master camera position and height. All four guards march in from their scattered spots, closing the gap in the middle of the frame. By 15 seconds they have nearly formed a solid wall; their backs and spears begin occluding both protagonists. Their movement is literal footwork and does not teleport. End before the full absurd obstruction is evaluated.\nSound: four coordinated boot steps settling; no dramatic impact.\nEND STATE AND EDIT\nAt 15 seconds the four guards form a dense line directly between the lens, the seeker and Zahhak. Hamed is just left of the frame's central axis, visibly assessing. The fixed work lighting remains on. Hard cut to the identical master angle at block 02 start.\n\n<<<image_1>>> is Hamed (CHR-001 V01); match it wherever Hamed appears.\n<<<image_2>>> is Zahhak (CHR-002 V01); match it wherever Zahhak appears.\n<<<image_3>>> is Palace Guards (GRP-001 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Zahhak Hall (LOC-001 V01); match it wherever Zahhak Hall appears.\n<<<image_5>>> is Gilded Lion Armchair (PRP-001 V01); match it wherever Gilded Lion Armchair appears.",
+  "basePrompt": "KELAASOR × HAMED HEYDARI | ZAHHAK AND THE SEEKER OF JUSTICE | SEEDANCE 2.5\nREFERENCE AND CONTINUITY LOCK\nCHARACTER REFERENCES\n{{CHAR_HAMED}}\n{{CHAR_ZAHHAK}}\n{{CHAR_DADKHAH}}\n{{CHAR_GUARD_01}}\n{{CHAR_GUARD_02}}\n{{CHAR_GUARD_03}}\n{{CHAR_GUARD_04}}\nLOCATION REFERENCES\n{{LOC_THRONE_STAGE}}\n{{LOC_THEATER_AUDITORIUM}}\nPROP REFERENCES\n{{PROP_ZAHHAK_CHAIR}}\n{{PROP_STEP_PLATFORM}}\n{{PROP_GUARD_SPEARS}}\n{{PROP_TOMATO}}\nIDENTITY LOCK\nHamed is the same contemporary director in every block, wearing his reference cap, round black glasses, gray beard, black hoodie and dark trousers. No extra Hamed doubles.\nZahhak keeps his exact established handmade mask, dark clothing, serpents and facial silhouette. Keep the serpent forms attached and fixed; do not add animal heads or replace his mask. His body is adult human scale except during the deliberately temporary visual size gag.\nThe seeker of justice is ONE masked adult human, continuously in the same costume, standing or kneeling with dignified resistance. Preserve the same handmade mask and silhouette.\nExactly FOUR distinct masked guards, each retaining individual costume and rigid mask. Their spears remain rigid objects; no new guards appear.\nUse one single stage space. The audience is physically seated in the dark auditorium from the start, but remains strictly outside all camera frames until the final reveal. Do not generate spectators on the stage.\nNo dialogue, narration, music, subtitles, captions or readable text. No fantasy particles, smoke bursts, magical wardrobe changes, detached shadows or impossible architecture. The size-change gag is the ONLY deliberate nonphysical change, and it must occur without redesigning Zahhak.\nPRODUCTION PROMPT\nDIRECTION AND SPATIAL RULES\nCreate a 15-second horizontal 16:9 live-action film sequence. A dry, serious, physical-comedy filmmaking scene inside a large Persian-myth-inspired stage hall. Treat the mythological cast with complete dignity, not parody. The camera must make each arrangement legible. The auditorium remains outside frame.\nEstablish a fixed master camera on the SOUTH side of the stage looking NORTH. Zahhak sits on an ordinary human-scale chair at the NORTH end, center-right. The seeker stands at the SOUTH-central foreground facing him. Four guards are scattered asymmetrically in middle ground. Hamed begins just outside camera-left. The set is deliberately under-directed, not cheaply built: neutral high uniform overhead work lighting, no dramatic spotlight. No podium exists yet.\nSHOT K01-01 | 0s–5s | 5 SECONDS\n28mm locked frontal wide master, chest-height camera from SOUTH, looking NORTH. Show the entire indifferent composition: Zahhak seated at ordinary height, seeker at a distance, four guards scattered with no compositional hierarchy. A tiny, controlled objection gesture from the seeker; Zahhak barely shifts one hand. All faces remain covered by established masks. Nobody speaks. Hold long enough to register the intentionally weak theatrical arrangement.\nSound: faint shoes, restrained cloth friction, expansive but quiet hall tone.\nSHOT K01-02 | 5s–9s | 4 SECONDS\n40mm medium three-quarter from SOUTHWEST. Hamed enters from camera-left, walks across the front stage edge, and stops without touching anyone. He looks from the seeker to Zahhak, then across the scattered guards. A few seconds of purposeful observation; no exaggerated thinking pose. Short lateral camera reposition follows him and stops.\nSound: four ordinary steps, clothing movement.\nSHOT K01-03 | 9s–12s | 3 SECONDS\n55mm medium close from slightly behind Hamed's RIGHT shoulder. Hamed gives one concise hand signal, pointing the four guards toward the centerline between Zahhak and the seeker. Guards react with militarily precise body turns. Do not move Zahhak or the seeker.\nSound: one synchronized armor or fabric shift, first boot contacts.\nSHOT K01-04 | 12s–15s | 3 SECONDS\nReturn to the exact 28mm SOUTH master camera position and height. All four guards march in from their scattered spots, closing the gap in the middle of the frame. By 15 seconds they have nearly formed a solid wall; their backs and spears begin occluding both protagonists. Their movement is literal footwork and does not teleport. End before the full absurd obstruction is evaluated.\nSound: four coordinated boot steps settling; no dramatic impact.\nEND STATE AND EDIT\nAt 15 seconds the four guards form a dense line directly between the lens, the seeker and Zahhak. Hamed is just left of the frame's central axis, visibly assessing. The fixed work lighting remains on. Hard cut to the identical master angle at block 02 start.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V01",
+    "@CHR-002/V01",
+    "@GRP-001/V01",
+    "@LOC-001/V01",
+    "@PRP-001/V01"
+  ],
+  "sentRefs": [
+    "@CHR-001/V01",
+    "@CHR-002/V01",
+    "@GRP-001/V01",
+    "@LOC-001/V01",
+    "@PRP-001/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-11-10T17:55:43.290Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261110_175402_9e0425f8-eb6b-4b61-a35d-0d0dd18aa405.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-11-10T17:54:02.600153Z",
+      "display_name": "Seedance 2.5",
+      "id": "9e0425f8-eb6b-4b61-a35d-0d0dd18aa405",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "8d382fa4-bf87-4405-86c1-f5da8aede8ee",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/8d382fa4-bf87-4405-86c1-f5da8aede8ee.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "70112cd1-c41f-4e07-b389-3cdaa77d16e4",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/70112cd1-c41f-4e07-b389-3cdaa77d16e4.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "880e7839-babe-4460-8e81-8f70f3e28b3d",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/880e7839-babe-4460-8e81-8f70f3e28b3d.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "b90df257-c94e-4464-a199-bbfdc3334a85",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/b90df257-c94e-4464-a199-bbfdc3334a85.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "89764a9f-7929-4ca9-b091-4ce81f032154",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/89764a9f-7929-4ca9-b091-4ce81f032154.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "KELAASOR × HAMED HEYDARI | ZAHHAK AND THE SEEKER OF JUSTICE | SEEDANCE 2.5\nREFERENCE AND CONTINUITY LOCK\nCHARACTER REFERENCES\n{{CHAR_HAMED}}\n{{CHAR_ZAHHAK}}\n{{CHAR_DADKHAH}}\n{{CHAR_GUARD_01}}\n{{CHAR_GUARD_02}}\n{{CHAR_GUARD_03}}\n{{CHAR_GUARD_04}}\nLOCATION REFERENCES\n{{LOC_THRONE_STAGE}}\n{{LOC_THEATER_AUDITORIUM}}\nPROP REFERENCES\n{{PROP_ZAHHAK_CHAIR}}\n{{PROP_STEP_PLATFORM}}\n{{PROP_GUARD_SPEARS}}\n{{PROP_TOMATO}}\nIDENTITY LOCK\nHamed is the same contemporary director in every block, wearing his reference cap, round black glasses, gray beard, black hoodie and dark trousers. No extra Hamed doubles.\nZahhak keeps his exact established handmade mask, dark clothing, serpents and facial silhouette. Keep the serpent forms attached and fixed; do not add animal heads or replace his mask. His body is adult human scale except during the deliberately temporary visual size gag.\nThe seeker of justice is ONE masked adult human, continuously in the same costume, standing or kneeling with dignified resistance. Preserve the same handmade mask and silhouette.\nExactly FOUR distinct masked guards, each retaining individual costume and rigid mask. Their spears remain rigid objects; no new guards appear.\nUse one single stage space. The audience is physically seated in the dark auditorium from the start, but remains strictly outside all camera frames until the final reveal. Do not generate spectators on the stage.\nNo dialogue, narration, music, subtitles, captions or readable text. No fantasy particles, smoke bursts, magical wardrobe changes, detached shadows or impossible architecture. The size-change gag is the ONLY deliberate nonphysical change, and it must occur without redesigning Zahhak.\nPRODUCTION PROMPT\nDIRECTION AND SPATIAL RULES\nCreate a 15-second horizontal 16:9 live-action film sequence. A dry, serious, physical-comedy filmmaking scene inside a large Persian-myth-inspired stage hall. Treat the mythological cast with complete dignity, not parody. The camera must make each arrangement legible. The auditorium remains outside frame.\nEstablish a fixed master camera on the SOUTH side of the stage looking NORTH. Zahhak sits on an ordinary human-scale chair at the NORTH end, center-right. The seeker stands at the SOUTH-central foreground facing him. Four guards are scattered asymmetrically in middle ground. Hamed begins just outside camera-left. The set is deliberately under-directed, not cheaply built: neutral high uniform overhead work lighting, no dramatic spotlight. No podium exists yet.\nSHOT K01-01 | 0s–5s | 5 SECONDS\n28mm locked frontal wide master, chest-height camera from SOUTH, looking NORTH. Show the entire indifferent composition: Zahhak seated at ordinary height, seeker at a distance, four guards scattered with no compositional hierarchy. A tiny, controlled objection gesture from the seeker; Zahhak barely shifts one hand. All faces remain covered by established masks. Nobody speaks. Hold long enough to register the intentionally weak theatrical arrangement.\nSound: faint shoes, restrained cloth friction, expansive but quiet hall tone.\nSHOT K01-02 | 5s–9s | 4 SECONDS\n40mm medium three-quarter from SOUTHWEST. Hamed enters from camera-left, walks across the front stage edge, and stops without touching anyone. He looks from the seeker to Zahhak, then across the scattered guards. A few seconds of purposeful observation; no exaggerated thinking pose. Short lateral camera reposition follows him and stops.\nSound: four ordinary steps, clothing movement.\nSHOT K01-03 | 9s–12s | 3 SECONDS\n55mm medium close from slightly behind Hamed's RIGHT shoulder. Hamed gives one concise hand signal, pointing the four guards toward the centerline between Zahhak and the seeker. Guards react with militarily precise body turns. Do not move Zahhak or the seeker.\nSound: one synchronized armor or fabric shift, first boot contacts.\nSHOT K01-04 | 12s–15s | 3 SECONDS\nReturn to the exact 28mm SOUTH master camera position and height. All four guards march in from their scattered spots, closing the gap in the middle of the frame. By 15 seconds they have nearly formed a solid wall; their backs and spears begin occluding both protagonists. Their movement is literal footwork and does not teleport. End before the full absurd obstruction is evaluated.\nSound: four coordinated boot steps settling; no dramatic impact.\nEND STATE AND EDIT\nAt 15 seconds the four guards form a dense line directly between the lens, the seeker and Zahhak. Hamed is just left of the frame's central axis, visibly assessing. The fixed work lighting remains on. Hard cut to the identical master angle at block 02 start.\n\n<<<image_1>>> is Hamed (CHR-001 V01); match it wherever Hamed appears.\n<<<image_2>>> is Zahhak (CHR-002 V01); match it wherever Zahhak appears.\n<<<image_3>>> is Palace Guards (GRP-001 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Zahhak Hall (LOC-001 V01); match it wherever Zahhak Hall appears.\n<<<image_5>>> is Gilded Lion Armchair (PRP-001 V01); match it wherever Gilded Lion Armchair appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 426481542,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261110_175402_9e0425f8-eb6b-4b61-a35d-0d0dd18aa405.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261110_175402_9e0425f8-eb6b-4b61-a35d-0d0dd18aa405_thumbnail.webp"
+    }
+  ]
+}

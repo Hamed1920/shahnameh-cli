@@ -122,6 +122,12 @@ Run `/project-log` at the start of a session, or read directly:
   every registry row. That is the sanctioned way to file something without Hamed clicking through
   the References dialog. Never hand-edit a CSV registry or move a filed asset to achieve the same
   thing.
+- **Copying entities between projects is the same request, aimed at the other project.** The
+  References page's "Copy to project…" (`app/[project]/references/copy-actions.ts`,
+  `lib/copy-assets.ts`) stages each look under the *target's* `09_OUTPUT/_uploads/<op-id>/` and
+  appends one `add` op to the *target's* `INDEX_OPS.jsonl`; the target's worker numbers it with its
+  own code and files it. The source is only read. An entity whose name the target already has is
+  left out, never doubled.
 - **Nothing is deleted from the index.** Retiring keeps an entity's number and files. Archiving a
   look moves it to `09_OUTPUT/_archive/` with its registry row saved, so it can be restored.
   Renaming changes the ID wording and the files, never the number.

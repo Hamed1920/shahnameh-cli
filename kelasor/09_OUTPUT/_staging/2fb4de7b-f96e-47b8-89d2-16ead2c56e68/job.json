@@ -1,0 +1,122 @@
+{
+  "jobId": "J-20261110-9U1",
+  "parentJobId": null,
+  "hfJobId": "2fb4de7b-f96e-47b8-89d2-16ead2c56e68",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PROMPT 03",
+  "target": "KEL-EP001-SC003-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/KEL-EP001/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "KELAASOR × HAMED HEYDARI | ZAHHAK AND THE SEEKER OF JUSTICE | SEEDANCE 2.5\nREFERENCE AND CONTINUITY LOCK\nCHARACTER REFERENCES\n{{CHAR_HAMED}}\n{{CHAR_ZAHHAK}}\n{{CHAR_DADKHAH}}\n{{CHAR_GUARD_01}}\n{{CHAR_GUARD_02}}\n{{CHAR_GUARD_03}}\n{{CHAR_GUARD_04}}\nLOCATION REFERENCES\n{{LOC_THRONE_STAGE}}\n{{LOC_THEATER_AUDITORIUM}}\nPROP REFERENCES\n{{PROP_ZAHHAK_CHAIR}}\n{{PROP_STEP_PLATFORM}}\n{{PROP_GUARD_SPEARS}}\n{{PROP_TOMATO}}\nIDENTITY LOCK\nHamed is the same contemporary director in every block, wearing his reference cap, round black glasses, gray beard, black hoodie and dark trousers. No extra Hamed doubles.\nZahhak keeps his exact established handmade mask, dark clothing, serpents and facial silhouette. Keep the serpent forms attached and fixed; do not add animal heads or replace his mask. His body is adult human scale except during the deliberately temporary visual size gag.\nThe seeker of justice is ONE masked adult human, continuously in the same costume, standing or kneeling with dignified resistance. Preserve the same handmade mask and silhouette.\nExactly FOUR distinct masked guards, each retaining individual costume and rigid mask. Their spears remain rigid objects; no new guards appear.\nUse one single stage space. The audience is physically seated in the dark auditorium from the start, but remains strictly outside all camera frames until the final reveal. Do not generate spectators on the stage.\nNo dialogue, narration, music, subtitles, captions or readable text. No fantasy particles, smoke bursts, magical wardrobe changes, detached shadows or impossible architecture. The size-change gag is the ONLY deliberate nonphysical change, and it must occur without redesigning Zahhak.\nPRODUCTION PROMPT\nDIRECTION AND SPATIAL RULES\nContinue the same studio stage, the same exact four guards, one seeker, one human-scale Zahhak and one Hamed. The king has returned to normal size, and the theatrical stage is still in flat uniform work light. The platform is stored outside the stage and must be carried in physically; it does not grow from the floor. The platform is broad, structurally credible, only a few human steps high, and the referenced original chair sits on top.\nBecause this is film direction rather than surreal effect, show weight, hands, footwork and the slight bureaucratic awkwardness of organizing a practical fix. No slapstick falls.\nSHOT K03-01 | 30s–34s | 4 SECONDS\n35mm handheld medium-wide from stage EAST facing WEST-NORTH. Two guards enter from the SOUTHWEST side carrying one low sturdy stepped riser together, gripping its solid side handles. The other two guards make space and turn to guide its near corner as it crosses the floor. The structure is moderately heavy; bodies lean honestly under its mass. The seeker stays in place, watching silently. Zahhak remains seated beside the future riser location.\nSound: synchronized steps, muted wood/metal creaks, fabric friction.\nSHOT K03-02 | 34s–38s | 4 SECONDS\n45mm three-quarter mid shot from NORTHWEST, low but close to stage floor. All four guards assist sequentially: two settle the platform in the NORTH center-right throne position while another checks its footing and the fourth lifts the original chair together with an adjacent guard onto the top. Maintain physically reasonable supported lifting, no instantaneous jumps. One chair, one platform, four guards; no extra personnel.\nSound: heavy but controlled platform foot contact, chair legs touching wood, one hand brushing dust.\nSHOT K03-03 | 38s–42s | 4 SECONDS\n35mm low three-quarter wide from SOUTHWEST looking NORTH. Now Zahhak rises from his normal-size chair at ground level, crosses the short distance, climbs the two or three platform steps slowly and naturally, then sits on the SAME chair at the top. One guard remains a step behind him to steady the chair if needed but does not touch his body. Hamed watches, measuring the difference in perceived authority with a small change in posture. Keep the masked seeker's position in foreground for scale.\nSound: measured steps on wood, garment weight, chair creak.\nSHOT K03-04 | 42s–45s | 3 SECONDS\n28mm locked original SOUTH master. The elevated king now reads as powerful at human scale. Hamed silently calls two guards to the sides of the platform and directs the other two toward the open diagonal corridor between king and seeker. Their first repositioning steps start. Avoid a complete obstruction; the centerline still shows the seeker clearly.\nSound: several sparse boots and spear shafts resetting against the floor.\nEND STATE AND EDIT\nZahhak is seated atop the fixed stepped riser in the NORTH background. Two guards flank the platform, two are beginning to angle into an open middle-ground barrier. The seeker stands alone at SOUTH center. Hamed stands just outside the master image's dominant vertical sightline. All illumination is still bright, general and flat. Continue precise guard placements and lighting in BLOCK 04.\n\n<<<image_1>>> is Hamed (CHR-001 V01); match it wherever Hamed appears.\n<<<image_2>>> is Zahhak (CHR-002 V01); match it wherever Zahhak appears.\n<<<image_3>>> is Palace Guards (GRP-001 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Zahhak Hall (LOC-001 V01); match it wherever Zahhak Hall appears.\n<<<image_5>>> is Gilded Lion Armchair (PRP-001 V01); match it wherever Gilded Lion Armchair appears.",
+  "basePrompt": "KELAASOR × HAMED HEYDARI | ZAHHAK AND THE SEEKER OF JUSTICE | SEEDANCE 2.5\nREFERENCE AND CONTINUITY LOCK\nCHARACTER REFERENCES\n{{CHAR_HAMED}}\n{{CHAR_ZAHHAK}}\n{{CHAR_DADKHAH}}\n{{CHAR_GUARD_01}}\n{{CHAR_GUARD_02}}\n{{CHAR_GUARD_03}}\n{{CHAR_GUARD_04}}\nLOCATION REFERENCES\n{{LOC_THRONE_STAGE}}\n{{LOC_THEATER_AUDITORIUM}}\nPROP REFERENCES\n{{PROP_ZAHHAK_CHAIR}}\n{{PROP_STEP_PLATFORM}}\n{{PROP_GUARD_SPEARS}}\n{{PROP_TOMATO}}\nIDENTITY LOCK\nHamed is the same contemporary director in every block, wearing his reference cap, round black glasses, gray beard, black hoodie and dark trousers. No extra Hamed doubles.\nZahhak keeps his exact established handmade mask, dark clothing, serpents and facial silhouette. Keep the serpent forms attached and fixed; do not add animal heads or replace his mask. His body is adult human scale except during the deliberately temporary visual size gag.\nThe seeker of justice is ONE masked adult human, continuously in the same costume, standing or kneeling with dignified resistance. Preserve the same handmade mask and silhouette.\nExactly FOUR distinct masked guards, each retaining individual costume and rigid mask. Their spears remain rigid objects; no new guards appear.\nUse one single stage space. The audience is physically seated in the dark auditorium from the start, but remains strictly outside all camera frames until the final reveal. Do not generate spectators on the stage.\nNo dialogue, narration, music, subtitles, captions or readable text. No fantasy particles, smoke bursts, magical wardrobe changes, detached shadows or impossible architecture. The size-change gag is the ONLY deliberate nonphysical change, and it must occur without redesigning Zahhak.\nPRODUCTION PROMPT\nDIRECTION AND SPATIAL RULES\nContinue the same studio stage, the same exact four guards, one seeker, one human-scale Zahhak and one Hamed. The king has returned to normal size, and the theatrical stage is still in flat uniform work light. The platform is stored outside the stage and must be carried in physically; it does not grow from the floor. The platform is broad, structurally credible, only a few human steps high, and the referenced original chair sits on top.\nBecause this is film direction rather than surreal effect, show weight, hands, footwork and the slight bureaucratic awkwardness of organizing a practical fix. No slapstick falls.\nSHOT K03-01 | 30s–34s | 4 SECONDS\n35mm handheld medium-wide from stage EAST facing WEST-NORTH. Two guards enter from the SOUTHWEST side carrying one low sturdy stepped riser together, gripping its solid side handles. The other two guards make space and turn to guide its near corner as it crosses the floor. The structure is moderately heavy; bodies lean honestly under its mass. The seeker stays in place, watching silently. Zahhak remains seated beside the future riser location.\nSound: synchronized steps, muted wood/metal creaks, fabric friction.\nSHOT K03-02 | 34s–38s | 4 SECONDS\n45mm three-quarter mid shot from NORTHWEST, low but close to stage floor. All four guards assist sequentially: two settle the platform in the NORTH center-right throne position while another checks its footing and the fourth lifts the original chair together with an adjacent guard onto the top. Maintain physically reasonable supported lifting, no instantaneous jumps. One chair, one platform, four guards; no extra personnel.\nSound: heavy but controlled platform foot contact, chair legs touching wood, one hand brushing dust.\nSHOT K03-03 | 38s–42s | 4 SECONDS\n35mm low three-quarter wide from SOUTHWEST looking NORTH. Now Zahhak rises from his normal-size chair at ground level, crosses the short distance, climbs the two or three platform steps slowly and naturally, then sits on the SAME chair at the top. One guard remains a step behind him to steady the chair if needed but does not touch his body. Hamed watches, measuring the difference in perceived authority with a small change in posture. Keep the masked seeker's position in foreground for scale.\nSound: measured steps on wood, garment weight, chair creak.\nSHOT K03-04 | 42s–45s | 3 SECONDS\n28mm locked original SOUTH master. The elevated king now reads as powerful at human scale. Hamed silently calls two guards to the sides of the platform and directs the other two toward the open diagonal corridor between king and seeker. Their first repositioning steps start. Avoid a complete obstruction; the centerline still shows the seeker clearly.\nSound: several sparse boots and spear shafts resetting against the floor.\nEND STATE AND EDIT\nZahhak is seated atop the fixed stepped riser in the NORTH background. Two guards flank the platform, two are beginning to angle into an open middle-ground barrier. The seeker stands alone at SOUTH center. Hamed stands just outside the master image's dominant vertical sightline. All illumination is still bright, general and flat. Continue precise guard placements and lighting in BLOCK 04.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V01",
+    "@CHR-002/V01",
+    "@GRP-001/V01",
+    "@LOC-001/V01",
+    "@PRP-001/V01"
+  ],
+  "sentRefs": [
+    "@CHR-001/V01",
+    "@CHR-002/V01",
+    "@GRP-001/V01",
+    "@LOC-001/V01",
+    "@PRP-001/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-11-10T17:55:59.924Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261110_175418_2fb4de7b-f96e-47b8-89d2-16ead2c56e68.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-11-10T17:54:18.898881Z",
+      "display_name": "Seedance 2.5",
+      "id": "2fb4de7b-f96e-47b8-89d2-16ead2c56e68",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "b11f9f00-13ad-43bb-9bbc-4dbe11af3afa",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/b11f9f00-13ad-43bb-9bbc-4dbe11af3afa.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "9ba87356-384f-4926-908b-a69764a49a56",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/9ba87356-384f-4926-908b-a69764a49a56.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "160afee2-f728-47c5-ae73-4f0c64045459",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/160afee2-f728-47c5-ae73-4f0c64045459.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "8727b3e6-3ae0-4443-a52f-5fc1106dd4cd",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/8727b3e6-3ae0-4443-a52f-5fc1106dd4cd.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "0e9d8984-bbf3-4241-a661-0dbce67fe9f0",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/0e9d8984-bbf3-4241-a661-0dbce67fe9f0.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "KELAASOR × HAMED HEYDARI | ZAHHAK AND THE SEEKER OF JUSTICE | SEEDANCE 2.5\nREFERENCE AND CONTINUITY LOCK\nCHARACTER REFERENCES\n{{CHAR_HAMED}}\n{{CHAR_ZAHHAK}}\n{{CHAR_DADKHAH}}\n{{CHAR_GUARD_01}}\n{{CHAR_GUARD_02}}\n{{CHAR_GUARD_03}}\n{{CHAR_GUARD_04}}\nLOCATION REFERENCES\n{{LOC_THRONE_STAGE}}\n{{LOC_THEATER_AUDITORIUM}}\nPROP REFERENCES\n{{PROP_ZAHHAK_CHAIR}}\n{{PROP_STEP_PLATFORM}}\n{{PROP_GUARD_SPEARS}}\n{{PROP_TOMATO}}\nIDENTITY LOCK\nHamed is the same contemporary director in every block, wearing his reference cap, round black glasses, gray beard, black hoodie and dark trousers. No extra Hamed doubles.\nZahhak keeps his exact established handmade mask, dark clothing, serpents and facial silhouette. Keep the serpent forms attached and fixed; do not add animal heads or replace his mask. His body is adult human scale except during the deliberately temporary visual size gag.\nThe seeker of justice is ONE masked adult human, continuously in the same costume, standing or kneeling with dignified resistance. Preserve the same handmade mask and silhouette.\nExactly FOUR distinct masked guards, each retaining individual costume and rigid mask. Their spears remain rigid objects; no new guards appear.\nUse one single stage space. The audience is physically seated in the dark auditorium from the start, but remains strictly outside all camera frames until the final reveal. Do not generate spectators on the stage.\nNo dialogue, narration, music, subtitles, captions or readable text. No fantasy particles, smoke bursts, magical wardrobe changes, detached shadows or impossible architecture. The size-change gag is the ONLY deliberate nonphysical change, and it must occur without redesigning Zahhak.\nPRODUCTION PROMPT\nDIRECTION AND SPATIAL RULES\nContinue the same studio stage, the same exact four guards, one seeker, one human-scale Zahhak and one Hamed. The king has returned to normal size, and the theatrical stage is still in flat uniform work light. The platform is stored outside the stage and must be carried in physically; it does not grow from the floor. The platform is broad, structurally credible, only a few human steps high, and the referenced original chair sits on top.\nBecause this is film direction rather than surreal effect, show weight, hands, footwork and the slight bureaucratic awkwardness of organizing a practical fix. No slapstick falls.\nSHOT K03-01 | 30s–34s | 4 SECONDS\n35mm handheld medium-wide from stage EAST facing WEST-NORTH. Two guards enter from the SOUTHWEST side carrying one low sturdy stepped riser together, gripping its solid side handles. The other two guards make space and turn to guide its near corner as it crosses the floor. The structure is moderately heavy; bodies lean honestly under its mass. The seeker stays in place, watching silently. Zahhak remains seated beside the future riser location.\nSound: synchronized steps, muted wood/metal creaks, fabric friction.\nSHOT K03-02 | 34s–38s | 4 SECONDS\n45mm three-quarter mid shot from NORTHWEST, low but close to stage floor. All four guards assist sequentially: two settle the platform in the NORTH center-right throne position while another checks its footing and the fourth lifts the original chair together with an adjacent guard onto the top. Maintain physically reasonable supported lifting, no instantaneous jumps. One chair, one platform, four guards; no extra personnel.\nSound: heavy but controlled platform foot contact, chair legs touching wood, one hand brushing dust.\nSHOT K03-03 | 38s–42s | 4 SECONDS\n35mm low three-quarter wide from SOUTHWEST looking NORTH. Now Zahhak rises from his normal-size chair at ground level, crosses the short distance, climbs the two or three platform steps slowly and naturally, then sits on the SAME chair at the top. One guard remains a step behind him to steady the chair if needed but does not touch his body. Hamed watches, measuring the difference in perceived authority with a small change in posture. Keep the masked seeker's position in foreground for scale.\nSound: measured steps on wood, garment weight, chair creak.\nSHOT K03-04 | 42s–45s | 3 SECONDS\n28mm locked original SOUTH master. The elevated king now reads as powerful at human scale. Hamed silently calls two guards to the sides of the platform and directs the other two toward the open diagonal corridor between king and seeker. Their first repositioning steps start. Avoid a complete obstruction; the centerline still shows the seeker clearly.\nSound: several sparse boots and spear shafts resetting against the floor.\nEND STATE AND EDIT\nZahhak is seated atop the fixed stepped riser in the NORTH background. Two guards flank the platform, two are beginning to angle into an open middle-ground barrier. The seeker stands alone at SOUTH center. Hamed stands just outside the master image's dominant vertical sightline. All illumination is still bright, general and flat. Continue precise guard placements and lighting in BLOCK 04.\n\n<<<image_1>>> is Hamed (CHR-001 V01); match it wherever Hamed appears.\n<<<image_2>>> is Zahhak (CHR-002 V01); match it wherever Zahhak appears.\n<<<image_3>>> is Palace Guards (GRP-001 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Zahhak Hall (LOC-001 V01); match it wherever Zahhak Hall appears.\n<<<image_5>>> is Gilded Lion Armchair (PRP-001 V01); match it wherever Gilded Lion Armchair appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 1657715657,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261110_175418_2fb4de7b-f96e-47b8-89d2-16ead2c56e68.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261110_175418_2fb4de7b-f96e-47b8-89d2-16ead2c56e68_thumbnail.webp"
+    }
+  ]
+}

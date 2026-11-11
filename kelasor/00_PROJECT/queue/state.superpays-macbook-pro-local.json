@@ -1,0 +1,35 @@
+{
+  "processedJobs": [
+    "J-20261110-1H2",
+    "J-20261110-W9U",
+    "J-20261110-EST",
+    "J-20261110-9U1",
+    "J-20261110-DIM",
+    "J-20261110-8KV"
+  ],
+  "processedDecisions": [],
+  "spentCredits": 225,
+  "processedOps": [
+    "op_kelhamed01",
+    "op_copyshmmway9go60",
+    "op_copyshmmwaycnqd0",
+    "op_keltheater01",
+    "op_kelaz01",
+    "op_kelchair01"
+  ],
+  "processedRequests": [
+    "jr_mwazifez2rrv",
+    "jr_mwaznzoxmxdj",
+    "jr_mwazrkagovye"
+  ],
+  "failedDecisions": {},
+  "held": {},
+  "learnWatermark": "",
+  "updatedAt": "2026-11-10T17:58:34.137Z",
+  "failedJobs": {
+    "J-20261110-1H2": {
+      "reason": "Error: Higgsfield API error (HTTP 520). failed to PUT media bytes to upload_url: 520",
+      "at": "2026-11-10T17:54:21.042Z"
+    }
+  }
+}

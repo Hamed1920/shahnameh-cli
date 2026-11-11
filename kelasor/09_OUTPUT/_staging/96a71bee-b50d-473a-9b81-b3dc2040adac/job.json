@@ -1,0 +1,122 @@
+{
+  "jobId": "J-20261110-8KV",
+  "parentJobId": "J-20261110-1H2",
+  "hfJobId": "96a71bee-b50d-473a-9b81-b3dc2040adac",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PROMPT 04",
+  "target": "KEL-EP001-SC004-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/KEL-EP001/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "KELAASOR × HAMED HEYDARI | ZAHHAK AND THE SEEKER OF JUSTICE | SEEDANCE 2.5\nREFERENCE AND CONTINUITY LOCK\nCHARACTER REFERENCES\n{{CHAR_HAMED}}\n{{CHAR_ZAHHAK}}\n{{CHAR_DADKHAH}}\n{{CHAR_GUARD_01}}\n{{CHAR_GUARD_02}}\n{{CHAR_GUARD_03}}\n{{CHAR_GUARD_04}}\nLOCATION REFERENCES\n{{LOC_THRONE_STAGE}}\n{{LOC_THEATER_AUDITORIUM}}\nPROP REFERENCES\n{{PROP_ZAHHAK_CHAIR}}\n{{PROP_STEP_PLATFORM}}\n{{PROP_GUARD_SPEARS}}\n{{PROP_TOMATO}}\nIDENTITY LOCK\nHamed is the same contemporary director in every block, wearing his reference cap, round black glasses, gray beard, black hoodie and dark trousers. No extra Hamed doubles.\nZahhak keeps his exact established handmade mask, dark clothing, serpents and facial silhouette. Keep the serpent forms attached and fixed; do not add animal heads or replace his mask. His body is adult human scale except during the deliberately temporary visual size gag.\nThe seeker of justice is ONE masked adult human, continuously in the same costume, standing or kneeling with dignified resistance. Preserve the same handmade mask and silhouette.\nExactly FOUR distinct masked guards, each retaining individual costume and rigid mask. Their spears remain rigid objects; no new guards appear.\nUse one single stage space. The audience is physically seated in the dark auditorium from the start, but remains strictly outside all camera frames until the final reveal. Do not generate spectators on the stage.\nNo dialogue, narration, music, subtitles, captions or readable text. No fantasy particles, smoke bursts, magical wardrobe changes, detached shadows or impossible architecture. The size-change gag is the ONLY deliberate nonphysical change, and it must occur without redesigning Zahhak.\nPRODUCTION PROMPT\nDIRECTION AND SPATIAL RULES\nContinue physically from BLOCK 03. The stepped podium, chair and throne height are final and must never change. Exactly four guards: TWO flanking the high throne in the NORTH mid-background, TWO positioned between Zahhak and the seeker but offset diagonally to leave a narrow sightline. The seeker remains fully visible, more vulnerable and visually isolated. This block contains the decisive theatrical lighting cue performed visibly within the SAME master composition; do not replace it with a before/after jump cut.\nThe last arrangement expresses oppression by height and blocked access, while the emotional focus falls on the seeker. Stage light is controlled and theatrical, not supernatural; one elevated hard spotlight fixture is motivated and must be spatially plausible.\nSHOT K04-01 | 45s–49s | 4 SECONDS\n35mm medium from SOUTHWEST. Hamed walks into the gaps between the two middle guards, moves one by a single step to the WEST and turns another slightly toward the seeker. The guards comply exactly but retain their individual silhouettes, spacing and spears. The two background guards hold their positions at the riser. The director then shifts the seeker's shoulders a few degrees toward the elevated king without touching the mask. The seeker maintains restrained dignity, not collapse.\nSound: boots repositioning, fabric brushing sleeves, one soft spear-foot contact.\nSHOT K04-02 | 49s–52s | 3 SECONDS\n28mm original SOUTH master, fixed at the exact height and angle used in K01-01. Hamed steps just clear of the primary stage axis. In the same frame, the rising stepped throne and the open but threatening guard barrier now impose pressure on the lone seeker. The composition is organized, but still uniformly illuminated and emotionally unresolved. Hamed watches for one precise beat.\nSound: relative quiet, slight breathing.\nSHOT K04-03 | 52s–55s | 3 SECONDS\nKeep the exact same locked 28mm master throughout; NO CUT INSIDE THIS SHOT. Hamed makes one small lighting cue gesture from the edge of the composition. With a crisp practical switch click, the broad general stage lights go OFF almost simultaneously. One beat of near-darkness. A second dry switch click: ONE hard-edged, neutral spotlight from high camera-left falls onto the seeker, leaving the king on his raised chair and the guards dimly visible under weak controlled ambient spill. The spotlight is hard, directional, not glowing or holy. No stage objects move when the lights change.\nSound: click, brief room silence, click.\nSHOT K04-04 | 55s–60s | 5 SECONDS\n35mm restrained low three-quarter from the EAST side of the seeker, facing obliquely NORTH toward Zahhak. The seeker is caught under a harsh circle of light and slowly lifts the masked head, keeping the body under pressure. Through the dim barrier of two guards, Zahhak remains elevated and still readable. A modest focus shift from a guard's shoulder to the seeker brings out the emotional subject. No extra dramatic gesture. Hamed remains at the composition's edge, quietly satisfied; do not smile broadly.\nSound: one controlled breath, cloth creak, concentrated stage silence.\nEND STATE AND EDIT\nKeep this final composition: human-scale Zahhak high at NORTH; seeker isolated at SOUTH under ONE hard spotlight; four guards fixed in the established arrangement, peripheral illumination low. The auditorium audience has always been seated beyond the SOUTH camera position, completely offscreen and in darkness. BLOCK 05 starts with a deliberate hold before revealing them using only house lights and camera pullback.\n\n<<<image_1>>> is Hamed (CHR-001 V01); match it wherever Hamed appears.\n<<<image_2>>> is Zahhak (CHR-002 V01); match it wherever Zahhak appears.\n<<<image_3>>> is Palace Guards (GRP-001 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Zahhak Hall (LOC-001 V01); match it wherever Zahhak Hall appears.\n<<<image_5>>> is Gilded Lion Armchair (PRP-001 V01); match it wherever Gilded Lion Armchair appears.",
+  "basePrompt": "KELAASOR × HAMED HEYDARI | ZAHHAK AND THE SEEKER OF JUSTICE | SEEDANCE 2.5\nREFERENCE AND CONTINUITY LOCK\nCHARACTER REFERENCES\n{{CHAR_HAMED}}\n{{CHAR_ZAHHAK}}\n{{CHAR_DADKHAH}}\n{{CHAR_GUARD_01}}\n{{CHAR_GUARD_02}}\n{{CHAR_GUARD_03}}\n{{CHAR_GUARD_04}}\nLOCATION REFERENCES\n{{LOC_THRONE_STAGE}}\n{{LOC_THEATER_AUDITORIUM}}\nPROP REFERENCES\n{{PROP_ZAHHAK_CHAIR}}\n{{PROP_STEP_PLATFORM}}\n{{PROP_GUARD_SPEARS}}\n{{PROP_TOMATO}}\nIDENTITY LOCK\nHamed is the same contemporary director in every block, wearing his reference cap, round black glasses, gray beard, black hoodie and dark trousers. No extra Hamed doubles.\nZahhak keeps his exact established handmade mask, dark clothing, serpents and facial silhouette. Keep the serpent forms attached and fixed; do not add animal heads or replace his mask. His body is adult human scale except during the deliberately temporary visual size gag.\nThe seeker of justice is ONE masked adult human, continuously in the same costume, standing or kneeling with dignified resistance. Preserve the same handmade mask and silhouette.\nExactly FOUR distinct masked guards, each retaining individual costume and rigid mask. Their spears remain rigid objects; no new guards appear.\nUse one single stage space. The audience is physically seated in the dark auditorium from the start, but remains strictly outside all camera frames until the final reveal. Do not generate spectators on the stage.\nNo dialogue, narration, music, subtitles, captions or readable text. No fantasy particles, smoke bursts, magical wardrobe changes, detached shadows or impossible architecture. The size-change gag is the ONLY deliberate nonphysical change, and it must occur without redesigning Zahhak.\nPRODUCTION PROMPT\nDIRECTION AND SPATIAL RULES\nContinue physically from BLOCK 03. The stepped podium, chair and throne height are final and must never change. Exactly four guards: TWO flanking the high throne in the NORTH mid-background, TWO positioned between Zahhak and the seeker but offset diagonally to leave a narrow sightline. The seeker remains fully visible, more vulnerable and visually isolated. This block contains the decisive theatrical lighting cue performed visibly within the SAME master composition; do not replace it with a before/after jump cut.\nThe last arrangement expresses oppression by height and blocked access, while the emotional focus falls on the seeker. Stage light is controlled and theatrical, not supernatural; one elevated hard spotlight fixture is motivated and must be spatially plausible.\nSHOT K04-01 | 45s–49s | 4 SECONDS\n35mm medium from SOUTHWEST. Hamed walks into the gaps between the two middle guards, moves one by a single step to the WEST and turns another slightly toward the seeker. The guards comply exactly but retain their individual silhouettes, spacing and spears. The two background guards hold their positions at the riser. The director then shifts the seeker's shoulders a few degrees toward the elevated king without touching the mask. The seeker maintains restrained dignity, not collapse.\nSound: boots repositioning, fabric brushing sleeves, one soft spear-foot contact.\nSHOT K04-02 | 49s–52s | 3 SECONDS\n28mm original SOUTH master, fixed at the exact height and angle used in K01-01. Hamed steps just clear of the primary stage axis. In the same frame, the rising stepped throne and the open but threatening guard barrier now impose pressure on the lone seeker. The composition is organized, but still uniformly illuminated and emotionally unresolved. Hamed watches for one precise beat.\nSound: relative quiet, slight breathing.\nSHOT K04-03 | 52s–55s | 3 SECONDS\nKeep the exact same locked 28mm master throughout; NO CUT INSIDE THIS SHOT. Hamed makes one small lighting cue gesture from the edge of the composition. With a crisp practical switch click, the broad general stage lights go OFF almost simultaneously. One beat of near-darkness. A second dry switch click: ONE hard-edged, neutral spotlight from high camera-left falls onto the seeker, leaving the king on his raised chair and the guards dimly visible under weak controlled ambient spill. The spotlight is hard, directional, not glowing or holy. No stage objects move when the lights change.\nSound: click, brief room silence, click.\nSHOT K04-04 | 55s–60s | 5 SECONDS\n35mm restrained low three-quarter from the EAST side of the seeker, facing obliquely NORTH toward Zahhak. The seeker is caught under a harsh circle of light and slowly lifts the masked head, keeping the body under pressure. Through the dim barrier of two guards, Zahhak remains elevated and still readable. A modest focus shift from a guard's shoulder to the seeker brings out the emotional subject. No extra dramatic gesture. Hamed remains at the composition's edge, quietly satisfied; do not smile broadly.\nSound: one controlled breath, cloth creak, concentrated stage silence.\nEND STATE AND EDIT\nKeep this final composition: human-scale Zahhak high at NORTH; seeker isolated at SOUTH under ONE hard spotlight; four guards fixed in the established arrangement, peripheral illumination low. The auditorium audience has always been seated beyond the SOUTH camera position, completely offscreen and in darkness. BLOCK 05 starts with a deliberate hold before revealing them using only house lights and camera pullback.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 15,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V01",
+    "@CHR-002/V01",
+    "@GRP-001/V01",
+    "@LOC-001/V01",
+    "@PRP-001/V01"
+  ],
+  "sentRefs": [
+    "@CHR-001/V01",
+    "@CHR-002/V01",
+    "@GRP-001/V01",
+    "@LOC-001/V01",
+    "@PRP-001/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-11-10T17:58:34.135Z",
+  "costCredits": 45,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261110_175643_96a71bee-b50d-473a-9b81-b3dc2040adac.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-11-10T17:56:43.457136Z",
+      "display_name": "Seedance 2.5",
+      "id": "96a71bee-b50d-473a-9b81-b3dc2040adac",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 15,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "bb5a8a7e-c70d-4b36-898d-a0a91adba52d",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/bb5a8a7e-c70d-4b36-898d-a0a91adba52d.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "fe4e0ec1-b5a0-4a06-a250-a236b9d02602",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/fe4e0ec1-b5a0-4a06-a250-a236b9d02602.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "eb03b9d4-876c-46bc-909f-c420559cd9f6",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/eb03b9d4-876c-46bc-909f-c420559cd9f6.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "03a140a9-963e-4041-a302-358977e07fe0",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/03a140a9-963e-4041-a302-358977e07fe0.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "abbd333a-54a5-4fb1-a0ca-3ddb7c84e02b",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/abbd333a-54a5-4fb1-a0ca-3ddb7c84e02b.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "KELAASOR × HAMED HEYDARI | ZAHHAK AND THE SEEKER OF JUSTICE | SEEDANCE 2.5\nREFERENCE AND CONTINUITY LOCK\nCHARACTER REFERENCES\n{{CHAR_HAMED}}\n{{CHAR_ZAHHAK}}\n{{CHAR_DADKHAH}}\n{{CHAR_GUARD_01}}\n{{CHAR_GUARD_02}}\n{{CHAR_GUARD_03}}\n{{CHAR_GUARD_04}}\nLOCATION REFERENCES\n{{LOC_THRONE_STAGE}}\n{{LOC_THEATER_AUDITORIUM}}\nPROP REFERENCES\n{{PROP_ZAHHAK_CHAIR}}\n{{PROP_STEP_PLATFORM}}\n{{PROP_GUARD_SPEARS}}\n{{PROP_TOMATO}}\nIDENTITY LOCK\nHamed is the same contemporary director in every block, wearing his reference cap, round black glasses, gray beard, black hoodie and dark trousers. No extra Hamed doubles.\nZahhak keeps his exact established handmade mask, dark clothing, serpents and facial silhouette. Keep the serpent forms attached and fixed; do not add animal heads or replace his mask. His body is adult human scale except during the deliberately temporary visual size gag.\nThe seeker of justice is ONE masked adult human, continuously in the same costume, standing or kneeling with dignified resistance. Preserve the same handmade mask and silhouette.\nExactly FOUR distinct masked guards, each retaining individual costume and rigid mask. Their spears remain rigid objects; no new guards appear.\nUse one single stage space. The audience is physically seated in the dark auditorium from the start, but remains strictly outside all camera frames until the final reveal. Do not generate spectators on the stage.\nNo dialogue, narration, music, subtitles, captions or readable text. No fantasy particles, smoke bursts, magical wardrobe changes, detached shadows or impossible architecture. The size-change gag is the ONLY deliberate nonphysical change, and it must occur without redesigning Zahhak.\nPRODUCTION PROMPT\nDIRECTION AND SPATIAL RULES\nContinue physically from BLOCK 03. The stepped podium, chair and throne height are final and must never change. Exactly four guards: TWO flanking the high throne in the NORTH mid-background, TWO positioned between Zahhak and the seeker but offset diagonally to leave a narrow sightline. The seeker remains fully visible, more vulnerable and visually isolated. This block contains the decisive theatrical lighting cue performed visibly within the SAME master composition; do not replace it with a before/after jump cut.\nThe last arrangement expresses oppression by height and blocked access, while the emotional focus falls on the seeker. Stage light is controlled and theatrical, not supernatural; one elevated hard spotlight fixture is motivated and must be spatially plausible.\nSHOT K04-01 | 45s–49s | 4 SECONDS\n35mm medium from SOUTHWEST. Hamed walks into the gaps between the two middle guards, moves one by a single step to the WEST and turns another slightly toward the seeker. The guards comply exactly but retain their individual silhouettes, spacing and spears. The two background guards hold their positions at the riser. The director then shifts the seeker's shoulders a few degrees toward the elevated king without touching the mask. The seeker maintains restrained dignity, not collapse.\nSound: boots repositioning, fabric brushing sleeves, one soft spear-foot contact.\nSHOT K04-02 | 49s–52s | 3 SECONDS\n28mm original SOUTH master, fixed at the exact height and angle used in K01-01. Hamed steps just clear of the primary stage axis. In the same frame, the rising stepped throne and the open but threatening guard barrier now impose pressure on the lone seeker. The composition is organized, but still uniformly illuminated and emotionally unresolved. Hamed watches for one precise beat.\nSound: relative quiet, slight breathing.\nSHOT K04-03 | 52s–55s | 3 SECONDS\nKeep the exact same locked 28mm master throughout; NO CUT INSIDE THIS SHOT. Hamed makes one small lighting cue gesture from the edge of the composition. With a crisp practical switch click, the broad general stage lights go OFF almost simultaneously. One beat of near-darkness. A second dry switch click: ONE hard-edged, neutral spotlight from high camera-left falls onto the seeker, leaving the king on his raised chair and the guards dimly visible under weak controlled ambient spill. The spotlight is hard, directional, not glowing or holy. No stage objects move when the lights change.\nSound: click, brief room silence, click.\nSHOT K04-04 | 55s–60s | 5 SECONDS\n35mm restrained low three-quarter from the EAST side of the seeker, facing obliquely NORTH toward Zahhak. The seeker is caught under a harsh circle of light and slowly lifts the masked head, keeping the body under pressure. Through the dim barrier of two guards, Zahhak remains elevated and still readable. A modest focus shift from a guard's shoulder to the seeker brings out the emotional subject. No extra dramatic gesture. Hamed remains at the composition's edge, quietly satisfied; do not smile broadly.\nSound: one controlled breath, cloth creak, concentrated stage silence.\nEND STATE AND EDIT\nKeep this final composition: human-scale Zahhak high at NORTH; seeker isolated at SOUTH under ONE hard spotlight; four guards fixed in the established arrangement, peripheral illumination low. The auditorium audience has always been seated beyond the SOUTH camera position, completely offscreen and in darkness. BLOCK 05 starts with a deliberate hold before revealing them using only house lights and camera pullback.\n\n<<<image_1>>> is Hamed (CHR-001 V01); match it wherever Hamed appears.\n<<<image_2>>> is Zahhak (CHR-002 V01); match it wherever Zahhak appears.\n<<<image_3>>> is Palace Guards (GRP-001 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Zahhak Hall (LOC-001 V01); match it wherever Zahhak Hall appears.\n<<<image_5>>> is Gilded Lion Armchair (PRP-001 V01); match it wherever Gilded Lion Armchair appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 411411461,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261110_175643_96a71bee-b50d-473a-9b81-b3dc2040adac.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261110_175643_96a71bee-b50d-473a-9b81-b3dc2040adac_thumbnail.webp"
+    }
+  ]
+}

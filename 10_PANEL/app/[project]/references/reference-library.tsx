@@ -4,11 +4,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import {
   Archive, ArchiveRestore, Check, ChevronDown, Copy, FolderOpen, ImageOff, LoaderCircle, Maximize2,
-  MoveRight, Pencil, Plus, Search, Star, Tag, Undo2, Upload, X,
+  MoveRight, Pencil, Send, Plus, Search, Star, Tag, Undo2, Upload, X,
 } from 'lucide-react'
 import { revealInFolder } from '../reveal-action'
 import { useAssetUrls, useProject } from '@/components/project-context'
 import { requestIndexOp } from './actions'
+import { copyToProject } from './copy-actions'
 import { IndexPicker } from '@/components/index-picker'
 import { Lightbox, type LightboxItem } from '@/components/lightbox'
 import { useReferenceEdits } from '@/components/reference-editor'
@@ -109,7 +110,19 @@ function Menu({ label, icon, items, disabled }: { label: string; icon: React.Rea
  * studio's launcher). Rendered above the library instead, they sat under this
  * header, which pulls itself up over whatever comes first on the page.
  */
-export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData; catalog: CatalogEntity[]; actions?: React.ReactNode }) {
+/** What "Copy reference" put aside, kept in the browser so another project's page can paste it. */
+type RefClip = { project: string; projectName: string; entities: { id: string; shortId: string; name: string }[] }
+const CLIP_KEY = 'fmfd.referenceClipboard'
+const readClip = (): RefClip | null => {
+  try {
+    const v = JSON.parse(localStorage.getItem(CLIP_KEY) ?? 'null')
+    return v && typeof v.project === 'string' && Array.isArray(v.entities) && v.entities.length ? v : null
+  } catch { return null }
+}
+
+export type OtherProject = { slug: string; name: string; code: string }
+
+export function ReferenceLibrary({ data, catalog, actions, otherProjects = [] }: { data: LibraryData; catalog: CatalogEntity[]; actions?: React.ReactNode; otherProjects?: OtherProject[] }) {
   const project = useProject()
   const { assetUrl, thumbUrl } = useAssetUrls()
   const [view, setView] = useState<View>('ALL')
@@ -124,6 +137,14 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
   const [openId, setOpenId] = useState<string | null>(null)
   const [adding, setAdding] = useState<{ entity: string } | null>(null)
   const [moveLooks, setMoveLooks] = useState<LookRef[] | null>(null)
+  const [copying, setCopying] = useState<LibraryEntity[] | null>(null)
+  const [clip, setClip] = useState<RefClip | null>(null)
+  useEffect(() => {
+    setClip(readClip())
+    const onStorage = (ev: StorageEvent) => { if (ev.key === CLIP_KEY) setClip(readClip()) }
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
+  }, [])
   const [menu, setMenu] = useState<{ at: { x: number; y: number }; entries: MenuEntry[] } | null>(null)
   const [confirm, setConfirm] = useState<{ title: string; body: string; label: string; run: () => void } | null>(null)
   const [viewer, setViewer] = useState<{ items: LightboxItem[]; index: number } | null>(null)
@@ -199,6 +220,27 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
     toast('muted', 'Sent to the worker…', 2500)
     clearSelection()
     return true
+  }
+
+  function copyReference() {
+    const next: RefClip = { project: project.slug, projectName: project.name, entities: selEntities.map((e) => ({ id: e.id, shortId: e.shortId, name: e.name })) }
+    try { localStorage.setItem(CLIP_KEY, JSON.stringify(next)) } catch { toast('bad', 'This browser would not keep the copy. Use “Copy to project…” instead.', 8000); return }
+    setClip(next)
+    toast('good', `Copied ${next.entities.map((e) => e.shortId).join(', ')}. Open another project’s References and press “Paste reference”.`, 7000)
+  }
+
+  async function pasteReference() {
+    if (!clip) return
+    setBusy(true)
+    const fd = new FormData()
+    fd.set('project', clip.project)
+    fd.set('target', project.slug)
+    fd.set('entities', JSON.stringify(clip.entities.map((e) => e.id)))
+    const r = await copyToProject(fd).catch((e: Error) => ({ ok: false as const, error: e.message, copied: 0, skipped: [] as { shortId: string; reason: string }[] }))
+    setBusy(false)
+    if (!r.ok) { toast('bad', r.error ?? 'Could not paste.', 12000); return }
+    const left = (r.skipped ?? []).map((s) => `${s.shortId} (${s.reason})`)
+    toast('good', `Pasted ${r.copied} ${r.copied === 1 ? 'reference' : 'references'} from ${clip.projectName}; the worker files ${r.copied === 1 ? 'it' : 'them'} in a few seconds.${left.length ? ` Left out: ${left.join('; ')}.` : ''}`, 9000)
   }
 
   const selEntities = [...selE].map((id) => byId.get(id)!).filter(Boolean)
@@ -330,6 +372,12 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
               {STATUSES.map((s) => <option key={s} value={s}>{s[0] + s.slice(1).toLowerCase()}</option>)}
             </Select>
             {actions}
+            {clip && clip.project !== project.slug && (
+              <Button type="button" tone="outline" size="sm" className="h-9 px-3.5" disabled={busy} onClick={pasteReference}
+                title={`From ${clip.projectName}: ${clip.entities.map((e) => `${e.shortId} ${e.name}`).join(', ')}`}>
+                <Send aria-hidden className="size-3.5" /> Paste reference ({clip.entities.length})
+              </Button>
+            )}
             <Button type="button" tone="accent" size="sm" className="h-9 px-3.5" onClick={() => setAdding({ entity: '' })}>
               <Plus aria-hidden className="size-3.5" /> Add references
             </Button>
@@ -492,6 +540,14 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
                   )}
                   <Menu label="Status" icon={<Tag aria-hidden className="size-3.5" />} disabled={busy}
                     items={STATUSES.map((st) => ({ label: st[0] + st.slice(1).toLowerCase(), onClick: () => send({ type: 'status', entities: [...selE], status: st }) }))} />
+                  <Button type="button" size="sm" tone="outline" disabled={busy} onClick={copyReference}>
+                    <Copy aria-hidden className="size-3.5" /> Copy reference
+                  </Button>
+                  {otherProjects.length > 0 && (
+                    <Button type="button" size="sm" tone="outline" disabled={busy} onClick={() => setCopying(selEntities)}>
+                      <Send aria-hidden className="size-3.5" /> Copy to project…
+                    </Button>
+                  )}
                 </>
               )}
 
@@ -582,6 +638,15 @@ export function ReferenceLibrary({ data, catalog, actions }: { data: LibraryData
         <p className="text-[15px] leading-relaxed text-muted">{confirm?.body}</p>
       </Modal>
 
+      {copying && (
+        <CopyDialog
+          entities={copying}
+          projects={otherProjects}
+          onClose={() => setCopying(null)}
+          onDone={(text) => { setCopying(null); clearSelection(); toast('good', text, 9000) }}
+          onError={(text) => toast('bad', text, 12000)}
+        />
+      )}
       {editing && <EditDialog entity={editing} onClose={() => setEditing(null)} send={send} busy={busy} />}
       {adding && <AddDialog entity={adding.entity} catalog={catalog} onClose={() => setAdding(null)} send={send} busy={busy} />}
 
@@ -1148,5 +1213,67 @@ function IconAction({ label, onClick, children }: { label: string; onClick: () =
     >
       {children}
     </button>
+  )
+}
+
+
+/**
+ * Copy the chosen entities, with all their looks, into another project. They
+ * arrive there as new things with that project's own numbers; this project is
+ * not changed. The other project's worker files them, a few seconds later.
+ */
+function CopyDialog({ entities, projects, onClose, onDone, onError }: {
+  entities: LibraryEntity[]
+  projects: OtherProject[]
+  onClose: () => void
+  onDone: (text: string) => void
+  onError: (text: string) => void
+}) {
+  const project = useProject()
+  const [target, setTarget] = useState(projects[0]?.slug ?? '')
+  const [busy, setBusy] = useState(false)
+  const dest = projects.find((p) => p.slug === target)
+  const looks = entities.reduce((n, e) => n + e.looks.length, 0)
+
+  async function copy() {
+    setBusy(true)
+    const fd = new FormData()
+    fd.set('project', project.slug)
+    fd.set('target', target)
+    fd.set('entities', JSON.stringify(entities.map((e) => e.id)))
+    const r = await copyToProject(fd).catch((e: Error) => ({ ok: false as const, error: e.message, copied: 0, skipped: [] as { shortId: string; reason: string }[] }))
+    setBusy(false)
+    if (!r.ok) { onError(r.error ?? 'Could not copy.'); return }
+    const left = (r.skipped ?? []).map((s) => `${s.shortId} (${s.reason})`)
+    onDone(`Sent ${r.copied} ${r.copied === 1 ? 'entity' : 'entities'} to ${dest?.name}; its worker files ${r.copied === 1 ? 'it' : 'them'} in a few seconds.${left.length ? ` Left out: ${left.join('; ')}.` : ''}`)
+  }
+
+  return (
+    <Modal
+      open
+      title={`Copy ${entities.length === 1 ? entities[0].name : `${entities.length} entities`} to another project`}
+      onClose={onClose}
+      footer={
+        <>
+          <Button type="button" size="sm" tone="ghost" onClick={onClose}>Cancel</Button>
+          <Button type="button" size="sm" disabled={busy || !target} onClick={copy}>
+            {busy ? <LoaderCircle aria-hidden className="size-3.5 animate-spin" /> : <Send aria-hidden className="size-3.5" />} Copy
+          </Button>
+        </>
+      }
+    >
+      <div className="grid gap-4">
+        <Field label="Copy into">
+          <Select value={target} onChange={(e) => setTarget(e.target.value)}>
+            {projects.map((p) => <option key={p.slug} value={p.slug}>{p.name} ({p.code})</option>)}
+          </Select>
+        </Field>
+        <p className="text-[15px] leading-relaxed text-muted">
+          {entities.map((e) => e.shortId).join(', ')}: {looks} {looks === 1 ? 'look' : 'looks'} in all, main look first.
+          They become new things in {dest?.name ?? 'that project'} with its own numbers ({dest?.code ?? '…'}-…). Nothing here changes,
+          and anything {dest?.name ?? 'that project'} already has under the same name is left out, not doubled.
+        </p>
+      </div>
+    </Modal>
   )
 }
