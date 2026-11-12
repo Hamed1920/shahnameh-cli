@@ -782,6 +782,25 @@ export interface EpisodeScene {
   movingTo: string | null
   /** Every output this shot has, oldest first. */
   outputs: ShotOutput[]
+  /** The plan's history: every prompt that was queued against it, oldest first. */
+  plan: PlanRevision[]
+}
+
+/** One version of a plan: the prompt as it was queued, and what changed it. */
+export interface PlanRevision {
+  jobId: string
+  parentJobId: string | null
+  attempt: number
+  stage: 'draft' | 'final' | null
+  ts: string
+  model: string
+  /** The prompt as authored (before references were expanded). */
+  prompt: string
+  refs: string[]
+  /** What the reviewer asked to change, when this revision came from one. */
+  notes: string[]
+  /** The prompt differs from the revision before it. */
+  changed: boolean
 }
 
 /** One episode, as the Episodes page reads it. */

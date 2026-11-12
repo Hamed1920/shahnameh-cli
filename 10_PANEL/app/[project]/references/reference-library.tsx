@@ -9,7 +9,7 @@ import {
 import { revealInFolder } from '../reveal-action'
 import { useAssetUrls, useProject } from '@/components/project-context'
 import { requestIndexOp } from './actions'
-import { copyToProject } from './copy-actions'
+import { copyToProject, listProjectEntities } from './copy-actions'
 import { IndexPicker } from '@/components/index-picker'
 import { Lightbox, type LightboxItem } from '@/components/lightbox'
 import { useReferenceEdits } from '@/components/reference-editor'
@@ -139,6 +139,7 @@ export function ReferenceLibrary({ data, catalog, actions, otherProjects = [] }:
   const [moveLooks, setMoveLooks] = useState<LookRef[] | null>(null)
   const [copying, setCopying] = useState<LibraryEntity[] | null>(null)
   const [clip, setClip] = useState<RefClip | null>(null)
+  const [importing, setImporting] = useState(false)
   useEffect(() => {
     setClip(readClip())
     const onStorage = (ev: StorageEvent) => { if (ev.key === CLIP_KEY) setClip(readClip()) }
@@ -376,6 +377,12 @@ export function ReferenceLibrary({ data, catalog, actions, otherProjects = [] }:
               <Button type="button" tone="outline" size="sm" className="h-9 px-3.5" disabled={busy} onClick={pasteReference}
                 title={`From ${clip.projectName}: ${clip.entities.map((e) => `${e.shortId} ${e.name}`).join(', ')}`}>
                 <Send aria-hidden className="size-3.5" /> Paste reference ({clip.entities.length})
+              </Button>
+            )}
+            {otherProjects.length > 0 && (
+              <Button type="button" tone="outline" size="sm" className="h-9 px-3.5" disabled={busy} onClick={() => setImporting(true)}
+                title="Bring references in from another project">
+                <Send aria-hidden className="size-3.5 -scale-x-100" /> Import from project…
               </Button>
             )}
             <Button type="button" tone="accent" size="sm" className="h-9 px-3.5" onClick={() => setAdding({ entity: '' })}>
@@ -638,6 +645,14 @@ export function ReferenceLibrary({ data, catalog, actions, otherProjects = [] }:
         <p className="text-[15px] leading-relaxed text-muted">{confirm?.body}</p>
       </Modal>
 
+      {importing && (
+        <ImportDialog
+          projects={otherProjects}
+          onClose={() => setImporting(false)}
+          onDone={(text) => { setImporting(false); toast('good', text, 9000) }}
+          onError={(text) => toast('bad', text, 12000)}
+        />
+      )}
       {copying && (
         <CopyDialog
           entities={copying}
@@ -1216,6 +1231,94 @@ function IconAction({ label, onClick, children }: { label: string; onClick: () =
   )
 }
 
+
+/**
+ * Import: pick another project, tick what to bring here. The same request as
+ * "Copy to project…", aimed the other way: this project is the target.
+ */
+function ImportDialog({ projects, onClose, onDone, onError }: {
+  projects: OtherProject[]
+  onClose: () => void
+  onDone: (text: string) => void
+  onError: (text: string) => void
+}) {
+  const project = useProject()
+  const [source, setSource] = useState(projects[0]?.slug ?? '')
+  const [list, setList] = useState<{ id: string; shortId: string; name: string; kind: string; looks: number }[] | null>(null)
+  const [picked, setPicked] = useState<Set<string>>(new Set())
+  const [busy, setBusy] = useState(false)
+  const from = projects.find((p) => p.slug === source)
+
+  useEffect(() => {
+    let live = true
+    setList(null)
+    setPicked(new Set())
+    listProjectEntities(source).then((r) => {
+      if (!live) return
+      if (!r.ok) onError(r.error ?? 'Could not read that project.')
+      setList(r.entities)
+    })
+    return () => { live = false }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [source])
+
+  async function run() {
+    setBusy(true)
+    const fd = new FormData()
+    fd.set('project', source)
+    fd.set('target', project.slug)
+    fd.set('entities', JSON.stringify([...picked]))
+    const r = await copyToProject(fd).catch((e: Error) => ({ ok: false as const, error: e.message, copied: 0, skipped: [] as { shortId: string; reason: string }[] }))
+    setBusy(false)
+    if (!r.ok) { onError(r.error ?? 'Could not import.'); return }
+    const left = (r.skipped ?? []).map((s) => `${s.shortId} (${s.reason})`)
+    onDone(`Imported ${r.copied} ${r.copied === 1 ? 'reference' : 'references'} from ${from?.name}; the worker files ${r.copied === 1 ? 'it' : 'them'} in a few seconds.${left.length ? ` Left out: ${left.join('; ')}.` : ''}`)
+  }
+
+  const toggleOne = (id: string) => setPicked((was) => { const n = new Set(was); if (n.has(id)) n.delete(id); else n.add(id); return n })
+
+  return (
+    <Modal
+      open
+      title="Import references from another project"
+      onClose={onClose}
+      footer={
+        <>
+          <Button type="button" size="sm" tone="ghost" onClick={onClose}>Cancel</Button>
+          <Button type="button" size="sm" disabled={busy || picked.size === 0} onClick={run}>
+            {busy ? <LoaderCircle aria-hidden className="size-3.5 animate-spin" /> : <Send aria-hidden className="size-3.5" />} Import{picked.size > 0 ? ` ${picked.size}` : ''}
+          </Button>
+        </>
+      }
+    >
+      <div className="grid gap-4">
+        <Field label="Import from">
+          <Select value={source} onChange={(e) => setSource(e.target.value)}>
+            {projects.map((p) => <option key={p.slug} value={p.slug}>{p.name} ({p.code})</option>)}
+          </Select>
+        </Field>
+        <div className="max-h-80 overflow-y-auto rounded-md border border-edge">
+          {list === null ? (
+            <p className="p-3 text-[13px] text-muted">Loading…</p>
+          ) : list.length === 0 ? (
+            <p className="p-3 text-[13px] text-muted">{from?.name} has no references to import.</p>
+          ) : list.map((e) => (
+            <label key={e.id} className="flex cursor-pointer items-center gap-3 border-b border-edge px-3 py-2 text-[13px] last:border-b-0 hover:bg-panel">
+              <input type="checkbox" checked={picked.has(e.id)} onChange={() => toggleOne(e.id)} />
+              <span className="font-mono text-[11px] text-faint">{e.shortId}</span>
+              <span className="min-w-0 flex-1 truncate text-fg">{e.name}</span>
+              <span className="text-[11px] text-faint">{e.looks} {e.looks === 1 ? 'look' : 'looks'}</span>
+            </label>
+          ))}
+        </div>
+        <p className="text-[13px] leading-relaxed text-muted">
+          They become new things here with this project’s own numbers. {from?.name ?? 'The other project'} is not changed,
+          and anything already here under the same name is left out, not doubled.
+        </p>
+      </div>
+    </Modal>
+  )
+}
 
 /**
  * Copy the chosen entities, with all their looks, into another project. They

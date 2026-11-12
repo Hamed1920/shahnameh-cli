@@ -43,7 +43,7 @@ export const credits = (n: number) => (n % 1 === 0 ? String(n) : n.toFixed(1))
  */
 export const shotLabel = (scene: string | null) => {
   const m = /^SC0*(\d+)$/.exec(String(scene ?? ''))
-  return m ? `Shot ${m[1]}` : String(scene ?? '')
+  return m ? `Plan ${m[1]}` : String(scene ?? '')
 }
 
 /** What a right-click on one scene offers: where it goes, its id, its file. */
@@ -113,7 +113,7 @@ export function SceneCard({
           <span aria-hidden className={cn('size-1.5 rounded-full', s.dot)} />
           <span className="text-[11.5px] text-muted">{s.label}</span>
           {/* The count opens the shot's history: every output, playable. */}
-          <TakesDialog shot={scene.shot} label={shotLabel(scene.scene)} outputs={scene.outputs} />
+          <TakesDialog shot={scene.shot} label={shotLabel(scene.scene)} outputs={scene.outputs} plan={scene.plan} />
           {scene.movingTo && <Badge tone="accent">moving to {shortEpisode(scene.movingTo)}</Badge>}
         </div>
 

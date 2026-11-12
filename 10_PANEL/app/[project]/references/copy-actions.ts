@@ -29,6 +29,22 @@ export interface CopyResult {
   skipped?: { shortId: string; reason: string }[]
 }
 
+/** What another project holds, for the Import dialog's picker. Read-only. */
+export async function listProjectEntities(slug: string): Promise<{ ok: boolean; error?: string; entities: { id: string; shortId: string; name: string; kind: string; looks: number }[] }> {
+  try {
+    const source = await requireProject(slug)
+    const library = await getLibrary(source)
+    return {
+      ok: true,
+      entities: library.entities
+        .filter((e) => e.status !== 'RETIRED')
+        .map((e) => ({ id: e.id, shortId: e.shortId, name: e.name, kind: e.kind, looks: e.looks.length })),
+    }
+  } catch (e) {
+    return { ok: false, error: (e as Error).message, entities: [] }
+  }
+}
+
 export async function copyToProject(formData: FormData): Promise<CopyResult> {
   const source = await requireProject(formData.get('project'))
   const target = await requireProject(formData.get('target'))

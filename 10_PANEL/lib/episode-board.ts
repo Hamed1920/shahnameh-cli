@@ -63,6 +63,7 @@ export async function getEpisodeBoard(pr: Project): Promise<EpisodeBoard[]> {
         credits: 0,
         movingTo: requests.pending[shot] ?? null,
         outputs: [],
+        plan: [],
       }
       rows.set(shot, r)
     }
@@ -74,7 +75,20 @@ export async function getEpisodeBoard(pr: Project): Promise<EpisodeBoard[]> {
   for (const q of queue) {
     const r = row(q.target)
     if (!r) continue
-    r.label ??= (q as QueueItem & { label?: string | null }).label ?? null
+    const x = q as QueueItem & { label?: string | null; basePrompt?: string; stage?: 'draft' | 'final'; revisionNotes?: unknown[] }
+    r.label ??= x.label ?? null
+    r.plan.push({
+      jobId: q.jobId,
+      parentJobId: q.parentJobId ?? null,
+      attempt: q.attempt ?? 1,
+      stage: x.stage ?? null,
+      ts: q.enqueuedAt ?? '',
+      model: q.model,
+      prompt: x.basePrompt ?? q.prompt ?? '',
+      refs: q.refs ?? [],
+      notes: (x.revisionNotes ?? []).map((n) => (typeof n === 'string' ? n : JSON.stringify(n))),
+      changed: true,
+    })
     if (!processed.has(q.jobId)) r.state = generating.has(q.jobId) ? 'generating' : 'queued'
   }
   for (const c of candidates) {
@@ -172,6 +186,8 @@ export async function getEpisodeBoard(pr: Project): Promise<EpisodeBoard[]> {
   // order by; anything else falls back to when it was decided.
   for (const r of rows.values()) {
     r.outputs.sort((a, b) => a.take.localeCompare(b.take) || a.ts.localeCompare(b.ts))
+    r.plan.sort((a, b) => a.ts.localeCompare(b.ts))
+    r.plan.forEach((p, i) => { p.changed = i === 0 || p.prompt !== r.plan[i - 1].prompt })
   }
 
   const byEpisode = new Map<string, EpisodeScene[]>()

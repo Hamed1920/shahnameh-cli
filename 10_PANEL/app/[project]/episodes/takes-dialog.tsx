@@ -9,7 +9,7 @@ import { TakeMedia } from '@/components/take-media'
 import { Modal } from '@/components/ui/modal'
 import { Badge } from '@/components/ui/text'
 import { cn } from '@/lib/cn'
-import type { ShotOutput } from '@/lib/types'
+import type { PlanRevision, ShotOutput } from '@/lib/types'
 
 /**
  * Every output a shot has ever had, each one playable.
@@ -28,26 +28,28 @@ export function TakesDialog({
   shot,
   label,
   outputs,
+  plan,
 }: {
   shot: string
-  /** "Shot 14", for the heading. */
+  /** "Plan 14", for the heading. */
   label: string
   outputs: ShotOutput[]
+  plan: PlanRevision[]
 }) {
   const [open, setOpen] = useState(false)
+  const [tab, setTab] = useState<'plan' | 'takes'>('plan')
   const count = outputs.length
-  if (count === 0) return null
 
   return (
     <>
       <button
         type="button"
         onClick={(e) => { e.stopPropagation(); setOpen(true) }}
-        title={`See all ${count} output${count === 1 ? '' : 's'} of ${shot}`}
+        title={count === 0 ? `${shot} has no outputs yet` : `See all ${count} output${count === 1 ? '' : 's'} of ${shot}`}
         className="focus-ring inline-flex h-[18px] cursor-pointer items-center gap-1 rounded-full border border-edge-strong px-2 text-[10.5px] text-muted transition-colors hover:border-muted hover:text-fg"
       >
         <Layers aria-hidden className="size-2.5" />
-        {count} take{count === 1 ? '' : 's'}
+        History{count > 0 && ` · ${count}`}
       </button>
 
       <Modal
@@ -61,7 +63,22 @@ export function TakesDialog({
         }
         onClose={() => setOpen(false)}
       >
-        <TakeList outputs={outputs} />
+        <div className="mb-5 flex gap-2">
+          {([['plan', `Plan history${plan.length ? ` · ${plan.length}` : ''}`], ['takes', `Takes${count ? ` · ${count}` : ''}`]] as const).map(([k, text]) => (
+            <button
+              key={k}
+              type="button"
+              onClick={() => setTab(k)}
+              className={cn(
+                'focus-ring h-7 cursor-pointer rounded-full border px-3 text-[12px] transition-colors',
+                tab === k ? 'border-fg text-fg' : 'border-edge text-muted hover:text-fg',
+              )}
+            >
+              {text}
+            </button>
+          ))}
+        </div>
+        {tab === 'plan' ? <PlanHistory plan={plan} /> : <TakeList outputs={outputs} />}
       </Modal>
     </>
   )
@@ -69,6 +86,45 @@ export function TakesDialog({
 
 const when = (iso: string) =>
   iso ? new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : null
+
+/** Every prompt queued against this plan, oldest first, with the notes that changed it. */
+function PlanHistory({ plan }: { plan: PlanRevision[] }) {
+  if (plan.length === 0) {
+    return <p className="text-[13px] leading-relaxed text-muted">No prompt has been queued for this plan yet. Its versions will appear here.</p>
+  }
+  return (
+    <ol className="space-y-4">
+      {plan.map((p, i) => (
+        <li key={p.jobId} className="rounded-xl border border-edge bg-panel p-4">
+          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
+            <span className="font-mono text-[13px] text-fg">v{i + 1}</span>
+            <span className="font-mono text-[11px] text-faint">{p.jobId}</span>
+            {p.stage && <Badge tone="muted">{p.stage}</Badge>}
+            {p.attempt > 1 && <Badge tone="muted">attempt {p.attempt}</Badge>}
+            {i > 0 && !p.changed && <Badge tone="muted">same prompt</Badge>}
+            {i > 0 && p.changed && <Badge tone="accent">prompt changed</Badge>}
+            {p.ts && <span className="ml-auto font-mono text-[10.5px] text-faint tabular-nums">{when(p.ts)}</span>}
+          </div>
+          {p.notes.length > 0 && (
+            <p className="mt-2.5 text-[12.5px] leading-relaxed whitespace-pre-line text-fg/80" dir="auto">
+              <span className="eyebrow mr-2 text-accent">why it was revised</span>
+              {p.notes.join('\n')}
+            </p>
+          )}
+          {(p.changed || i === 0) ? (
+            <details className="mt-2.5">
+              <summary className="cursor-pointer text-[12px] text-muted hover:text-fg">Show the prompt</summary>
+              <pre className="mt-2 max-h-80 overflow-auto text-[12px] leading-relaxed whitespace-pre-wrap text-fg/80" dir="auto">{p.prompt}</pre>
+            </details>
+          ) : (
+            <p className="mt-2.5 text-[12px] text-faint">Prompt unchanged from v{i}.</p>
+          )}
+          {p.refs.length > 0 && <p className="mt-2 font-mono text-[10.5px] break-all text-faint">{p.refs.join(' ')}</p>}
+        </li>
+      ))}
+    </ol>
+  )
+}
 
 function TakeList({ outputs }: { outputs: ShotOutput[] }) {
   const project = useProject()
@@ -79,6 +135,10 @@ function TakeList({ outputs }: { outputs: ShotOutput[] }) {
     void revealInFolder(project.slug, path).then((r) => {
       if (!r.ok) { setNote(r.error ?? 'Could not open the folder.'); setTimeout(() => setNote(null), 5000) }
     })
+
+  if (outputs.length === 0) {
+    return <p className="text-[13px] leading-relaxed text-muted">Nothing has been generated for this shot yet. Its history will appear here.</p>
+  }
 
   return (
     <>
