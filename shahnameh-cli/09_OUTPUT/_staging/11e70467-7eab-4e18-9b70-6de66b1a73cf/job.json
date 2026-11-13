@@ -1,0 +1,162 @@
+{
+  "jobId": "J-20261113-K68",
+  "parentJobId": null,
+  "hfJobId": "11e70467-7eab-4e18-9b70-6de66b1a73cf",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 11",
+  "target": "SHM-EP017-SC011-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP017/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 11 | A SECOND SHELTER\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_ZAHHAK}} {{CHAR_ZIRAK}} {{CHAR_ARNAVAZ}} {{CHAR_PRIESTS}} {{CHAR_ABTIN}} {{CHAR_FEREYDUN_CHILD}} {{CHAR_BARMAYEH}} {{CHAR_AGENTS}}\nLOCATION REFERENCES\n{{LOC_MASTER_HALL}} {{LOC_DARK_TABLEAU_BAYS}}\nPROP REFERENCES\n{{PROP_STAFF}} {{PROP_BINDING}} {{PROP_ANIMAL_ROPE}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action sequence. Lock referenced identities, clothing, proportions and rigid handmade masks, including fixed eye openings. All humans are masked. Hard cuts only at listed times. Unless labelled LOCKED, camera stays physically moving: handheld drift, late reframing, foreground obstruction and brief focus slips that recover essential action. Broken framing never means broken armor, damaged sets or glitch effects. No slow motion, arbitrary orbit, zoom or exposure pumping. Written lighting overrides reference exposure. Generate diegetic sound only; poetry is added in post. NO DIALOGUE, NARRATION OR MUSIC. Fixed world anchors survive every cut. Screen directions belong only to each named angle. Off-camera actors retain their marks. Body facing and eyeline are separate; no accidental looks into camera.\nZahhak retains his referenced 178 cm body, support hand and weak-leg side. Every step: plant staff, transfer weight, weaker leg follows. Turns: staff, torso, then head. No brisk or normal walking. Lock the supplied dream reference's exact count of five to ten natural black single-headed snakes across all blocks; independent living movement on shoulders, neck, back and torso continues even while he is still. No dragons or rigid snakes.\nLOCATION AND LIGHT\nOne night hall: NORTH upper throne; middle-level rim; central square exactly THREE shallow steps lower, accessed at NORTH. WEST camera aisle; SOUTH/EAST guard entrances. NORTH/WEST/SOUTHWEST dark bays are parts of this hall, not separate sets. Iranian-inspired stone, rounded openings, engineered practical lamps. Low neutral wall lights and faint cold high-opening spill stay fixed. Upper landing slightly brighter than recessed floor. No fog, aura or magical transitions. New angles discover bodies already in shadow. Reality characters never see or react to the prophecy tableaux.\n\nPLAN 11 | BLOCKING AND SHOTS\nSTART STATE AND BLOCKING\nREALITY: Zahhak below SOUTHWEST rim faces Zirak above him. PROPHECY: Abtin's bound hands remain at WEST bay edge. Separate SOUTHWEST dark bay contains Barmayeh and child Fereydun, already present, invisible to assembly. Barmayeh stands broadside facing EAST; child on her SOUTH side, palm resting on flank. Agents wait outside this insert until the last shot. Off-screen cast retain these marks. No unlisted entrance or exit.\nSHOT 11-01 | 0s–4s | 4 SECONDS\n65mm close from SOUTHEAST of Zahhak looking NORTHWEST, on the same side of his axis with Zirak. Zahhak faces southwest/up toward Zirak off-screen left. Move a few centimeters laterally, too close to the mask edge, then recover focus on the exposed near eye. He grips his staff harder. He never turns toward a prophecy tableau.\nFRAME / EYELINE / CONTINUITY: Reality positions unchanged; Zirak stays above-left off-camera. Zahhak's gaze belongs to the real encounter only.\nSHOT 11-02 | 4s–5s | 1 SECONDS\nCut to 85mm close on Abtin's still bound hand, moving gently sideways across stone. Use its curve and screen position as a visual match for the next shot, not a morph.\nFRAME / EYELINE / CONTINUITY: Prophecy insert repeats the SOUTH boundary hand position; no new motion or actor entry.\n\nPLAN 11 | SHOTS AND HANDOFF\nSHOT 11-03 | 5s–10s | 5 SECONDS\nHard MATCH CUT to 65mm close at calf height: child Fereydun's small hand rests on Barmayeh's flank in the same screen position. Camera tracks slowly WEST along the SOUTH side of the animal's breathing body, then reveals part of the child leaning close. Soft reflected spill from the existing wall lamp, no new spotlight. Cow stands naturally; the child remains calm and wears the referenced safe, unobstructive handmade mask.\nFRAME / EYELINE / CONTINUITY: Cow faces EAST, head to screen-right from SOUTH. Child is on SOUTH flank, nearer camera; hand rests on same flank throughout.\nSHOT 11-04 | 10s–13s | 3 SECONDS\n35mm low side view from SOUTHWEST, moving parallel to Barmayeh. Cow faces EAST, child remains SOUTH of her, leaning against the flank with palm still touching. Her breathing and a small ear adjustment remain natural; frame both bodies clearly without sentimental posing.\nFRAME / EYELINE / CONTINUITY: Southwest side continues west-to-east animal axis. Child's side/back faces camera while head turns toward the cow, not lens.\nSHOT 11-05 | 13s–15s | 2 SECONDS\n28mm from SOUTH of the pair. Two agents enter from EAST and WEST foreground edges, partially occluding the lens. The camera makes a small anxious retreat. Agent A reaches toward the loose halter rope at the cow's EAST head end; Agent B remains clear of the child. The calm composition becomes crowded.\nFRAME / EYELINE / CONTINUITY: From SOUTH looking NORTH: Agent A enters screen-right/EAST toward cow's head; B screen-left/WEST. Child remains near/SOUTH flank; B stops clear behind child's west side.\nEND STATE AND EDIT\nCow still faces EAST; child remains SOUTH beside her. Two agents have arrived. Agent A reaches the halter rope, not yet pulling. No harm or transformation is shown.\nSOUND\nClose uneven breathing, fabric pressure, footsteps at the specified level, staff contacts on stone, subtle scales against clothing, restrained practical-lamp hum and hall resonance. Perspective follows camera distance. No intelligible voices. No sound of any omitted strike or death. Maintain room tone across dream/reality cuts; no magical whoosh. Final cut to black only where specified.\nNO DIALOGUE. NO NARRATION. NO MUSIC.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_3>>> is Abtin (CHR-013 V01); match it wherever Abtin appears.\n<<<image_4>>> is Fereydoun Childhood (CHR-014 V01); match it wherever Fereydoun Childhood appears.\n<<<image_5>>> is Fire Priests (GRP-003 V01); match it wherever Fire Priests appears.\n<<<image_6>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_7>>> is Barmayeh (CRT-005 V01); match it wherever Barmayeh appears.\n<<<image_8>>> is Zahhak Royal Bed (LOC-043 V01); match it wherever Zahhak Royal Bed appears.\n<<<image_9>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+  "basePrompt": "PLAN 11 | A SECOND SHELTER\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_ZAHHAK}} {{CHAR_ZIRAK}} {{CHAR_ARNAVAZ}} {{CHAR_PRIESTS}} {{CHAR_ABTIN}} {{CHAR_FEREYDUN_CHILD}} {{CHAR_BARMAYEH}} {{CHAR_AGENTS}}\nLOCATION REFERENCES\n{{LOC_MASTER_HALL}} {{LOC_DARK_TABLEAU_BAYS}}\nPROP REFERENCES\n{{PROP_STAFF}} {{PROP_BINDING}} {{PROP_ANIMAL_ROPE}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action sequence. Lock referenced identities, clothing, proportions and rigid handmade masks, including fixed eye openings. All humans are masked. Hard cuts only at listed times. Unless labelled LOCKED, camera stays physically moving: handheld drift, late reframing, foreground obstruction and brief focus slips that recover essential action. Broken framing never means broken armor, damaged sets or glitch effects. No slow motion, arbitrary orbit, zoom or exposure pumping. Written lighting overrides reference exposure. Generate diegetic sound only; poetry is added in post. NO DIALOGUE, NARRATION OR MUSIC. Fixed world anchors survive every cut. Screen directions belong only to each named angle. Off-camera actors retain their marks. Body facing and eyeline are separate; no accidental looks into camera.\nZahhak retains his referenced 178 cm body, support hand and weak-leg side. Every step: plant staff, transfer weight, weaker leg follows. Turns: staff, torso, then head. No brisk or normal walking. Lock the supplied dream reference's exact count of five to ten natural black single-headed snakes across all blocks; independent living movement on shoulders, neck, back and torso continues even while he is still. No dragons or rigid snakes.\nLOCATION AND LIGHT\nOne night hall: NORTH upper throne; middle-level rim; central square exactly THREE shallow steps lower, accessed at NORTH. WEST camera aisle; SOUTH/EAST guard entrances. NORTH/WEST/SOUTHWEST dark bays are parts of this hall, not separate sets. Iranian-inspired stone, rounded openings, engineered practical lamps. Low neutral wall lights and faint cold high-opening spill stay fixed. Upper landing slightly brighter than recessed floor. No fog, aura or magical transitions. New angles discover bodies already in shadow. Reality characters never see or react to the prophecy tableaux.\n\nPLAN 11 | BLOCKING AND SHOTS\nSTART STATE AND BLOCKING\nREALITY: Zahhak below SOUTHWEST rim faces Zirak above him. PROPHECY: Abtin's bound hands remain at WEST bay edge. Separate SOUTHWEST dark bay contains Barmayeh and child Fereydun, already present, invisible to assembly. Barmayeh stands broadside facing EAST; child on her SOUTH side, palm resting on flank. Agents wait outside this insert until the last shot. Off-screen cast retain these marks. No unlisted entrance or exit.\nSHOT 11-01 | 0s–4s | 4 SECONDS\n65mm close from SOUTHEAST of Zahhak looking NORTHWEST, on the same side of his axis with Zirak. Zahhak faces southwest/up toward Zirak off-screen left. Move a few centimeters laterally, too close to the mask edge, then recover focus on the exposed near eye. He grips his staff harder. He never turns toward a prophecy tableau.\nFRAME / EYELINE / CONTINUITY: Reality positions unchanged; Zirak stays above-left off-camera. Zahhak's gaze belongs to the real encounter only.\nSHOT 11-02 | 4s–5s | 1 SECONDS\nCut to 85mm close on Abtin's still bound hand, moving gently sideways across stone. Use its curve and screen position as a visual match for the next shot, not a morph.\nFRAME / EYELINE / CONTINUITY: Prophecy insert repeats the SOUTH boundary hand position; no new motion or actor entry.\n\nPLAN 11 | SHOTS AND HANDOFF\nSHOT 11-03 | 5s–10s | 5 SECONDS\nHard MATCH CUT to 65mm close at calf height: child Fereydun's small hand rests on Barmayeh's flank in the same screen position. Camera tracks slowly WEST along the SOUTH side of the animal's breathing body, then reveals part of the child leaning close. Soft reflected spill from the existing wall lamp, no new spotlight. Cow stands naturally; the child remains calm and wears the referenced safe, unobstructive handmade mask.\nFRAME / EYELINE / CONTINUITY: Cow faces EAST, head to screen-right from SOUTH. Child is on SOUTH flank, nearer camera; hand rests on same flank throughout.\nSHOT 11-04 | 10s–13s | 3 SECONDS\n35mm low side view from SOUTHWEST, moving parallel to Barmayeh. Cow faces EAST, child remains SOUTH of her, leaning against the flank with palm still touching. Her breathing and a small ear adjustment remain natural; frame both bodies clearly without sentimental posing.\nFRAME / EYELINE / CONTINUITY: Southwest side continues west-to-east animal axis. Child's side/back faces camera while head turns toward the cow, not lens.\nSHOT 11-05 | 13s–15s | 2 SECONDS\n28mm from SOUTH of the pair. Two agents enter from EAST and WEST foreground edges, partially occluding the lens. The camera makes a small anxious retreat. Agent A reaches toward the loose halter rope at the cow's EAST head end; Agent B remains clear of the child. The calm composition becomes crowded.\nFRAME / EYELINE / CONTINUITY: From SOUTH looking NORTH: Agent A enters screen-right/EAST toward cow's head; B screen-left/WEST. Child remains near/SOUTH flank; B stops clear behind child's west side.\nEND STATE AND EDIT\nCow still faces EAST; child remains SOUTH beside her. Two agents have arrived. Agent A reaches the halter rope, not yet pulling. No harm or transformation is shown.\nSOUND\nClose uneven breathing, fabric pressure, footsteps at the specified level, staff contacts on stone, subtle scales against clothing, restrained practical-lamp hum and hall resonance. Perspective follows camera distance. No intelligible voices. No sound of any omitted strike or death. Maintain room tone across dream/reality cuts; no magical whoosh. Final cut to black only where specified.\nNO DIALOGUE. NO NARRATION. NO MUSIC.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 20,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V08",
+    "@CHR-004/V01",
+    "@CHR-013/V01",
+    "@CHR-014/V01",
+    "@GRP-003/V01",
+    "@GRP-005/V01",
+    "@CRT-005/V01",
+    "@LOC-043/V01",
+    "@PRP-001/V01"
+  ],
+  "sentRefs": [
+    "@CHR-001/V08",
+    "@CHR-004/V01",
+    "@CHR-013/V01",
+    "@CHR-014/V01",
+    "@GRP-003/V01",
+    "@GRP-005/V01",
+    "@CRT-005/V01",
+    "@LOC-043/V01",
+    "@PRP-001/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-11-13T13:53:10.750Z",
+  "costCredits": 60,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261113_135104_11e70467-7eab-4e18-9b70-6de66b1a73cf.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-11-13T13:51:04.896106Z",
+      "display_name": "Seedance 2.5",
+      "id": "11e70467-7eab-4e18-9b70-6de66b1a73cf",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 20,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "508ef67f-b659-4fe0-8cb5-cf80d1c24ad6",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/508ef67f-b659-4fe0-8cb5-cf80d1c24ad6.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "4b58deaa-73eb-4e1e-abc3-3cf6a78a6110",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/4b58deaa-73eb-4e1e-abc3-3cf6a78a6110.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "6b996d65-52ef-40b1-be24-f400823db0a1",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/6b996d65-52ef-40b1-be24-f400823db0a1.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "4b6fcef3-8dbb-417e-8e26-e072fc019bd2",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/4b6fcef3-8dbb-417e-8e26-e072fc019bd2_resize.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "7239e7f7-dd4a-44d8-bc67-0ebf248f42e0",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/7239e7f7-dd4a-44d8-bc67-0ebf248f42e0.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "d93368ac-22da-41e1-8287-7a34bb0030c9",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/d93368ac-22da-41e1-8287-7a34bb0030c9.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "bcd828af-fbc1-4407-94f8-4912ae8f606a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/bcd828af-fbc1-4407-94f8-4912ae8f606a_resize.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "fd644be3-5858-4868-8db6-16dfbed6e6fa",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/fd644be3-5858-4868-8db6-16dfbed6e6fa_resize.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "f22a1632-8d53-4552-a868-28994e55f25e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/f22a1632-8d53-4552-a868-28994e55f25e.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 11 | A SECOND SHELTER\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_ZAHHAK}} {{CHAR_ZIRAK}} {{CHAR_ARNAVAZ}} {{CHAR_PRIESTS}} {{CHAR_ABTIN}} {{CHAR_FEREYDUN_CHILD}} {{CHAR_BARMAYEH}} {{CHAR_AGENTS}}\nLOCATION REFERENCES\n{{LOC_MASTER_HALL}} {{LOC_DARK_TABLEAU_BAYS}}\nPROP REFERENCES\n{{PROP_STAFF}} {{PROP_BINDING}} {{PROP_ANIMAL_ROPE}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action sequence. Lock referenced identities, clothing, proportions and rigid handmade masks, including fixed eye openings. All humans are masked. Hard cuts only at listed times. Unless labelled LOCKED, camera stays physically moving: handheld drift, late reframing, foreground obstruction and brief focus slips that recover essential action. Broken framing never means broken armor, damaged sets or glitch effects. No slow motion, arbitrary orbit, zoom or exposure pumping. Written lighting overrides reference exposure. Generate diegetic sound only; poetry is added in post. NO DIALOGUE, NARRATION OR MUSIC. Fixed world anchors survive every cut. Screen directions belong only to each named angle. Off-camera actors retain their marks. Body facing and eyeline are separate; no accidental looks into camera.\nZahhak retains his referenced 178 cm body, support hand and weak-leg side. Every step: plant staff, transfer weight, weaker leg follows. Turns: staff, torso, then head. No brisk or normal walking. Lock the supplied dream reference's exact count of five to ten natural black single-headed snakes across all blocks; independent living movement on shoulders, neck, back and torso continues even while he is still. No dragons or rigid snakes.\nLOCATION AND LIGHT\nOne night hall: NORTH upper throne; middle-level rim; central square exactly THREE shallow steps lower, accessed at NORTH. WEST camera aisle; SOUTH/EAST guard entrances. NORTH/WEST/SOUTHWEST dark bays are parts of this hall, not separate sets. Iranian-inspired stone, rounded openings, engineered practical lamps. Low neutral wall lights and faint cold high-opening spill stay fixed. Upper landing slightly brighter than recessed floor. No fog, aura or magical transitions. New angles discover bodies already in shadow. Reality characters never see or react to the prophecy tableaux.\n\nPLAN 11 | BLOCKING AND SHOTS\nSTART STATE AND BLOCKING\nREALITY: Zahhak below SOUTHWEST rim faces Zirak above him. PROPHECY: Abtin's bound hands remain at WEST bay edge. Separate SOUTHWEST dark bay contains Barmayeh and child Fereydun, already present, invisible to assembly. Barmayeh stands broadside facing EAST; child on her SOUTH side, palm resting on flank. Agents wait outside this insert until the last shot. Off-screen cast retain these marks. No unlisted entrance or exit.\nSHOT 11-01 | 0s–4s | 4 SECONDS\n65mm close from SOUTHEAST of Zahhak looking NORTHWEST, on the same side of his axis with Zirak. Zahhak faces southwest/up toward Zirak off-screen left. Move a few centimeters laterally, too close to the mask edge, then recover focus on the exposed near eye. He grips his staff harder. He never turns toward a prophecy tableau.\nFRAME / EYELINE / CONTINUITY: Reality positions unchanged; Zirak stays above-left off-camera. Zahhak's gaze belongs to the real encounter only.\nSHOT 11-02 | 4s–5s | 1 SECONDS\nCut to 85mm close on Abtin's still bound hand, moving gently sideways across stone. Use its curve and screen position as a visual match for the next shot, not a morph.\nFRAME / EYELINE / CONTINUITY: Prophecy insert repeats the SOUTH boundary hand position; no new motion or actor entry.\n\nPLAN 11 | SHOTS AND HANDOFF\nSHOT 11-03 | 5s–10s | 5 SECONDS\nHard MATCH CUT to 65mm close at calf height: child Fereydun's small hand rests on Barmayeh's flank in the same screen position. Camera tracks slowly WEST along the SOUTH side of the animal's breathing body, then reveals part of the child leaning close. Soft reflected spill from the existing wall lamp, no new spotlight. Cow stands naturally; the child remains calm and wears the referenced safe, unobstructive handmade mask.\nFRAME / EYELINE / CONTINUITY: Cow faces EAST, head to screen-right from SOUTH. Child is on SOUTH flank, nearer camera; hand rests on same flank throughout.\nSHOT 11-04 | 10s–13s | 3 SECONDS\n35mm low side view from SOUTHWEST, moving parallel to Barmayeh. Cow faces EAST, child remains SOUTH of her, leaning against the flank with palm still touching. Her breathing and a small ear adjustment remain natural; frame both bodies clearly without sentimental posing.\nFRAME / EYELINE / CONTINUITY: Southwest side continues west-to-east animal axis. Child's side/back faces camera while head turns toward the cow, not lens.\nSHOT 11-05 | 13s–15s | 2 SECONDS\n28mm from SOUTH of the pair. Two agents enter from EAST and WEST foreground edges, partially occluding the lens. The camera makes a small anxious retreat. Agent A reaches toward the loose halter rope at the cow's EAST head end; Agent B remains clear of the child. The calm composition becomes crowded.\nFRAME / EYELINE / CONTINUITY: From SOUTH looking NORTH: Agent A enters screen-right/EAST toward cow's head; B screen-left/WEST. Child remains near/SOUTH flank; B stops clear behind child's west side.\nEND STATE AND EDIT\nCow still faces EAST; child remains SOUTH beside her. Two agents have arrived. Agent A reaches the halter rope, not yet pulling. No harm or transformation is shown.\nSOUND\nClose uneven breathing, fabric pressure, footsteps at the specified level, staff contacts on stone, subtle scales against clothing, restrained practical-lamp hum and hall resonance. Perspective follows camera distance. No intelligible voices. No sound of any omitted strike or death. Maintain room tone across dream/reality cuts; no magical whoosh. Final cut to black only where specified.\nNO DIALOGUE. NO NARRATION. NO MUSIC.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_3>>> is Abtin (CHR-013 V01); match it wherever Abtin appears.\n<<<image_4>>> is Fereydoun Childhood (CHR-014 V01); match it wherever Fereydoun Childhood appears.\n<<<image_5>>> is Fire Priests (GRP-003 V01); match it wherever Fire Priests appears.\n<<<image_6>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_7>>> is Barmayeh (CRT-005 V01); match it wherever Barmayeh appears.\n<<<image_8>>> is Zahhak Royal Bed (LOC-043 V01); match it wherever Zahhak Royal Bed appears.\n<<<image_9>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 1531167350,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261113_135104_11e70467-7eab-4e18-9b70-6de66b1a73cf.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261113_135104_11e70467-7eab-4e18-9b70-6de66b1a73cf_thumbnail.webp"
+    }
+  ]
+}

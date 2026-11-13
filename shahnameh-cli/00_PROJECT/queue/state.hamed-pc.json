@@ -111,7 +111,19 @@
     "J-20261016-ZBA",
     "J-20261016-X3K",
     "J-20261016-WH5",
-    "J-20261016-216"
+    "J-20261016-216",
+    "J-20261113-SST",
+    "J-20261113-5WA",
+    "J-20261113-R4I",
+    "J-20261113-9BB",
+    "J-20261113-6MU",
+    "J-20261113-83R",
+    "J-20261113-KIK",
+    "J-20261113-3Y2",
+    "J-20261113-OQM",
+    "J-20261113-8VB",
+    "J-20261113-K68",
+    "J-20261113-E1T"
   ],
   "processedDecisions": [
     "rev_mtljtubxafk9",
@@ -224,8 +236,8 @@
     "rev_mvauu85koahi",
     "rev_mvhyv958r4xm"
   ],
-  "spentCredits": 10650,
-  "updatedAt": "2026-10-21T10:25:53.283Z",
+  "spentCredits": 11370,
+  "updatedAt": "2026-11-13T13:53:47.849Z",
   "failedDecisions": {},
   "processedOps": [
     "op_mu18d6axozqm",
@@ -269,7 +281,9 @@
     "op_mup6ep15clvr",
     "op_mvapp693vicz",
     "op_mvapp6dzzhyt",
-    "op_mv1b7fileints"
+    "op_mv1b7fileints",
+    "op_rootintakemwf0d2wm",
+    "op_rootintakemwf0tsuv"
   ],
   "learnWatermark": "rev_mu19vrjsbra1",
   "processedRequests": [
@@ -318,7 +332,9 @@
     "jr_mvatkh479v6b",
     "jr_mvatl3taxr8d",
     "jr_mvatsz2bd8gg",
-    "jr_mvaz63dx69e9"
+    "jr_mvaz63dx69e9",
+    "jr_mwf12djzi63d",
+    "jr_mwf16l9yjiho"
   ],
   "held": {},
   "failedJobs": {

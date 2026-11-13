@@ -1,0 +1,152 @@
+{
+  "jobId": "J-20261113-8VB",
+  "parentJobId": null,
+  "hfJobId": "70c28b6b-92e9-463b-b447-c4839fb2411c",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 09",
+  "target": "SHM-EP017-SC009-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP017/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 09 | THE FUTURE HAS A NAME\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_ZAHHAK}} {{CHAR_ZIRAK}} {{CHAR_ARNAVAZ}} {{CHAR_PRIESTS}} {{CHAR_FEREYDUN_ADULT}} {{CHAR_ABTIN}} {{CHAR_AGENTS}}\nLOCATION REFERENCES\n{{LOC_MASTER_HALL}} {{LOC_DARK_TABLEAU_BAYS}}\nPROP REFERENCES\n{{PROP_STAFF}} {{PROP_BULL_MACE}} {{PROP_BINDING}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action sequence. Lock referenced identities, clothing, proportions and rigid handmade masks, including fixed eye openings. All humans are masked. Hard cuts only at listed times. Unless labelled LOCKED, camera stays physically moving: handheld drift, late reframing, foreground obstruction and brief focus slips that recover essential action. Broken framing never means broken armor, damaged sets or glitch effects. No slow motion, arbitrary orbit, zoom or exposure pumping. Written lighting overrides reference exposure. Generate diegetic sound only; poetry is added in post. NO DIALOGUE, NARRATION OR MUSIC. Fixed world anchors survive every cut. Screen directions belong only to each named angle. Off-camera actors retain their marks. Body facing and eyeline are separate; no accidental looks into camera.\nZahhak retains his referenced 178 cm body, support hand and weak-leg side. Every step: plant staff, transfer weight, weaker leg follows. Turns: staff, torso, then head. No brisk or normal walking. Lock the supplied dream reference's exact count of five to ten natural black single-headed snakes across all blocks; independent living movement on shoulders, neck, back and torso continues even while he is still. No dragons or rigid snakes.\nLOCATION AND LIGHT\nOne night hall: NORTH upper throne; middle-level rim; central square exactly THREE shallow steps lower, accessed at NORTH. WEST camera aisle; SOUTH/EAST guard entrances. NORTH/WEST/SOUTHWEST dark bays are parts of this hall, not separate sets. Iranian-inspired stone, rounded openings, engineered practical lamps. Low neutral wall lights and faint cold high-opening spill stay fixed. Upper landing slightly brighter than recessed floor. No fog, aura or magical transitions. New angles discover bodies already in shadow. Reality characters never see or react to the prophecy tableaux.\n\nPLAN 09 | BLOCKING AND SHOTS\nSTART STATE AND BLOCKING\nREALITY: Zirak at SOUTHWEST rim faces northeast/down toward Zahhak on lower floor. Arnavaz east, priests behind Zirak. Prophecy inserts show isolated bodies already present in dark perimeter areas of the SAME hall, not visible to real characters. Adult Fereydun alone in the NORTH dark aisle; Abtin with two agents in WEST dark bay. Off-screen cast retain these marks. No unlisted entrance or exit.\nSHOT 09-01 | 0s–4s | 4 SECONDS\n40mm handheld from SOUTHEAST of the Zirak-Zahhak axis looking NORTHWEST. Zirak remains upper-left at the southwest rim; Zahhak lower-right on the lower floor, facing one another along the northeast/southwest diagonal. Drift a few centimeters behind Zirak's near sleeve without crossing the axis; his sleeve partially obscures the view, then reveals Zahhak's upward-looking three-quarter face. Zirak's open hand trembles; no invented dialogue.\nFRAME / EYELINE / CONTINUITY: No new entry: priests stay behind Zirak; Arnavaz holds EAST. Both faces are oblique opposing profiles, never parallel front-facing portraits.\nSHOT 09-02 | 4s–11s | 7 SECONDS\nCut to AUDIENCE-ONLY PROPHECY. 50mm from NORTHWEST aisle, sliding slowly sideways past a dark column edge. Adult Fereydun stands facing southeast, motionless except breath, the bull-headed mace grounded beside him. The existing lamp spill reveals mask edge and mace head. Keep camera in continuous restrained motion, no attack or magical arrival. No other warrior or assembly appears in this insert.\nFRAME / EYELINE / CONTINUITY: Prophecy-only Fereydun stands NORTH bay facing SOUTHEAST; northwest camera sees back-three-quarter and mask edge, not a full frontal face. No reality figure shares this shot.\n\nPLAN 09 | SHOTS AND HANDOFF\nSHOT 09-03 | 11s–14s | 3 SECONDS\n65mm close from SOUTHEAST of Zahhak, below his eye height, looking NORTHWEST. His three-quarter face looks up toward Zirak off-screen left at the southwest rim. Drift closer a few centimeters. His breath stops briefly and his neck tightens. The prophecy bay is never his eyeline target.\nFRAME / EYELINE / CONTINUITY: Return to unchanged reality marks: Zahhak below/northeast, Zirak above/southwest. Eyeline stays elevated left.\nSHOT 09-04 | 14s–15s | 1 SECONDS\nCut to WEST dark bay, audience-only prophecy. 35mm side fragment drifting past a column: Abtin stands between exactly two agents, wrists bound in front, facing SOUTH toward their exit route. Reveal bodies already there, no materialization.\nFRAME / EYELINE / CONTINUITY: Abtin faces SOUTH. Agent A EAST at his left arm; B WEST at right arm. A west-side view sees B nearer, Abtin middle, A farther.\nEND STATE AND EDIT\nProphecy view ends on Abtin between two agents in the west bay. Reality positions remain unchanged; no one in the assembly has watched this tableau.\nSOUND\nClose uneven breathing, fabric pressure, footsteps at the specified level, staff contacts on stone, subtle scales against clothing, restrained practical-lamp hum and hall resonance. Perspective follows camera distance. No intelligible voices. No sound of any omitted strike or death. Maintain room tone across dream/reality cuts; no magical whoosh. Final cut to black only where specified.\nNO DIALOGUE. NO NARRATION. NO MUSIC.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_3>>> is Abtin (CHR-013 V01); match it wherever Abtin appears.\n<<<image_4>>> is Fereydoun (CHR-015 V01); match it wherever Fereydoun appears.\n<<<image_5>>> is Fire Priests (GRP-003 V01); match it wherever Fire Priests appears.\n<<<image_6>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_7>>> is Zahhak Royal Bed (LOC-043 V01); match it wherever Zahhak Royal Bed appears.\n<<<image_8>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+  "basePrompt": "PLAN 09 | THE FUTURE HAS A NAME\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_ZAHHAK}} {{CHAR_ZIRAK}} {{CHAR_ARNAVAZ}} {{CHAR_PRIESTS}} {{CHAR_FEREYDUN_ADULT}} {{CHAR_ABTIN}} {{CHAR_AGENTS}}\nLOCATION REFERENCES\n{{LOC_MASTER_HALL}} {{LOC_DARK_TABLEAU_BAYS}}\nPROP REFERENCES\n{{PROP_STAFF}} {{PROP_BULL_MACE}} {{PROP_BINDING}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action sequence. Lock referenced identities, clothing, proportions and rigid handmade masks, including fixed eye openings. All humans are masked. Hard cuts only at listed times. Unless labelled LOCKED, camera stays physically moving: handheld drift, late reframing, foreground obstruction and brief focus slips that recover essential action. Broken framing never means broken armor, damaged sets or glitch effects. No slow motion, arbitrary orbit, zoom or exposure pumping. Written lighting overrides reference exposure. Generate diegetic sound only; poetry is added in post. NO DIALOGUE, NARRATION OR MUSIC. Fixed world anchors survive every cut. Screen directions belong only to each named angle. Off-camera actors retain their marks. Body facing and eyeline are separate; no accidental looks into camera.\nZahhak retains his referenced 178 cm body, support hand and weak-leg side. Every step: plant staff, transfer weight, weaker leg follows. Turns: staff, torso, then head. No brisk or normal walking. Lock the supplied dream reference's exact count of five to ten natural black single-headed snakes across all blocks; independent living movement on shoulders, neck, back and torso continues even while he is still. No dragons or rigid snakes.\nLOCATION AND LIGHT\nOne night hall: NORTH upper throne; middle-level rim; central square exactly THREE shallow steps lower, accessed at NORTH. WEST camera aisle; SOUTH/EAST guard entrances. NORTH/WEST/SOUTHWEST dark bays are parts of this hall, not separate sets. Iranian-inspired stone, rounded openings, engineered practical lamps. Low neutral wall lights and faint cold high-opening spill stay fixed. Upper landing slightly brighter than recessed floor. No fog, aura or magical transitions. New angles discover bodies already in shadow. Reality characters never see or react to the prophecy tableaux.\n\nPLAN 09 | BLOCKING AND SHOTS\nSTART STATE AND BLOCKING\nREALITY: Zirak at SOUTHWEST rim faces northeast/down toward Zahhak on lower floor. Arnavaz east, priests behind Zirak. Prophecy inserts show isolated bodies already present in dark perimeter areas of the SAME hall, not visible to real characters. Adult Fereydun alone in the NORTH dark aisle; Abtin with two agents in WEST dark bay. Off-screen cast retain these marks. No unlisted entrance or exit.\nSHOT 09-01 | 0s–4s | 4 SECONDS\n40mm handheld from SOUTHEAST of the Zirak-Zahhak axis looking NORTHWEST. Zirak remains upper-left at the southwest rim; Zahhak lower-right on the lower floor, facing one another along the northeast/southwest diagonal. Drift a few centimeters behind Zirak's near sleeve without crossing the axis; his sleeve partially obscures the view, then reveals Zahhak's upward-looking three-quarter face. Zirak's open hand trembles; no invented dialogue.\nFRAME / EYELINE / CONTINUITY: No new entry: priests stay behind Zirak; Arnavaz holds EAST. Both faces are oblique opposing profiles, never parallel front-facing portraits.\nSHOT 09-02 | 4s–11s | 7 SECONDS\nCut to AUDIENCE-ONLY PROPHECY. 50mm from NORTHWEST aisle, sliding slowly sideways past a dark column edge. Adult Fereydun stands facing southeast, motionless except breath, the bull-headed mace grounded beside him. The existing lamp spill reveals mask edge and mace head. Keep camera in continuous restrained motion, no attack or magical arrival. No other warrior or assembly appears in this insert.\nFRAME / EYELINE / CONTINUITY: Prophecy-only Fereydun stands NORTH bay facing SOUTHEAST; northwest camera sees back-three-quarter and mask edge, not a full frontal face. No reality figure shares this shot.\n\nPLAN 09 | SHOTS AND HANDOFF\nSHOT 09-03 | 11s–14s | 3 SECONDS\n65mm close from SOUTHEAST of Zahhak, below his eye height, looking NORTHWEST. His three-quarter face looks up toward Zirak off-screen left at the southwest rim. Drift closer a few centimeters. His breath stops briefly and his neck tightens. The prophecy bay is never his eyeline target.\nFRAME / EYELINE / CONTINUITY: Return to unchanged reality marks: Zahhak below/northeast, Zirak above/southwest. Eyeline stays elevated left.\nSHOT 09-04 | 14s–15s | 1 SECONDS\nCut to WEST dark bay, audience-only prophecy. 35mm side fragment drifting past a column: Abtin stands between exactly two agents, wrists bound in front, facing SOUTH toward their exit route. Reveal bodies already there, no materialization.\nFRAME / EYELINE / CONTINUITY: Abtin faces SOUTH. Agent A EAST at his left arm; B WEST at right arm. A west-side view sees B nearer, Abtin middle, A farther.\nEND STATE AND EDIT\nProphecy view ends on Abtin between two agents in the west bay. Reality positions remain unchanged; no one in the assembly has watched this tableau.\nSOUND\nClose uneven breathing, fabric pressure, footsteps at the specified level, staff contacts on stone, subtle scales against clothing, restrained practical-lamp hum and hall resonance. Perspective follows camera distance. No intelligible voices. No sound of any omitted strike or death. Maintain room tone across dream/reality cuts; no magical whoosh. Final cut to black only where specified.\nNO DIALOGUE. NO NARRATION. NO MUSIC.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 20,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V08",
+    "@CHR-004/V01",
+    "@CHR-013/V01",
+    "@CHR-015/V01",
+    "@GRP-003/V01",
+    "@GRP-005/V01",
+    "@LOC-043/V01",
+    "@PRP-001/V01"
+  ],
+  "sentRefs": [
+    "@CHR-001/V08",
+    "@CHR-004/V01",
+    "@CHR-013/V01",
+    "@CHR-015/V01",
+    "@GRP-003/V01",
+    "@GRP-005/V01",
+    "@LOC-043/V01",
+    "@PRP-001/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-11-13T13:51:59.952Z",
+  "costCredits": 60,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261113_134959_70c28b6b-92e9-463b-b447-c4839fb2411c.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-11-13T13:49:59.049875Z",
+      "display_name": "Seedance 2.5",
+      "id": "70c28b6b-92e9-463b-b447-c4839fb2411c",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 20,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "fd9d08c8-f1de-466b-a89f-def88e620983",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/fd9d08c8-f1de-466b-a89f-def88e620983.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "c192af73-013e-4c2f-b46a-b23ed0f27cd4",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/c192af73-013e-4c2f-b46a-b23ed0f27cd4.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "fff04a2c-ea53-4b2e-9e0a-4e29bf426e31",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/fff04a2c-ea53-4b2e-9e0a-4e29bf426e31.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "2184eac2-db93-4e0a-b0a7-c8f6042bea76",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/2184eac2-db93-4e0a-b0a7-c8f6042bea76_resize.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "cec0dfc6-2952-4b3b-bd97-6f97f1c8ccdf",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/cec0dfc6-2952-4b3b-bd97-6f97f1c8ccdf.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "025e7f13-fa3d-49e7-98a7-a960ec5603a8",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/025e7f13-fa3d-49e7-98a7-a960ec5603a8.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "e6358204-155e-44e9-bc72-4424917853f2",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/e6358204-155e-44e9-bc72-4424917853f2_resize.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "86f2e8ba-8e0b-4652-b364-99d7ddfc59cb",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/86f2e8ba-8e0b-4652-b364-99d7ddfc59cb.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 09 | THE FUTURE HAS A NAME\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_ZAHHAK}} {{CHAR_ZIRAK}} {{CHAR_ARNAVAZ}} {{CHAR_PRIESTS}} {{CHAR_FEREYDUN_ADULT}} {{CHAR_ABTIN}} {{CHAR_AGENTS}}\nLOCATION REFERENCES\n{{LOC_MASTER_HALL}} {{LOC_DARK_TABLEAU_BAYS}}\nPROP REFERENCES\n{{PROP_STAFF}} {{PROP_BULL_MACE}} {{PROP_BINDING}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action sequence. Lock referenced identities, clothing, proportions and rigid handmade masks, including fixed eye openings. All humans are masked. Hard cuts only at listed times. Unless labelled LOCKED, camera stays physically moving: handheld drift, late reframing, foreground obstruction and brief focus slips that recover essential action. Broken framing never means broken armor, damaged sets or glitch effects. No slow motion, arbitrary orbit, zoom or exposure pumping. Written lighting overrides reference exposure. Generate diegetic sound only; poetry is added in post. NO DIALOGUE, NARRATION OR MUSIC. Fixed world anchors survive every cut. Screen directions belong only to each named angle. Off-camera actors retain their marks. Body facing and eyeline are separate; no accidental looks into camera.\nZahhak retains his referenced 178 cm body, support hand and weak-leg side. Every step: plant staff, transfer weight, weaker leg follows. Turns: staff, torso, then head. No brisk or normal walking. Lock the supplied dream reference's exact count of five to ten natural black single-headed snakes across all blocks; independent living movement on shoulders, neck, back and torso continues even while he is still. No dragons or rigid snakes.\nLOCATION AND LIGHT\nOne night hall: NORTH upper throne; middle-level rim; central square exactly THREE shallow steps lower, accessed at NORTH. WEST camera aisle; SOUTH/EAST guard entrances. NORTH/WEST/SOUTHWEST dark bays are parts of this hall, not separate sets. Iranian-inspired stone, rounded openings, engineered practical lamps. Low neutral wall lights and faint cold high-opening spill stay fixed. Upper landing slightly brighter than recessed floor. No fog, aura or magical transitions. New angles discover bodies already in shadow. Reality characters never see or react to the prophecy tableaux.\n\nPLAN 09 | BLOCKING AND SHOTS\nSTART STATE AND BLOCKING\nREALITY: Zirak at SOUTHWEST rim faces northeast/down toward Zahhak on lower floor. Arnavaz east, priests behind Zirak. Prophecy inserts show isolated bodies already present in dark perimeter areas of the SAME hall, not visible to real characters. Adult Fereydun alone in the NORTH dark aisle; Abtin with two agents in WEST dark bay. Off-screen cast retain these marks. No unlisted entrance or exit.\nSHOT 09-01 | 0s–4s | 4 SECONDS\n40mm handheld from SOUTHEAST of the Zirak-Zahhak axis looking NORTHWEST. Zirak remains upper-left at the southwest rim; Zahhak lower-right on the lower floor, facing one another along the northeast/southwest diagonal. Drift a few centimeters behind Zirak's near sleeve without crossing the axis; his sleeve partially obscures the view, then reveals Zahhak's upward-looking three-quarter face. Zirak's open hand trembles; no invented dialogue.\nFRAME / EYELINE / CONTINUITY: No new entry: priests stay behind Zirak; Arnavaz holds EAST. Both faces are oblique opposing profiles, never parallel front-facing portraits.\nSHOT 09-02 | 4s–11s | 7 SECONDS\nCut to AUDIENCE-ONLY PROPHECY. 50mm from NORTHWEST aisle, sliding slowly sideways past a dark column edge. Adult Fereydun stands facing southeast, motionless except breath, the bull-headed mace grounded beside him. The existing lamp spill reveals mask edge and mace head. Keep camera in continuous restrained motion, no attack or magical arrival. No other warrior or assembly appears in this insert.\nFRAME / EYELINE / CONTINUITY: Prophecy-only Fereydun stands NORTH bay facing SOUTHEAST; northwest camera sees back-three-quarter and mask edge, not a full frontal face. No reality figure shares this shot.\n\nPLAN 09 | SHOTS AND HANDOFF\nSHOT 09-03 | 11s–14s | 3 SECONDS\n65mm close from SOUTHEAST of Zahhak, below his eye height, looking NORTHWEST. His three-quarter face looks up toward Zirak off-screen left at the southwest rim. Drift closer a few centimeters. His breath stops briefly and his neck tightens. The prophecy bay is never his eyeline target.\nFRAME / EYELINE / CONTINUITY: Return to unchanged reality marks: Zahhak below/northeast, Zirak above/southwest. Eyeline stays elevated left.\nSHOT 09-04 | 14s–15s | 1 SECONDS\nCut to WEST dark bay, audience-only prophecy. 35mm side fragment drifting past a column: Abtin stands between exactly two agents, wrists bound in front, facing SOUTH toward their exit route. Reveal bodies already there, no materialization.\nFRAME / EYELINE / CONTINUITY: Abtin faces SOUTH. Agent A EAST at his left arm; B WEST at right arm. A west-side view sees B nearer, Abtin middle, A farther.\nEND STATE AND EDIT\nProphecy view ends on Abtin between two agents in the west bay. Reality positions remain unchanged; no one in the assembly has watched this tableau.\nSOUND\nClose uneven breathing, fabric pressure, footsteps at the specified level, staff contacts on stone, subtle scales against clothing, restrained practical-lamp hum and hall resonance. Perspective follows camera distance. No intelligible voices. No sound of any omitted strike or death. Maintain room tone across dream/reality cuts; no magical whoosh. Final cut to black only where specified.\nNO DIALOGUE. NO NARRATION. NO MUSIC.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_3>>> is Abtin (CHR-013 V01); match it wherever Abtin appears.\n<<<image_4>>> is Fereydoun (CHR-015 V01); match it wherever Fereydoun appears.\n<<<image_5>>> is Fire Priests (GRP-003 V01); match it wherever Fire Priests appears.\n<<<image_6>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_7>>> is Zahhak Royal Bed (LOC-043 V01); match it wherever Zahhak Royal Bed appears.\n<<<image_8>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 542392977,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261113_134959_70c28b6b-92e9-463b-b447-c4839fb2411c.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261113_134959_70c28b6b-92e9-463b-b447-c4839fb2411c_thumbnail.webp"
+    }
+  ]
+}

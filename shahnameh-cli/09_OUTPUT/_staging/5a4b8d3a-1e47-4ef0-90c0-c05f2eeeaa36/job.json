@@ -1,0 +1,122 @@
+{
+  "jobId": "J-20261113-SST",
+  "parentJobId": null,
+  "hfJobId": "5a4b8d3a-1e47-4ef0-90c0-c05f2eeeaa36",
+  "attempt": 1,
+  "stage": "draft",
+  "label": "PLAN 01",
+  "target": "SHM-EP017-SC001-SH0010",
+  "isShot": true,
+  "outputFolder": "07_EPISODES/SHM-EP017/shots",
+  "variant": "V01",
+  "model": "seedance_2_5",
+  "prompt": "PLAN 01 | THE BODY BETRAYS HIM\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_ZAHHAK}} {{CHAR_ARNAVAZ}} {{CHAR_GUARDS}}\nLOCATION REFERENCES\n{{LOC_MASTER_HALL}}\nPROP REFERENCES\n{{PROP_STAFF}} {{PROP_THRONE_TEXTILE}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action sequence. Lock referenced identities, clothing, proportions and rigid handmade masks, including fixed eye openings. All humans are masked. Hard cuts only at listed times. Unless labelled LOCKED, camera stays physically moving: handheld drift, late reframing, foreground obstruction and brief focus slips that recover essential action. Broken framing never means broken armor, damaged sets or glitch effects. No slow motion, arbitrary orbit, zoom or exposure pumping. Written lighting overrides reference exposure. Generate diegetic sound only; poetry is added in post. NO DIALOGUE, NARRATION OR MUSIC. Fixed world anchors survive every cut. Screen directions belong only to each named angle. Off-camera actors retain their marks. Body facing and eyeline are separate; no accidental looks into camera.\nZahhak retains his referenced 178 cm body, support hand and weak-leg side. Every step: plant staff, transfer weight, weaker leg follows. Turns: staff, torso, then head. No brisk or normal walking. Lock the supplied dream reference's exact count of five to ten natural black single-headed snakes across all blocks; independent living movement on shoulders, neck, back and torso continues even while he is still. No dragons or rigid snakes.\nLOCATION AND LIGHT\nOne night hall: NORTH upper throne; middle-level rim; central square exactly THREE shallow steps lower, accessed at NORTH. WEST camera aisle; SOUTH/EAST guard entrances. NORTH/WEST/SOUTHWEST dark bays are parts of this hall, not separate sets. Iranian-inspired stone, rounded openings, engineered practical lamps. Low neutral wall lights and faint cold high-opening spill stay fixed. Upper landing slightly brighter than recessed floor. No fog, aura or magical transitions. New angles discover bodies already in shadow. Reality characters never see or react to the prophecy tableaux.\n\nPLAN 01 | BLOCKING AND SHOTS\nSTART STATE AND BLOCKING\nZahhak reclines at the NORTH upper seat with his torso oriented SOUTH. His staff is within his established support hand's reach. Arnavaz starts on the EAST middle aisle, facing NORTH toward the upper landing. Guard A enters from SOUTHEAST; B enters from SOUTHWEST, both stopping at their respective outer rims. No priest enters in this block. Off-screen cast retain these marks. No unlisted entrance or exit.\nSHOT 01-01 | 0s–3s | 3 SECONDS\n85mm extreme close at seat height from the WEST edge of the upper seat. Zahhak's fingers suddenly seize the throne textile. Camera recoils a few centimeters, briefly focusing on a fabric fold before recovering the knuckles. The frame is too tight to explain the whole room.\nFRAME / EYELINE / CONTINUITY: Hand insert: Zahhak alone; no entry or eyeline change. Seat and staff remain at NORTH.\nSHOT 01-02 | 3s–6s | 3 SECONDS\n35mm close from SOUTHWEST beside the seat, just below shoulder height. His torso jolts upright, clipped by the top edge; camera tilts late to recover his fixed mask and exposed eyes. Snakes recoil and independently readjust on his shoulders. A sharp breath, no theatrical scream.\nFRAME / EYELINE / CONTINUITY: Southwest viewpoint sees Zahhak's front-right three-quarter mask; his torso still faces SOUTH. Guard entrances stay behind camera.\n\nPLAN 01 | SHOTS AND HANDOFF\nSHOT 01-03 | 6s–9s | 3 SECONDS\n50mm lateral from EAST, sliding along the seat edge. His hand searches, finds and grips the staff. He tries to suppress his broken breathing. A moving serpent briefly interrupts focus, then his hand returns sharp. Never deform his mask.\nFRAME / EYELINE / CONTINUITY: East viewpoint sees his left profile; hand reaches the same side of the seat, not across his body.\nSHOT 01-04 | 9s–12s | 3 SECONDS\n28mm near the upper seat's SOUTH side. Retreat a short step as Zahhak plants the staff and begins standing, loading it before the weaker leg follows. A and B reach the middle-level entrances in distant depth and stop. The camera becomes slightly less erratic but stays handheld.\nFRAME / EYELINE / CONTINUITY: South camera looks NORTH: Zahhak faces toward the aisle, eyes below the lens. Guards stay behind camera on outer approaches.\nSHOT 01-05 | 12s–15s | 3 SECONDS\n40mm handheld from EAST of the upper landing looking WEST, moving alongside Arnavaz as she completes the east aisle approach to Zahhak's northeast rear quarter. Zahhak is frame-left facing SOUTH, seen in left profile; Arnavaz is frame-right behind him, facing southwest toward his back, seen in three-quarter face. She approaches without touching or threatening him, stopping one arm's length behind his left shoulder. He does not turn yet. The camera never asks both characters to face it.\nFRAME / EYELINE / CONTINUITY: Hold EAST-side geography through the approach; Arnavaz is behind Zahhak, not confronting him.\nEND STATE AND EDIT\nZahhak stands at the SOUTH edge of the NORTH upper seat facing SOUTH, staff planted. Arnavaz stands northeast of him, one arm's length behind his left shoulder, looking at his back. Guards A/B hold southeast/southwest outer marks.\nSOUND\nClose uneven breathing, fabric pressure, footsteps at the specified level, staff contacts on stone, subtle scales against clothing, restrained practical-lamp hum and hall resonance. Perspective follows camera distance. No intelligible voices. No sound of any omitted strike or death. Maintain room tone across dream/reality cuts; no magical whoosh. Final cut to black only where specified.\nNO DIALOGUE. NO NARRATION. NO MUSIC.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_3>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Zahhak Royal Bed (LOC-043 V01); match it wherever Zahhak Royal Bed appears.\n<<<image_5>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+  "basePrompt": "PLAN 01 | THE BODY BETRAYS HIM\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_ZAHHAK}} {{CHAR_ARNAVAZ}} {{CHAR_GUARDS}}\nLOCATION REFERENCES\n{{LOC_MASTER_HALL}}\nPROP REFERENCES\n{{PROP_STAFF}} {{PROP_THRONE_TEXTILE}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action sequence. Lock referenced identities, clothing, proportions and rigid handmade masks, including fixed eye openings. All humans are masked. Hard cuts only at listed times. Unless labelled LOCKED, camera stays physically moving: handheld drift, late reframing, foreground obstruction and brief focus slips that recover essential action. Broken framing never means broken armor, damaged sets or glitch effects. No slow motion, arbitrary orbit, zoom or exposure pumping. Written lighting overrides reference exposure. Generate diegetic sound only; poetry is added in post. NO DIALOGUE, NARRATION OR MUSIC. Fixed world anchors survive every cut. Screen directions belong only to each named angle. Off-camera actors retain their marks. Body facing and eyeline are separate; no accidental looks into camera.\nZahhak retains his referenced 178 cm body, support hand and weak-leg side. Every step: plant staff, transfer weight, weaker leg follows. Turns: staff, torso, then head. No brisk or normal walking. Lock the supplied dream reference's exact count of five to ten natural black single-headed snakes across all blocks; independent living movement on shoulders, neck, back and torso continues even while he is still. No dragons or rigid snakes.\nLOCATION AND LIGHT\nOne night hall: NORTH upper throne; middle-level rim; central square exactly THREE shallow steps lower, accessed at NORTH. WEST camera aisle; SOUTH/EAST guard entrances. NORTH/WEST/SOUTHWEST dark bays are parts of this hall, not separate sets. Iranian-inspired stone, rounded openings, engineered practical lamps. Low neutral wall lights and faint cold high-opening spill stay fixed. Upper landing slightly brighter than recessed floor. No fog, aura or magical transitions. New angles discover bodies already in shadow. Reality characters never see or react to the prophecy tableaux.\n\nPLAN 01 | BLOCKING AND SHOTS\nSTART STATE AND BLOCKING\nZahhak reclines at the NORTH upper seat with his torso oriented SOUTH. His staff is within his established support hand's reach. Arnavaz starts on the EAST middle aisle, facing NORTH toward the upper landing. Guard A enters from SOUTHEAST; B enters from SOUTHWEST, both stopping at their respective outer rims. No priest enters in this block. Off-screen cast retain these marks. No unlisted entrance or exit.\nSHOT 01-01 | 0s–3s | 3 SECONDS\n85mm extreme close at seat height from the WEST edge of the upper seat. Zahhak's fingers suddenly seize the throne textile. Camera recoils a few centimeters, briefly focusing on a fabric fold before recovering the knuckles. The frame is too tight to explain the whole room.\nFRAME / EYELINE / CONTINUITY: Hand insert: Zahhak alone; no entry or eyeline change. Seat and staff remain at NORTH.\nSHOT 01-02 | 3s–6s | 3 SECONDS\n35mm close from SOUTHWEST beside the seat, just below shoulder height. His torso jolts upright, clipped by the top edge; camera tilts late to recover his fixed mask and exposed eyes. Snakes recoil and independently readjust on his shoulders. A sharp breath, no theatrical scream.\nFRAME / EYELINE / CONTINUITY: Southwest viewpoint sees Zahhak's front-right three-quarter mask; his torso still faces SOUTH. Guard entrances stay behind camera.\n\nPLAN 01 | SHOTS AND HANDOFF\nSHOT 01-03 | 6s–9s | 3 SECONDS\n50mm lateral from EAST, sliding along the seat edge. His hand searches, finds and grips the staff. He tries to suppress his broken breathing. A moving serpent briefly interrupts focus, then his hand returns sharp. Never deform his mask.\nFRAME / EYELINE / CONTINUITY: East viewpoint sees his left profile; hand reaches the same side of the seat, not across his body.\nSHOT 01-04 | 9s–12s | 3 SECONDS\n28mm near the upper seat's SOUTH side. Retreat a short step as Zahhak plants the staff and begins standing, loading it before the weaker leg follows. A and B reach the middle-level entrances in distant depth and stop. The camera becomes slightly less erratic but stays handheld.\nFRAME / EYELINE / CONTINUITY: South camera looks NORTH: Zahhak faces toward the aisle, eyes below the lens. Guards stay behind camera on outer approaches.\nSHOT 01-05 | 12s–15s | 3 SECONDS\n40mm handheld from EAST of the upper landing looking WEST, moving alongside Arnavaz as she completes the east aisle approach to Zahhak's northeast rear quarter. Zahhak is frame-left facing SOUTH, seen in left profile; Arnavaz is frame-right behind him, facing southwest toward his back, seen in three-quarter face. She approaches without touching or threatening him, stopping one arm's length behind his left shoulder. He does not turn yet. The camera never asks both characters to face it.\nFRAME / EYELINE / CONTINUITY: Hold EAST-side geography through the approach; Arnavaz is behind Zahhak, not confronting him.\nEND STATE AND EDIT\nZahhak stands at the SOUTH edge of the NORTH upper seat facing SOUTH, staff planted. Arnavaz stands northeast of him, one arm's length behind his left shoulder, looking at his back. Guards A/B hold southeast/southwest outer marks.\nSOUND\nClose uneven breathing, fabric pressure, footsteps at the specified level, staff contacts on stone, subtle scales against clothing, restrained practical-lamp hum and hall resonance. Perspective follows camera distance. No intelligible voices. No sound of any omitted strike or death. Maintain room tone across dream/reality cuts; no magical whoosh. Final cut to black only where specified.\nNO DIALOGUE. NO NARRATION. NO MUSIC.",
+  "revisionNotes": [],
+  "params": {
+    "aspect_ratio": "16:9",
+    "duration": 20,
+    "generate_audio": true,
+    "resolution": "480p"
+  },
+  "refs": [
+    "@CHR-001/V08",
+    "@CHR-004/V01",
+    "@GRP-005/V01",
+    "@LOC-043/V01",
+    "@PRP-001/V01"
+  ],
+  "sentRefs": [
+    "@CHR-001/V08",
+    "@CHR-004/V01",
+    "@GRP-005/V01",
+    "@LOC-043/V01",
+    "@PRP-001/V01"
+  ],
+  "hfDraft": true,
+  "createdAt": "2026-11-13T13:49:25.994Z",
+  "costCredits": 60,
+  "candidates": [
+    {
+      "file": "T01.mp4",
+      "take": "T01",
+      "resultUrl": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261113_134729_5a4b8d3a-1e47-4ef0-90c0-c05f2eeeaa36.mp4"
+    }
+  ],
+  "rawResponse": [
+    {
+      "created_at": "2026-11-13T13:47:29.985489Z",
+      "display_name": "Seedance 2.5",
+      "id": "5a4b8d3a-1e47-4ef0-90c0-c05f2eeeaa36",
+      "job_type": "seedance_2_5",
+      "min_result_url": null,
+      "params": {
+        "aspect_ratio": "16:9",
+        "bitrate_mode": "standard",
+        "draft": true,
+        "draft_job_id": null,
+        "duration": 20,
+        "extension_mode": null,
+        "generate_audio": true,
+        "genre": "auto",
+        "height": 480,
+        "medias": [
+          {
+            "data": {
+              "id": "72ff9ff6-a292-449f-aa21-520dc95d030a",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/72ff9ff6-a292-449f-aa21-520dc95d030a.png"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "83b1532f-e347-47c7-9596-bd4afff0f962",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/83b1532f-e347-47c7-9596-bd4afff0f962.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "68ca0506-7361-41c3-8d55-d42585e352ee",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/68ca0506-7361-41c3-8d55-d42585e352ee.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "522b8b35-1e86-4d6d-8c64-869d5d7206d6",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/522b8b35-1e86-4d6d-8c64-869d5d7206d6_resize.jpg"
+            },
+            "role": "image"
+          },
+          {
+            "data": {
+              "id": "f612df98-0633-4850-9a47-2276f063e77e",
+              "type": "media_input",
+              "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/f612df98-0633-4850-9a47-2276f063e77e.jpg"
+            },
+            "role": "image"
+          }
+        ],
+        "model": "default",
+        "multi_prompt": [],
+        "multi_shot_mode": "custom",
+        "multi_shots": false,
+        "prompt": "PLAN 01 | THE BODY BETRAYS HIM\nDURATION 15 SECONDS | HORIZONTAL 16:9\nCHARACTER REFERENCES\n{{CHAR_ZAHHAK}} {{CHAR_ARNAVAZ}} {{CHAR_GUARDS}}\nLOCATION REFERENCES\n{{LOC_MASTER_HALL}}\nPROP REFERENCES\n{{PROP_STAFF}} {{PROP_THRONE_TEXTILE}}\nDIRECTION AND CONTINUITY\nCreate a 15-second horizontal 16:9 live-action sequence. Lock referenced identities, clothing, proportions and rigid handmade masks, including fixed eye openings. All humans are masked. Hard cuts only at listed times. Unless labelled LOCKED, camera stays physically moving: handheld drift, late reframing, foreground obstruction and brief focus slips that recover essential action. Broken framing never means broken armor, damaged sets or glitch effects. No slow motion, arbitrary orbit, zoom or exposure pumping. Written lighting overrides reference exposure. Generate diegetic sound only; poetry is added in post. NO DIALOGUE, NARRATION OR MUSIC. Fixed world anchors survive every cut. Screen directions belong only to each named angle. Off-camera actors retain their marks. Body facing and eyeline are separate; no accidental looks into camera.\nZahhak retains his referenced 178 cm body, support hand and weak-leg side. Every step: plant staff, transfer weight, weaker leg follows. Turns: staff, torso, then head. No brisk or normal walking. Lock the supplied dream reference's exact count of five to ten natural black single-headed snakes across all blocks; independent living movement on shoulders, neck, back and torso continues even while he is still. No dragons or rigid snakes.\nLOCATION AND LIGHT\nOne night hall: NORTH upper throne; middle-level rim; central square exactly THREE shallow steps lower, accessed at NORTH. WEST camera aisle; SOUTH/EAST guard entrances. NORTH/WEST/SOUTHWEST dark bays are parts of this hall, not separate sets. Iranian-inspired stone, rounded openings, engineered practical lamps. Low neutral wall lights and faint cold high-opening spill stay fixed. Upper landing slightly brighter than recessed floor. No fog, aura or magical transitions. New angles discover bodies already in shadow. Reality characters never see or react to the prophecy tableaux.\n\nPLAN 01 | BLOCKING AND SHOTS\nSTART STATE AND BLOCKING\nZahhak reclines at the NORTH upper seat with his torso oriented SOUTH. His staff is within his established support hand's reach. Arnavaz starts on the EAST middle aisle, facing NORTH toward the upper landing. Guard A enters from SOUTHEAST; B enters from SOUTHWEST, both stopping at their respective outer rims. No priest enters in this block. Off-screen cast retain these marks. No unlisted entrance or exit.\nSHOT 01-01 | 0s–3s | 3 SECONDS\n85mm extreme close at seat height from the WEST edge of the upper seat. Zahhak's fingers suddenly seize the throne textile. Camera recoils a few centimeters, briefly focusing on a fabric fold before recovering the knuckles. The frame is too tight to explain the whole room.\nFRAME / EYELINE / CONTINUITY: Hand insert: Zahhak alone; no entry or eyeline change. Seat and staff remain at NORTH.\nSHOT 01-02 | 3s–6s | 3 SECONDS\n35mm close from SOUTHWEST beside the seat, just below shoulder height. His torso jolts upright, clipped by the top edge; camera tilts late to recover his fixed mask and exposed eyes. Snakes recoil and independently readjust on his shoulders. A sharp breath, no theatrical scream.\nFRAME / EYELINE / CONTINUITY: Southwest viewpoint sees Zahhak's front-right three-quarter mask; his torso still faces SOUTH. Guard entrances stay behind camera.\n\nPLAN 01 | SHOTS AND HANDOFF\nSHOT 01-03 | 6s–9s | 3 SECONDS\n50mm lateral from EAST, sliding along the seat edge. His hand searches, finds and grips the staff. He tries to suppress his broken breathing. A moving serpent briefly interrupts focus, then his hand returns sharp. Never deform his mask.\nFRAME / EYELINE / CONTINUITY: East viewpoint sees his left profile; hand reaches the same side of the seat, not across his body.\nSHOT 01-04 | 9s–12s | 3 SECONDS\n28mm near the upper seat's SOUTH side. Retreat a short step as Zahhak plants the staff and begins standing, loading it before the weaker leg follows. A and B reach the middle-level entrances in distant depth and stop. The camera becomes slightly less erratic but stays handheld.\nFRAME / EYELINE / CONTINUITY: South camera looks NORTH: Zahhak faces toward the aisle, eyes below the lens. Guards stay behind camera on outer approaches.\nSHOT 01-05 | 12s–15s | 3 SECONDS\n40mm handheld from EAST of the upper landing looking WEST, moving alongside Arnavaz as she completes the east aisle approach to Zahhak's northeast rear quarter. Zahhak is frame-left facing SOUTH, seen in left profile; Arnavaz is frame-right behind him, facing southwest toward his back, seen in three-quarter face. She approaches without touching or threatening him, stopping one arm's length behind his left shoulder. He does not turn yet. The camera never asks both characters to face it.\nFRAME / EYELINE / CONTINUITY: Hold EAST-side geography through the approach; Arnavaz is behind Zahhak, not confronting him.\nEND STATE AND EDIT\nZahhak stands at the SOUTH edge of the NORTH upper seat facing SOUTH, staff planted. Arnavaz stands northeast of him, one arm's length behind his left shoulder, looking at his back. Guards A/B hold southeast/southwest outer marks.\nSOUND\nClose uneven breathing, fabric pressure, footsteps at the specified level, staff contacts on stone, subtle scales against clothing, restrained practical-lamp hum and hall resonance. Perspective follows camera distance. No intelligible voices. No sound of any omitted strike or death. Maintain room tone across dream/reality cuts; no magical whoosh. Final cut to black only where specified.\nNO DIALOGUE. NO NARRATION. NO MUSIC.\n\nEstablished requirements for this subject:\n- No human appears without a mask. Every person on screen, including nobles, gift-bearers, servants and background figures, wears a mask. A figure who is not a named character takes one of the masked caste looks in REF-001, Civilization Caste Board. Never show a bare human face.\n\n<<<image_1>>> is Zahhak (CHR-001 V08); match it wherever Zahhak appears.\n<<<image_2>>> is Arnavaz (CHR-004 V01); match it wherever Arnavaz appears.\n<<<image_3>>> is Palace Guards (GRP-005 V01); match it wherever Palace Guards appears.\n<<<image_4>>> is Zahhak Royal Bed (LOC-043 V01); match it wherever Zahhak Royal Bed appears.\n<<<image_5>>> is Staff - Bronze Cobra (PRP-001 V01); match it wherever Staff - Bronze Cobra appears.",
+        "prompt_language": "en",
+        "reference_elements": [],
+        "resolution": "480p",
+        "seed": 1775439187,
+        "speedramp": "auto",
+        "width": 854
+      },
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261113_134729_5a4b8d3a-1e47-4ef0-90c0-c05f2eeeaa36.mp4",
+      "status": "completed",
+      "thumbnail_url": "https://cdn.higgsfield.ai/user_3JM7wWhpynmYF5sCDGtn6Qx3M4C/hf_20261113_134729_5a4b8d3a-1e47-4ef0-90c0-c05f2eeeaa36_thumbnail.webp"
+    }
+  ]
+}

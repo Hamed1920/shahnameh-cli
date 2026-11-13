@@ -1,6 +1,6 @@
 {
  "_comment": "Written by the worker from `higgsfield model list` / `model get` (worker/lib/models.mjs). Do not edit by hand; refresh from the Prompts page or restart a worker once it is a day old.",
- "fetchedAt": "2026-11-10T15:52:26.879Z",
+ "fetchedAt": "2026-11-13T10:06:53.553Z",
  "models": {
   "3d_jutsu_angles": {
    "job_type": "3d_jutsu_angles",
@@ -3942,6 +3942,64 @@
    "sound": null,
    "stages": null
   },
+  "minimax_h3_image": {
+   "job_type": "minimax_h3_image",
+   "display_name": "MiniMax H3 Image",
+   "type": "image",
+   "usable": true,
+   "params": [
+    {
+     "name": "aspect_ratio",
+     "type": "string",
+     "default": "auto",
+     "required": false
+    },
+    {
+     "name": "batch_size",
+     "type": "integer",
+     "default": 1,
+     "required": false
+    },
+    {
+     "name": "folder_id",
+     "type": "string|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "resolution",
+     "type": "string",
+     "default": "4k",
+     "required": false,
+     "enum": [
+      "1k",
+      "2k",
+      "4k"
+     ]
+    }
+   ],
+   "rules": [],
+   "ruleDetails": [],
+   "refs": {
+    "param": "image_references",
+    "max": 12,
+    "min": 0
+   },
+   "sound": null,
+   "stages": null
+  },
   "minimax_h3_max": {
    "job_type": "minimax_h3_max",
    "display_name": "MiniMax H3 Max",
@@ -5578,7 +5636,8 @@
      "enum": [
       "480p",
       "720p",
-      "1080p"
+      "1080p",
+      "4k"
      ]
     },
     {
@@ -5659,107 +5718,12 @@
    },
    "stages": {
     "draft": "480p",
-    "final": "1080p",
+    "final": "4k",
     "options": [
      "480p",
      "720p",
-     "1080p"
-    ]
-   }
-  },
-  "seedance1_5": {
-   "job_type": "seedance1_5",
-   "display_name": "Seedance 1.5 Pro",
-   "type": "video",
-   "usable": true,
-   "params": [
-    {
-     "name": "aspect_ratio",
-     "type": "string",
-     "default": "16:9",
-     "required": false,
-     "enum": [
-      "auto",
-      "16:9",
-      "9:16",
-      "4:3",
-      "3:4",
-      "1:1",
-      "21:9"
-     ]
-    },
-    {
-     "name": "duration",
-     "type": "integer",
-     "default": 4,
-     "required": false,
-     "enum": [
-      "4",
-      "8",
-      "12"
-     ]
-    },
-    {
-     "name": "end_image",
-     "type": "object|null",
-     "default": null,
-     "required": false
-    },
-    {
-     "name": "generate_audio",
-     "type": "boolean",
-     "default": true,
-     "required": false
-    },
-    {
-     "name": "prompt",
-     "type": "string",
-     "default": null,
-     "required": true
-    },
-    {
-     "name": "resolution",
-     "type": "string",
-     "default": "720p",
-     "required": false,
-     "enum": [
-      "480p",
-      "720p",
-      "1080p"
-     ]
-    },
-    {
-     "name": "start_image",
-     "type": "object|null",
-     "default": null,
-     "required": false
-    }
-   ],
-   "rules": [
-    "params.end_image == null || !(params.start_image == null)"
-   ],
-   "ruleDetails": [
-    {
-     "cel": "params.end_image == null || !(params.start_image == null)",
-     "message": "end_image requires start_image to be set"
-    }
-   ],
-   "refs": {
-    "param": "start_image",
-    "max": 2,
-    "min": 0
-   },
-   "sound": {
-    "param": "generate_audio",
-    "kind": "bool"
-   },
-   "stages": {
-    "draft": "480p",
-    "final": "1080p",
-    "options": [
-     "480p",
-     "720p",
-     "1080p"
+     "1080p",
+     "4k"
     ]
    }
   },
