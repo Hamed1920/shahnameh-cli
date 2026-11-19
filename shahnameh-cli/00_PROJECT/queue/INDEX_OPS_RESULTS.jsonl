@@ -66,3 +66,17 @@
 {"opId":"op_moveep016a","ok":true,"summary":"moved SHM-EP015-SC021-SH0010 -> SHM-EP016-SC003-SH0010 (1 take), SHM-EP015-SC022-SH0010 -> SHM-EP016-SC004-SH0010 (1 take), SHM-EP015-SC023-SH0010 -> SHM-EP016-SC005-SH0010 (1 take), SHM-EP015-SC024-SH0010 -> SHM-EP016-SC006-SH0010 (1 take), SHM-EP015-SC025-SH0010 -> SHM-EP016-SC007-SH0010 (1 take), SHM-EP015-SC026-SH0010 -> SHM-EP016-SC008-SH0010 (1 take), SHM-EP015-SC027-SH0010 -> SHM-EP016-SC009-SH0010 (1 take), SHM-EP015-SC028-SH0010 -> SHM-EP016-SC010-SH0010 (1 take), SHM-EP015-SC029-SH0010 -> SHM-EP016-SC011-SH0010 (1 take), SHM-EP015-SC030-SH0010 -> SHM-EP016-SC012-SH0010 (1 take), SHM-EP015-SC031-SH0010 -> SHM-EP016-SC013-SH0010 (1 take), SHM-EP015-SC032-SH0010 -> SHM-EP016-SC014-SH0010 (1 take)","ts":"2026-11-05T16:31:05.515Z"}
 {"opId":"op_rootintakemwf0d2wm","ok":true,"summary":"added @CHR-013/V01, @CRT-005/V01, @CHR-014/V01, @CHR-015/V01, @PRP-026/V01, @CHR-016/V01, @CHR-017/V01, @LOC-043/V01","ts":"2026-11-13T13:24:09.225Z"}
 {"opId":"op_rootintakemwf0tsuv","ok":true,"summary":"added @CHR-018/V01","ts":"2026-11-13T13:37:10.003Z"}
+{"opId":"op_rootintaketoja7vx","ok":true,"summary":"added @LOC-044/V01, @LOC-044/V02","ts":"2026-11-15T07:59:59.167Z"}
+{"opId":"op_rootintakemwm9mu9q","ok":true,"summary":"added @CRT-005/V02, @CHR-015/V02, @CHR-016/V02, @CHR-017/V02","ts":"2026-11-18T15:18:05.711Z"}
+{"opId":"op_mwmbnhme8d7s","ok":true,"summary":"CHR-015 main look -> V02","ts":"2026-11-18T16:14:35.747Z"}
+{"opId":"op_mwmbnrb2er2v","ok":true,"summary":"CHR-017 main look -> V02","ts":"2026-11-18T16:14:46.960Z"}
+{"opId":"op_mwmbnyr0ofko","ok":true,"summary":"CHR-016 main look -> V02","ts":"2026-11-18T16:14:56.791Z"}
+{"opId":"op_mwmbuyvjovqc","ok":true,"summary":"archived CHR-015/V01. PLAN 09 (waiting for review) uses @CHR-015 instead of @CHR-015/V01; PLAN 12 (waiting for review) uses @CHR-015 instead of @CHR-015/V01","ts":"2026-11-18T16:20:26.391Z"}
+{"opId":"op_mwmbvocw715n","ok":true,"summary":"archived CHR-016/V01. PLAN 04 (waiting for review) uses @CHR-016 instead of @CHR-016/V01; PLAN 05 (waiting for review) uses @CHR-016 instead of @CHR-016/V01","ts":"2026-11-18T16:20:56.588Z"}
+{"opId":"op_mwmbvzrcv1wt","ok":true,"summary":"archived CHR-017/V01. PLAN 04 (waiting for review) uses @CHR-017 instead of @CHR-017/V01; PLAN 05 (waiting for review) uses @CHR-017 instead of @CHR-017/V01","ts":"2026-11-18T16:21:11.755Z"}
+{"opId":"op_rootintakemwmcdcbp","ok":true,"summary":"added @CHR-014/V02, @PRP-026/V02, @CHR-016/V03","ts":"2026-11-18T16:34:42.124Z"}
+{"opId":"op_rootintakemwmdcrtd","ok":true,"summary":"added @CHR-015/V03","ts":"2026-11-18T17:02:14.934Z"}
+{"opId":"op_mwmepwwmyg5h","ok":true,"summary":"CHR-014 main look -> V02","ts":"2026-11-18T17:40:27.598Z"}
+{"opId":"op_mwmeq1v8hjm5","ok":true,"summary":"archived CHR-014/V01. PLAN 11 (waiting for review) uses @CHR-014 instead of @CHR-014/V01; PLAN 12 (waiting for review) uses @CHR-014 instead of @CHR-014/V01","ts":"2026-11-18T17:40:33.747Z"}
+{"opId":"op_mwmeqcltr8k1","ok":true,"summary":"CHR-016 main look -> V03","ts":"2026-11-18T17:40:45.794Z"}
+{"opId":"op_mwmeqh0nnis7","ok":true,"summary":"archived CHR-016/V02","ts":"2026-11-18T17:40:51.957Z"}

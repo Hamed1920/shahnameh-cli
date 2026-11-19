@@ -1,6 +1,6 @@
 {
  "_comment": "Written by the worker from `higgsfield model list` / `model get` (worker/lib/models.mjs). Do not edit by hand; refresh from the Prompts page or restart a worker once it is a day old.",
- "fetchedAt": "2026-11-13T10:06:53.553Z",
+ "fetchedAt": "2026-11-18T15:03:06.604Z",
  "models": {
   "3d_jutsu_angles": {
    "job_type": "3d_jutsu_angles",
@@ -3172,6 +3172,85 @@
    "refs": {
     "param": "image_references",
     "max": 10,
+    "min": 0
+   },
+   "sound": null,
+   "stages": null
+  },
+  "kling_image_4_0": {
+   "job_type": "kling_image_4_0",
+   "display_name": "Kling Image 4.0",
+   "type": "image",
+   "usable": true,
+   "params": [
+    {
+     "name": "aspect_ratio",
+     "type": "string",
+     "default": "auto",
+     "required": false,
+     "enum": [
+      "auto",
+      "16:9",
+      "9:16",
+      "1:1",
+      "4:3",
+      "3:4",
+      "3:2",
+      "2:3",
+      "21:9"
+     ]
+    },
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "kling_element_ids",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "resolution",
+     "type": "string",
+     "default": "2k",
+     "required": false,
+     "enum": [
+      "2k",
+      "4k",
+      "8k"
+     ]
+    },
+    {
+     "name": "result_type",
+     "type": "string",
+     "default": "single",
+     "required": false,
+     "enum": [
+      "single"
+     ]
+    }
+   ],
+   "rules": [
+    "size(params.image_references) + size(params.kling_element_ids) <= 10"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "size(params.image_references) + size(params.kling_element_ids) <= 10",
+     "message": "at most 10 image references and elements are allowed in total"
+    }
+   ],
+   "refs": {
+    "param": "image_references",
+    "max": 12,
     "min": 0
    },
    "sound": null,

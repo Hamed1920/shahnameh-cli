@@ -206,7 +206,16 @@
     "J-20261031-1ZB",
     "J-20261031-D2N",
     "J-20261031-X88",
-    "J-20261101-GXH"
+    "J-20261101-GXH",
+    "J-20261115-IS1",
+    "J-20261115-YSB",
+    "J-20261118-5HV",
+    "J-20261118-VQ3",
+    "J-20261118-563",
+    "J-20261118-KI6",
+    "J-20261118-EOU",
+    "J-20261118-A1K",
+    "J-20261119-Z6J"
   ],
   "processedDecisions": [
     "rev_mtljtubxafk9",
@@ -388,10 +397,17 @@
     "rev_mw3rc8ju7rqh",
     "rev_mw3rcq6t7aij",
     "rev_mw3rczx53jfn",
-    "rev_mw3rd402r7ed"
+    "rev_mw3rd402r7ed",
+    "rev_mwhjxz67jdau",
+    "rev_mwhknhh9mnxr",
+    "rev_mwmbt1z8bhhz",
+    "rev_mwmdktx5zl5l",
+    "rev_mwme5j4g1htu",
+    "rev_mwmeetd2qtzi",
+    "rev_mwmetp3ocray"
   ],
-  "spentCredits": 16692.5,
-  "updatedAt": "2026-11-05T16:31:05.517Z",
+  "spentCredits": 17115,
+  "updatedAt": "2026-11-19T07:44:41.254Z",
   "failedDecisions": {},
   "processedOps": [
     "op_mu18d6axozqm",
@@ -444,7 +460,21 @@
     "op_zahhakhallsaw01",
     "op_zahhakshipflag01",
     "op_mvvdq53foc7i",
-    "op_moveep016a"
+    "op_moveep016a",
+    "op_rootintaketoja7vx",
+    "op_rootintakemwm9mu9q",
+    "op_mwmbnhme8d7s",
+    "op_mwmbnrb2er2v",
+    "op_mwmbnyr0ofko",
+    "op_mwmbuyvjovqc",
+    "op_mwmbvocw715n",
+    "op_mwmbvzrcv1wt",
+    "op_rootintakemwmcdcbp",
+    "op_rootintakemwmdcrtd",
+    "op_mwmepwwmyg5h",
+    "op_mwmeq1v8hjm5",
+    "op_mwmeqcltr8k1",
+    "op_mwmeqh0nnis7"
   ],
   "learnWatermark": "rev_mu19vrjsbra1",
   "processedRequests": [
@@ -529,7 +559,10 @@
     "jr_mvw59tg7m7q5",
     "jr_mvw654jvo6in",
     "jr_mvws8ml7qksu",
-    "jr_mvws9sm8wg3r"
+    "jr_mvws9sm8wg3r",
+    "jr_mwmeg1uxisf8",
+    "jr_mwn8rl1ifju7",
+    "jr_mwn8sd0fh4o5"
   ],
   "held": {},
   "failedJobs": {
@@ -652,6 +685,10 @@
     "J-20261031-3VP": {
       "reason": "Error: \"Pro\" or \"Ultimate\" plan required",
       "at": "2026-10-31T08:17:12.287Z"
+    },
+    "J-20261118-KI6": {
+      "reason": "Error: Higgsfield API error (HTTP 520). failed to PUT media bytes to upload_url: 520",
+      "at": "2026-11-18T17:32:21.518Z"
     }
   },
   "landedChecks": {}
