@@ -80,3 +80,4 @@
 {"opId":"op_mwmeq1v8hjm5","ok":true,"summary":"archived CHR-014/V01. PLAN 11 (waiting for review) uses @CHR-014 instead of @CHR-014/V01; PLAN 12 (waiting for review) uses @CHR-014 instead of @CHR-014/V01","ts":"2026-11-18T17:40:33.747Z"}
 {"opId":"op_mwmeqcltr8k1","ok":true,"summary":"CHR-016 main look -> V03","ts":"2026-11-18T17:40:45.794Z"}
 {"opId":"op_mwmeqh0nnis7","ok":true,"summary":"archived CHR-016/V02","ts":"2026-11-18T17:40:51.957Z"}
+{"opId":"op_rootintakemwnrmg49","ok":true,"summary":"added @CRT-005/V03","ts":"2026-11-19T16:29:27.581Z"}

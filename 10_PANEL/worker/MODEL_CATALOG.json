@@ -1,6 +1,6 @@
 {
  "_comment": "Written by the worker from `higgsfield model list` / `model get` (worker/lib/models.mjs). Do not edit by hand; refresh from the Prompts page or restart a worker once it is a day old.",
- "fetchedAt": "2026-11-18T15:03:06.604Z",
+ "fetchedAt": "2026-11-19T21:43:41.421Z",
  "models": {
   "3d_jutsu_angles": {
    "job_type": "3d_jutsu_angles",
@@ -2734,6 +2734,208 @@
     "param": "image_references",
     "max": 12,
     "min": 0
+   },
+   "sound": null,
+   "stages": null
+  },
+  "ideogram_4_6": {
+   "job_type": "ideogram_4_6",
+   "display_name": "Ideogram 4.6",
+   "type": "image",
+   "usable": true,
+   "params": [
+    {
+     "name": "aspect_ratio",
+     "type": "string",
+     "default": "auto",
+     "required": false,
+     "enum": [
+      "auto",
+      "1:1",
+      "1:2",
+      "2:1",
+      "2:3",
+      "3:2",
+      "4:5",
+      "5:4",
+      "9:16",
+      "16:9",
+      "5:8",
+      "8:5",
+      "3:4",
+      "4:3",
+      "9:21",
+      "21:9",
+      "9:22",
+      "22:9",
+      "9:23",
+      "23:9",
+      "3:8",
+      "8:3",
+      "5:12",
+      "12:5",
+      "1:3",
+      "3:1"
+     ]
+    },
+    {
+     "name": "background",
+     "type": "string",
+     "default": "auto",
+     "required": false,
+     "enum": [
+      "auto",
+      "opaque",
+      "transparent"
+     ]
+    },
+    {
+     "name": "batch_size",
+     "type": "integer",
+     "default": 1,
+     "required": false
+    },
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "magic_prompt",
+     "type": "string",
+     "default": "auto",
+     "required": false,
+     "enum": [
+      "auto",
+      "on",
+      "off"
+     ]
+    },
+    {
+     "name": "mask",
+     "type": "object|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "quality",
+     "type": "string",
+     "default": "medium",
+     "required": false,
+     "enum": [
+      "low",
+      "medium",
+      "high"
+     ]
+    },
+    {
+     "name": "resolution",
+     "type": "string",
+     "default": "2k",
+     "required": false,
+     "enum": [
+      "2k",
+      "4k"
+     ]
+    },
+    {
+     "name": "seed",
+     "type": "integer|null",
+     "default": null,
+     "required": false
+    }
+   ],
+   "rules": [
+    "params.mask == null || (size(params.image_references) >= 1 && size(params.image_references) <= 4)"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "params.mask == null || (size(params.image_references) >= 1 && size(params.image_references) <= 4)",
+     "message": "A mask requires one to four source images."
+    }
+   ],
+   "refs": {
+    "param": "image_references",
+    "max": 12,
+    "min": 0
+   },
+   "sound": null,
+   "stages": null
+  },
+  "ideogram_4_6_precise_edit": {
+   "job_type": "ideogram_4_6_precise_edit",
+   "display_name": "Ideogram 4.6 Precise Edit",
+   "type": "image",
+   "usable": true,
+   "params": [
+    {
+     "name": "batch_size",
+     "type": "integer",
+     "default": 1,
+     "required": false
+    },
+    {
+     "name": "context_window",
+     "type": "string",
+     "default": "auto",
+     "required": false
+    },
+    {
+     "name": "image_references",
+     "type": "array",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "mask",
+     "type": "object|null",
+     "default": null,
+     "required": false
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "default": null,
+     "required": true
+    },
+    {
+     "name": "quality",
+     "type": "string",
+     "default": "medium",
+     "required": false,
+     "enum": [
+      "low",
+      "medium",
+      "high"
+     ]
+    },
+    {
+     "name": "seed",
+     "type": "integer|null",
+     "default": null,
+     "required": false
+    }
+   ],
+   "rules": [
+    "params.mask == null || (size(params.image_references) >= 1 && size(params.image_references) <= 4)"
+   ],
+   "ruleDetails": [
+    {
+     "cel": "params.mask == null || (size(params.image_references) >= 1 && size(params.image_references) <= 4)",
+     "message": "A mask requires one to four source images."
+    }
+   ],
+   "refs": {
+    "param": "image_references",
+    "max": 12,
+    "min": 1
    },
    "sound": null,
    "stages": null
